@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="ueditor-mini">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/icrane-spring/icrane-web/src/main/webapp/lib/umeditor/1.2.2/jsp/ueditor-mini.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

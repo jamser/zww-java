@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="icrane-web:war">
-    <output-path>$PROJECT_DIR$/icrane-spring/icrane-web/target</output-path>
-    <root id="archive" name="icrane-web.war">
-      <element id="artifact" artifact-name="icrane-web:war exploded" />
-    </root>
-  </artifact>
-</component>
