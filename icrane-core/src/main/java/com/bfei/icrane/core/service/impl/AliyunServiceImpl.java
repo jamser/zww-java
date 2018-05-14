@@ -61,7 +61,6 @@ public class AliyunServiceImpl implements AliyunService {
         String accessKey = propFileMgr.getProperty("aliyun.accessKey");
         String accessSecret = propFileMgr.getProperty("aliyun.accessSecret");
         String mnsAccountEndPoint = propFileMgr.getProperty("aliyun.mnsAccountEndPoint");
-        System.out.println(accessKey + "----" + accessSecret +  "----" + mnsAccountEndPoint);
         //初始化Iot套件SDK客户端
         try {
             DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", "Iot", "iot.cn-hangzhou.aliyuncs.com");

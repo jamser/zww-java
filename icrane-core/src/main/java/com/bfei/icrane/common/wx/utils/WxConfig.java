@@ -5,7 +5,7 @@ public class WxConfig {
     //微信商户信息
     public final static String APPID = "";
     public final static String SECRET = "";
-    public final static String PARTNER = "";
+    public final static String PARTNER = "1503788561";
     public final static String PARTNERKEY = "";
 
 
@@ -23,8 +23,8 @@ public class WxConfig {
     //公众号信息
     public final static String GZHAPPID = "wxcb4254f4b131fc12";
     public final static String GZHTOKEN = "lanaokj";
-    public final static String GZHPARTNERKEY = "svM34iakaVkbLEMjPNn4bbsMzR1fllIQ";
-    public final static String ENCODINGAESKEY = "HhcrKuX11UdS5vF7eU8xXMWs6xLLjuhaHuIihCcqK66";
+    //public final static String GZHPARTNERKEY = "svM34iakaVkbLEMjPNn4bbsMzR1fllIQ";
+  //  public final static String ENCODINGAESKEY = "HhcrKuX11UdS5vF7eU8xXMWs6xLLjuhaHuIihCcqK66";
     public final static String GZHSECRET = "ed958469e6ee8a343daca01b3c685ba1";
     public final static String GZHURLBODY = "http://lanao.nat300.top/icrane/api";
 
