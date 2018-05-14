@@ -2,3 +2,4 @@
 /icrane-core/.settings/*.prefs
 /icrane-spring/icrane-api/.settings/*.prefs
 /icrane-spring/icrane-web/.settings/*.prefs
+.idea
