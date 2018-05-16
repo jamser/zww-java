@@ -116,13 +116,8 @@ public class WxPayController {
                 String device_info = "";
                 // 随机数
                 String nonce_str = strReq;
-                String body;
-                // 商品描述根据情况修改
-                if ("xiaoyaojing".equals(packageName)) {
-                    body = "小妖精抓抓乐";
-                } else {
-                    body = "网搜支付";
-                }
+                // 商品描述
+                String body = "网搜支付";
                 // 附加数据
                 String attach = memberId + "";
                 // 商户订单号
@@ -139,13 +134,9 @@ public class WxPayController {
                 String notify_url = propFileMgr.getProperty("wx.notify");
                 SortedMap<String, String> packageParams = new TreeMap<>();
                 packageParams.put("trade_type", "APP");
-                if ("xiaoyaojing".equals(packageName)) {
-                    packageParams.put("appid", WxConfig.XYJAPPID);
-                    packageParams.put("mch_id", WxConfig.XYJPARTNER);
-                } else {
-                    packageParams.put("appid", WxConfig.APPID);
-                    packageParams.put("mch_id", WxConfig.PARTNER);
-                }
+                packageParams.put("appid", WxConfig.APPID);
+                packageParams.put("mch_id", WxConfig.PARTNER);
+
                 if (StringUtils.isNotEmpty(IP) && !"老子是公众号".equals(IP)) {
                     packageParams.put("trade_type", "MWEB");
                     //spbill_create_ip = IP;
@@ -158,11 +149,8 @@ public class WxPayController {
                 packageParams.put("spbill_create_ip", spbill_create_ip);
                 packageParams.put("notify_url", notify_url);
                 RequestHandler reqHandler = new RequestHandler(null, null);
-                if ("xiaoyaojing".equals(packageName)) {
-                    reqHandler.init(packageParams.get("appid"), packageParams.get("mch_id"), WxConfig.XYJPARTNERKEY);
-                } else {
-                    reqHandler.init(packageParams.get("appid"), packageParams.get("mch_id"), WxConfig.PARTNERKEY);
-                }
+                reqHandler.init(packageParams.get("appid"), packageParams.get("mch_id"), WxConfig.PARTNERKEY);
+
                 String gzhopenId = memberService.selectGzhopenId(memberId);
                 if ("老子是公众号".equals(IP) && StringUtils.isEmpty(gzhopenId)) {
                     return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, "公众号支付接口获取预支付订单失败,请先关注网搜抓娃娃公众号");
@@ -170,9 +158,9 @@ public class WxPayController {
                 if ("老子是公众号".equals(IP)) {
                     packageParams.put("openid", gzhopenId);
                     packageParams.put("trade_type", "JSAPI");
-                    packageParams.put("appid", "wx42ac1f22ae0225f3");
-                    packageParams.put("mch_id", "1493502502");
-                    reqHandler.init("wx42ac1f22ae0225f3", "1493502502", WxConfig.PARTNERKEY);
+                    packageParams.put("appid", WxConfig.GZHAPPID);
+                    packageParams.put("mch_id", WxConfig.PARTNER);
+                    reqHandler.init(WxConfig.GZHAPPID, WxConfig.GZHSECRET, WxConfig.PARTNERKEY);
                 }
 
                 String sign = reqHandler.createSign(packageParams);
@@ -199,19 +187,12 @@ public class WxPayController {
                     String timestamp = Sha1Util.getTimeStamp();
                     String nonceStr2 = nonce_str;
                     if ("老子是公众号".equals(IP)) {
-                        finalpackage.put("appId", "wx42ac1f22ae0225f3");
+                        finalpackage.put("appId", WxConfig.GZHAPPID);
                         finalpackage.put("timeStamp", timestamp);
                         finalpackage.put("nonceStr", nonceStr2);
                         finalpackage.put("package", "prepay_id=" + prepay_id);
                         finalpackage.put("signType", "MD5");
                         //finalpackage.put("paySign", prepay_id);
-                    } else if ("xiaoyaojing".equals(packageName)) {
-                        finalpackage.put("appid", WxConfig.XYJAPPID);
-                        finalpackage.put("partnerid", WxConfig.XYJPARTNER);
-                        finalpackage.put("timestamp", timestamp);
-                        finalpackage.put("noncestr", nonceStr2);
-                        finalpackage.put("prepayid", prepay_id);
-                        finalpackage.put("package", "Sign=WXPay");
                     } else {
                         finalpackage.put("appid", WxConfig.APPID);
                         finalpackage.put("partnerid", WxConfig.PARTNER);

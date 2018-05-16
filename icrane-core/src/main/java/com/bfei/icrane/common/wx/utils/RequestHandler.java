@@ -151,28 +151,8 @@ public class RequestHandler {
         /** 微信端返回的合法签名 */
         String validSign = ((String) smap.get("sign")).toUpperCase();
         //System.out.println("sign=" + sign + ",validSign=" + validSign);
-        if (validSign.equals(sign)) {
-            return true;
-        } else {
-            sb = new StringBuffer();
-            es = smap.entrySet();
-            it = es.iterator();
-            while (it.hasNext()) {
-                Map.Entry entry = (Map.Entry) it.next();
-                String k = (String) entry.getKey();
-                String v = (String) entry.getValue();
-                if (!"sign".equals(k) && !"key".equals(k) && StringUtils.isNotEmpty(v)) {
-                    sb.append(k + "=" + v + "&");
-                }
-            }
-            sb.append("key=" + WxConfig.XYJPARTNERKEY);
-            /** 验证的签名 */
-            sign = MD5Util.MD5Encode(sb.toString(), "utf-8").toUpperCase();
-            /** 微信端返回的合法签名 */
-            validSign = ((String) smap.get("sign")).toUpperCase();
-            //System.out.println("sign=" + sign + ",validSign=" + validSign);
-            return validSign.equals(sign);
-        }
+        return validSign.equals(sign);
+
     }
 
     public boolean createMd5Sign(String signParams) {

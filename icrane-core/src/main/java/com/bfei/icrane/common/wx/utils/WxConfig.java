@@ -2,9 +2,10 @@ package com.bfei.icrane.common.wx.utils;
 
 
 public class WxConfig {
-    //微信商户信息
-    public final static String APPID = "";
-    public final static String SECRET = "";
+    //微信开放平台
+    public final static String APPID = "wxcb4254f4b131fc12";
+    public final static String SECRET = "ed958469e6ee8a343daca01b3c685ba1";
+    //微信支付商户信息
     public final static String PARTNER = "1503788561";
     public final static String PARTNERKEY = "";
 
@@ -14,11 +15,6 @@ public class WxConfig {
    // public final static String SECRET = "2ea60e622ec01d428f5205d997e45b0d";
   //  public final static String PARTNER = "1492588212";
   //  public final static String PARTNERKEY = "svM34iakaVkbLEMjPNn4bbsMzR1fllIQ";
-
-    //马甲商户信息
-    public final static String XYJAPPID = "wx956f01bcced1c6aa";
-    public final static String XYJPARTNER = "1500124522";
-    public final static String XYJPARTNERKEY = "bnbcearMqGz4DGSQMZj0CBgDb4RfTkDC";
 
     //公众号信息
     public final static String GZHAPPID = "wxcb4254f4b131fc12";

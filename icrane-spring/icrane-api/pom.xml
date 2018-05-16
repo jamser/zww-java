@@ -264,7 +264,7 @@
 
     </dependencies>
     <build>
-        <finalName>icrane-api</finalName>
+        <finalName>icrane#api</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
