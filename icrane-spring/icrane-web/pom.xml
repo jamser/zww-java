@@ -281,17 +281,11 @@
                 <filters.env>dev</filters.env>
             </properties>  
         </profile>
-		<profile>
-			<id>loc</id>
+        <profile>  
+            <id>prod</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
-			<properties>
-				<filters.env>loc</filters.env>
-			</properties>
-		</profile>
-        <profile>  
-            <id>prod</id>  
             <properties>  
                 <filters.env>prod</filters.env>
             </properties>  
