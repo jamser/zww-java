@@ -7,7 +7,7 @@ public class WxConfig {
     public final static String SECRET = "ed958469e6ee8a343daca01b3c685ba1";
     //微信支付商户信息
     public final static String PARTNER = "1503788561";
-    public final static String PARTNERKEY = "";
+    public final static String PARTNERKEY = "PtR5S9g88z8LTUFZTsPMWdtqUgDJ4f8V";
 
 
     //365微信商户信息
