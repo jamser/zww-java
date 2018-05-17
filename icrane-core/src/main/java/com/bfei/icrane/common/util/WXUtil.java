@@ -80,11 +80,9 @@ public class WXUtil {
         //logger.info("微信登录请求微信服务器:url={}", wxUrl);
         if (StringUtils.isNotEmpty(head)) {
             if ("老子是H5".equals(head)) {
-                wxUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx42ac1f22ae0225f3&secret=6382ef530107642121fa2743b110aaa4&code=" + code + "&grant_type=authorization_code";
+                wxUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WxConfig.GZHAPPID + "&secret=" + WxConfig.GZHSECRET + "&code=" + code + "&grant_type=authorization_code";
             } else if ("老子是小程序".equals(head)) {
                 wxUrl = "https://api.weixin.qq.com/sns/jscode2session?appid=" + WxConfig.XCXAPPID + "&secret=" + WxConfig.XCXSECRET + "&js_code=" + code + "&grant_type=authorization_code";
-            } else if ("xiaoyaojing".equals(head)) {
-                wxUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx956f01bcced1c6aa&secret=0b50759f7ad1e4a47eac349813d9e0a0&code=" + code + "&grant_type=authorization_code";
             }
         }
         //logger.info("微信登录请求微信服务器:url={}", wxUrl);

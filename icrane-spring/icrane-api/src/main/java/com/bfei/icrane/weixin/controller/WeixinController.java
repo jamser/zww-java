@@ -96,7 +96,7 @@ public class WeixinController {
                 phoneModel = "未知";
             }
             MemberInfo member = (MemberInfo) loginService.weChatLogin(request, code, memberId, "wxWeb", "IMEI", phoneModel, chnnerl).getResultData();
-            String s = "http://zww.lanao.fun/lanaokj/wxLogin.html?memberId=" + member.getMember().getId() + "&token=" + member.getToken();
+            String s = "http://h5.lanao.fun/lanaokj/wxLogin.html?memberId=" + member.getMember().getId() + "&token=" + member.getToken();
             if (StringUtils.isNotEmpty(index)) {
                 s += "&index=" + index;
             }

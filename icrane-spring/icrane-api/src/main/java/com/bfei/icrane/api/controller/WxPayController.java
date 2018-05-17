@@ -81,7 +81,7 @@ public class WxPayController {
         try {
             boolean isToken = validateTokenService.validataToken(token, memberId);
             if (isToken) {
-                String orderNo = UUID.randomUUID().toString().replaceAll("-", "");
+                String orderNo = UUID.randomUUID().toString().replaceAll(       "-", "");
                 //数据库 创建订单
                 Vip vip = vipService.selectVipByMemberId(memberId);
                 //总金额以分为单位，不带小数点
