@@ -209,6 +209,7 @@ public class PaySerciceImpl implements PayService {
      * @return
      */
     @Override
+    @Transactional
     public String wxNotify(HttpServletRequest request) {
         try {
             logger.info("微信充值回调...");
@@ -228,19 +229,7 @@ public class PaySerciceImpl implements PayService {
                     // 处理业务，更新用户余额或金币
                     int memberId = Integer.parseInt(mapXml.get("attach"));
                     double fee = Double.parseDouble(mapXml.get("total_fee")) / 100;
-                    //微信充值记录
-                    WxpayRecord wr = new WxpayRecord();
-                    wr.setMemberId(memberId);
-                    wr.setMchOrderNo(mapXml.get("out_trade_no"));
-                    wr.setWxOrderNo(mapXml.get("transaction_id"));
-                    wr.setOpenId(mapXml.get("openid"));
-                    wr.setTotalFee(fee + "");
-                    wr.setTimeEnd(mapXml.get("time_end"));
-                    wr.setChargeFrom("weixin");
-                    if (wxpayRecordService.selectByOutTradeNo(mapXml.get("out_trade_no")) == null) {
-                        int insert = wxpayRecordService.insert(wr);
-                        logger.info("充值记录结果:insertResult=" + insert);
-                    }
+
                 /*Map<String, Object> parameterMap = new HashMap<>();
                 parameterMap.put("memberId", memberId);
                 parameterMap.put("mchOrderNo", mapXml.get("out_trade_no"));
@@ -268,6 +257,21 @@ public class PaySerciceImpl implements PayService {
                     charge.setChargeMethod("微信充值-" + order.getChargeName());
                     Integer result = chargeService.insertChargeHistory(charge);
                     chargeService.inviteChargeFirst(memberId);//检测邀请 首充赠送
+
+
+                    //微信充值记录
+                    WxpayRecord wr = new WxpayRecord();
+                    wr.setMemberId(memberId);
+                    wr.setMchOrderNo(mapXml.get("out_trade_no"));
+                    wr.setWxOrderNo(mapXml.get("transaction_id"));
+                    wr.setOpenId(mapXml.get("openid"));
+                    wr.setTotalFee(fee + "");
+                    wr.setTimeEnd(mapXml.get("time_end"));
+                    wr.setChargeFrom("weixin");
+                    if (wxpayRecordService.selectByOutTradeNo(mapXml.get("out_trade_no")) == null) {
+                        int insert = wxpayRecordService.insert(wr);
+                        logger.info("充值记录结果:insertResult=" + insert);
+                    }
                     if (result == 1) {
                         return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
                     }
