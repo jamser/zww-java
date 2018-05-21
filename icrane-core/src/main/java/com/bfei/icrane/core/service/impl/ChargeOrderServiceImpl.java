@@ -4,10 +4,13 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.bfei.icrane.common.util.BitStatesUtils;
+import com.bfei.icrane.common.util.MathUtil;
 import com.bfei.icrane.core.dao.*;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.models.vo.ChannelChargeOrder;
 import com.bfei.icrane.core.service.AccountService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("chargeOrderService")
 @Transactional
 public class ChargeOrderServiceImpl implements ChargeOrderService {
+    private static final Logger logger = LoggerFactory.getLogger(ChargeOrderService.class);
 
     @Autowired
     private ChargeDao chargeDao;
@@ -104,12 +108,19 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
     }
 
     @Override
-    public ChargeOrder orderSuccess(String orderNo) {
+    public ChargeOrder orderSuccess(String orderNo, Double fee) {
         try {
             ChargeOrder chargeOrder = chargeOrderDao.selectByOrderNo(orderNo);
             if (chargeOrder == null || chargeOrder.getChargeState() == 1) {
                 return null;
             }
+            //金额是否一致
+            if (!MathUtil.equals(fee, chargeOrder.getPrice())) {
+                logger.error("【微信支付】异步通知 ，订单金额不一致 ,orderId{}，微信通知金额={}，系统金额={}", orderNo,
+                        fee, chargeOrder.getPrice());
+                return null;
+            }
+
             //修改订单状态
             chargeOrderDao.orderSuccess(orderNo, new Date());
             //普通礼包修改首充次数

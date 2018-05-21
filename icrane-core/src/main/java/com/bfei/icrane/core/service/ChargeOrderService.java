@@ -30,7 +30,7 @@ public interface ChargeOrderService {
      * @param orderNo
      * @return
      */
-    ChargeOrder orderSuccess(String orderNo);
+    ChargeOrder orderSuccess(String orderNo,Double fee);
 
     /**
      * 订单失效

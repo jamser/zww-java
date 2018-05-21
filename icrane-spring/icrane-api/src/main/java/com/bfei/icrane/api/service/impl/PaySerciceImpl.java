@@ -241,7 +241,7 @@ public class PaySerciceImpl implements PayService {
                 parameterMap.put("result", 0);
                 chargeDao.payNotify(parameterMap);*/
                     //更新充值订单状态
-                    ChargeOrder order = chargeOrderService.orderSuccess(mapXml.get("out_trade_no"));
+                    ChargeOrder order = chargeOrderService.orderSuccess(mapXml.get("out_trade_no"), fee);
                     if (order == null) {
                         return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
                     }
@@ -341,7 +341,7 @@ public class PaySerciceImpl implements PayService {
                             }
 
                             //更新充值订单状态
-                            ChargeOrder order = chargeOrderService.orderSuccess(out_trade_no);//订单支付成功
+                            ChargeOrder order = chargeOrderService.orderSuccess(out_trade_no, null);//订单支付成功
                             int coinsSum = order.getCoinsCharge() + order.getCoinsOffer();
                             int superTicketSum = order.getSuperTicketCharge() + order.getSuperTicketOffer();
                             Charge charge = new Charge();
