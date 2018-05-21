@@ -489,16 +489,16 @@ public class DollController {
     }
 
 
-    /**
-     * 获取娃娃机列表(Id分页查询)
-     *
-     * @param memberId 用户UserId
-     * @param token    登陆令牌
-     * @param startId  起始房间Id
-     * @return
-     * @throws Exception
-     */
-    /*@RequestMapping(value = "/DollPage", method = RequestMethod.POST)
+        /*
+         * 获取娃娃机列表(Id分页查询)
+         *
+         * @param memberId 用户UserId
+         * @param token    登陆令牌
+         * @param startId  起始房间Id
+         * @return
+         * @throws Exception
+         */
+   /* @RequestMapping(value = "/DollPage", method = RequestMethod.POST)
     @ResponseBody
     public ResultMap DollPage(Integer memberId, String token, Integer startId, Integer pageSize, Integer dollTopic) throws Exception {
         try {
