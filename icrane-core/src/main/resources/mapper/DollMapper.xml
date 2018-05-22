@@ -198,7 +198,6 @@
         ) r ORDER BY r.id
     </select>
 
-<!--
     <select id="getH5DollTopicList" resultMap="BaseResultMap">
         SELECT
             a.id,
@@ -238,50 +237,8 @@
         AND delete_status = 1
         ORDER BY
             watching_number;
-    </select>-->
-
-    <select id="getH5DollTopicList" resultMap="BaseResultMap">
-        SELECT
-        a.id,
-        a. NAME,
-        a.description,
-        a.machine_type,
-        a.quantity,
-        a.price,
-        a.machine_status,
-        a.machine_serial_num,
-        a.machine_ip,
-        a.machine_url,
-        a.tbimg_context_path,
-        a.tbimg_file_name,
-        a.tbimg_real_path,
-        a.created_date,
-        a.created_by,
-        a.modified_date,
-        a.modified_by,
-        dh.rtmpUrlH5,
-        a.rtmp_push_url,
-        a.watching_number,
-        a.mns_topic_name,
-        a.redeem_coins,
-        a.timeout,
-        a.machine_code,
-        a.doll_ID
-        FROM
-        t_doll a
-        LEFT JOIN doll_h5 dh ON a.id = dh.id
-        WHERE
-        dh.id IS NULL
-        AND
-        (
-        machine_status = '空闲中'
-        OR machine_status = '游戏中'
-        )
-        AND a.machine_url in (SELECT machine_name from machine_status where machine_state='ONLINE' AND rtmp_state='开启')
-        AND delete_status = 1
-        ORDER BY
-        watching_number;
     </select>
+
 
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">

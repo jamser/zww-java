@@ -100,19 +100,19 @@ public class AliPayController {
                 model.setGoodsType("0");
                 //商品名称
                 // 商品描述根据情况修改
-                if ("xiaoyaojing".equals(packageName)) {
+          /*      if ("xiaoyaojing".equals(packageName)) {
                     if (new BigDecimal(vip.getDiscount()).compareTo(new BigDecimal(10)) < 0) {
                         model.setSubject("小妖精抓抓乐-" + chargeRules.getChargeName() + "-" + chargeRules.getDescription() + "-" + vip.getName() + vip.getDiscount() + "折");
                     } else {
                         model.setSubject("小妖精抓抓乐-" + chargeRules.getChargeName());
                     }
-                } else {
+                } else {*/
                     if (new BigDecimal(vip.getDiscount()).compareTo(new BigDecimal(10)) < 0) {
                         model.setSubject("网搜抓娃娃-" + chargeRules.getChargeName() + "-" + chargeRules.getDescription() + "-" + vip.getName() + vip.getDiscount() + "折");
                     } else {
                         model.setSubject("网搜抓娃娃-" + chargeRules.getChargeName());
                     }
-                }
+              //  }
                 //商户订单号
                 model.setOutTradeNo(out_trade_no);
                 //该笔订单允许的最晚付款时间，逾期将关闭交易。

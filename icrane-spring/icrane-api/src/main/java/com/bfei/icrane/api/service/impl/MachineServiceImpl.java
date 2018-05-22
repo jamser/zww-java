@@ -90,8 +90,18 @@ public class MachineServiceImpl  {
 	    		pw.write(message);
 	    		pw.flush();
 	    	}
-	    }  
-	      
+	    }
+
+/*	public static void main(String[] args) {
+		try {
+			System.out.println(serverIp + " " + port);
+			Socket socket = new Socket(serverIp,port);
+			System.out.println(socket);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}*/
 
 	public static void sendMsg(String msg,Integer dollId,Integer userId) {
 		try {

@@ -440,7 +440,6 @@ public class DollController {
                 resultMap.put("message", Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
                 return resultMap;
             }*/
-
             if (StringUtils.isNotEmpty(request.getParameter("pageNo"))) {
                 pageNo = Integer.parseInt(request.getParameter("pageNo"));
             } else {
