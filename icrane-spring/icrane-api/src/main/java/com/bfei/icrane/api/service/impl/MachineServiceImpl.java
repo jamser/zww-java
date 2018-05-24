@@ -92,20 +92,8 @@ public class MachineServiceImpl  {
 	    	}
 	    }
 
-/*	public static void main(String[] args) {
-		try {
-			System.out.println(serverIp + " " + port);
-			Socket socket = new Socket(serverIp,port);
-			System.out.println(socket);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}*/
-
 	public static void sendMsg(String msg,Integer dollId,Integer userId) {
 		try {
-			
 			if(!machineSocketMap.containsKey(dollId)) {
 				Socket socket = new Socket(serverIp,port);
 				machineSocketMap.put(dollId, socket);

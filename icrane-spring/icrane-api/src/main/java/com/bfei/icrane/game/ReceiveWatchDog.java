@@ -8,8 +8,12 @@ import com.bfei.icrane.api.service.impl.LocalMachineServiceImpl;
 import com.bfei.icrane.api.service.impl.MachineServiceImpl;
 import com.bfei.icrane.common.util.RedisKeyGenerator;
 import com.bfei.icrane.common.util.RedisUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class ReceiveWatchDog implements Runnable{  
+public class ReceiveWatchDog implements Runnable{
+
+	private static final Logger logger = LoggerFactory.getLogger(ReceiveWatchDog.class);
 	private Integer dollId;
 	private Integer userId;
 	private volatile Boolean running = true;
@@ -22,7 +26,8 @@ public class ReceiveWatchDog implements Runnable{
     public void run() {  
     	this.running = MachineServiceImpl.socketRunning.get(this.dollId);
         while(this.running){  
-            try {  
+            try {
+
             	Socket  socket= MachineServiceImpl.machineSocketMap.get(this.dollId);
             	if(socket==null || socket.isClosed()) {return;}
                 InputStream in = socket.getInputStream();  
@@ -45,7 +50,7 @@ public class ReceiveWatchDog implements Runnable{
     					int read = in.read(bytes);
     					if(read != -1){
     						String info =new String(bytes, 0, read);
-    						//System.out.println("++++++++++++"+info+"新机器接受指令"+RedisKeyGenerator.getUserGameCatch(userId));
+							logger.info("++++++++++++"+info+"新机器接受指令" + this.dollId);
     						//if(info.indexOf("gotToy")>0) {
     							//redisUtil.setString(RedisKeyGenerator.getUserGameCatch(userId), "1", 60*2);
     			           // }

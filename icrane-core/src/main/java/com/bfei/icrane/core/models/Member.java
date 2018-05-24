@@ -83,6 +83,8 @@ public class Member implements Serializable {
             //判断数据库是否已经迁移过来了
             if (id != 0 && accountService.selectId(id) == null) {
                 account = accountService.createAccount(id);
+            }else{
+                account = accountService.select(id);
             }
         }
         return this.account;

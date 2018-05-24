@@ -101,6 +101,7 @@ public class WebSocketController {
                        @PathParam(value = "token") String token) throws Exception {
 
         try {
+            logger.info("进来了onOpen。。。。。。。。。。。。。。。。" );
             this.dollId = Integer.parseInt(dollId);
             this.userId = Integer.parseInt(memberId);
             //如果已经有人在玩则关闭session
@@ -189,6 +190,7 @@ public class WebSocketController {
 
     public void ReceivingMessage(String queueName) {
         try {
+            logger.info("进来了ReceivingMessage。。。。。。。。。。。。。。。。" );
         	RoomSession roomSession = roomSessionMap.get(this.dollId);
             Message message = null;
             String messageRawBody = "";
@@ -230,14 +232,16 @@ public class WebSocketController {
     //向所有客户端发送消息
     public synchronized void sendMessage(String info, Integer dollId,boolean popSend) {
         try {
+            logger.info("进来了sendMessage前。。。。。。。。。。。。。。。。" + info);
 //				for (Map.Entry<Integer, WebSocketController> entry : webSocketMap.entrySet()) {
 //					entry.getValue().session.getBasicRemote().sendText(info);
 //					logger.info("向手机端" + entry.getKey() + "转发消息:"+info);
 //				}
             if (webSocketMap.get(dollId) != null && webSocketMap.get(dollId).isOpen() && webSocketMap.get(dollId).getBasicRemote()!=null && popSend && info!=null) {
-            	String[] infos = info.split("}");
-            	final String sText = infos[0] + "}";
-            	webSocketMap.get(dollId).getBasicRemote().sendText(sText);
+ /*           	String[] infos = info.split("}");
+            	final String sText = infos[0] + "}";*/
+                logger.info("进来了sendMessage后。。。。。。。。。。。。。。。。" + info);
+            	webSocketMap.get(dollId).getBasicRemote().sendText(info);
                 //logger.info("向在娃娃机" + dollId + "手机端" + roomSessionMap.get(dollId).getMemberId() + "转发消息:" + info);
             } else {
                 //logger.info("会话已断开，不向在娃娃机" + dollId + "的玩家" + roomSessionMap.get(dollId).getMemberId() + "转发消息:" + info);
@@ -254,6 +258,7 @@ public class WebSocketController {
      */
     @OnMessage
     public void onMessage(String message, Session session) throws Exception {
+        logger.info("进来了onMessage。。。。。。。。。。。。。。。。" + message);
         // 调用阿里物联网套件接口
         RoomSession roomSession = roomSessionMap.get(this.dollId);
         //Message msg=new Gson().fromJson(message.getPayload().toString(),Message.class);
@@ -313,6 +318,7 @@ public class WebSocketController {
      */
     @OnClose
     public void onClose() {
+        logger.info("进来了onClose。。。。。。。。。。。。。。。。" );
         RoomSession roomSession = roomSessionMap.get(this.dollId);
         String tokenStr = roomSession.getToken();
         Integer userId = roomSession.getMemberId();
@@ -400,6 +406,7 @@ public class WebSocketController {
     @OnError
     public void onError(Session session, Throwable error) {
         try {
+            logger.info("进来了onError。。。。。。。。。。。。。。。。" );
            //redisUtil.delKey(RedisKeyGenerator.getRoomHostKey(this.dollId));
         	RoomSession roomSession = roomSessionMap.get(this.dollId);
         	if (roomSession!=null) {

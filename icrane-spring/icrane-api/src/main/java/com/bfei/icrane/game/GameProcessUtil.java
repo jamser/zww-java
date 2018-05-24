@@ -240,7 +240,7 @@ public class GameProcessUtil {
 	}
 	/**
 	 * 抓中娃娃结果
-	 * @param dollId
+	 * @param gameNum
 	 * @return
 	 */
 	public  Integer getGameCatchDoll(String gameNum) {
@@ -254,7 +254,6 @@ public class GameProcessUtil {
 	
 	/**
 	 * 下抓
-	 * @param newMachineType
 	 * @param userId
 	 * @param dollId
 	 */
