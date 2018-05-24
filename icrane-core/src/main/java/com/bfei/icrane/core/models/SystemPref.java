@@ -31,4 +31,6 @@ public class SystemPref implements Serializable {
 
     private Integer modifiedBy;
 
+    private Integer type;
+
 }

@@ -492,14 +492,11 @@ public class LoginServiceImpl implements LoginService {
                         if (member == null) {
                             IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.REGISTRATION_FAILED);
                         }
-                        if (StringUtils.isEmpty(memberId)) {
-                            int i = chargeService.inviteOne(member.getId(), channel);
-                            if (i == 2) {
-                                IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, "链接错误");
+                        if (!StringUtils.isEmpty(memberId)) {
+                            if (systemPrefService.selectByPrimaryKey(Enviroment.CODE_INVITE_BONUS).getType() == 1) {
+                                //绑定邀请
+                                ResultMap resultMap = chargeService.invite(2, memberId);
                             }
-                        } else {
-                            //绑定邀请
-                            ResultMap resultMap = chargeService.invite(member.getId(), memberId);
                         }
                         member = memberService.selectById(member.getId());
                     } else {

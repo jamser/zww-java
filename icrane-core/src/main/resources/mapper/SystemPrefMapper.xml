@@ -7,9 +7,10 @@
     <result column="value" jdbcType="VARCHAR" property="value" />
     <result column="modified_date" jdbcType="TIMESTAMP" property="modifiedDate" />
     <result column="modified_by" jdbcType="INTEGER" property="modifiedBy" />
+    <result column="type" jdbcType="INTEGER" property="type" />
   </resultMap>
   <sql id="Base_Column_List">
-    code, name, value, modified_date, modified_by
+    code, name, value, modified_date, modified_by,type
   </sql>
   <select id="selectAll" resultMap="BaseResultMap">
   	select

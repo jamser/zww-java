@@ -332,7 +332,7 @@ public class ChargeServiceImpl implements ChargeService {
         invicteCharge.setCode(Enviroment.CODE_INVITE_BONUS);
         invicteCharge.setInviteMemberId(memberInvite.getId());
         invicteCharge.setMemberId(memberId);
-        invicteCharge.setCoins(member.getAccount().getCoins());
+        invicteCharge.setCoins(memberInvite.getAccount().getCoins());
         invicteCharge.setType(Enviroment.TYPE_INCOME);
         //邀请奖励
         SystemPref INVITE_BONUS = systemPrefDao.selectByPrimaryKey(Enviroment.CODE_INVITE_BONUS);
@@ -350,6 +350,8 @@ public class ChargeServiceImpl implements ChargeService {
             invicteCharge.setInviteCoinsSum(Integer.valueOf(INVITE_BONUS.getValue()));//邀请人获取赠送币数量
             invicteCharge.setChargeMethod("由邀请好友获取,邀请好友id" + memberService.selectById(invicteCharge.getMemberId()).getMemberID());
         }
+
+
         //邀请人获取奖励
         invicteCharge.setChargeDate(TimeUtil.getTime());
         //更新邀请人币数
@@ -357,10 +359,10 @@ public class ChargeServiceImpl implements ChargeService {
         //生成邀请人记录
         chargeDao.insertInviteChargeHistory(invicteCharge);
         //被邀请人获取奖励
-        chargeDao.updateMemberCount(invicteCharge);
+//        chargeDao.updateMemberCount(invicteCharge);
         //标记被邀请人被邀请状态
         memberDao.updateInviteStatus(memberId);
-        chargeDao.insertChargeHistory(invicteCharge);
+//        chargeDao.insertChargeHistory(invicteCharge);
         //生成邀请记录
         ShareInvite invite = new ShareInvite();
         invite.setInviteCode(inviteCode);
