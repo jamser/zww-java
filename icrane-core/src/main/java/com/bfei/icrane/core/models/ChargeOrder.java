@@ -14,7 +14,7 @@ public class ChargeOrder implements Serializable {
 
     private static final long serialVersionUID = -7573063272518136649L;
 
-    private Integer id;                //订单序号
+    private Long id;                //订单序号
     private String orderNo;            //订单编号
     private Integer chargeruleid;    //充值规则
     private String chargeName;        //充值规则名称

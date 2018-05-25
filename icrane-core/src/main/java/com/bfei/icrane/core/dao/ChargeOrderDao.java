@@ -16,7 +16,7 @@ public interface ChargeOrderDao {
 	 * @param id
 	 * @return
 	 */
-	ChargeOrder selectByPrimaryKey(Integer id);
+	ChargeOrder selectByPrimaryKey(Long id);
 	/**
 	 * 查询订单列表
 	 * @return

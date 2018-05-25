@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bfei.icrane.core.dao.DollOrderItemDao">
     <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.DollOrderItem">
-        <id column="id" jdbcType="INTEGER" property="id"/>
+        <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="quantity" jdbcType="INTEGER" property="quantity"/>
         <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
         <result column="doll_code" jdbcType="VARCHAR" property="dollCode"/>
@@ -32,7 +32,7 @@
 		id, order_id, doll_id, created_date,doll_code
 	</sql>
     <!-- 根据订单id查询 -->
-    <select id="getOrderItemByOrderId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <select id="getOrderItemByOrderId" parameterType="java.lang.Long" resultMap="BaseResultMap">
 		SELECT
             a.*, b. NAME NAME,
             b.tbimg_real_path
@@ -48,7 +48,7 @@
         select
         <include refid="Base_Column_List"/>
         from t_doll_order_item
-        where id = #{id,jdbcType=INTEGER}
+        where id = #{id,jdbcType=BIGINT}
     </select>
 
     <select id="selectByDollId" parameterType="java.lang.Integer"
@@ -128,14 +128,14 @@
         </where>
     </select>
 
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
 		delete from t_doll_order_item
-		where id = #{id,jdbcType=INTEGER}
+		where id = #{id,jdbcType=BIGINT}
 	</delete>
     <insert id="insert" parameterType="com.bfei.icrane.core.models.DollOrderItem">
 		insert into t_doll_order_item (id, order_id, doll_id,
 		created_date,quantity,doll_code)
-		values (#{id,jdbcType=INTEGER}, #{dollOrder.id,jdbcType=INTEGER},
+		values (#{id,jdbcType=BIGINT}, #{dollOrder.id,jdbcType=BIGINT},
 		#{doll.id,jdbcType=INTEGER},
 		#{createdDate,jdbcType=TIMESTAMP},#{quantity,jdbcType=INTEGER},#{doll.dollID,jdbcType=VARCHAR})
 	</insert>
@@ -163,10 +163,10 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
-                #{id,jdbcType=INTEGER},
+                #{id,jdbcType=BIGINT},
             </if>
             <if test="orderId != null">
-                #{orderId,jdbcType=INTEGER},
+                #{orderId,jdbcType=BIGINT},
             </if>
             <if test="dollId != null">
                 #{dollId,jdbcType=INTEGER},
@@ -192,21 +192,21 @@
                 created_date = #{createdDate,jdbcType=TIMESTAMP},
             </if>
         </set>
-        where id = #{id,jdbcType=INTEGER}
+        where id = #{id,jdbcType=BIGINT}
     </update>
 
     <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.DollOrderItem">
 		update t_doll_order_item
-		set order_id = #{orderId,jdbcType=INTEGER},
+		set order_id = #{orderId,jdbcType=BIGINT},
 		doll_id = #{dollId,jdbcType=INTEGER},
 		created_date = #{createdDate,jdbcType=TIMESTAMP}
-		where id = #{id,jdbcType=INTEGER}
+		where id = #{id,jdbcType=BIGINT}
 	</update>
 
     <update id="updateOrderId" parameterType="com.bfei.icrane.core.models.DollOrderItem">
 		update t_doll_order_item
-		set order_id = #{dollOrder.id,jdbcType=INTEGER}
-		where id = #{id,jdbcType=INTEGER}
+		set order_id = #{dollOrder.id,jdbcType=BIGINT}
+		where id = #{id,jdbcType=BIGINT}
 	</update>
 </mapper>
 

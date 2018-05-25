@@ -11,16 +11,16 @@ import com.bfei.icrane.core.models.DollOrder;
  * Copyright (c) 2017 伴飞网络. All rights reserved.
  */
 public interface DollOrderDao {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Long id);
 
     int insert(DollOrder record);
 
     int insertSelective(DollOrder record);
 
-    DollOrder selectByPrimaryKey(Integer id);
+    DollOrder selectByPrimaryKey(Long id);
 
     //发货申请
-    int sendDoll(@Param("addressId") Integer addressId, @Param("orderIds") Integer[] orderIds);
+    int sendDoll(@Param("addressId") Integer addressId, @Param("orderIds") Long[] orderIds);
 
     int updateByPrimaryKeySelective(DollOrder record);
 
@@ -30,9 +30,9 @@ public interface DollOrderDao {
 
     DollOrder selectByOrderNum(String orderNum);
 
-    DollOrder selectByOrderIds(Integer[] orderIds);
+    DollOrder selectByOrderIds(Long[] orderIds);
 
-    List<DollOrder> selectListByOrderIds(Integer[] orderIds);
+    List<DollOrder> selectListByOrderIds(Long[] orderIds);
 
     List<DollOrder> selectByOrderNotIn(DollOrder record);
 
@@ -46,7 +46,7 @@ public interface DollOrderDao {
 
     int totalCountOutOrders(@Param("phone") String phone, @Param("outGoodsId") int outGoodsId);
 
-    List<DollOrder> selectListByPrimaryKey(Integer[] orderIds);
+    List<DollOrder> selectListByPrimaryKey(Long[] orderIds);
 
     List<DollOrder> selectOutTimeDolls();
 

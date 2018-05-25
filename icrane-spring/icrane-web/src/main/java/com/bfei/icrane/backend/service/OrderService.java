@@ -10,7 +10,7 @@ import com.bfei.icrane.core.models.vo.OutGoods;
 
 public interface OrderService {
 	public PageBean<OutGoods> getOrdersByStatus(int page,int pageSize,String phone,String memberId);
-	public List<DollOrderItem> getOrderItemByOrderId(Integer id);
+	public List<DollOrderItem> getOrderItemByOrderId(Long id);
 	public int updateByPrimaryKeySelective(DollOrder dollOrder);
 	public PageBean<OutGoods> getOutOrdersByStatus(int page, int pageSize, String phone, int outGoodsId);
 

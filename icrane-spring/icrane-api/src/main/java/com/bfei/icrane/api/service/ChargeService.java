@@ -20,7 +20,7 @@ public interface ChargeService {
 
     Integer insertChargeHistory(Charge charge);
 
-    Integer insertChargeHistory(Charge charge, Integer memberId, Integer[] dollId);
+    Integer insertChargeHistory(Charge charge, Integer memberId, Long[] orderIds);
 
     List<Charge> getChargeHistory(Integer memberId);
 

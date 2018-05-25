@@ -15,13 +15,13 @@ import com.bfei.icrane.core.models.DollOrderItem;
  * Copyright (c) 2017 伴飞网络. All rights reserved.
  */
 public interface DollOrderItemDao {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Long id);
 
     int insert(DollOrderItem record);
 
     int insertSelective(DollOrderItem record);
 
-    DollOrderItem selectByPrimaryKey(Integer id);
+    DollOrderItem selectByPrimaryKey(Long id);
 
     int updateByPrimaryKeySelective(DollOrderItem record);
 
@@ -35,5 +35,5 @@ public interface DollOrderItemDao {
 
     int updateOrderId(DollOrderItem item);
 
-    List<DollOrderItem> getOrderItemByOrderId(Integer id);
+    List<DollOrderItem> getOrderItemByOrderId(Long id);
 }

@@ -3,7 +3,7 @@
 <mapper namespace="com.bfei.icrane.core.dao.ChargeOrderDao">
 	
 	<resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.ChargeOrder" >
-	    <id column="id" property="id" jdbcType="INTEGER" />
+	    <id column="id" property="id" jdbcType="BIGINT" />
 	    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
 	    <result column="chargeruleid" property="chargeruleid" jdbcType="INTEGER" />
 	    <result column="charge_name" property="chargeName" jdbcType="VARCHAR" />
@@ -28,17 +28,15 @@
     id,order_no,chargeruleid,charge_name,price,member_id,member_name,charge_type,charge_state,coins_before,coins_after,coins_charge,coins_offer,superTicket_before,superTicket_after,superTicket_charge,superTicket_offer,create_date,update_date
   	</sql>
 	
-	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from charge_order
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   	</select>
   	
   	<select id="selectByOrderNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    *
-    from charge_order
+    select   *  from charge_order
     where order_no = #{orderNo,jdbcType=VARCHAR}
   	</select>
 	
@@ -125,7 +123,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
-        #{id,jdbcType=INTEGER},
+        #{id,jdbcType=BIGINT},
       </if>
       <if test="orderNo != null" >
         #{orderNo,jdbcType=VARCHAR},

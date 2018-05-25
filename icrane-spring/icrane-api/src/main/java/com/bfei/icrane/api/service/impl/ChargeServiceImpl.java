@@ -131,7 +131,7 @@ public class ChargeServiceImpl implements ChargeService {
     }
 
     @Override
-    public Integer insertChargeHistory(Charge charge, Integer memberId, Integer[] orderIds) {
+    public Integer insertChargeHistory(Charge charge, Integer memberId, Long[] orderIds) {
         //logger.info("insertChargeHistory参数charge:{},memberId:{},orderIds:{}", charge, memberId, orderIds);
         List<DollOrder> list = new ArrayList<>();
        /* for (int orderId : orderIds) {
@@ -214,7 +214,8 @@ public class ChargeServiceImpl implements ChargeService {
         logger.info("changeCount 参数:{}", dollOrderList);
         Charge charge = new Charge();
         DollOrder dOrder = new DollOrder();
-        List<Map<String, Integer>> list = new ArrayList<Map<String, Integer>>();
+      //  List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        Integer result = 0;
         for (DollOrder dollOrder : dollOrderList) {
             /*List<DollOrderItem> orderItem = dollOrder.getOrderItems();
             for (DollOrderItem dollOrderItem : orderItem) {
@@ -226,22 +227,18 @@ public class ChargeServiceImpl implements ChargeService {
                 list.add(dollMap);
             }*/
             DollOrderItem orderItem = dollOrder.getOrderItems();
-            Map<String, Integer> dollMap = new HashMap<String, Integer>();
+/*            Map<String, Object> dollMap = new HashMap<String, Object>();
             dollMap.put("orderId", dollOrder.getId());
             dollMap.put("memberId", dollOrder.getOrderBy());
             dollMap.put("dollId", orderItem.getDoll().getId());
-            list.add(dollMap);
+            list.add(dollMap);*/
 
-        }
-        Integer result = 0;
-        for (Map<String, Integer> map : list) {
             dOrder.setStatus("已兑换");
-            dOrder.setId(map.get("orderId"));
+            dOrder.setId(dollOrder.getId());
             result = dollOrderService.updateByPrimaryKeySelective(dOrder);
-            Integer dollId = map.get("dollId");
-            Doll doll = dollService.selectByPrimaryKey(dollId);
-            Member member = memberService.selectById(map.get("memberId"));
-            charge.setMemberId(map.get("memberId"));
+            Doll doll = dollService.selectByPrimaryKey(orderItem.getDoll().getId());
+            Member member = memberService.selectById(dollOrder.getOrderBy());
+            charge.setMemberId(dollOrder.getOrderBy());
             //charge.setCoinsSum(doll.getRedeemCoins() + member.getCoins());
             charge.setCoinsSum(doll.getRedeemCoins());
             charge.setChargeDate(TimeUtil.getTime());
@@ -257,7 +254,33 @@ public class ChargeServiceImpl implements ChargeService {
             //	}
             chargeDao.updateMemberCount(charge);
             result = chargeDao.insertChargeHistory(charge);
+
         }
+/*        Integer result = 0;
+        for (Map<String, Object> map : list) {
+            dOrder.setStatus("已兑换");
+            dOrder.setId((Long)map.get("orderId"));
+            result = dollOrderService.updateByPrimaryKeySelective(dOrder);
+            Integer dollId = (Integer)map.get("dollId");
+            Doll doll = dollService.selectByPrimaryKey(dollId);
+            Member member = memberService.selectById((Integer)map.get("memberId"));
+            charge.setMemberId((Integer)map.get("memberId"));
+            //charge.setCoinsSum(doll.getRedeemCoins() + member.getCoins());
+            charge.setCoinsSum(doll.getRedeemCoins());
+            charge.setChargeDate(TimeUtil.getTime());
+            charge.setType("income");
+            charge.setDollId(doll.getId());
+            charge.setChargeMethod("由<" + doll.getName() + ">兑换获取");
+            //charge.setCoins(doll.getRedeemCoins());
+            charge.setCoins(member.getAccount().getCoins());
+            // charge.setCoinsSum(charge.getCoinsSum()+charge.getCoins());
+            charge.setChargeDate(TimeUtil.getTime());
+            //	if (charge.getDollId() == null) {
+            //		charge.setChargeMethod("现金充值");
+            //	}
+            chargeDao.updateMemberCount(charge);
+            result = chargeDao.insertChargeHistory(charge);
+        }*/
         logger.info("resul:{}", result);
         return result;
     }

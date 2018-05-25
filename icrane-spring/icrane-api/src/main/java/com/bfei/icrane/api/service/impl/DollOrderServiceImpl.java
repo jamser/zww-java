@@ -54,17 +54,17 @@ public class DollOrderServiceImpl implements DollOrderService {
     private ChargeDao chargeDao;
 
     @Override
-    public List<DollOrder> selectListByOrderIds(Integer[] orderIds) {
+    public List<DollOrder> selectListByOrderIds(Long[] orderIds) {
         return dollOrderDao.selectListByOrderIds(orderIds);
     }
 
     @Override
-    public DollOrder selectByPrimaryKey(Integer id) {
+    public DollOrder selectByPrimaryKey(Long id) {
         return dollOrderDao.selectByPrimaryKey(id);
     }
 
     @Override
-    public List<DollOrder> selectListByPrimaryKey(Integer[] orderIds) {
+    public List<DollOrder> selectListByPrimaryKey(Long[] orderIds) {
         return dollOrderDao.selectListByPrimaryKey(orderIds);
     }
 
@@ -202,7 +202,7 @@ public class DollOrderServiceImpl implements DollOrderService {
     }
 
     @Override
-    public DollOrder selectByOrderIds(Integer[] orderIds) {
+    public DollOrder selectByOrderIds(Long[] orderIds) {
         return dollOrderDao.selectByOrderIds(orderIds);
     }
 
@@ -225,7 +225,7 @@ public class DollOrderServiceImpl implements DollOrderService {
      * @return
      */
     @Override
-    public ResultMap sendOrder(Integer memberId, Integer[] orderIds, Integer addrId, String note) {
+    public ResultMap sendOrder(Integer memberId, Long[] orderIds, Integer addrId, String note) {
         //根据抓取订单id查询可发货的寄存娃娃
         List<DollOrder> sendList = dollOrderDao.selectListByOrderIds(orderIds);
         if (sendList == null || sendList.size() == 0) {
@@ -402,7 +402,7 @@ public class DollOrderServiceImpl implements DollOrderService {
     }
 
     @Override
-    public ResultMap beforeSendDoll(Integer memberId, Integer[] orderIds) {
+    public ResultMap beforeSendDoll(Integer memberId, Long[] orderIds) {
         Map<String, Object> map = new HashMap<>();
         //新用户包邮
         /*if (dollOrderGoodsDao.selectByMemberId(memberId).size() < 1) {

@@ -167,7 +167,7 @@ public class ChargeController {
      */
     @RequestMapping(value = "/redeemCoins", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap redeemCoins(Integer memberId, @RequestParam("orderIds") Integer[] orderIds, String token) throws Exception {
+    public ResultMap redeemCoins(Integer memberId, @RequestParam("orderIds") Long[] orderIds, String token) throws Exception {
         logger.info("兑换娃娃币接口参数：memberId=" + memberId + "," + "dollId=" + orderIds);
         try {
             //验证参数

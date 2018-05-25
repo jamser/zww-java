@@ -17,14 +17,14 @@ import com.bfei.icrane.core.models.DollOrderItem;
  */
 public interface DollOrderService {
 
-    List<DollOrder> selectListByOrderIds(Integer[] orderIds);
+    List<DollOrder> selectListByOrderIds(Long[] orderIds);
 
     /**
      * 获取订单
      */
-    DollOrder selectByPrimaryKey(Integer id);
+    DollOrder selectByPrimaryKey(Long id);
 
-    List<DollOrder> selectListByPrimaryKey(Integer[] orderIds);
+    List<DollOrder> selectListByPrimaryKey(Long[] orderIds);
 
     /**
      * 根据用户id获取订单详情
@@ -37,7 +37,7 @@ public interface DollOrderService {
 
     int updateByPrimaryKeySelective(DollOrder record);
 
-    DollOrder selectByOrderIds(Integer[] orderIds);
+    DollOrder selectByOrderIds(Long[] orderIds);
 
     List<DollOrder> selectByOrderNotIn(DollOrder record);
 
@@ -53,11 +53,11 @@ public interface DollOrderService {
      * @param addrId
      * @return
      */
-    ResultMap sendOrder(Integer memberId, Integer[] orderIds, Integer addrId, String note);
+    ResultMap sendOrder(Integer memberId, Long[] orderIds, Integer addrId, String note);
 
     List<DollOrder> selectExpireOrder();
 
     List<DollOrder> selectOutTimeDolls();
 
-    ResultMap beforeSendDoll(Integer memberId, Integer[] orderIds);
+    ResultMap beforeSendDoll(Integer memberId, Long[] orderIds);
 }

@@ -22,7 +22,7 @@ import java.util.Date;
 public class DollOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private Integer id;
+    private Long id;
     private String orderNumber;
     private Date orderDate;
     private Integer orderBy;
@@ -36,7 +36,7 @@ public class DollOrder implements Serializable {
     private MemberAddr memberAddress;
     private Date modifiedDate;
     private Integer modifiedBy;
-    private Integer[] orderIds;
+    private Long[] orderIds;
     private String comment;
     private int dollRedeemCoins;
     private DollOrderItem orderItems;

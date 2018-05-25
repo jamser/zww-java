@@ -21,7 +21,7 @@ import java.util.Date;
 public class DollOrderItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private Integer id;
+    private Long id;
     private DollOrder dollOrder;
     private Integer quantity;
     private Doll doll;

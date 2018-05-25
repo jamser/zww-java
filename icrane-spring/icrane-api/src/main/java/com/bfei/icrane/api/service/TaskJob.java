@@ -47,7 +47,7 @@ public class TaskJob {
         if (dollOrders.size() > 0) {
             for (DollOrder dollOrder : dollOrders) {
                 logger.info("过期娃娃自动兑换" + dollOrder.getId());
-                chargeService.insertChargeHistory(new Charge(), dollOrder.getOrderBy(), new Integer[]{dollOrder.getId()});
+                chargeService.insertChargeHistory(new Charge(), dollOrder.getOrderBy(), new Long[]{dollOrder.getId()});
             }
         }
     }

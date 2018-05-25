@@ -80,7 +80,7 @@ public class OutGoodsController {
 	}
 
 	@RequestMapping("/dollOrder")
-	public String dollOrder(Integer id,HttpServletRequest request)throws Exception {
+	public String dollOrder(Long id,HttpServletRequest request)throws Exception {
 		logger.info("查询订单详情输入参数:id={}",id);
 		try {
 			List<DollOrderItem> list = orderService.getOrderItemByOrderId(id);
