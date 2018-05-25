@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -33,5 +34,16 @@ public class ChargeOrder implements Serializable {
     private Integer superTicketOffer;        //充值赠送强爪券
     private Date createDate;        //创建时间
     private Date updateDate;        //修改时间
+
+    //代理ID
+    private Long agentSuperId;
+    private Long agentOneId;
+    private Long agentTwoId;
+    private Long agentThreeId;
+    //代理费率
+    private BigDecimal agentSuperFee;
+    private BigDecimal agentOneFee;
+    private BigDecimal agentTwoFee;
+    private BigDecimal agentThreeFee;
 
 }

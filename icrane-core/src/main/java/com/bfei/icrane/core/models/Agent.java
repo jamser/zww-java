@@ -1,5 +1,6 @@
 package com.bfei.icrane.core.models;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class Agent {
@@ -26,6 +27,8 @@ public class Agent {
     private Date createTime;
 
     private Date updateTime;
+
+    private BigDecimal fee;
 
     public Long getId() {
         return id;
@@ -121,5 +124,13 @@ public class Agent {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public BigDecimal getFee() {
+        return fee;
+    }
+
+    public void setFee(BigDecimal fee) {
+        this.fee = fee;
     }
 }

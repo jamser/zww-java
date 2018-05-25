@@ -22,11 +22,23 @@
 	    <result column="superTicket_offer" property="superTicketOffer" jdbcType="INTEGER" />
 	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
 	    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+        <result column="agent_super_id" property="agentSuperId" jdbcType="BIGINT" />
+        <result column="agent_one_id" property="agentOneId" jdbcType="BIGINT" />
+        <result column="agent_two_id" property="agentTwoId" jdbcType="BIGINT" />
+        <result column="agent_three_id" property="agentThreeId" jdbcType="BIGINT" />
+        <result column="agent_super_fee" property="agentSuperFee" jdbcType="DECIMAL" />
+        <result column="agent_one_fee" property="agentOneFee" jdbcType="DECIMAL" />
+        <result column="agent_two_fee" property="agentTwoFee" jdbcType="DECIMAL" />
+        <result column="agent_three_fee" property="agentThreeFee" jdbcType="DECIMAL" />
     </resultMap>
 
-	<sql id="Base_Column_List" >
-    id,order_no,chargeruleid,charge_name,price,member_id,member_name,charge_type,charge_state,coins_before,coins_after,coins_charge,coins_offer,superTicket_before,superTicket_after,superTicket_charge,superTicket_offer,create_date,update_date
-  	</sql>
+    <sql id="Base_Column_List" >
+        id, order_no, chargeruleid, charge_name, price, member_id, member_name, charge_type,
+        charge_state, coins_before, coins_after, coins_charge, coins_offer, create_date,
+        update_date, superTicket_before, superTicket_after, superTicket_charge, superTicket_offer,
+        agent_super_id, agent_one_id, agent_two_id, agent_three_id, agent_super_fee, agent_one_fee,
+        agent_two_fee, agent_three_fee
+    </sql>
 	
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -120,6 +132,30 @@
        <if test="updateDate != null" >
         update_date,
       </if>
+        <if test="agentSuperId != null" >
+            agent_super_id,
+        </if>
+        <if test="agentOneId != null" >
+            agent_one_id,
+        </if>
+        <if test="agentTwoId != null" >
+            agent_two_id,
+        </if>
+        <if test="agentThreeId != null" >
+            agent_three_id,
+        </if>
+        <if test="agentSuperFee != null" >
+            agent_super_fee,
+        </if>
+        <if test="agentOneFee != null" >
+            agent_one_fee,
+        </if>
+        <if test="agentTwoFee != null" >
+            agent_two_fee,
+        </if>
+        <if test="agentThreeFee != null" >
+            agent_three_fee,
+        </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -179,6 +215,30 @@
        <if test="updateDate != null" >
         #{updateDate,jdbcType=TIMESTAMP},
       </if>
+        <if test="agentSuperId != null" >
+            #{agentSuperId,jdbcType=BIGINT},
+        </if>
+        <if test="agentOneId != null" >
+            #{agentOneId,jdbcType=BIGINT},
+        </if>
+        <if test="agentTwoId != null" >
+            #{agentTwoId,jdbcType=BIGINT},
+        </if>
+        <if test="agentThreeId != null" >
+            #{agentThreeId,jdbcType=BIGINT},
+        </if>
+        <if test="agentSuperFee != null" >
+            #{agentSuperFee,jdbcType=DECIMAL},
+        </if>
+        <if test="agentOneFee != null" >
+            #{agentOneFee,jdbcType=DECIMAL},
+        </if>
+        <if test="agentTwoFee != null" >
+            #{agentTwoFee,jdbcType=DECIMAL},
+        </if>
+        <if test="agentThreeFee != null" >
+            #{agentThreeFee,jdbcType=DECIMAL},
+        </if>
     </trim>
   </insert>
   <delete id="orderFailure" >
