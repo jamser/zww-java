@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bfei.icrane.core.dao.AgentMapper">
   <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.Agent">
-    <id column="id" jdbcType="BIGINT" property="id" />
+    <id column="id" jdbcType="INTEGER" property="id" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
@@ -20,15 +20,15 @@
     id, username, password, phone, nick_name, level, status, agent_id, agent_one_id, 
     agent_two_id, create_time, update_time, fee
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from t_agent
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from t_agent
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bfei.icrane.core.models.Agent">
     insert into t_agent (id, username, password, 
@@ -36,7 +36,7 @@
       status, agent_id, agent_one_id, 
       agent_two_id, create_time, update_time, 
       fee)
-    values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, 
       #{status,jdbcType=INTEGER}, #{agentId,jdbcType=BIGINT}, #{agentOneId,jdbcType=BIGINT}, 
       #{agentTwoId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
@@ -87,7 +87,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        #{id,jdbcType=BIGINT},
+        #{id,jdbcType=INTEGER},
       </if>
       <if test="username != null">
         #{username,jdbcType=VARCHAR},
@@ -167,7 +167,7 @@
         fee = #{fee,jdbcType=DECIMAL},
       </if>
     </set>
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.Agent">
     update t_agent
@@ -183,10 +183,378 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       fee = #{fee,jdbcType=DECIMAL}
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
   <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.Agent">
-    <id column="id" jdbcType="BIGINT" property="id" />
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="agent_id" jdbcType="BIGINT" property="agentId" />
+    <result column="agent_one_id" jdbcType="BIGINT" property="agentOneId" />
+    <result column="agent_two_id" jdbcType="BIGINT" property="agentTwoId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="fee" jdbcType="DECIMAL" property="fee" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, username, password, phone, nick_name, level, status, agent_id, agent_one_id, 
+    agent_two_id, create_time, update_time, fee
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_agent
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_agent
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bfei.icrane.core.models.Agent">
+    insert into t_agent (id, username, password, 
+      phone, nick_name, level, 
+      status, agent_id, agent_one_id, 
+      agent_two_id, create_time, update_time, 
+      fee)
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{agentId,jdbcType=BIGINT}, #{agentOneId,jdbcType=BIGINT}, 
+      #{agentTwoId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{fee,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.Agent">
+    insert into t_agent
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="nickName != null">
+        nick_name,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="agentId != null">
+        agent_id,
+      </if>
+      <if test="agentOneId != null">
+        agent_one_id,
+      </if>
+      <if test="agentTwoId != null">
+        agent_two_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="fee != null">
+        fee,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null">
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="agentId != null">
+        #{agentId,jdbcType=BIGINT},
+      </if>
+      <if test="agentOneId != null">
+        #{agentOneId,jdbcType=BIGINT},
+      </if>
+      <if test="agentTwoId != null">
+        #{agentTwoId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fee != null">
+        #{fee,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bfei.icrane.core.models.Agent">
+    update t_agent
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null">
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="agentId != null">
+        agent_id = #{agentId,jdbcType=BIGINT},
+      </if>
+      <if test="agentOneId != null">
+        agent_one_id = #{agentOneId,jdbcType=BIGINT},
+      </if>
+      <if test="agentTwoId != null">
+        agent_two_id = #{agentTwoId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fee != null">
+        fee = #{fee,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.Agent">
+    update t_agent
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      level = #{level,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      agent_id = #{agentId,jdbcType=BIGINT},
+      agent_one_id = #{agentOneId,jdbcType=BIGINT},
+      agent_two_id = #{agentTwoId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      fee = #{fee,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.Agent">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="agent_id" jdbcType="BIGINT" property="agentId" />
+    <result column="agent_one_id" jdbcType="BIGINT" property="agentOneId" />
+    <result column="agent_two_id" jdbcType="BIGINT" property="agentTwoId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="fee" jdbcType="DECIMAL" property="fee" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, username, password, phone, nick_name, level, status, agent_id, agent_one_id, 
+    agent_two_id, create_time, update_time, fee
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_agent
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_agent
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bfei.icrane.core.models.Agent">
+    insert into t_agent (id, username, password, 
+      phone, nick_name, level, 
+      status, agent_id, agent_one_id, 
+      agent_two_id, create_time, update_time, 
+      fee)
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{phone,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{agentId,jdbcType=BIGINT}, #{agentOneId,jdbcType=BIGINT}, 
+      #{agentTwoId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{fee,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.Agent">
+    insert into t_agent
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="nickName != null">
+        nick_name,
+      </if>
+      <if test="level != null">
+        level,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="agentId != null">
+        agent_id,
+      </if>
+      <if test="agentOneId != null">
+        agent_one_id,
+      </if>
+      <if test="agentTwoId != null">
+        agent_two_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="fee != null">
+        fee,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null">
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="agentId != null">
+        #{agentId,jdbcType=BIGINT},
+      </if>
+      <if test="agentOneId != null">
+        #{agentOneId,jdbcType=BIGINT},
+      </if>
+      <if test="agentTwoId != null">
+        #{agentTwoId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fee != null">
+        #{fee,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bfei.icrane.core.models.Agent">
+    update t_agent
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null">
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="agentId != null">
+        agent_id = #{agentId,jdbcType=BIGINT},
+      </if>
+      <if test="agentOneId != null">
+        agent_one_id = #{agentOneId,jdbcType=BIGINT},
+      </if>
+      <if test="agentTwoId != null">
+        agent_two_id = #{agentTwoId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fee != null">
+        fee = #{fee,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.Agent">
+    update t_agent
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      level = #{level,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      agent_id = #{agentId,jdbcType=BIGINT},
+      agent_one_id = #{agentOneId,jdbcType=BIGINT},
+      agent_two_id = #{agentTwoId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      fee = #{fee,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.Agent">
+    <id column="id" jdbcType="INTEGER" property="id" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
@@ -207,11 +575,11 @@
     select 
     <include refid="Base_Column_List" />
     from t_agent
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from t_agent
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bfei.icrane.core.models.Agent">
     insert into t_agent (id, username, password, 
@@ -219,7 +587,7 @@
       status, agent_id, agent_one_id, 
       agent_two_id, create_time, update_time
       )
-    values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, 
       #{status,jdbcType=INTEGER}, #{agentId,jdbcType=BIGINT}, #{agentOneId,jdbcType=BIGINT}, 
       #{agentTwoId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
@@ -267,7 +635,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        #{id,jdbcType=BIGINT},
+        #{id,jdbcType=INTEGER},
       </if>
       <if test="username != null">
         #{username,jdbcType=VARCHAR},
@@ -341,7 +709,7 @@
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.Agent">
     update t_agent
@@ -356,7 +724,7 @@
       agent_two_id = #{agentTwoId,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
   <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.Agent">
     <id column="id" jdbcType="BIGINT" property="id" />
@@ -380,11 +748,11 @@
     select 
     <include refid="Base_Column_List" />
     from t_agent
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from t_agent
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bfei.icrane.core.models.Agent">
     insert into t_agent (id, username, password, 
@@ -392,7 +760,7 @@
       status, agent_id, agent_one_id, 
       agent_two_id, create_time, update_time
       )
-    values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, 
       #{status,jdbcType=INTEGER}, #{agentId,jdbcType=BIGINT}, #{agentOneId,jdbcType=BIGINT}, 
       #{agentTwoId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
@@ -440,7 +808,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        #{id,jdbcType=BIGINT},
+        #{id,jdbcType=INTEGER},
       </if>
       <if test="username != null">
         #{username,jdbcType=VARCHAR},
@@ -514,7 +882,7 @@
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.Agent">
     update t_agent
@@ -529,7 +897,7 @@
       agent_two_id = #{agentTwoId,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
   <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.Agent">
     <id column="id" jdbcType="BIGINT" property="id" />
@@ -553,11 +921,11 @@
     select 
     <include refid="Base_Column_List" />
     from t_agent
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from t_agent
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bfei.icrane.core.models.Agent">
     insert into t_agent (id, username, password, 
@@ -565,7 +933,7 @@
       status, agent_id, agent_one_id, 
       agent_two_id, create_time, update_time
       )
-    values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, 
       #{status,jdbcType=INTEGER}, #{agentId,jdbcType=BIGINT}, #{agentOneId,jdbcType=BIGINT}, 
       #{agentTwoId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
@@ -613,7 +981,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        #{id,jdbcType=BIGINT},
+        #{id,jdbcType=INTEGER},
       </if>
       <if test="username != null">
         #{username,jdbcType=VARCHAR},
@@ -687,7 +1055,7 @@
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.Agent">
     update t_agent
@@ -702,7 +1070,7 @@
       agent_two_id = #{agentTwoId,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
   <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.Agent">
     <id column="id" jdbcType="BIGINT" property="id" />
@@ -726,11 +1094,11 @@
     select 
     <include refid="Base_Column_List" />
     from t_agent
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from t_agent
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.bfei.icrane.core.models.Agent">
     insert into t_agent (id, username, password, 
@@ -738,7 +1106,7 @@
       status, agent_id, agent_one_id, 
       agent_two_id, create_time, update_time
       )
-    values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, 
       #{status,jdbcType=INTEGER}, #{agentId,jdbcType=BIGINT}, #{agentOneId,jdbcType=BIGINT}, 
       #{agentTwoId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
@@ -786,7 +1154,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        #{id,jdbcType=BIGINT},
+        #{id,jdbcType=INTEGER},
       </if>
       <if test="username != null">
         #{username,jdbcType=VARCHAR},
@@ -860,7 +1228,7 @@
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.Agent">
     update t_agent
@@ -875,6 +1243,6 @@
       agent_two_id = #{agentTwoId,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

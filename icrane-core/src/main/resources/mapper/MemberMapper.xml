@@ -36,10 +36,6 @@
         <result column="register_channel" jdbcType="VARCHAR" property="registerChannel"/>
         <result column="login_channel" jdbcType="VARCHAR" property="loginChannel"/>
         <result column="phone_model" jdbcType="VARCHAR" property="phoneModel"/>
-        <result column="agent_super_id" property="agentSuperId" jdbcType="BIGINT" />
-        <result column="agent_one_id" property="agentOneId" jdbcType="BIGINT" />
-        <result column="agent_two_id" property="agentTwoId" jdbcType="BIGINT" />
-        <result column="agent_three_id" property="agentThreeId" jdbcType="BIGINT" />
         <association property="prefset" javaType="PrefSet">
             <id property="memberId" column="member_id"/>
             <result property="musicFlg" column="music_flg"/>
@@ -95,18 +91,6 @@
             </if>
             <if test="iconRealPath != null">
                 icon_real_path = #{iconRealPath,jdbcType=VARCHAR},
-            </if>
-            <if test="agentSuperId != null" >
-                agent_super_id,
-            </if>
-            <if test="agentOneId != null" >
-                agent_one_id,
-            </if>
-            <if test="agentTwoId != null" >
-                agent_two_id,
-            </if>
-            <if test="agentThreeId != null" >
-                agent_three_id,
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
@@ -405,18 +389,6 @@
             <if test="phoneModel != null">
                 phone_model,
             </if>
-            <if test="agentSuperId != null" >
-                agent_super_id,
-            </if>
-            <if test="agentOneId != null" >
-                agent_one_id,
-            </if>
-            <if test="agentTwoId != null" >
-                agent_two_id,
-            </if>
-            <if test="agentThreeId != null" >
-                agent_three_id,
-            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -463,18 +435,6 @@
             </if>
             <if test="phoneModel != null">
                 #{phoneModel,jdbcType=VARCHAR},
-            </if>
-            <if test="agentSuperId != null" >
-                #{agentSuperId,jdbcType=BIGINT},
-            </if>
-            <if test="agentOneId != null" >
-                #{agentOneId,jdbcType=BIGINT},
-            </if>
-            <if test="agentTwoId != null" >
-                #{agentTwoId,jdbcType=BIGINT},
-            </if>
-            <if test="agentThreeId != null" >
-                #{agentThreeId,jdbcType=BIGINT},
             </if>
         </trim>
     </insert>
@@ -543,18 +503,6 @@
             <if test="phoneModel != null">
                 phone_model,
             </if>
-            <if test="agentSuperId != null" >
-                agent_super_id,
-            </if>
-            <if test="agentOneId != null" >
-                agent_one_id,
-            </if>
-            <if test="agentTwoId != null" >
-                agent_two_id,
-            </if>
-            <if test="agentThreeId != null" >
-                agent_three_id,
-            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">
@@ -616,18 +564,6 @@
             </if>
             <if test="phoneModel != null">
                 #{phoneModel,jdbcType=VARCHAR},
-            </if>
-            <if test="agentSuperId != null" >
-                #{agentSuperId,jdbcType=BIGINT},
-            </if>
-            <if test="agentOneId != null" >
-                #{agentOneId,jdbcType=BIGINT},
-            </if>
-            <if test="agentTwoId != null" >
-                #{agentTwoId,jdbcType=BIGINT},
-            </if>
-            <if test="agentThreeId != null" >
-                #{agentThreeId,jdbcType=BIGINT},
             </if>
         </trim>
     </insert>

@@ -8,6 +8,22 @@ public class AgentCharge {
 
     private Long orderId;
 
+    private Integer agentSuperId;
+
+    private Integer agentOneId;
+
+    private Integer agentTwoId;
+
+    private Integer agentThreeId;
+
+    private BigDecimal agentSuperFee;
+
+    private BigDecimal agentOneFee;
+
+    private BigDecimal agentTwoFee;
+
+    private BigDecimal agentThreeFee;
+
     private BigDecimal agentSuperIncome;
 
     private BigDecimal agentOneIncome;
@@ -34,6 +50,70 @@ public class AgentCharge {
 
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
+    }
+
+    public Integer getAgentSuperId() {
+        return agentSuperId;
+    }
+
+    public void setAgentSuperId(Integer agentSuperId) {
+        this.agentSuperId = agentSuperId;
+    }
+
+    public Integer getAgentOneId() {
+        return agentOneId;
+    }
+
+    public void setAgentOneId(Integer agentOneId) {
+        this.agentOneId = agentOneId;
+    }
+
+    public Integer getAgentTwoId() {
+        return agentTwoId;
+    }
+
+    public void setAgentTwoId(Integer agentTwoId) {
+        this.agentTwoId = agentTwoId;
+    }
+
+    public Integer getAgentThreeId() {
+        return agentThreeId;
+    }
+
+    public void setAgentThreeId(Integer agentThreeId) {
+        this.agentThreeId = agentThreeId;
+    }
+
+    public BigDecimal getAgentSuperFee() {
+        return agentSuperFee;
+    }
+
+    public void setAgentSuperFee(BigDecimal agentSuperFee) {
+        this.agentSuperFee = agentSuperFee;
+    }
+
+    public BigDecimal getAgentOneFee() {
+        return agentOneFee;
+    }
+
+    public void setAgentOneFee(BigDecimal agentOneFee) {
+        this.agentOneFee = agentOneFee;
+    }
+
+    public BigDecimal getAgentTwoFee() {
+        return agentTwoFee;
+    }
+
+    public void setAgentTwoFee(BigDecimal agentTwoFee) {
+        this.agentTwoFee = agentTwoFee;
+    }
+
+    public BigDecimal getAgentThreeFee() {
+        return agentThreeFee;
+    }
+
+    public void setAgentThreeFee(BigDecimal agentThreeFee) {
+        this.agentThreeFee = agentThreeFee;
     }
 
     public BigDecimal getAgentSuperIncome() {

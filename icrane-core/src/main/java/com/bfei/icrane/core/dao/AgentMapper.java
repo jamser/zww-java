@@ -3,13 +3,13 @@ package com.bfei.icrane.core.dao;
 import com.bfei.icrane.core.models.Agent;
 
 public interface AgentMapper {
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(Integer id);
 
     int insert(Agent record);
 
     int insertSelective(Agent record);
 
-    Agent selectByPrimaryKey(Long id);
+    Agent selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(Agent record);
 
