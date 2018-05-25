@@ -4,10 +4,13 @@ import com.bfei.icrane.core.dao.AgentMapper;
 import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.service.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by moying on 2018/5/25.
  */
+
+@Service("AgentService")
 public class AgentServiceImpl implements AgentService {
 
 
