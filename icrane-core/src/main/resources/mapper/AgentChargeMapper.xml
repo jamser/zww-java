@@ -1,40 +1,40 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bfei.icrane.core.dao.AgentChargeMapper">
-  <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.AgentCharge">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="order_id" jdbcType="BIGINT" property="orderId" />
-    <result column="agent_super_id" jdbcType="INTEGER" property="agentSuperId" />
-    <result column="agent_one_id" jdbcType="INTEGER" property="agentOneId" />
-    <result column="agent_two_id" jdbcType="INTEGER" property="agentTwoId" />
-    <result column="agent_three_id" jdbcType="INTEGER" property="agentThreeId" />
-    <result column="agent_super_fee" jdbcType="DECIMAL" property="agentSuperFee" />
-    <result column="agent_one_fee" jdbcType="DECIMAL" property="agentOneFee" />
-    <result column="agent_two_fee" jdbcType="DECIMAL" property="agentTwoFee" />
-    <result column="agent_three_fee" jdbcType="DECIMAL" property="agentThreeFee" />
-    <result column="agent_super_income" jdbcType="DECIMAL" property="agentSuperIncome" />
-    <result column="agent_one_income" jdbcType="DECIMAL" property="agentOneIncome" />
-    <result column="agent_two_income" jdbcType="DECIMAL" property="agentTwoIncome" />
-    <result column="agent_three_income" jdbcType="DECIMAL" property="agentThreeIncome" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bfei.icrane.core.dao.AgentChargeMapper" >
+  <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.AgentCharge" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="agent_super_id" property="agentSuperId" jdbcType="INTEGER" />
+    <result column="agent_one_id" property="agentOneId" jdbcType="INTEGER" />
+    <result column="agent_two_id" property="agentTwoId" jdbcType="INTEGER" />
+    <result column="agent_three_id" property="agentThreeId" jdbcType="INTEGER" />
+    <result column="agent_super_fee" property="agentSuperFee" jdbcType="DECIMAL" />
+    <result column="agent_one_fee" property="agentOneFee" jdbcType="DECIMAL" />
+    <result column="agent_two_fee" property="agentTwoFee" jdbcType="DECIMAL" />
+    <result column="agent_three_fee" property="agentThreeFee" jdbcType="DECIMAL" />
+    <result column="agent_super_income" property="agentSuperIncome" jdbcType="DECIMAL" />
+    <result column="agent_one_income" property="agentOneIncome" jdbcType="DECIMAL" />
+    <result column="agent_two_income" property="agentTwoIncome" jdbcType="DECIMAL" />
+    <result column="agent_three_income" property="agentThreeIncome" jdbcType="DECIMAL" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
-  <sql id="Base_Column_List">
+  <sql id="Base_Column_List" >
     id, order_id, agent_super_id, agent_one_id, agent_two_id, agent_three_id, agent_super_fee, 
     agent_one_fee, agent_two_fee, agent_three_fee, agent_super_income, agent_one_income, 
     agent_two_income, agent_three_income, update_time, create_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from agent_charge
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from agent_charge
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.bfei.icrane.core.models.AgentCharge">
+  <insert id="insert" parameterType="com.bfei.icrane.core.models.AgentCharge" >
     insert into agent_charge (id, order_id, agent_super_id, 
       agent_one_id, agent_two_id, agent_three_id, 
       agent_super_fee, agent_one_fee, agent_two_fee, 
@@ -48,161 +48,161 @@
       #{agentTwoIncome,jdbcType=DECIMAL}, #{agentThreeIncome,jdbcType=DECIMAL}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.AgentCharge">
+  <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.AgentCharge" >
     insert into agent_charge
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         id,
       </if>
-      <if test="orderId != null">
+      <if test="orderId != null" >
         order_id,
       </if>
-      <if test="agentSuperId != null">
+      <if test="agentSuperId != null" >
         agent_super_id,
       </if>
-      <if test="agentOneId != null">
+      <if test="agentOneId != null" >
         agent_one_id,
       </if>
-      <if test="agentTwoId != null">
+      <if test="agentTwoId != null" >
         agent_two_id,
       </if>
-      <if test="agentThreeId != null">
+      <if test="agentThreeId != null" >
         agent_three_id,
       </if>
-      <if test="agentSuperFee != null">
+      <if test="agentSuperFee != null" >
         agent_super_fee,
       </if>
-      <if test="agentOneFee != null">
+      <if test="agentOneFee != null" >
         agent_one_fee,
       </if>
-      <if test="agentTwoFee != null">
+      <if test="agentTwoFee != null" >
         agent_two_fee,
       </if>
-      <if test="agentThreeFee != null">
+      <if test="agentThreeFee != null" >
         agent_three_fee,
       </if>
-      <if test="agentSuperIncome != null">
+      <if test="agentSuperIncome != null" >
         agent_super_income,
       </if>
-      <if test="agentOneIncome != null">
+      <if test="agentOneIncome != null" >
         agent_one_income,
       </if>
-      <if test="agentTwoIncome != null">
+      <if test="agentTwoIncome != null" >
         agent_two_income,
       </if>
-      <if test="agentThreeIncome != null">
+      <if test="agentThreeIncome != null" >
         agent_three_income,
       </if>
-      <if test="updateTime != null">
+      <if test="updateTime != null" >
         update_time,
       </if>
-      <if test="createTime != null">
+      <if test="createTime != null" >
         create_time,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="orderId != null">
+      <if test="orderId != null" >
         #{orderId,jdbcType=BIGINT},
       </if>
-      <if test="agentSuperId != null">
+      <if test="agentSuperId != null" >
         #{agentSuperId,jdbcType=INTEGER},
       </if>
-      <if test="agentOneId != null">
+      <if test="agentOneId != null" >
         #{agentOneId,jdbcType=INTEGER},
       </if>
-      <if test="agentTwoId != null">
+      <if test="agentTwoId != null" >
         #{agentTwoId,jdbcType=INTEGER},
       </if>
-      <if test="agentThreeId != null">
+      <if test="agentThreeId != null" >
         #{agentThreeId,jdbcType=INTEGER},
       </if>
-      <if test="agentSuperFee != null">
+      <if test="agentSuperFee != null" >
         #{agentSuperFee,jdbcType=DECIMAL},
       </if>
-      <if test="agentOneFee != null">
+      <if test="agentOneFee != null" >
         #{agentOneFee,jdbcType=DECIMAL},
       </if>
-      <if test="agentTwoFee != null">
+      <if test="agentTwoFee != null" >
         #{agentTwoFee,jdbcType=DECIMAL},
       </if>
-      <if test="agentThreeFee != null">
+      <if test="agentThreeFee != null" >
         #{agentThreeFee,jdbcType=DECIMAL},
       </if>
-      <if test="agentSuperIncome != null">
+      <if test="agentSuperIncome != null" >
         #{agentSuperIncome,jdbcType=DECIMAL},
       </if>
-      <if test="agentOneIncome != null">
+      <if test="agentOneIncome != null" >
         #{agentOneIncome,jdbcType=DECIMAL},
       </if>
-      <if test="agentTwoIncome != null">
+      <if test="agentTwoIncome != null" >
         #{agentTwoIncome,jdbcType=DECIMAL},
       </if>
-      <if test="agentThreeIncome != null">
+      <if test="agentThreeIncome != null" >
         #{agentThreeIncome,jdbcType=DECIMAL},
       </if>
-      <if test="updateTime != null">
+      <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="createTime != null">
+      <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bfei.icrane.core.models.AgentCharge">
+  <update id="updateByPrimaryKeySelective" parameterType="com.bfei.icrane.core.models.AgentCharge" >
     update agent_charge
-    <set>
-      <if test="orderId != null">
+    <set >
+      <if test="orderId != null" >
         order_id = #{orderId,jdbcType=BIGINT},
       </if>
-      <if test="agentSuperId != null">
+      <if test="agentSuperId != null" >
         agent_super_id = #{agentSuperId,jdbcType=INTEGER},
       </if>
-      <if test="agentOneId != null">
+      <if test="agentOneId != null" >
         agent_one_id = #{agentOneId,jdbcType=INTEGER},
       </if>
-      <if test="agentTwoId != null">
+      <if test="agentTwoId != null" >
         agent_two_id = #{agentTwoId,jdbcType=INTEGER},
       </if>
-      <if test="agentThreeId != null">
+      <if test="agentThreeId != null" >
         agent_three_id = #{agentThreeId,jdbcType=INTEGER},
       </if>
-      <if test="agentSuperFee != null">
+      <if test="agentSuperFee != null" >
         agent_super_fee = #{agentSuperFee,jdbcType=DECIMAL},
       </if>
-      <if test="agentOneFee != null">
+      <if test="agentOneFee != null" >
         agent_one_fee = #{agentOneFee,jdbcType=DECIMAL},
       </if>
-      <if test="agentTwoFee != null">
+      <if test="agentTwoFee != null" >
         agent_two_fee = #{agentTwoFee,jdbcType=DECIMAL},
       </if>
-      <if test="agentThreeFee != null">
+      <if test="agentThreeFee != null" >
         agent_three_fee = #{agentThreeFee,jdbcType=DECIMAL},
       </if>
-      <if test="agentSuperIncome != null">
+      <if test="agentSuperIncome != null" >
         agent_super_income = #{agentSuperIncome,jdbcType=DECIMAL},
       </if>
-      <if test="agentOneIncome != null">
+      <if test="agentOneIncome != null" >
         agent_one_income = #{agentOneIncome,jdbcType=DECIMAL},
       </if>
-      <if test="agentTwoIncome != null">
+      <if test="agentTwoIncome != null" >
         agent_two_income = #{agentTwoIncome,jdbcType=DECIMAL},
       </if>
-      <if test="agentThreeIncome != null">
+      <if test="agentThreeIncome != null" >
         agent_three_income = #{agentThreeIncome,jdbcType=DECIMAL},
       </if>
-      <if test="updateTime != null">
+      <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="createTime != null">
+      <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.AgentCharge">
+  <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.AgentCharge" >
     update agent_charge
     set order_id = #{orderId,jdbcType=BIGINT},
       agent_super_id = #{agentSuperId,jdbcType=INTEGER},
@@ -213,821 +213,6 @@
       agent_one_fee = #{agentOneFee,jdbcType=DECIMAL},
       agent_two_fee = #{agentTwoFee,jdbcType=DECIMAL},
       agent_three_fee = #{agentThreeFee,jdbcType=DECIMAL},
-      agent_super_income = #{agentSuperIncome,jdbcType=DECIMAL},
-      agent_one_income = #{agentOneIncome,jdbcType=DECIMAL},
-      agent_two_income = #{agentTwoIncome,jdbcType=DECIMAL},
-      agent_three_income = #{agentThreeIncome,jdbcType=DECIMAL},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.AgentCharge">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="order_id" jdbcType="BIGINT" property="orderId" />
-    <result column="agent_super_id" jdbcType="INTEGER" property="agentSuperId" />
-    <result column="agent_one_id" jdbcType="INTEGER" property="agentOneId" />
-    <result column="agent_two_id" jdbcType="INTEGER" property="agentTwoId" />
-    <result column="agent_three_id" jdbcType="INTEGER" property="agentThreeId" />
-    <result column="agent_super_fee" jdbcType="DECIMAL" property="agentSuperFee" />
-    <result column="agent_one_fee" jdbcType="DECIMAL" property="agentOneFee" />
-    <result column="agent_two_fee" jdbcType="DECIMAL" property="agentTwoFee" />
-    <result column="agent_three_fee" jdbcType="DECIMAL" property="agentThreeFee" />
-    <result column="agent_super_income" jdbcType="DECIMAL" property="agentSuperIncome" />
-    <result column="agent_one_income" jdbcType="DECIMAL" property="agentOneIncome" />
-    <result column="agent_two_income" jdbcType="DECIMAL" property="agentTwoIncome" />
-    <result column="agent_three_income" jdbcType="DECIMAL" property="agentThreeIncome" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, order_id, agent_super_id, agent_one_id, agent_two_id, agent_three_id, agent_super_fee, 
-    agent_one_fee, agent_two_fee, agent_three_fee, agent_super_income, agent_one_income, 
-    agent_two_income, agent_three_income, update_time, create_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from agent_charge
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from agent_charge
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    insert into agent_charge (id, order_id, agent_super_id, 
-      agent_one_id, agent_two_id, agent_three_id, 
-      agent_super_fee, agent_one_fee, agent_two_fee, 
-      agent_three_fee, agent_super_income, agent_one_income, 
-      agent_two_income, agent_three_income, update_time, 
-      create_time)
-    values (#{id,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, #{agentSuperId,jdbcType=INTEGER}, 
-      #{agentOneId,jdbcType=INTEGER}, #{agentTwoId,jdbcType=INTEGER}, #{agentThreeId,jdbcType=INTEGER}, 
-      #{agentSuperFee,jdbcType=DECIMAL}, #{agentOneFee,jdbcType=DECIMAL}, #{agentTwoFee,jdbcType=DECIMAL}, 
-      #{agentThreeFee,jdbcType=DECIMAL}, #{agentSuperIncome,jdbcType=DECIMAL}, #{agentOneIncome,jdbcType=DECIMAL}, 
-      #{agentTwoIncome,jdbcType=DECIMAL}, #{agentThreeIncome,jdbcType=DECIMAL}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{createTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    insert into agent_charge
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="orderId != null">
-        order_id,
-      </if>
-      <if test="agentSuperId != null">
-        agent_super_id,
-      </if>
-      <if test="agentOneId != null">
-        agent_one_id,
-      </if>
-      <if test="agentTwoId != null">
-        agent_two_id,
-      </if>
-      <if test="agentThreeId != null">
-        agent_three_id,
-      </if>
-      <if test="agentSuperFee != null">
-        agent_super_fee,
-      </if>
-      <if test="agentOneFee != null">
-        agent_one_fee,
-      </if>
-      <if test="agentTwoFee != null">
-        agent_two_fee,
-      </if>
-      <if test="agentThreeFee != null">
-        agent_three_fee,
-      </if>
-      <if test="agentSuperIncome != null">
-        agent_super_income,
-      </if>
-      <if test="agentOneIncome != null">
-        agent_one_income,
-      </if>
-      <if test="agentTwoIncome != null">
-        agent_two_income,
-      </if>
-      <if test="agentThreeIncome != null">
-        agent_three_income,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="orderId != null">
-        #{orderId,jdbcType=BIGINT},
-      </if>
-      <if test="agentSuperId != null">
-        #{agentSuperId,jdbcType=INTEGER},
-      </if>
-      <if test="agentOneId != null">
-        #{agentOneId,jdbcType=INTEGER},
-      </if>
-      <if test="agentTwoId != null">
-        #{agentTwoId,jdbcType=INTEGER},
-      </if>
-      <if test="agentThreeId != null">
-        #{agentThreeId,jdbcType=INTEGER},
-      </if>
-      <if test="agentSuperFee != null">
-        #{agentSuperFee,jdbcType=DECIMAL},
-      </if>
-      <if test="agentOneFee != null">
-        #{agentOneFee,jdbcType=DECIMAL},
-      </if>
-      <if test="agentTwoFee != null">
-        #{agentTwoFee,jdbcType=DECIMAL},
-      </if>
-      <if test="agentThreeFee != null">
-        #{agentThreeFee,jdbcType=DECIMAL},
-      </if>
-      <if test="agentSuperIncome != null">
-        #{agentSuperIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentOneIncome != null">
-        #{agentOneIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentTwoIncome != null">
-        #{agentTwoIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentThreeIncome != null">
-        #{agentThreeIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    update agent_charge
-    <set>
-      <if test="orderId != null">
-        order_id = #{orderId,jdbcType=BIGINT},
-      </if>
-      <if test="agentSuperId != null">
-        agent_super_id = #{agentSuperId,jdbcType=INTEGER},
-      </if>
-      <if test="agentOneId != null">
-        agent_one_id = #{agentOneId,jdbcType=INTEGER},
-      </if>
-      <if test="agentTwoId != null">
-        agent_two_id = #{agentTwoId,jdbcType=INTEGER},
-      </if>
-      <if test="agentThreeId != null">
-        agent_three_id = #{agentThreeId,jdbcType=INTEGER},
-      </if>
-      <if test="agentSuperFee != null">
-        agent_super_fee = #{agentSuperFee,jdbcType=DECIMAL},
-      </if>
-      <if test="agentOneFee != null">
-        agent_one_fee = #{agentOneFee,jdbcType=DECIMAL},
-      </if>
-      <if test="agentTwoFee != null">
-        agent_two_fee = #{agentTwoFee,jdbcType=DECIMAL},
-      </if>
-      <if test="agentThreeFee != null">
-        agent_three_fee = #{agentThreeFee,jdbcType=DECIMAL},
-      </if>
-      <if test="agentSuperIncome != null">
-        agent_super_income = #{agentSuperIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentOneIncome != null">
-        agent_one_income = #{agentOneIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentTwoIncome != null">
-        agent_two_income = #{agentTwoIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentThreeIncome != null">
-        agent_three_income = #{agentThreeIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    update agent_charge
-    set order_id = #{orderId,jdbcType=BIGINT},
-      agent_super_id = #{agentSuperId,jdbcType=INTEGER},
-      agent_one_id = #{agentOneId,jdbcType=INTEGER},
-      agent_two_id = #{agentTwoId,jdbcType=INTEGER},
-      agent_three_id = #{agentThreeId,jdbcType=INTEGER},
-      agent_super_fee = #{agentSuperFee,jdbcType=DECIMAL},
-      agent_one_fee = #{agentOneFee,jdbcType=DECIMAL},
-      agent_two_fee = #{agentTwoFee,jdbcType=DECIMAL},
-      agent_three_fee = #{agentThreeFee,jdbcType=DECIMAL},
-      agent_super_income = #{agentSuperIncome,jdbcType=DECIMAL},
-      agent_one_income = #{agentOneIncome,jdbcType=DECIMAL},
-      agent_two_income = #{agentTwoIncome,jdbcType=DECIMAL},
-      agent_three_income = #{agentThreeIncome,jdbcType=DECIMAL},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.AgentCharge">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="order_id" jdbcType="BIGINT" property="orderId" />
-    <result column="agent_super_id" jdbcType="INTEGER" property="agentSuperId" />
-    <result column="agent_one_id" jdbcType="INTEGER" property="agentOneId" />
-    <result column="agent_two_id" jdbcType="INTEGER" property="agentTwoId" />
-    <result column="agent_three_id" jdbcType="INTEGER" property="agentThreeId" />
-    <result column="agent_super_fee" jdbcType="DECIMAL" property="agentSuperFee" />
-    <result column="agent_one_fee" jdbcType="DECIMAL" property="agentOneFee" />
-    <result column="agent_two_fee" jdbcType="DECIMAL" property="agentTwoFee" />
-    <result column="agent_three_fee" jdbcType="DECIMAL" property="agentThreeFee" />
-    <result column="agent_super_income" jdbcType="DECIMAL" property="agentSuperIncome" />
-    <result column="agent_one_income" jdbcType="DECIMAL" property="agentOneIncome" />
-    <result column="agent_two_income" jdbcType="DECIMAL" property="agentTwoIncome" />
-    <result column="agent_three_income" jdbcType="DECIMAL" property="agentThreeIncome" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, order_id, agent_super_id, agent_one_id, agent_two_id, agent_three_id, agent_super_fee, 
-    agent_one_fee, agent_two_fee, agent_three_fee, agent_super_income, agent_one_income, 
-    agent_two_income, agent_three_income, update_time, create_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from agent_charge
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from agent_charge
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    insert into agent_charge (id, order_id, agent_super_id, 
-      agent_one_id, agent_two_id, agent_three_id, 
-      agent_super_fee, agent_one_fee, agent_two_fee, 
-      agent_three_fee, agent_super_income, agent_one_income, 
-      agent_two_income, agent_three_income, update_time, 
-      create_time)
-    values (#{id,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, #{agentSuperId,jdbcType=INTEGER}, 
-      #{agentOneId,jdbcType=INTEGER}, #{agentTwoId,jdbcType=INTEGER}, #{agentThreeId,jdbcType=INTEGER}, 
-      #{agentSuperFee,jdbcType=DECIMAL}, #{agentOneFee,jdbcType=DECIMAL}, #{agentTwoFee,jdbcType=DECIMAL}, 
-      #{agentThreeFee,jdbcType=DECIMAL}, #{agentSuperIncome,jdbcType=DECIMAL}, #{agentOneIncome,jdbcType=DECIMAL}, 
-      #{agentTwoIncome,jdbcType=DECIMAL}, #{agentThreeIncome,jdbcType=DECIMAL}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{createTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    insert into agent_charge
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="orderId != null">
-        order_id,
-      </if>
-      <if test="agentSuperId != null">
-        agent_super_id,
-      </if>
-      <if test="agentOneId != null">
-        agent_one_id,
-      </if>
-      <if test="agentTwoId != null">
-        agent_two_id,
-      </if>
-      <if test="agentThreeId != null">
-        agent_three_id,
-      </if>
-      <if test="agentSuperFee != null">
-        agent_super_fee,
-      </if>
-      <if test="agentOneFee != null">
-        agent_one_fee,
-      </if>
-      <if test="agentTwoFee != null">
-        agent_two_fee,
-      </if>
-      <if test="agentThreeFee != null">
-        agent_three_fee,
-      </if>
-      <if test="agentSuperIncome != null">
-        agent_super_income,
-      </if>
-      <if test="agentOneIncome != null">
-        agent_one_income,
-      </if>
-      <if test="agentTwoIncome != null">
-        agent_two_income,
-      </if>
-      <if test="agentThreeIncome != null">
-        agent_three_income,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="orderId != null">
-        #{orderId,jdbcType=BIGINT},
-      </if>
-      <if test="agentSuperId != null">
-        #{agentSuperId,jdbcType=INTEGER},
-      </if>
-      <if test="agentOneId != null">
-        #{agentOneId,jdbcType=INTEGER},
-      </if>
-      <if test="agentTwoId != null">
-        #{agentTwoId,jdbcType=INTEGER},
-      </if>
-      <if test="agentThreeId != null">
-        #{agentThreeId,jdbcType=INTEGER},
-      </if>
-      <if test="agentSuperFee != null">
-        #{agentSuperFee,jdbcType=DECIMAL},
-      </if>
-      <if test="agentOneFee != null">
-        #{agentOneFee,jdbcType=DECIMAL},
-      </if>
-      <if test="agentTwoFee != null">
-        #{agentTwoFee,jdbcType=DECIMAL},
-      </if>
-      <if test="agentThreeFee != null">
-        #{agentThreeFee,jdbcType=DECIMAL},
-      </if>
-      <if test="agentSuperIncome != null">
-        #{agentSuperIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentOneIncome != null">
-        #{agentOneIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentTwoIncome != null">
-        #{agentTwoIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentThreeIncome != null">
-        #{agentThreeIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    update agent_charge
-    <set>
-      <if test="orderId != null">
-        order_id = #{orderId,jdbcType=BIGINT},
-      </if>
-      <if test="agentSuperId != null">
-        agent_super_id = #{agentSuperId,jdbcType=INTEGER},
-      </if>
-      <if test="agentOneId != null">
-        agent_one_id = #{agentOneId,jdbcType=INTEGER},
-      </if>
-      <if test="agentTwoId != null">
-        agent_two_id = #{agentTwoId,jdbcType=INTEGER},
-      </if>
-      <if test="agentThreeId != null">
-        agent_three_id = #{agentThreeId,jdbcType=INTEGER},
-      </if>
-      <if test="agentSuperFee != null">
-        agent_super_fee = #{agentSuperFee,jdbcType=DECIMAL},
-      </if>
-      <if test="agentOneFee != null">
-        agent_one_fee = #{agentOneFee,jdbcType=DECIMAL},
-      </if>
-      <if test="agentTwoFee != null">
-        agent_two_fee = #{agentTwoFee,jdbcType=DECIMAL},
-      </if>
-      <if test="agentThreeFee != null">
-        agent_three_fee = #{agentThreeFee,jdbcType=DECIMAL},
-      </if>
-      <if test="agentSuperIncome != null">
-        agent_super_income = #{agentSuperIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentOneIncome != null">
-        agent_one_income = #{agentOneIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentTwoIncome != null">
-        agent_two_income = #{agentTwoIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentThreeIncome != null">
-        agent_three_income = #{agentThreeIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    update agent_charge
-    set order_id = #{orderId,jdbcType=BIGINT},
-      agent_super_id = #{agentSuperId,jdbcType=INTEGER},
-      agent_one_id = #{agentOneId,jdbcType=INTEGER},
-      agent_two_id = #{agentTwoId,jdbcType=INTEGER},
-      agent_three_id = #{agentThreeId,jdbcType=INTEGER},
-      agent_super_fee = #{agentSuperFee,jdbcType=DECIMAL},
-      agent_one_fee = #{agentOneFee,jdbcType=DECIMAL},
-      agent_two_fee = #{agentTwoFee,jdbcType=DECIMAL},
-      agent_three_fee = #{agentThreeFee,jdbcType=DECIMAL},
-      agent_super_income = #{agentSuperIncome,jdbcType=DECIMAL},
-      agent_one_income = #{agentOneIncome,jdbcType=DECIMAL},
-      agent_two_income = #{agentTwoIncome,jdbcType=DECIMAL},
-      agent_three_income = #{agentThreeIncome,jdbcType=DECIMAL},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.AgentCharge">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="order_id" jdbcType="BIGINT" property="orderId" />
-    <result column="agent_super_income" jdbcType="DECIMAL" property="agentSuperIncome" />
-    <result column="agent_one_income" jdbcType="DECIMAL" property="agentOneIncome" />
-    <result column="agent_two_income" jdbcType="DECIMAL" property="agentTwoIncome" />
-    <result column="agent_three_income" jdbcType="DECIMAL" property="agentThreeIncome" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, order_id, agent_super_income, agent_one_income, agent_two_income, agent_three_income, 
-    update_time, create_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from agent_charge
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from agent_charge
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    insert into agent_charge (id, order_id, agent_super_income, 
-      agent_one_income, agent_two_income, agent_three_income, 
-      update_time, create_time)
-    values (#{id,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, #{agentSuperIncome,jdbcType=DECIMAL}, 
-      #{agentOneIncome,jdbcType=DECIMAL}, #{agentTwoIncome,jdbcType=DECIMAL}, #{agentThreeIncome,jdbcType=DECIMAL}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    insert into agent_charge
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="orderId != null">
-        order_id,
-      </if>
-      <if test="agentSuperIncome != null">
-        agent_super_income,
-      </if>
-      <if test="agentOneIncome != null">
-        agent_one_income,
-      </if>
-      <if test="agentTwoIncome != null">
-        agent_two_income,
-      </if>
-      <if test="agentThreeIncome != null">
-        agent_three_income,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="orderId != null">
-        #{orderId,jdbcType=BIGINT},
-      </if>
-      <if test="agentSuperIncome != null">
-        #{agentSuperIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentOneIncome != null">
-        #{agentOneIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentTwoIncome != null">
-        #{agentTwoIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentThreeIncome != null">
-        #{agentThreeIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    update agent_charge
-    <set>
-      <if test="orderId != null">
-        order_id = #{orderId,jdbcType=BIGINT},
-      </if>
-      <if test="agentSuperIncome != null">
-        agent_super_income = #{agentSuperIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentOneIncome != null">
-        agent_one_income = #{agentOneIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentTwoIncome != null">
-        agent_two_income = #{agentTwoIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentThreeIncome != null">
-        agent_three_income = #{agentThreeIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    update agent_charge
-    set order_id = #{orderId,jdbcType=BIGINT},
-      agent_super_income = #{agentSuperIncome,jdbcType=DECIMAL},
-      agent_one_income = #{agentOneIncome,jdbcType=DECIMAL},
-      agent_two_income = #{agentTwoIncome,jdbcType=DECIMAL},
-      agent_three_income = #{agentThreeIncome,jdbcType=DECIMAL},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.AgentCharge">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="order_id" jdbcType="BIGINT" property="orderId" />
-    <result column="agent_super_income" jdbcType="DECIMAL" property="agentSuperIncome" />
-    <result column="agent_one_income" jdbcType="DECIMAL" property="agentOneIncome" />
-    <result column="agent_two_income" jdbcType="DECIMAL" property="agentTwoIncome" />
-    <result column="agent_three_income" jdbcType="DECIMAL" property="agentThreeIncome" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, order_id, agent_super_income, agent_one_income, agent_two_income, agent_three_income, 
-    update_time, create_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from agent_charge
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from agent_charge
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    insert into agent_charge (id, order_id, agent_super_income, 
-      agent_one_income, agent_two_income, agent_three_income, 
-      update_time, create_time)
-    values (#{id,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, #{agentSuperIncome,jdbcType=DECIMAL}, 
-      #{agentOneIncome,jdbcType=DECIMAL}, #{agentTwoIncome,jdbcType=DECIMAL}, #{agentThreeIncome,jdbcType=DECIMAL}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    insert into agent_charge
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="orderId != null">
-        order_id,
-      </if>
-      <if test="agentSuperIncome != null">
-        agent_super_income,
-      </if>
-      <if test="agentOneIncome != null">
-        agent_one_income,
-      </if>
-      <if test="agentTwoIncome != null">
-        agent_two_income,
-      </if>
-      <if test="agentThreeIncome != null">
-        agent_three_income,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="orderId != null">
-        #{orderId,jdbcType=BIGINT},
-      </if>
-      <if test="agentSuperIncome != null">
-        #{agentSuperIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentOneIncome != null">
-        #{agentOneIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentTwoIncome != null">
-        #{agentTwoIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentThreeIncome != null">
-        #{agentThreeIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    update agent_charge
-    <set>
-      <if test="orderId != null">
-        order_id = #{orderId,jdbcType=BIGINT},
-      </if>
-      <if test="agentSuperIncome != null">
-        agent_super_income = #{agentSuperIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentOneIncome != null">
-        agent_one_income = #{agentOneIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentTwoIncome != null">
-        agent_two_income = #{agentTwoIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentThreeIncome != null">
-        agent_three_income = #{agentThreeIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    update agent_charge
-    set order_id = #{orderId,jdbcType=BIGINT},
-      agent_super_income = #{agentSuperIncome,jdbcType=DECIMAL},
-      agent_one_income = #{agentOneIncome,jdbcType=DECIMAL},
-      agent_two_income = #{agentTwoIncome,jdbcType=DECIMAL},
-      agent_three_income = #{agentThreeIncome,jdbcType=DECIMAL},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.AgentCharge">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="order_id" jdbcType="BIGINT" property="orderId" />
-    <result column="agent_super_income" jdbcType="DECIMAL" property="agentSuperIncome" />
-    <result column="agent_one_income" jdbcType="DECIMAL" property="agentOneIncome" />
-    <result column="agent_two_income" jdbcType="DECIMAL" property="agentTwoIncome" />
-    <result column="agent_three_income" jdbcType="DECIMAL" property="agentThreeIncome" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, order_id, agent_super_income, agent_one_income, agent_two_income, agent_three_income, 
-    update_time, create_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from agent_charge
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from agent_charge
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    insert into agent_charge (id, order_id, agent_super_income, 
-      agent_one_income, agent_two_income, agent_three_income, 
-      update_time, create_time)
-    values (#{id,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, #{agentSuperIncome,jdbcType=DECIMAL}, 
-      #{agentOneIncome,jdbcType=DECIMAL}, #{agentTwoIncome,jdbcType=DECIMAL}, #{agentThreeIncome,jdbcType=DECIMAL}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    insert into agent_charge
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="orderId != null">
-        order_id,
-      </if>
-      <if test="agentSuperIncome != null">
-        agent_super_income,
-      </if>
-      <if test="agentOneIncome != null">
-        agent_one_income,
-      </if>
-      <if test="agentTwoIncome != null">
-        agent_two_income,
-      </if>
-      <if test="agentThreeIncome != null">
-        agent_three_income,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="orderId != null">
-        #{orderId,jdbcType=BIGINT},
-      </if>
-      <if test="agentSuperIncome != null">
-        #{agentSuperIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentOneIncome != null">
-        #{agentOneIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentTwoIncome != null">
-        #{agentTwoIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentThreeIncome != null">
-        #{agentThreeIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    update agent_charge
-    <set>
-      <if test="orderId != null">
-        order_id = #{orderId,jdbcType=BIGINT},
-      </if>
-      <if test="agentSuperIncome != null">
-        agent_super_income = #{agentSuperIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentOneIncome != null">
-        agent_one_income = #{agentOneIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentTwoIncome != null">
-        agent_two_income = #{agentTwoIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="agentThreeIncome != null">
-        agent_three_income = #{agentThreeIncome,jdbcType=DECIMAL},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.AgentCharge">
-    update agent_charge
-    set order_id = #{orderId,jdbcType=BIGINT},
       agent_super_income = #{agentSuperIncome,jdbcType=DECIMAL},
       agent_one_income = #{agentOneIncome,jdbcType=DECIMAL},
       agent_two_income = #{agentTwoIncome,jdbcType=DECIMAL},
