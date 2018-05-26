@@ -18,7 +18,7 @@ public class AgentServiceImpl implements AgentService {
     private AgentMapper agentMapper;
 
     @Override
-    public int deleteByPrimaryKey(Long id) {
+    public int deleteByPrimaryKey(Integer id) {
         return agentMapper.deleteByPrimaryKey(id);
     }
 
@@ -33,7 +33,7 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public Agent selectByPrimaryKey(Long id) {
+    public Agent selectByPrimaryKey(Integer id) {
         return agentMapper.selectByPrimaryKey(id);
     }
 

@@ -6,13 +6,13 @@ import com.bfei.icrane.core.models.Agent;
  * Created by moying on 2018/5/25.
  */
 public interface AgentService {
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(Integer id);
 
     int insert(Agent record);
 
     int insertSelective(Agent record);
 
-    Agent selectByPrimaryKey(Long id);
+    Agent selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(Agent record);
 
