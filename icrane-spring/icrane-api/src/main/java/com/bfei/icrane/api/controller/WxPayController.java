@@ -4,18 +4,21 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.net.InetAddress;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.bfei.icrane.api.service.*;
 import com.bfei.icrane.common.util.*;
+import com.bfei.icrane.common.wx.utils.*;
 import com.bfei.icrane.core.models.Vip;
 import com.bfei.icrane.core.models.WxPay;
 import com.bfei.icrane.core.service.RiskManagementService;
 import com.bfei.icrane.core.service.VipService;
+import com.github.binarywang.wxpay.service.WxPayService;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -26,15 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import com.bfei.icrane.common.wx.utils.GetWxOrderno;
-import com.bfei.icrane.common.wx.utils.RequestHandler;
-import com.bfei.icrane.common.wx.utils.Sha1Util;
-import com.bfei.icrane.common.wx.utils.TenpayUtil;
-import com.bfei.icrane.common.wx.utils.WxConfig;
+import org.springframework.web.bind.annotation.*;
 import com.bfei.icrane.core.models.ChargeRules;
 import com.bfei.icrane.core.models.Member;
 import com.bfei.icrane.core.service.ChargeOrderService;
@@ -66,6 +61,8 @@ public class WxPayController {
     private RiskManagementService riskManagementService;
     @Autowired
     private VipService vipService;
+    @Autowired
+    private WxPayService wxPayService;
 
 
     private RedisUtil redisUtil = new RedisUtil();
@@ -81,7 +78,7 @@ public class WxPayController {
         try {
             boolean isToken = validateTokenService.validataToken(token, memberId);
             if (isToken) {
-                String orderNo = UUID.randomUUID().toString().replaceAll(       "-", "");
+                String orderNo = UUID.randomUUID().toString().replaceAll("-", "");
                 //数据库 创建订单
                 Vip vip = vipService.selectVipByMemberId(memberId);
                 //总金额以分为单位，不带小数点
@@ -89,6 +86,7 @@ public class WxPayController {
                 ChargeRules rule = chargeOrderService.queryRule(chargeruleid);
                 Double dprice = rule.getChargePrice();
                 if (vip != null) {
+
                     dprice = dprice * 10 * new BigDecimal(vip.getDiscount()).doubleValue();
                 }
                 if (dprice < 1) {
@@ -130,12 +128,14 @@ public class WxPayController {
                 price = rule.getChargePrice();
                 Integer total_fee = dprice.intValue();// 正式环境下要*100
                 // 订单生成的机器 IP
-                String spbill_create_ip = request.getRemoteAddr();
+                String spbill_create_ip = IPUtils.getIpAddr(request);
+                logger.info("支付ip ={}", spbill_create_ip);
                 String notify_url = propFileMgr.getProperty("wx.notify");
                 SortedMap<String, String> packageParams = new TreeMap<>();
                 packageParams.put("trade_type", "APP");
                 packageParams.put("appid", WxConfig.APPID);
                 packageParams.put("mch_id", WxConfig.PARTNER);
+
 
                 if (StringUtils.isNotEmpty(IP) && !"老子是公众号".equals(IP)) {
                     packageParams.put("trade_type", "MWEB");
