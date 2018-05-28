@@ -17,13 +17,16 @@ import java.util.concurrent.TimeUnit;
 
 import javax.websocket.Session;
 
+import com.bfei.icrane.api.controller.WebSocketController;
 import com.bfei.icrane.common.util.PropFileManager;
 import com.bfei.icrane.game.KeepAliveWatchDog;
 import com.bfei.icrane.game.ReceiveWatchDog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MachineServiceImpl  {
 
-	//private static MachineServiceImpl _instance;
+    private static final Logger logger = LoggerFactory.getLogger(MachineServiceImpl.class);
     private static final PropFileManager propFileMgr = new PropFileManager("interface.properties");
 	private static String serverIp = propFileMgr.getProperty("machineIp");
 	private static Integer port =Integer.parseInt(propFileMgr.getProperty("machinePort"));
@@ -102,6 +105,7 @@ public class MachineServiceImpl  {
 	public static void sendMsg(String msg,Integer dollId,Integer userId) {
 		try {
 			if(!machineSocketMap.containsKey(dollId)) {
+                logger.info("php socket ip={},port={}",serverIp,port);
 				Socket socket = new Socket(serverIp,port);
 				machineSocketMap.put(dollId, socket);
 				socketRunning.put(dollId, true);
