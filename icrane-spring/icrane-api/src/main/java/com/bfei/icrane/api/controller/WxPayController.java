@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.net.InetAddress;
 import java.net.URI;
-import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +16,6 @@ import com.bfei.icrane.core.models.Vip;
 import com.bfei.icrane.core.models.WxPay;
 import com.bfei.icrane.core.service.RiskManagementService;
 import com.bfei.icrane.core.service.VipService;
-import com.github.binarywang.wxpay.service.WxPayService;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -61,8 +58,6 @@ public class WxPayController {
     private RiskManagementService riskManagementService;
     @Autowired
     private VipService vipService;
-    @Autowired
-    private WxPayService wxPayService;
 
 
     private RedisUtil redisUtil = new RedisUtil();
