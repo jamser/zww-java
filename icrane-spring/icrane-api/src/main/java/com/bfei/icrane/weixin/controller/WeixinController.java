@@ -2,76 +2,21 @@ package com.bfei.icrane.weixin.controller;
 
 import com.bfei.icrane.api.service.LoginService;
 import com.bfei.icrane.common.util.StringUtils;
-import com.bfei.icrane.common.util.WXUtil;
 import com.bfei.icrane.core.models.MemberInfo;
-import com.bfei.icrane.core.models.XmlMessageEntity;
-import com.bfei.icrane.weixin.service.IWeixinService;
-import com.sun.org.apache.xpath.internal.SourceTree;
-import net.sf.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
 
 
 @Controller
 public class WeixinController {
     @Autowired
     private LoginService loginService;
-    @Autowired
-    private IWeixinService weixinService;
-
-
-    @RequestMapping(value = "/weixin", method = RequestMethod.GET)
-    @ResponseBody
-    public String checkSignature(String signature, String timestamp, String nonce, String echostr) {
-        return weixinService.checkSignature(signature, timestamp, nonce, echostr);
-    }
-
-    @RequestMapping(value = "/miniApps", method = RequestMethod.GET)
-    @ResponseBody
-    public String checkSignatureMiniApps(String signature, String timestamp, String nonce, String echostr) {
-        return weixinService.checkSignature(signature, timestamp, nonce, echostr);
-    }
-
-    @RequestMapping(value = "/weixin", method = RequestMethod.POST)
-    @ResponseBody
-    public XmlMessageEntity handlerMessage(@RequestBody XmlMessageEntity entity) throws Exception {
-        try {
-            //System.out.println(entity);
-            return weixinService.getBackEntity(entity);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @RequestMapping(value = "/miniApps", method = RequestMethod.POST)
-    @ResponseBody
-    public Object handlerMessageMiniApps(HttpServletRequest request) {
-        try {
-            BufferedReader reader = request.getReader();
-            String input = null;
-            StringBuffer requestBody = new StringBuffer();
-            while ((input = reader.readLine()) != null) {
-                requestBody.append(input);
-            }
-            JSONObject jsonObject = JSONObject.fromObject(requestBody.toString());
-            return weixinService.getBackEntityMiniApps(jsonObject);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     @RequestMapping("/h5login")
     @ResponseBody

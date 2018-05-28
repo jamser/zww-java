@@ -9,7 +9,7 @@
         <result column="icon_context_path" jdbcType="VARCHAR" property="catchContextPath"/>
         <result column="icon_file_name" jdbcType="VARCHAR" property="catchFileName"/>
         <result column="icon_real_path" jdbcType="VARCHAR" property="iconRealPath"/>
-        <association property="vip" javaType="com.bfei.icrane.7core.models.Vip"
+        <association property="vip" javaType="com.bfei.icrane.core.models.Vip"
                      select="com.bfei.icrane.core.dao.VipDao.selectVipByMemberId" column="id">
         </association>
     </resultMap>
