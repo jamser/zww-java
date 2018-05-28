@@ -11,7 +11,9 @@
         <result column="modeUrl" property="modeUrl"/>
         <result column="wxpireTime" property="wxpireTime"/>
     </resultMap>
-
+    <sql id="Base_Column_List" >
+        id,divination_name,created_date,created_by,modified_date,modified_by,modeUrl,wxpireTime
+    </sql>
     <select id="getDivinationIdByDollId" resultType="java.lang.Integer">
         SELECT
             divination_id
@@ -22,7 +24,7 @@
     </select>
     <select id="getByDollId" resultMap="BaseResultMap">
         SELECT
-            *
+        <include refid="Base_Column_List" />
         FROM
             divination_topic dt
         LEFT JOIN doll_divination dd ON dt.id = dd.divination_id
@@ -31,7 +33,7 @@
     </select>
     <select id="divination" resultType="com.bfei.icrane.core.models.DivinationImage">
        SELECT
-            *
+        <include refid="Base_Column_List" />
         FROM
             divination_image
         WHERE

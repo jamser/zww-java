@@ -386,7 +386,7 @@ public class LoginServiceImpl implements LoginService {
         PropFileManager propFileMgr = new PropFileManager("interface.properties");
         try {
             // 发送短信
-            if (AliyunServiceImpl.getInstance().sendSMSForCode(mobile, "蓝澳科技",
+            if (AliyunServiceImpl.getInstance().sendSMSForCode(mobile, propFileMgr.getProperty("aliyun.smsModelCode.name"),
                     propFileMgr.getProperty("aliyun.smsModelCode.reg"), smsCode)) {
                 //验证码信息存入redis
                 redisUtil.setString(RedisKeyGenerator.getCodeLoginKey(mobile), smsCode, Enviroment.SMS_ENDTIME);
@@ -417,7 +417,7 @@ public class LoginServiceImpl implements LoginService {
      * 登出服务
      *
      * @param memberId 用户userID
-     * @param token    用户token
+    // * @param token    用户token
      */
     @Override
     public ResultMap logout(Integer memberId

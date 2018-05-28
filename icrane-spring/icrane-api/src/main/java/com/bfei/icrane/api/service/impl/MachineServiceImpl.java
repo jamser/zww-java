@@ -92,6 +92,13 @@ public class MachineServiceImpl  {
 	    	}
 	    }
 
+	public static void main(String[] args) throws IOException {
+		System.out.println("serverIp:" + serverIp + " " + "port:" + port);
+		Socket socket = new Socket(serverIp,port);
+		System.out.println(socket);
+	}
+
+
 	public static void sendMsg(String msg,Integer dollId,Integer userId) {
 		try {
 			if(!machineSocketMap.containsKey(dollId)) {

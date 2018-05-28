@@ -388,7 +388,7 @@ public class MemberServiceImpl implements MemberService {
                 String smsCode = StringUtils.getSmsCode();
                 // 获取配置文件
                 // 发送短信
-                if (AliyunServiceImpl.getInstance().sendSMSForCode(mobile, "蓝澳科技",
+                if (AliyunServiceImpl.getInstance().sendSMSForCode(mobile, propFileMgr.getProperty("aliyun.smsModelCode.name"),
                         propFileMgr.getProperty("aliyun.smsModelCode.reg"), smsCode)) {
                     //验证码信息存入redis
                     redisUtil.setString(RedisKeyGenerator.getLinkMobileCodeKey(mobile), smsCode, Enviroment.SMS_ENDTIME);

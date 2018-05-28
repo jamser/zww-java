@@ -103,7 +103,7 @@
 	<!-- 分页查询用户列表 -->
 	<select id="getDollTopicList" resultType="DollTopicAll">
 		select
-		a.*, b.machine_code
+		a.id,a.doll_id,a.doll_name,a.room_type,a.topic_type,a.topic_name,a.groupid, b.machine_code
 		from doll_topic a LEFT JOIN t_doll b on a.doll_id = b.id
 		where 1=1
 		<if test="dollId != null and dollId != '' ">
@@ -130,7 +130,7 @@
 	<select id="getDollTopicById" resultType="DollTopic" parameterType="java.lang.Integer">
 		<!-- 具体的sql -->
 		SELECT
-		*
+		id,doll_id,doll_name,room_type,topic_type,topic_name,groupid
 		FROM
 		doll_topic
 		WHERE

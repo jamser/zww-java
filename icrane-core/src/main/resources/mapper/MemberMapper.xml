@@ -19,8 +19,7 @@
         <result column="modified_date" jdbcType="TIMESTAMP" property="modifiedDate"/>
         <result column="modified_by" jdbcType="INTEGER" property="modifiedBy"/>
         <result column="last_login_date" jdbcType="TIMESTAMP" property="lastLoginDate"/>
-        <result column="last_logoff_date" jdbcType="TIMESTAMP"
-                property="lastLogoffDate"/>
+        <result column="last_logoff_date" jdbcType="TIMESTAMP"  property="lastLogoffDate"/>
         <result column="online_flg" jdbcType="INTEGER" property="onlineFlg"/>
         <result column="icon_context_path" jdbcType="VARCHAR" property="iconContextPath"/>
         <result column="icon_file_name" jdbcType="VARCHAR" property="iconFileName"/>
@@ -50,6 +49,11 @@
                      select="com.bfei.icrane.core.dao.AccountDao.selectById" column="id">
         </association>
     </resultMap>
+    <sql id="Base_Column_List" >
+        id, password, memberID, name, mobile, weixin_id,open_id,union_id,gender,birthday,catch_number,register_date,modified_date,modified_by,last_login_date,last_logoff_date,online_flg,icon_context_path,icon_file_name,icon_real_path,easemob_uuid,
+        active_flg,invite_flg,invite_flg_web,register_from,last_login_from,first_login,first_charge,register_channel,login_channel,phone_model,agent_super_id,agent_one_id,agent_two_id,agent_three_id
+    </sql>
+
     <!-- 目的：为dao接口方法提供sql语句配置 -->
     <update id="updateByPrimaryKeySelective" parameterType="Member">
         update t_member
@@ -96,14 +100,26 @@
             <if test="iconRealPath != null">
                 icon_real_path = #{iconRealPath,jdbcType=VARCHAR},
             </if>
+            <if test="agentSuperId != null">
+                agent_super_id = #{agentSuperId,jdbcType=INTEGER},
+            </if>
+            <if test="agentOneId != null">
+                agent_one_id = #{agentOneId,jdbcType=INTEGER},
+            </if>
+            <if test="agentTwoId != null">
+                agent_two_id = #{agentTwoId,jdbcType=INTEGER},
+            </if>
+            <if test="agentThreeId != null">
+                agent_three_id = #{agentThreeId,jdbcType=INTEGER},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
     <select id="login" resultMap="BaseResultMap" parameterType="Member">
         <!-- 具体的sql -->
         SELECT
-        m.*,
-        p.*
+        <include refid="Base_Column_List" />,
+        member_id,music_flg,sound_flg,shock_flg
         FROM
         t_member m LEFT JOIN t_member_pref p ON
         (m.`id`=p.`member_id`)
@@ -113,7 +129,7 @@
 
     <select id="selectByMobile" resultMap="BaseResultMap" parameterType="Member">
         SELECT
-			*
+        <include refid="Base_Column_List" />
 		FROM
 			t_member
 		WHERE
@@ -125,7 +141,7 @@
     <select id="selectById" resultMap="BaseResultMap">
         <!-- 具体的sql -->
         SELECT
-        *
+        <include refid="Base_Column_List" />
         FROM
         t_member
         WHERE
@@ -135,7 +151,7 @@
     <select id="selectByMemberID" resultType="Member" parameterType="Member">
         <!-- 具体的sql -->
         SELECT
-        *
+        <include refid="Base_Column_List" />
         FROM
         t_member
         WHERE
@@ -240,7 +256,8 @@
     <!-- 根据openId查询用户是否存在 -->
     <select id="selectByOpenId" parameterType="String" resultMap="BaseResultMap">
 		SELECT
-            a.*, b.*, w.*
+		a.id, password, memberID, name, mobile, weixin_id,open_id,union_id,gender,birthday,catch_number,register_date,modified_date,modified_by,last_login_date,last_logoff_date,online_flg,icon_context_path,icon_file_name,icon_real_path,easemob_uuid,
+        active_flg,invite_flg,invite_flg_web,register_from,last_login_from,first_login,first_charge,register_channel,login_channel,phone_model,agent_super_id,agent_one_id,agent_two_id,agent_three_id,w.id,w.open_id,w.union_id,w.user_id,member_id,music_flg,sound_flg,shock_flg
         FROM
             t_member a
         LEFT JOIN t_member_pref b ON a.id = b.member_id
@@ -682,7 +699,7 @@
     <select id="getUserInfoById" resultMap="BaseResultMap"
             parameterType="int">
 		select
-		a.*,b.member_id ,music_flg,sound_flg,shock_flg
+        <include refid="Base_Column_List" />,member_id ,music_flg,sound_flg,shock_flg
 		from t_member a,t_member_pref b
 		where
 		a.id=#{memberId} and a.id=b.member_id
@@ -696,7 +713,7 @@
     <!-- 分页查询用户列表 -->
     <select id="getUserList" resultMap="BaseResultMap">
         select
-        *
+        <include refid="Base_Column_List" />
         from t_member
         where 1=1
         <if test="registerChannel != null">
@@ -790,7 +807,7 @@
 
     <select id="getUserList1" resultMap="BaseResultMap">
         select
-        *
+        <include refid="Base_Column_List" />
         from t_member
         where 1=1
         <if test="name != null">
@@ -847,7 +864,7 @@
 
     <select id="getAllById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
-		*
+        <include refid="Base_Column_List" />
 		from t_member
 		where
 		id = #{id}
@@ -914,7 +931,7 @@
     </select>
     <select id="isWorker" resultType="java.lang.Boolean">
         SELECT
-            *
+        <include refid="Base_Column_List" />
         FROM
             member_white_list
         WHERE

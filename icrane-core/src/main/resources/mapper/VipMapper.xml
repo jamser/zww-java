@@ -12,47 +12,23 @@
         <result column="flash_appeal" property="flashAppeal"/>
         <result column="discount" property="discount"/>
     </resultMap>
+    <sql id="Base_Column_List" >
+        id,level,name,least_allowed,exemption_postage_number,delivery_time,check_time,flash_appeal,discount
+    </sql>
     <update id="lowerLevel">
-        UPDATE account
-        SET growth_value = (
-        SELECT
-        a.least_allowed
-        FROM
-        (
-        SELECT
-        *
-        FROM
-        member_vip
-        WHERE
-        `level` = IFNULL(
-        (
-        SELECT
-        `level`
-        FROM
-        member_vip
-        WHERE
-        least_allowed <![CDATA[<=]]> (
-        SELECT
-        growth_value
-        FROM
-        account
-        WHERE
-        id = #{id}
-        )
-        ORDER BY
-        `level` DESC
-        LIMIT 1
-        ) - 1,
-        0
-        )
-        ) a
-        )
-        WHERE
-        id = #{id};
+        UPDATE account  SET growth_value = (
+          SELECT a.least_allowed   FROM (
+             SELECT id,level,name,least_allowed,exemption_postage_number,delivery_time,check_time,flash_appeal,discount  FROM member_vip
+             WHERE  `level` = IFNULL(  (
+                SELECT `level`  FROM  member_vip WHERE least_allowed <![CDATA[<=]]>
+                    ( SELECT   growth_value FROM  account  WHERE id = #{id}  )
+                ORDER BY `level` DESC
+             LIMIT 1  ) - 1,   0  )  ) a)
+          WHERE  id = #{id};
     </update>
     <select id="selectVipByGrowthValue" resultMap="BaseResultMap">
         SELECT
-            *
+        <include refid="Base_Column_List" />
         FROM
             member_vip
         WHERE
@@ -63,7 +39,7 @@
     </select>
     <select id="selectVipByMemberId" resultType="com.bfei.icrane.core.models.Vip">
         SELECT
-            *
+        <include refid="Base_Column_List" />
         FROM
             member_vip
         WHERE
@@ -81,7 +57,7 @@
     </select>
     <select id="getAll" resultType="com.bfei.icrane.core.models.Vip">
         SELECT
-            *
+        <include refid="Base_Column_List" />
         FROM
             member_vip
         ORDER BY
@@ -89,7 +65,7 @@
     </select>
     <select id="selectVipByLevel" resultType="com.bfei.icrane.core.models.Vip">
         SELECT
-            *
+        <include refid="Base_Column_List" />
         FROM
             member_vip
         WHERE
@@ -97,7 +73,7 @@
     </select>
     <select id="getNext" resultMap="BaseResultMap">
         SELECT
-            *
+        <include refid="Base_Column_List" />
         FROM
             member_vip
         WHERE
@@ -115,7 +91,7 @@
     </select>
     <select id="getMax" resultMap="BaseResultMap">
         SELECT
-            *
+        <include refid="Base_Column_List" />
         FROM
             member_vip
         ORDER BY

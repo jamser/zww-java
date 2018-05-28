@@ -28,7 +28,7 @@
 
     <select id="getChargeList" resultType="Charge">
         select
-        *
+        id,member_id,prepaid_amt,coins,charge_date,type,charge_method,doll_id,coins_before,coins_after
         from t_member_charge_history
         where 1=1
         <if test="memberId!=null">
@@ -385,7 +385,7 @@
     </select>
     <select id="whetherTheDowngrade" resultMap="BaseResultMap">
         SELECT
-            *
+           id,member_id,prepaid_amt,growth_date,type,growth_value_method,value_before,value_after
         FROM
             member_growth_value_history
         WHERE

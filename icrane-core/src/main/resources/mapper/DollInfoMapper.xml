@@ -13,7 +13,9 @@
                      select="com.bfei.icrane.core.dao.DollInfoDao.selectOnline" column="dollCode">
         </association>
     </resultMap>
-
+    <sql id="Base_Column_List" >
+        id,dollName,dollTotal,img_url,addTime,dollCode
+    </sql>
     <select id="selectOnline" resultType="boolean">
         SELECT
             IF (COUNT(id) > 0, 1, 0) ONLINE
@@ -40,19 +42,19 @@
 
     <select id="selectDollInfoList" resultType="com.bfei.icrane.core.models.DollInfo">
 		select
-		id,dollName,dollTotal,img_url imgUrl,addTime,dollCode
+        <include refid="Base_Column_List" />
 		from doll_info
 	</select>
 
     <select id="selectDollInfoById" parameterType="java.lang.Integer" resultType="com.bfei.icrane.core.models.DollInfo">
 		select
-		id,dollName,dollTotal,img_url imgUrl,addTime,dollCode
+        <include refid="Base_Column_List" />
 		from doll_info
 		where id = #{id,jdbcType=INTEGER}
 	</select>
     <select id="selectDollInfoByDollCode" resultType="com.bfei.icrane.core.models.DollInfo">
 		SELECT
-			*
+        <include refid="Base_Column_List" />
 		FROM
 			doll_info
 		WHERE
@@ -61,7 +63,7 @@
 
     <select id="selectByLikeDollCode" resultMap="BaseResultMap">
         SELECT
-        *
+        <include refid="Base_Column_List" />
         FROM
         doll_info
         where

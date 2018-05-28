@@ -13,6 +13,10 @@
 		<result column="created_date" jdbcType="TIMESTAMP" property="createdDate" />
 		<result column="modified_date" jdbcType="TIMESTAMP" property="modifiedDate" />
 	</resultMap>
+
+	<sql id="Base_Column_List" >
+		id,user_id,member_id,user_name,user_IP,states,created_date,modified_date
+	</sql>
 	<!-- 目的：为dao接口方法提供sql语句配置 -->
 	<update id="updateByPrimaryKeySelective" parameterType="com.bfei.icrane.core.models.MemberWhite">
 		update member_white_list
@@ -101,7 +105,7 @@
 	<!-- 分页查询用户列表 -->
 	<select id="getUserList" resultMap="BaseResultMap">
 		select
-		*
+		<include refid="Base_Column_List" />
 		from member_white_list
 		where 1=1
 		<if test="memberId!=null">
@@ -124,7 +128,7 @@
 	<select id="getMemberById" resultType="MemberWhite" parameterType="java.lang.Integer">
 		<!-- 具体的sql -->
 		SELECT
-		*
+		<include refid="Base_Column_List" />
 		FROM
 	    member_white_list
 		WHERE

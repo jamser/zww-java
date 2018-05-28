@@ -18,7 +18,7 @@
     </resultMap>
     
     <sql id="Base_Column_List" >
-   `id`,`member_id`,`member_name`',`charge_type`,`charge_name`,`charge_date_limit`,`charge_date_start`,`coins_standard`,`coins_take`,`member_state`,`charge_date_end`,`charge_award`
+   id,member_id,member_name,charge_type,charge_name,charge_date_limit,charge_date_start,coins_standard,coins_take,member_state,charge_date_end,charge_award
   	</sql>
 
 	<select id="selectMemberEffect" resultType="MemberChargeActiviti" >

@@ -20,7 +20,9 @@
 		<result column="login_channel" jdbcType="VARCHAR" property="loginChannel" />
 		<result column="phone_model" jdbcType="VARCHAR" property="phoneModel" />
 	</resultMap>
-
+	<sql id="Base_Column_List" >
+		id,user_id,memberID,name,mobile,weixin_id,gender,register_date,last_login_date,online_flg,register_from,last_login_from,register_channel,login_channel,phone_model
+	</sql>
 	<!-- 目的：为dao接口方法提供sql语句配置 -->
 	<update id="updateByPrimaryKeySelective" parameterType="MemberChannelDeduct">
 		update member_channel_deduct
@@ -53,9 +55,7 @@
 	<select id="selectById" resultType="MemberChannelDeduct" parameterType="MemberChannelDeduct">
 		<!-- 具体的sql -->
 		SELECT
-		id, user_id, memberID, name, mobile, weixin_id, gender, phone_model,
-		register_date, last_login_date, register_channel, login_channel,
-		register_from, last_login_from, online_flg
+		<include refid="Base_Column_List" />
 		FROM
 		member_channel_deduct
 		WHERE
@@ -65,9 +65,7 @@
 	<select id="selectByMemberID" resultType="MemberChannelDeduct" parameterType="MemberChannelDeduct">
 		<!-- 具体的sql -->
 		SELECT
-		id, user_id, memberID, name, mobile, weixin_id, gender, phone_model,
-		register_date, last_login_date, register_channel, login_channel,
-		register_from, last_login_from, online_flg
+		<include refid="Base_Column_List" />
 		FROM
 		member_channel_deduct
 		WHERE
@@ -198,7 +196,7 @@
 	<!-- 分页查询用户列表 -->
 	<select id="getUserList" resultMap="BaseResultMap">
 		select
-		*
+		<include refid="Base_Column_List" />
 		from member_channel_deduct
 		where 1=1
 		<if test="name != null">

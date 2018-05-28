@@ -14,7 +14,6 @@ import java.util.Date;
 @NoArgsConstructor
 public class MessageLoging extends BaseModels {
 
-    private Client client;
 
     private String inMessage;
 

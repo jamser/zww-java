@@ -13,6 +13,10 @@
                      select="com.bfei.icrane.core.dao.VipDao.selectVipByGrowthValue" column="growth_value">
         </association>
     </resultMap>
+    <sql id="Base_Column_List" >
+        id,coins,superTicket,bitState,weeksCardState,monthCardState,growth_value
+    </sql>
+
     <insert id="insert">
         INSERT INTO account (id, coins, superTicket)
         VALUES
@@ -89,7 +93,7 @@
     </update>
     <select id="selectById" resultMap="BaseResultMap">
         SELECT
-            *
+        <include refid="Base_Column_List" />
         FROM
             account
         WHERE
@@ -105,7 +109,7 @@
     </select>
     <select id="selectPayingUser" resultMap="BaseResultMap">
         SELECT
-            *
+        <include refid="Base_Column_List" />
         FROM
             account
         WHERE

@@ -18,7 +18,7 @@
   	</resultMap>
   	
   	<select id="getImageList" resultMap="BaseResultMap" >
-  		select a.*,
+  		select a.id,a.doll_id,a.img_context_path,a.img_file_name,a.img_real_path,a.created_date,a.created_by,a.modified_date,a.modified_by,
   		b.name
   		from t_doll_image a,t_doll b
   		where a.doll_id=b.id
