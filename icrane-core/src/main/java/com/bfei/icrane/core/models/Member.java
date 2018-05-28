@@ -67,6 +67,17 @@ public class Member implements Serializable {
     private String loginChannel;
     private String phoneModel;
 
+    //代理ID
+    private Integer agentSuperId;
+
+    private Integer agentOneId;
+
+    private Integer agentTwoId;
+
+    private Integer agentThreeId;
+
+
+
     private Account account = new Account();//账户信息
 
     //兼容老版本的机器
