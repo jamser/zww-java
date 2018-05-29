@@ -15,10 +15,12 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="fee" property="fee" jdbcType="DECIMAL" />
+    <result column="withdraw_fee" property="withdrawFee" jdbcType="DECIMAL" />
+    <result column="balance" property="balance" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, username, password, phone, nick_name, level, status, agent_id, agent_one_id, 
-    agent_two_id, create_time, update_time, fee
+    agent_two_id, create_time, update_time, fee, withdraw_fee, balance
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -35,12 +37,14 @@
       phone, nick_name, level, 
       status, agent_id, agent_one_id, 
       agent_two_id, create_time, update_time, 
-      fee)
+      fee, withdraw_fee, balance
+      )
     values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, 
       #{status,jdbcType=INTEGER}, #{agentId,jdbcType=BIGINT}, #{agentOneId,jdbcType=BIGINT}, 
       #{agentTwoId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{fee,jdbcType=DECIMAL})
+      #{fee,jdbcType=DECIMAL}, #{withdrawFee,jdbcType=DECIMAL}, #{balance,jdbcType=DECIMAL}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.Agent" >
     insert into t_agent
@@ -84,6 +88,12 @@
       <if test="fee != null" >
         fee,
       </if>
+      <if test="withdrawFee != null" >
+        withdraw_fee,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -124,6 +134,12 @@
       </if>
       <if test="fee != null" >
         #{fee,jdbcType=DECIMAL},
+      </if>
+      <if test="withdrawFee != null" >
+        #{withdrawFee,jdbcType=DECIMAL},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -166,6 +182,12 @@
       <if test="fee != null" >
         fee = #{fee,jdbcType=DECIMAL},
       </if>
+      <if test="withdrawFee != null" >
+        withdraw_fee = #{withdrawFee,jdbcType=DECIMAL},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=DECIMAL},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -182,7 +204,9 @@
       agent_two_id = #{agentTwoId,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      fee = #{fee,jdbcType=DECIMAL}
+      fee = #{fee,jdbcType=DECIMAL},
+      withdraw_fee = #{withdrawFee,jdbcType=DECIMAL},
+      balance = #{balance,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
