@@ -2,6 +2,7 @@ package com.bfei.icrane.api.service.impl;
 
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -99,11 +100,15 @@ public class MachineServiceImpl  {
 		System.out.println("serverIp:" + serverIp + " " + "port:" + port);
 		Socket socket = new Socket(serverIp,port);
 		System.out.println(socket);
+		InputStream in = socket.getInputStream();
+
 	}
 
 
 	public static void sendMsg(String msg,Integer dollId,Integer userId) {
 		try {
+			logger.info("!machineSocketMap.containsKey(dollId)"+ !machineSocketMap.containsKey(dollId));
+			logger.info("machineSocketMap.get(dollId).isClosed()"+ machineSocketMap.get(dollId).isClosed());
 			if(!machineSocketMap.containsKey(dollId)) {
                 logger.info("php socket ip={},port={}",serverIp,port);
 				Socket socket = new Socket(serverIp,port);

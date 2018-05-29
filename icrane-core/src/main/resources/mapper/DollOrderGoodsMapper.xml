@@ -115,7 +115,7 @@
 	</select>
     <select id="selectByMemberId" resultMap="BaseResultMap">
         SELECT
-            *
+        <include refid="Base_Column_List"/>
         FROM
             doll_order_goods
         WHERE

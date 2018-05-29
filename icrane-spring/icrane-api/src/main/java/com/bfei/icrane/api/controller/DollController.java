@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.bfei.icrane.common.util.*;
+import com.bfei.icrane.core.models.*;
+import com.bfei.icrane.core.service.OemService;
 import org.apache.commons.collections4.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.bfei.icrane.api.service.MemberService;
 import com.bfei.icrane.api.service.SystemPrefService;
-import com.bfei.icrane.core.models.Doll;
-import com.bfei.icrane.core.models.DollTopic;
-import com.bfei.icrane.core.models.Member;
-import com.bfei.icrane.core.models.SystemPref;
 import com.bfei.icrane.core.pojos.MemberInfoPojo;
 import com.bfei.icrane.core.pojos.RoomStatusPojo;
 import com.bfei.icrane.core.service.DollService;
@@ -45,6 +43,9 @@ public class DollController {
     private MemberService memberService;
     @Autowired
     SystemPrefService systemPrefService;
+    @Autowired
+    private OemService oemService;
+
     //level的失效时间
     public static Long expiresTime = 0L;
 
@@ -675,5 +676,42 @@ public class DollController {
             return resultMap;
         }
 
+    }
+
+    /**
+     * 获取bannner(H5用)
+     * @param memberId
+     * @param token
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/getH5BannerList", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap getH5BannerList(String token, Integer memberId) throws Exception {
+        try {
+            //logger.info("获取娃娃机列表接口参数：token=" + token + ",memberId=" + memberId);
+            //验证参数
+            if (StringUtils.isEmpty(token) || memberId == null) {
+                //logger.info("用户账户接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
+                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+            }
+            //验证token
+            if (!validateTokenService.validataToken(token, memberId)) {
+                //logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            }
+           Member member =  memberService.selectById(memberId);
+           Oem oem =oemService.selectByCode(member.getLoginChannel());
+           if(oem == null){
+               oem =oemService.selectByCode("lanaokj");
+           }
+           List<OemBanner> list = oemService.selectByOemId(oem.getId());
+            //logger.info("获取娃娃机列表resultMap=" + Enviroment.RETURN_SUCCESS_MESSAGE);
+            return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, list);
+        } catch (Exception e) {
+            //logger.error("获取H5娃娃机列表出错", e);
+            e.printStackTrace();
+            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
+        }
     }
 }
