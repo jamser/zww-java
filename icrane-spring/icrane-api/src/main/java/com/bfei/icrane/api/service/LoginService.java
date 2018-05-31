@@ -60,6 +60,6 @@ public interface LoginService {
                      // , String token
     );
 
-    ResultMap weChatLogin(HttpServletRequest request, String code, String memberId, String lastLoginFrom, String IMEI, String phoneModel, String channel);
+    ResultMap weChatLogin(HttpServletRequest request, String code, String memberId, String lastLoginFrom, String IMEI, String phoneModel, String channel,String userId);
 
 }

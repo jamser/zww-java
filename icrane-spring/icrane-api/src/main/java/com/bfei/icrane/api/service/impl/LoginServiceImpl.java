@@ -452,7 +452,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public ResultMap weChatLogin(HttpServletRequest request, String code, String memberId, String lastLoginFrom, String IMEI, String phoneModel, String channel) {
+    public ResultMap weChatLogin(HttpServletRequest request, String code, String memberId, String lastLoginFrom, String IMEI, String phoneModel, String channel, String userId) {
         try {
             String ipAdrress = HttpClientUtil.getIpAdrress(request);
             //logger.info("多级渠道注册 code=" + code + ",IP=" + ipAdrress + ",memberId=" + memberId + ",lastLoginFrom=" + lastLoginFrom + ",channel=" + channel);
@@ -465,7 +465,7 @@ public class LoginServiceImpl implements LoginService {
             Member member = null;
 
             //根据redis中的缓存判断是否注册是否要重新登录
-            String openIdUnionid = redisUtil.getString(code);
+            String openIdUnionid = redisUtil.getString("register" + userId);
             if (StringUtils.isEmpty(openIdUnionid)) {
                 //新用户或者未登录H5的APP用户(redis中不存在,那么表示code是新的)
                 String result = WXUtil.getOauthInfo(code, "老子是H5");
@@ -478,7 +478,6 @@ public class LoginServiceImpl implements LoginService {
                     if (StringUtils.isEmpty(memberService.selectGzhopenIdByUnionId(unionId))) {
                         memberService.insertmember_add(wopenid, unionId);
                     }
-                    redisUtil.setString(code, wopenid + unionId, 2592000);
                     //unionId登录兼容问题
                     String openId = memberService.selectOpenIdByUnionId(unionId);
                     if (StringUtils.isEmpty(openId)) {
@@ -492,6 +491,8 @@ public class LoginServiceImpl implements LoginService {
                         if (member == null) {
                             IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.REGISTRATION_FAILED);
                         }
+
+                        redisUtil.setString("register" + member.getId(), wopenid +"+"+ unionId, 604800);
                         if (!StringUtils.isEmpty(memberId)) {
                             if (systemPrefService.selectByPrimaryKey(Enviroment.CODE_INVITE_BONUS).getType() == 1) {
                                 //绑定邀请
@@ -513,7 +514,7 @@ public class LoginServiceImpl implements LoginService {
                 }
             } else {
                 //使用openIdUnionid登录
-                member = memberService.selectByOpenId(openIdUnionid.substring(openIdUnionid.indexOf("+"), openIdUnionid.length()));
+                member = memberService.selectByOpenId(openIdUnionid.substring(0,openIdUnionid.indexOf("+")));
             }
 
             //老用户直接登录
