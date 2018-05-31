@@ -79,6 +79,8 @@ public interface MemberDao {
 
     Member selectById(Integer Id);
 
+    Member selectByAgent(Integer Id);
+
     /**
      * 更改密码
      */

@@ -17,4 +17,6 @@ public interface AgentService {
     int updateByPrimaryKeySelective(Agent record);
 
     int updateByPrimaryKey(Agent record);
+
+    int updateAgentBalance(Agent record);
 }

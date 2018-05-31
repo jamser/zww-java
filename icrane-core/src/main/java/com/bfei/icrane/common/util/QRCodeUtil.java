@@ -241,6 +241,6 @@ public class QRCodeUtil {
 
 
     public static String getshareUrl(String memberId, String channel, Integer index) {
-        return GET_SHARE_URL.replace("APPID", WxConfig.GZHAPPID).replace("REDIRECT_URI", "http%3A%2F%2Flanao.nat300.top/icrane/api/h5login").replace("SCOPE", "snsapi_userinfo").replace("STATE", memberId + "-" + channel + "_" + index);
+        return GET_SHARE_URL.replace("APPID", WxConfig.GZHAPPID).replace("REDIRECT_URI", "http%3A%2F%2Flanao.nat300.top/icrane/api/h5login").replace("SCOPE", "snsapi_userinfo").replace("STATE", memberId + "-" + channel + "_" + index + "=userId");
     }
 }

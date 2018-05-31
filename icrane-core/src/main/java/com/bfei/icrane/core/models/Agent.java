@@ -30,9 +30,7 @@ public class Agent {
 
     private BigDecimal fee;
 
-    private BigDecimal withdrawFee;
-
-    private BigDecimal balance;
+    private Long balance;
 
     public Integer getId() {
         return id;
@@ -138,19 +136,11 @@ public class Agent {
         this.fee = fee;
     }
 
-    public BigDecimal getWithdrawFee() {
-        return withdrawFee;
-    }
-
-    public void setWithdrawFee(BigDecimal withdrawFee) {
-        this.withdrawFee = withdrawFee;
-    }
-
-    public BigDecimal getBalance() {
+    public Long getBalance() {
         return balance;
     }
 
-    public void setBalance(BigDecimal balance) {
+    public void setBalance(Long balance) {
         this.balance = balance;
     }
 }

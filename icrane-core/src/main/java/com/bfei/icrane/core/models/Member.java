@@ -69,12 +69,19 @@ public class Member implements Serializable {
 
     //代理ID
     private Integer agentSuperId;
-
     private Integer agentOneId;
-
     private Integer agentTwoId;
-
     private Integer agentThreeId;
+
+
+    private Agent agentSuper;
+    private Agent agentOne;
+    private Agent agentTwo;
+    private Agent agentThree;
+
+
+
+
 
 
 

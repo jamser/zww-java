@@ -46,4 +46,9 @@ public class AgentServiceImpl implements AgentService {
     public int updateByPrimaryKey(Agent record) {
         return agentMapper.updateByPrimaryKey(record);
     }
+
+    @Override
+    public int updateAgentBalance(Agent record) {
+        return agentMapper.updateAgentBalance(record);
+    }
 }

@@ -1,21 +1,21 @@
 package com.bfei.icrane.core.service.impl;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.bfei.icrane.common.util.BitStatesUtils;
-import com.bfei.icrane.common.util.MathUtil;
+import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.dao.*;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.models.vo.ChannelChargeOrder;
 import com.bfei.icrane.core.service.AccountService;
+import com.bfei.icrane.core.service.AgentChargeService;
+import com.bfei.icrane.core.service.AgentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bfei.icrane.common.util.PageBean;
-import com.bfei.icrane.common.util.TimeUtil;
 import com.bfei.icrane.core.service.ChargeOrderService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +40,10 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
     SystemPrefDao systemPrefDao;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private AgentChargeService agentChargeService;
+    @Autowired
+    private AgentService agentService;
 
     @Override
     public int createChareOrder(ChargeOrder order) {
@@ -111,7 +115,9 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
     public ChargeOrder orderSuccess(String orderNo, Double fee) {
         try {
             ChargeOrder chargeOrder = chargeOrderDao.selectByOrderNo(orderNo);
+
             if (chargeOrder == null || chargeOrder.getChargeState() == 1) {
+                logger.error("【查询订单】订单不存在 或者 订单已经支付");
                 return null;
             }
             //金额是否一致
@@ -123,6 +129,10 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
 
             //修改订单状态
             chargeOrderDao.orderSuccess(orderNo, new Date());
+
+            //代理收益
+            createAgentCharge(chargeOrder);
+
             //普通礼包修改首充次数
             ChargeOrder order = chargeOrder;
             Integer memberId = order.getMemberId();
@@ -253,6 +263,83 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
             throw e;
         }
     }
+
+
+    private void createAgentCharge(ChargeOrder chargeOrder) {
+        Member member = memberDao.selectByAgent(chargeOrder.getMemberId());
+        BigDecimal price = new BigDecimal(chargeOrder.getPrice());
+        AgentCharge agentCharge = new AgentCharge();
+        agentCharge.setOrderId(chargeOrder.getId(   ));
+        Agent agent = new Agent();
+        agent.setUpdateTime(new Date());
+        BigDecimal income;
+
+        if (!StringUtils.isEmpty(member.getAgentSuper()) ||
+                !StringUtils.isEmpty(member.getAgentOne()) ||
+                !StringUtils.isEmpty(member.getAgentTwo()) ||
+                !StringUtils.isEmpty(member.getAgentThree())) {
+
+
+            //计算代理收益价格
+            if (AgentUtils.isNotNull(member.getAgentSuper())) {
+                agentCharge.setAgentSuperId(member.getAgentSuperId());
+                agentCharge.setAgentSuperFee(member.getAgentSuper().getFee());
+                if (AgentUtils.isNotNull(member.getAgentOne())) {
+                    income = (member.getAgentSuper().getFee().subtract(member.getAgentOne().getFee())).multiply(price.multiply(new BigDecimal(100)));
+                } else {
+                    income = member.getAgentSuper().getFee().multiply(price.multiply(new BigDecimal(100)));
+                }
+                agentCharge.setAgentSuperIncome(income.longValue());
+                agent.setId(member.getAgentSuper().getId());
+                agent.setBalance(income.longValue());
+                agentService.updateAgentBalance(agent);
+                logger.info("代理 {} ,增加金额 {},订单号 {}", member.getAgentSuperId(), income.longValue(), agentCharge.getOrderId());
+            }
+            if (AgentUtils.isNotNull(member.getAgentOne())) {
+                agentCharge.setAgentOneId(member.getAgentOneId());
+                agentCharge.setAgentOneFee(member.getAgentOne().getFee());
+                if (AgentUtils.isNotNull(member.getAgentTwo())) {
+                    income = (member.getAgentOne().getFee().subtract(member.getAgentTwo().getFee())).multiply(price.multiply(new BigDecimal(100)));
+                } else {
+                    income = member.getAgentOne().getFee().multiply(price.multiply(new BigDecimal(100)));
+                }
+                agentCharge.setAgentOneIncome(income.longValue());
+                agent.setId(member.getAgentOne().getId());
+                agent.setBalance(income.longValue());
+                agentService.updateAgentBalance(agent);
+                logger.info("代理 {} ,增加金额 {},订单号 {}", member.getAgentOneId(), income.longValue(), agentCharge.getOrderId());
+            }
+            if (AgentUtils.isNotNull(member.getAgentTwo())) {
+                agentCharge.setAgentTwoId(member.getAgentTwoId());
+                agentCharge.setAgentTwoFee(member.getAgentTwo().getFee());
+                if (AgentUtils.isNotNull(member.getAgentThree())) {
+                    income = (member.getAgentTwo().getFee().subtract(member.getAgentThree().getFee())).multiply(price.multiply(new BigDecimal(100)));
+                } else {
+                    income = member.getAgentTwo().getFee().multiply(price.multiply(new BigDecimal(100)));
+                }
+                agentCharge.setAgentTwoIncome(income.longValue());
+                agent.setId(member.getAgentTwo().getId());
+                agent.setBalance(income.longValue());
+                agentService.updateAgentBalance(agent);
+                logger.info("代理 {} ,增加金额 {},订单号 {}", member.getAgentTwoId(), income.longValue(), agentCharge.getOrderId());
+            }
+            if (AgentUtils.isNotNull(member.getAgentThree())) {
+                agentCharge.setAgentThreeId(member.getAgentThreeId());
+                agentCharge.setAgentThreeFee(member.getAgentThree().getFee());
+                income = member.getAgentThree().getFee().multiply(price.multiply(new BigDecimal(100)));
+                agentCharge.setAgentThreeIncome(income.longValue());
+                agent.setId(member.getAgentThree().getId());
+                agent.setBalance(income.longValue());
+                agentService.updateAgentBalance(agent);
+                logger.info("代理 {} ,增加金额 {},订单号 {}", member.getAgentThreeId(), income.longValue(), agentCharge.getOrderId());
+            }
+            agentCharge.setCreateTime(new Date());
+            agentCharge.setUpdateTime(new Date());
+            agentChargeService.insertSelective(agentCharge);
+            logger.info("生成代理收益数据，订单号 {},订单详情 {}", agentCharge.getOrderId(), agentCharge.toString());
+        }
+    }
+
 
     @Override
     public int orderFailure(String orderNo) {

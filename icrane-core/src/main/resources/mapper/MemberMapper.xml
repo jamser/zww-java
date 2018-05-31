@@ -19,7 +19,7 @@
         <result column="modified_date" jdbcType="TIMESTAMP" property="modifiedDate"/>
         <result column="modified_by" jdbcType="INTEGER" property="modifiedBy"/>
         <result column="last_login_date" jdbcType="TIMESTAMP" property="lastLoginDate"/>
-        <result column="last_logoff_date" jdbcType="TIMESTAMP"  property="lastLogoffDate"/>
+        <result column="last_logoff_date" jdbcType="TIMESTAMP" property="lastLogoffDate"/>
         <result column="online_flg" jdbcType="INTEGER" property="onlineFlg"/>
         <result column="icon_context_path" jdbcType="VARCHAR" property="iconContextPath"/>
         <result column="icon_file_name" jdbcType="VARCHAR" property="iconFileName"/>
@@ -35,10 +35,10 @@
         <result column="register_channel" jdbcType="VARCHAR" property="registerChannel"/>
         <result column="login_channel" jdbcType="VARCHAR" property="loginChannel"/>
         <result column="phone_model" jdbcType="VARCHAR" property="phoneModel"/>
-        <result column="agent_super_id" property="agentSuperId" jdbcType="INTEGER" />
-        <result column="agent_one_id" property="agentOneId" jdbcType="INTEGER" />
-        <result column="agent_two_id" property="agentTwoId" jdbcType="INTEGER" />
-        <result column="agent_three_id" property="agentThreeId" jdbcType="INTEGER" />
+        <result column="agent_super_id" property="agentSuperId" jdbcType="INTEGER"/>
+        <result column="agent_one_id" property="agentOneId" jdbcType="INTEGER"/>
+        <result column="agent_two_id" property="agentTwoId" jdbcType="INTEGER"/>
+        <result column="agent_three_id" property="agentThreeId" jdbcType="INTEGER"/>
         <association property="prefset" javaType="PrefSet">
             <id property="memberId" column="member_id"/>
             <result property="musicFlg" column="music_flg"/>
@@ -49,15 +49,68 @@
                      select="com.bfei.icrane.core.dao.AccountDao.selectById" column="id">
         </association>
     </resultMap>
-    <sql id="Base_Column_List" >
+
+
+    <resultMap id="AgentResultMap" type="com.bfei.icrane.core.models.Member">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="memberID" jdbcType="VARCHAR" property="memberID"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="weixin_id" jdbcType="VARCHAR" property="weixinId"/>
+        <result column="open_id" jdbcType="VARCHAR" property="openId"/>
+        <result column="union_id" jdbcType="VARCHAR" property="unionId"/>
+        <result column="gender" jdbcType="VARCHAR" property="gender"/>
+        <result column="birthday" jdbcType="DATE" property="birthday"/>
+        <result column="catch_number" jdbcType="VARCHAR" property="catchNumber"/>
+        <result column="register_date" jdbcType="TIMESTAMP" property="registerDate"/>
+        <result column="modified_date" jdbcType="TIMESTAMP" property="modifiedDate"/>
+        <result column="modified_by" jdbcType="INTEGER" property="modifiedBy"/>
+        <result column="last_login_date" jdbcType="TIMESTAMP" property="lastLoginDate"/>
+        <result column="last_logoff_date" jdbcType="TIMESTAMP" property="lastLogoffDate"/>
+        <result column="online_flg" jdbcType="INTEGER" property="onlineFlg"/>
+        <result column="icon_context_path" jdbcType="VARCHAR" property="iconContextPath"/>
+        <result column="icon_file_name" jdbcType="VARCHAR" property="iconFileName"/>
+        <result column="icon_real_path" jdbcType="VARCHAR" property="iconRealPath"/>
+        <result column="easemob_uuid" jdbcType="VARCHAR" property="easemobUuid"/>
+        <result column="active_flg" jdbcType="VARCHAR" property="activeFlg"/>
+        <result column="invite_flg" jdbcType="VARCHAR" property="inviteFlg"/>
+        <result column="invite_flg_web" jdbcType="VARCHAR" property="inviteFlgWeb"/>
+        <result column="register_from" jdbcType="VARCHAR" property="registerFrom"/>
+        <result column="last_login_from" jdbcType="VARCHAR" property="lastLoginFrom"/>
+        <result column="first_login" jdbcType="INTEGER" property="firstLogin"/>
+        <result column="first_charge" jdbcType="INTEGER" property="firstCharge"/>
+        <result column="register_channel" jdbcType="VARCHAR" property="registerChannel"/>
+        <result column="login_channel" jdbcType="VARCHAR" property="loginChannel"/>
+        <result column="phone_model" jdbcType="VARCHAR" property="phoneModel"/>
+        <result column="agent_super_id" property="agentSuperId" jdbcType="INTEGER"/>
+        <result column="agent_one_id" property="agentOneId" jdbcType="INTEGER"/>
+        <result column="agent_two_id" property="agentTwoId" jdbcType="INTEGER"/>
+        <result column="agent_three_id" property="agentThreeId" jdbcType="INTEGER"/>
+        <association property="agentSuper" javaType="com.bfei.icrane.core.models.Agent"
+                     select="com.bfei.icrane.core.dao.AgentMapper.selectByPrimaryKey" column="agent_super_id">
+        </association>
+        <association property="agentOne" javaType="com.bfei.icrane.core.models.Agent"
+                     select="com.bfei.icrane.core.dao.AgentMapper.selectByPrimaryKey" column="agent_one_id">
+        </association>
+        <association property="agentTwo" javaType="com.bfei.icrane.core.models.Agent"
+                     select="com.bfei.icrane.core.dao.AgentMapper.selectByPrimaryKey" column="agent_two_id">
+        </association>
+        <association property="agentThree" javaType="com.bfei.icrane.core.models.Agent"
+                     select="com.bfei.icrane.core.dao.AgentMapper.selectByPrimaryKey" column="agent_three_id">
+        </association>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
         id, password, memberID, name, mobile, weixin_id,open_id,union_id,gender,birthday,catch_number,register_date,modified_date,modified_by,last_login_date,last_logoff_date,online_flg,icon_context_path,icon_file_name,icon_real_path,easemob_uuid,
         active_flg,invite_flg,invite_flg_web,register_from,last_login_from,first_login,first_charge,register_channel,login_channel,phone_model,agent_super_id,agent_one_id,agent_two_id,agent_three_id
     </sql>
-    <sql id="Member_Column_List" >
+    <sql id="Member_Column_List">
         id, password, memberID, name, mobile, weixin_id,gender,birthday,catch_number,register_date,modified_date,modified_by,last_login_date,last_logoff_date,online_flg,icon_context_path,icon_file_name,icon_real_path,easemob_uuid,
     active_flg,invite_flg,invite_flg_web,register_from,last_login_from,first_login,first_charge,register_channel,login_channel,phone_model,agent_super_id,agent_one_id,agent_two_id,agent_three_id
      </sql>
-   <!-- 目的：为dao接口方法提供sql语句配置 -->
+    <!-- 目的：为dao接口方法提供sql语句配置 -->
     <update id="updateByPrimaryKeySelective" parameterType="Member">
         update t_member
         <set>
@@ -122,7 +175,7 @@
     <select id="login" resultMap="BaseResultMap" parameterType="Member">
         <!-- 具体的sql -->
         SELECT
-        <include refid="Member_Column_List" />,
+        <include refid="Member_Column_List"/>,
         member_id,music_flg,sound_flg,shock_flg
         FROM
         t_member m LEFT JOIN t_member_pref p ON
@@ -133,19 +186,29 @@
 
     <select id="selectByMobile" resultMap="BaseResultMap" parameterType="Member">
         SELECT
-        <include refid="Member_Column_List" />
-		FROM
-			t_member
-		WHERE
-			mobile = #{mobile}
-		LIMIT 0,
-		1
+        <include refid="Member_Column_List"/>
+        FROM
+        t_member
+        WHERE
+        mobile = #{mobile}
+        LIMIT 0,
+        1
     </select>
 
     <select id="selectById" resultMap="BaseResultMap">
         <!-- 具体的sql -->
         SELECT
-        <include refid="Member_Column_List" />
+        <include refid="Member_Column_List"/>
+        FROM
+        t_member
+        WHERE
+        id = #{id}
+    </select>
+
+    <select id="selectByAgent" resultMap="AgentResultMap">
+        <!-- 具体的sql -->
+        SELECT
+        <include refid="Member_Column_List"/>
         FROM
         t_member
         WHERE
@@ -155,7 +218,7 @@
     <select id="selectByMemberID" resultType="Member" parameterType="Member">
         <!-- 具体的sql -->
         SELECT
-        <include refid="Member_Column_List" />
+        <include refid="Member_Column_List"/>
         FROM
         t_member
         WHERE
@@ -414,16 +477,16 @@
             <if test="phoneModel != null">
                 phone_model,
             </if>
-            <if test="agentSuperId != null" >
+            <if test="agentSuperId != null">
                 agent_super_id,
             </if>
-            <if test="agentOneId != null" >
+            <if test="agentOneId != null">
                 agent_one_id,
             </if>
-            <if test="agentTwoId != null" >
+            <if test="agentTwoId != null">
                 agent_two_id,
             </if>
-            <if test="agentThreeId != null" >
+            <if test="agentThreeId != null">
                 agent_three_id,
             </if>
         </trim>
@@ -473,16 +536,16 @@
             <if test="phoneModel != null">
                 #{phoneModel,jdbcType=VARCHAR},
             </if>
-            <if test="agentSuperId != null" >
+            <if test="agentSuperId != null">
                 #{agentSuperId,jdbcType=INTEGER},
             </if>
-            <if test="agentOneId != null" >
+            <if test="agentOneId != null">
                 #{agentOneId,jdbcType=INTEGER},
             </if>
-            <if test="agentTwoId != null" >
+            <if test="agentTwoId != null">
                 #{agentTwoId,jdbcType=INTEGER},
             </if>
-            <if test="agentThreeId != null" >
+            <if test="agentThreeId != null">
                 #{agentThreeId,jdbcType=INTEGER},
             </if>
         </trim>
@@ -702,12 +765,12 @@
     <!-- 根据 memberId查询用户金币数 -->
     <select id="getUserInfoById" resultMap="BaseResultMap"
             parameterType="int">
-		select
-        <include refid="Member_Column_List" />,member_id ,music_flg,sound_flg,shock_flg
-		from t_member a,t_member_pref b
-		where
-		a.id=#{memberId} and a.id=b.member_id
-	</select>
+        select
+        <include refid="Member_Column_List"/>,member_id ,music_flg,sound_flg,shock_flg
+        from t_member a,t_member_pref b
+        where
+        a.id=#{memberId} and a.id=b.member_id
+    </select>
     <!-- <select id="getUserAll" resultType="User"> SELECT id,name,password
         FROM t_user ORDER BY name LIMIT #{offset}, #{limit} </select> <insert id="insertUser"
         parameterType="User"> INSERT INTO t_user(name,password, mobile, created_date,created_by,modified_date,modified_by)
@@ -717,7 +780,7 @@
     <!-- 分页查询用户列表 -->
     <select id="getUserList" resultMap="BaseResultMap">
         select
-        <include refid="Member_Column_List" />
+        <include refid="Member_Column_List"/>
         from t_member
         where 1=1
         <if test="registerChannel != null">
@@ -811,7 +874,7 @@
 
     <select id="getUserList1" resultMap="BaseResultMap">
         select
-        <include refid="Member_Column_List" />
+        <include refid="Member_Column_List"/>
         from t_member
         where 1=1
         <if test="name != null">
@@ -867,12 +930,12 @@
 	</select>
 
     <select id="getAllById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
-		select
-        <include refid="Member_Column_List" />
-		from t_member
-		where
-		id = #{id}
-	</select>
+        select
+        <include refid="Member_Column_List"/>
+        from t_member
+        where
+        id = #{id}
+    </select>
 
     <select id="getMemberAllGroupBy" resultMap="BaseResultMap">
 		select
@@ -949,12 +1012,14 @@
     </select>
     <select id="selectOutTokenUserId" resultType="java.lang.Integer">
         <![CDATA[
+
         SELECT
             member_id
         FROM
             t_member_token
         WHERE
             valid_start_date < NOW() - INTERVAL 24 HOUR;
+
         ]]>
     </select>
 

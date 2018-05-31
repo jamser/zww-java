@@ -12,10 +12,10 @@
     <result column="agent_one_fee" property="agentOneFee" jdbcType="DECIMAL" />
     <result column="agent_two_fee" property="agentTwoFee" jdbcType="DECIMAL" />
     <result column="agent_three_fee" property="agentThreeFee" jdbcType="DECIMAL" />
-    <result column="agent_super_income" property="agentSuperIncome" jdbcType="DECIMAL" />
-    <result column="agent_one_income" property="agentOneIncome" jdbcType="DECIMAL" />
-    <result column="agent_two_income" property="agentTwoIncome" jdbcType="DECIMAL" />
-    <result column="agent_three_income" property="agentThreeIncome" jdbcType="DECIMAL" />
+    <result column="agent_super_income" property="agentSuperIncome" jdbcType="BIGINT" />
+    <result column="agent_one_income" property="agentOneIncome" jdbcType="BIGINT" />
+    <result column="agent_two_income" property="agentTwoIncome" jdbcType="BIGINT" />
+    <result column="agent_three_income" property="agentThreeIncome" jdbcType="BIGINT" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -44,8 +44,8 @@
     values (#{id,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, #{agentSuperId,jdbcType=INTEGER}, 
       #{agentOneId,jdbcType=INTEGER}, #{agentTwoId,jdbcType=INTEGER}, #{agentThreeId,jdbcType=INTEGER}, 
       #{agentSuperFee,jdbcType=DECIMAL}, #{agentOneFee,jdbcType=DECIMAL}, #{agentTwoFee,jdbcType=DECIMAL}, 
-      #{agentThreeFee,jdbcType=DECIMAL}, #{agentSuperIncome,jdbcType=DECIMAL}, #{agentOneIncome,jdbcType=DECIMAL}, 
-      #{agentTwoIncome,jdbcType=DECIMAL}, #{agentThreeIncome,jdbcType=DECIMAL}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{agentThreeFee,jdbcType=DECIMAL}, #{agentSuperIncome,jdbcType=BIGINT}, #{agentOneIncome,jdbcType=BIGINT}, 
+      #{agentTwoIncome,jdbcType=BIGINT}, #{agentThreeIncome,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.AgentCharge" >
@@ -132,16 +132,16 @@
         #{agentThreeFee,jdbcType=DECIMAL},
       </if>
       <if test="agentSuperIncome != null" >
-        #{agentSuperIncome,jdbcType=DECIMAL},
+        #{agentSuperIncome,jdbcType=BIGINT},
       </if>
       <if test="agentOneIncome != null" >
-        #{agentOneIncome,jdbcType=DECIMAL},
+        #{agentOneIncome,jdbcType=BIGINT},
       </if>
       <if test="agentTwoIncome != null" >
-        #{agentTwoIncome,jdbcType=DECIMAL},
+        #{agentTwoIncome,jdbcType=BIGINT},
       </if>
       <if test="agentThreeIncome != null" >
-        #{agentThreeIncome,jdbcType=DECIMAL},
+        #{agentThreeIncome,jdbcType=BIGINT},
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
@@ -182,16 +182,16 @@
         agent_three_fee = #{agentThreeFee,jdbcType=DECIMAL},
       </if>
       <if test="agentSuperIncome != null" >
-        agent_super_income = #{agentSuperIncome,jdbcType=DECIMAL},
+        agent_super_income = #{agentSuperIncome,jdbcType=BIGINT},
       </if>
       <if test="agentOneIncome != null" >
-        agent_one_income = #{agentOneIncome,jdbcType=DECIMAL},
+        agent_one_income = #{agentOneIncome,jdbcType=BIGINT},
       </if>
       <if test="agentTwoIncome != null" >
-        agent_two_income = #{agentTwoIncome,jdbcType=DECIMAL},
+        agent_two_income = #{agentTwoIncome,jdbcType=BIGINT},
       </if>
       <if test="agentThreeIncome != null" >
-        agent_three_income = #{agentThreeIncome,jdbcType=DECIMAL},
+        agent_three_income = #{agentThreeIncome,jdbcType=BIGINT},
       </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -213,10 +213,10 @@
       agent_one_fee = #{agentOneFee,jdbcType=DECIMAL},
       agent_two_fee = #{agentTwoFee,jdbcType=DECIMAL},
       agent_three_fee = #{agentThreeFee,jdbcType=DECIMAL},
-      agent_super_income = #{agentSuperIncome,jdbcType=DECIMAL},
-      agent_one_income = #{agentOneIncome,jdbcType=DECIMAL},
-      agent_two_income = #{agentTwoIncome,jdbcType=DECIMAL},
-      agent_three_income = #{agentThreeIncome,jdbcType=DECIMAL},
+      agent_super_income = #{agentSuperIncome,jdbcType=BIGINT},
+      agent_one_income = #{agentOneIncome,jdbcType=BIGINT},
+      agent_two_income = #{agentTwoIncome,jdbcType=BIGINT},
+      agent_three_income = #{agentThreeIncome,jdbcType=BIGINT},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}

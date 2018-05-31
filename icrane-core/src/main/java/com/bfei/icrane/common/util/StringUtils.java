@@ -209,6 +209,13 @@ public class StringUtils {
         return false;
     }
 
+    public static boolean isAgentEmpty(Integer obj) {
+        if (obj == null || obj == 0) {
+            return true;
+        }
+        return false;
+    }
+
     //判断值是否为空   为空返回false   不为空返回true
     public static boolean isNotEmpty(Object obj) {
         if (obj != null && !"".equals(obj)) {
