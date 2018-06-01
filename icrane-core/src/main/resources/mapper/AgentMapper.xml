@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="salt" property="salt" jdbcType="VARCHAR" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
     <result column="level" property="level" jdbcType="INTEGER" />
@@ -16,10 +17,11 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="fee" property="fee" jdbcType="DECIMAL" />
     <result column="balance" property="balance" jdbcType="BIGINT" />
+    <result column="balance_disabled" property="balanceDisabled" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, username, password, phone, nick_name, level, status, agent_id, agent_one_id, 
-    agent_two_id, create_time, update_time, fee, balance
+    id, username, password, salt, phone, nick_name, level, status, agent_id, agent_one_id, 
+    agent_two_id, create_time, update_time, fee, balance, balance_disabled
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -33,27 +35,18 @@
   </delete>
   <insert id="insert" parameterType="com.bfei.icrane.core.models.Agent" >
     insert into t_agent (id, username, password, 
-      phone, nick_name, level, 
-      status, agent_id, agent_one_id, 
-      agent_two_id, create_time, update_time, 
-      fee, balance)
+      salt, phone, nick_name, 
+      level, status, agent_id, 
+      agent_one_id, agent_two_id, create_time, 
+      update_time, fee, balance, 
+      balance_disabled)
     values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{phone,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, 
-      #{status,jdbcType=INTEGER}, #{agentId,jdbcType=BIGINT}, #{agentOneId,jdbcType=BIGINT}, 
-      #{agentTwoId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{fee,jdbcType=DECIMAL}, #{balance,jdbcType=BIGINT})
+      #{salt,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, 
+      #{level,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{agentId,jdbcType=BIGINT}, 
+      #{agentOneId,jdbcType=BIGINT}, #{agentTwoId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{fee,jdbcType=DECIMAL}, #{balance,jdbcType=BIGINT}, 
+      #{balanceDisabled,jdbcType=BIGINT})
   </insert>
-
-
-  <!-- 更新余额 -->
-  <update id="updateAgentBalance">
-    UPDATE t_agent
-    SET
-    balance = balance + #{balance}
-    WHERE
-    id = #{id}
-  </update>
-
   <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.Agent" >
     insert into t_agent
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -65,6 +58,9 @@
       </if>
       <if test="password != null" >
         password,
+      </if>
+      <if test="salt != null" >
+        salt,
       </if>
       <if test="phone != null" >
         phone,
@@ -99,6 +95,9 @@
       <if test="balance != null" >
         balance,
       </if>
+      <if test="balanceDisabled != null" >
+        balance_disabled,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -109,6 +108,9 @@
       </if>
       <if test="password != null" >
         #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null" >
+        #{salt,jdbcType=VARCHAR},
       </if>
       <if test="phone != null" >
         #{phone,jdbcType=VARCHAR},
@@ -143,6 +145,9 @@
       <if test="balance != null" >
         #{balance,jdbcType=BIGINT},
       </if>
+      <if test="balanceDisabled != null" >
+        #{balanceDisabled,jdbcType=BIGINT},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.bfei.icrane.core.models.Agent" >
@@ -153,6 +158,9 @@
       </if>
       <if test="password != null" >
         password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null" >
+        salt = #{salt,jdbcType=VARCHAR},
       </if>
       <if test="phone != null" >
         phone = #{phone,jdbcType=VARCHAR},
@@ -187,6 +195,9 @@
       <if test="balance != null" >
         balance = #{balance,jdbcType=BIGINT},
       </if>
+      <if test="balanceDisabled != null" >
+        balance_disabled = #{balanceDisabled,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -194,6 +205,7 @@
     update t_agent
     set username = #{username,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       nick_name = #{nickName,jdbcType=VARCHAR},
       level = #{level,jdbcType=INTEGER},
@@ -204,7 +216,8 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       fee = #{fee,jdbcType=DECIMAL},
-      balance = #{balance,jdbcType=BIGINT}
+      balance = #{balance,jdbcType=BIGINT},
+      balance_disabled = #{balanceDisabled,jdbcType=BIGINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

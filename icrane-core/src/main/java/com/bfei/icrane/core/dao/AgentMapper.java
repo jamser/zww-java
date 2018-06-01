@@ -14,6 +14,4 @@ public interface AgentMapper {
     int updateByPrimaryKeySelective(Agent record);
 
     int updateByPrimaryKey(Agent record);
-
-    int updateAgentBalance(Agent record);
 }

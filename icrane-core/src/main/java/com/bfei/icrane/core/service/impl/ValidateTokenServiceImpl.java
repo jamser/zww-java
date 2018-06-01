@@ -1,6 +1,8 @@
 package com.bfei.icrane.core.service.impl;
 
 
+import com.bfei.icrane.core.dao.AgentTokenMapper;
+import com.bfei.icrane.core.models.AgentToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +19,15 @@ import com.bfei.icrane.core.service.ValidateTokenService;
  */
 @Service("ValidataTokenService")
 public class ValidateTokenServiceImpl implements ValidateTokenService {
-	 @Autowired
-	 ValidateTokenDao validateTokenDao;
-	 @Autowired
-	 MemberDao memberDao;
-	 RedisUtil redisUtil = new RedisUtil();
-	    
+    @Autowired
+    ValidateTokenDao validateTokenDao;
+    @Autowired
+    MemberDao memberDao;
+    RedisUtil redisUtil = new RedisUtil();
+
+    @Autowired
+    private AgentTokenMapper agentTokenMapper;
+
     @Override
     public MemberToken selectByMemberId(int memberId) {
         // TODO Auto-generated method stub
@@ -60,7 +65,33 @@ public class ValidateTokenServiceImpl implements ValidateTokenService {
         validateTokenDao.deleteByMemberId(memberId);
         return false;
     }
-    
+
+    @Override
+    public boolean validataAgentToken(String token, Integer agentId) {
+        if (redisUtil.existsKey(token)) {
+            String vAgentId = redisUtil.getString(token);
+            if (vAgentId.equals(String.valueOf(agentId))) {
+                redisUtil.setString(token, String.valueOf(agentId), 3600 * 24);
+                return true;
+            } else {
+                AgentToken agentToken = agentTokenMapper.selectByAgentId(Integer.parseInt(vAgentId));
+                if (agentToken != null && agentToken.getAgentId().equals(String.valueOf(agentId))) {
+                    redisUtil.setString(token, String.valueOf(agentId), 3600 * 24);
+                    return true;
+                }
+                redisUtil.delKey(token);
+                return false;
+            }
+        }
+        AgentToken agentToken = agentTokenMapper.selectByPrimaryKey(token);
+        if (agentToken != null && String.valueOf(agentToken.getAgentId()).equals(String.valueOf(agentId))) {
+            redisUtil.setString(token, String.valueOf(agentId), 3600 * 24);
+            return true;
+        }
+        agentTokenMapper.deleteByAgentId(agentId);
+        return false;
+    }
+
     public boolean validataToken(String token) {
         if (redisUtil.existsKey(token)) {
             String memberId = redisUtil.getString(token);
@@ -68,15 +99,14 @@ public class ValidateTokenServiceImpl implements ValidateTokenService {
             return true;
         }
         MemberToken member = validateTokenDao.selectByToken(token);
-        if(member!=null) {
-        	redisUtil.setString(token, String.valueOf(member.getMemberId()),3600 * 24);
-        	return true;
-        }else {
-        	redisUtil.delKey(token);
-        	return false;
+        if (member != null) {
+            redisUtil.setString(token, String.valueOf(member.getMemberId()), 3600 * 24);
+            return true;
+        } else {
+            redisUtil.delKey(token);
+            return false;
         }
     }
-
 
 
 }
