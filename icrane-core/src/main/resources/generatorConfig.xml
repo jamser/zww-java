@@ -54,10 +54,10 @@
         </javaClientGenerator>
         <!-- 指定数据库表 -->
 
-        <table schema="" tableName="t_oem" domainObjectName="Oem" enableCountByExample="false" enableUpdateByExample="false"
+        <table schema="" tableName="agent_withdraw" domainObjectName="agentWithdraw" enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
         </table>
-        <table schema="" tableName="t_oem_banner" domainObjectName="OemBanner" enableCountByExample="false" enableUpdateByExample="false"
+        <table schema="" tableName="bank_info" domainObjectName="BankInfo" enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
         </table>
     </context>

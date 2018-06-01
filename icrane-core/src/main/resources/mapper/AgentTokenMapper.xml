@@ -10,7 +10,7 @@
   <sql id="Base_Column_List" >
     token, agent_id, valid_start_date, valid_end_date
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByToken" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from t_agent_token

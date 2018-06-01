@@ -83,7 +83,7 @@ public class ValidateTokenServiceImpl implements ValidateTokenService {
                 return false;
             }
         }
-        AgentToken agentToken = agentTokenMapper.selectByPrimaryKey(token);
+        AgentToken agentToken = agentTokenMapper.selectByToken(token);
         if (agentToken != null && String.valueOf(agentToken.getAgentId()).equals(String.valueOf(agentId))) {
             redisUtil.setString(token, String.valueOf(agentId), 3600 * 24);
             return true;
@@ -108,7 +108,21 @@ public class ValidateTokenServiceImpl implements ValidateTokenService {
         }
     }
 
-
+    public boolean validataAgentToken(String token) {
+        if (redisUtil.existsKey(token)) {
+            String memberId = redisUtil.getString(token);
+            redisUtil.setString(token, memberId, 3600 * 24);
+            return true;
+        }
+        AgentToken agentToken = agentTokenMapper.selectByToken(token);
+        if (agentToken != null) {
+            redisUtil.setString(token, String.valueOf(agentToken.getAgentId()), 3600 * 24);
+            return true;
+        } else {
+            redisUtil.delKey(token);
+            return false;
+        }
+    }
 }
 
 

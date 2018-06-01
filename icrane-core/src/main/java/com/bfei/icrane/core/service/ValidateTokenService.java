@@ -21,4 +21,6 @@ public interface ValidateTokenService {
 
     int updateToken(MemberToken mtoken);
 
+    boolean validataAgentToken(String token);
+
 }

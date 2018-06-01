@@ -48,15 +48,15 @@ public class AgentController {
     public ResultMap getAccount(Integer agentId, String token) {
         try {
             logger.info("代理账户接口参数:memberId=" + agentId + ",token=" + token);
-            if (agentId == null || StringUtils.isEmpty(token)) {
+           /* if (agentId == null || StringUtils.isEmpty(token)) {
                 logger.info("用户账户接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
                 return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }
+            }*/
             //验证token
-            if (!validateTokenService.validataAgentToken(token, agentId)) {
+           /* if (!validateTokenService.validataAgentToken(token, agentId)) {
                 logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
                 return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
+            }*/
             //return accountService.selectById(memberId);
             Agent agent = agentService.selectByPrimaryKey(agentId);
             Long withdraw = 0L;

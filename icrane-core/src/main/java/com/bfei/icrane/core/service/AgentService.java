@@ -1,6 +1,9 @@
 package com.bfei.icrane.core.service;
 
 import com.bfei.icrane.core.models.Agent;
+import com.bfei.icrane.core.models.BankInfo;
+
+import java.util.List;
 
 /**
  * Created by moying on 2018/5/25.
@@ -19,4 +22,8 @@ public interface AgentService {
     int updateByPrimaryKey(Agent record);
 
     int updateAgentBalance(Agent record);
+
+    int insertBankInfo(BankInfo bankInfo);
+
+    List<BankInfo>  getBankInfoList(int agentId);
 }

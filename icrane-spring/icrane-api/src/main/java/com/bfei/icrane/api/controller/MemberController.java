@@ -46,11 +46,12 @@ public class MemberController {
     @RequestMapping(value = "/uploadPortrait", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> handleFileUpload(@RequestParam("file") MultipartFile file, HttpServletRequest request, String token, HttpSession session) throws Exception {
-        logger.info("头像上传接口参数memberId" + Integer.parseInt(request.getParameter("memberId").toString()) + "token=" + token);
+        String memberStr = request.getParameter("memberId").toString();
+        logger.info("头像上传接口参数memberId" + Integer.parseInt(memberStr) + "token=" + token);
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
         try {
-            int memberId = Integer.parseInt(request.getParameter("memberId").toString());
+            int memberId = Integer.parseInt(memberStr);
 
             PropFileManager propFileMgr = new PropFileManager("interface.properties");
             String ossBucketName = propFileMgr.getProperty("aliyun.ossBucketName");
@@ -60,8 +61,7 @@ public class MemberController {
                 if (StringUtils.isEmpty(token)) {
                     token = request.getParameter("token");
                 }
-                if (token == null ||
-                        "".equals(token) ||
+                if (token == null || "".equals(token) ||
                         !validateTokenService.validataToken(token)) {
                     resultMap.put("success", Enviroment.RETURN_FAILE);
                     resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
@@ -74,7 +74,7 @@ public class MemberController {
                 String suffix = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
                 // 修改后完整的文件名称
                 String fileKey = StringUtils.getRandomUUID();
-                String NewFileKey = fileKey + "." + suffix;
+                String NewFileKey = "member/" + memberStr + "/" +fileKey + "." + suffix;
 
                 byte[] bytes = file.getBytes();
                 InputStream fileInputStream = new ByteArrayInputStream(bytes);

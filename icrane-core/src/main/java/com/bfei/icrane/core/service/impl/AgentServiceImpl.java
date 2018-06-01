@@ -1,10 +1,14 @@
 package com.bfei.icrane.core.service.impl;
 
 import com.bfei.icrane.core.dao.AgentMapper;
+import com.bfei.icrane.core.dao.BankInfoMapper;
 import com.bfei.icrane.core.models.Agent;
+import com.bfei.icrane.core.models.BankInfo;
 import com.bfei.icrane.core.service.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by moying on 2018/5/25.
@@ -16,6 +20,9 @@ public class AgentServiceImpl implements AgentService {
 
     @Autowired
     private AgentMapper agentMapper;
+
+    @Autowired
+    private BankInfoMapper bankInfoMapper;
 
     @Override
     public int deleteByPrimaryKey(Integer id) {
@@ -50,5 +57,15 @@ public class AgentServiceImpl implements AgentService {
     @Override
     public int updateAgentBalance(Agent record) {
         return agentMapper.updateAgentBalance(record);
+    }
+
+    @Override
+    public int insertBankInfo(BankInfo bankInfo) {
+        return bankInfoMapper.insertSelective(bankInfo);
+    }
+
+    @Override
+    public List<BankInfo> getBankInfoList(int agentId) {
+        return bankInfoMapper.selectByAgentId(agentId);
     }
 }

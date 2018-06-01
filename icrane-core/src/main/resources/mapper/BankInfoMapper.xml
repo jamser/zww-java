@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bfei.icrane.core.dao.BankInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.BankInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="agent_id" property="agentId" jdbcType="INTEGER" />
+    <result column="card_bank" property="cardBank" jdbcType="VARCHAR" />
+    <result column="card_sub_bank" property="cardSubBank" jdbcType="VARCHAR" />
+    <result column="card_province" property="cardProvince" jdbcType="VARCHAR" />
+    <result column="card_city" property="cardCity" jdbcType="VARCHAR" />
+    <result column="card_area" property="cardArea" jdbcType="VARCHAR" />
+    <result column="card_bank_no" property="cardBankNo" jdbcType="VARCHAR" />
+    <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+    <result column="id_card_no" property="idCardNo" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="id_card_picture_pos" property="idCardPicturePos" jdbcType="VARCHAR" />
+    <result column="id_card_picture_rev" property="idCardPictureRev" jdbcType="VARCHAR" />
+    <result column="id_card_picture" property="idCardPicture" jdbcType="VARCHAR" />
+    <result column="bank_picture_pos" property="bankPicturePos" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, agent_id, card_bank, card_sub_bank, card_province, card_city, card_area, card_bank_no, 
+    card_no, id_card_no, name, phone, id_card_picture_pos, id_card_picture_rev, id_card_picture, 
+    bank_picture_pos, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bank_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bank_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bfei.icrane.core.models.BankInfo" >
+    insert into bank_info (id, agent_id, card_bank, 
+      card_sub_bank, card_province, card_city, 
+      card_area, card_bank_no, card_no, 
+      id_card_no, name, phone, 
+      id_card_picture_pos, id_card_picture_rev, id_card_picture, 
+      bank_picture_pos, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{agentId,jdbcType=INTEGER}, #{cardBank,jdbcType=VARCHAR}, 
+      #{cardSubBank,jdbcType=VARCHAR}, #{cardProvince,jdbcType=VARCHAR}, #{cardCity,jdbcType=VARCHAR}, 
+      #{cardArea,jdbcType=VARCHAR}, #{cardBankNo,jdbcType=VARCHAR}, #{cardNo,jdbcType=VARCHAR}, 
+      #{idCardNo,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{idCardPicturePos,jdbcType=VARCHAR}, #{idCardPictureRev,jdbcType=VARCHAR}, #{idCardPicture,jdbcType=VARCHAR}, 
+      #{bankPicturePos,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.BankInfo" >
+    insert into bank_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="agentId != null" >
+        agent_id,
+      </if>
+      <if test="cardBank != null" >
+        card_bank,
+      </if>
+      <if test="cardSubBank != null" >
+        card_sub_bank,
+      </if>
+      <if test="cardProvince != null" >
+        card_province,
+      </if>
+      <if test="cardCity != null" >
+        card_city,
+      </if>
+      <if test="cardArea != null" >
+        card_area,
+      </if>
+      <if test="cardBankNo != null" >
+        card_bank_no,
+      </if>
+      <if test="cardNo != null" >
+        card_no,
+      </if>
+      <if test="idCardNo != null" >
+        id_card_no,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="idCardPicturePos != null" >
+        id_card_picture_pos,
+      </if>
+      <if test="idCardPictureRev != null" >
+        id_card_picture_rev,
+      </if>
+      <if test="idCardPicture != null" >
+        id_card_picture,
+      </if>
+      <if test="bankPicturePos != null" >
+        bank_picture_pos,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="agentId != null" >
+        #{agentId,jdbcType=INTEGER},
+      </if>
+      <if test="cardBank != null" >
+        #{cardBank,jdbcType=VARCHAR},
+      </if>
+      <if test="cardSubBank != null" >
+        #{cardSubBank,jdbcType=VARCHAR},
+      </if>
+      <if test="cardProvince != null" >
+        #{cardProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="cardCity != null" >
+        #{cardCity,jdbcType=VARCHAR},
+      </if>
+      <if test="cardArea != null" >
+        #{cardArea,jdbcType=VARCHAR},
+      </if>
+      <if test="cardBankNo != null" >
+        #{cardBankNo,jdbcType=VARCHAR},
+      </if>
+      <if test="cardNo != null" >
+        #{cardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardNo != null" >
+        #{idCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardPicturePos != null" >
+        #{idCardPicturePos,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardPictureRev != null" >
+        #{idCardPictureRev,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardPicture != null" >
+        #{idCardPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="bankPicturePos != null" >
+        #{bankPicturePos,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bfei.icrane.core.models.BankInfo" >
+    update bank_info
+    <set >
+      <if test="agentId != null" >
+        agent_id = #{agentId,jdbcType=INTEGER},
+      </if>
+      <if test="cardBank != null" >
+        card_bank = #{cardBank,jdbcType=VARCHAR},
+      </if>
+      <if test="cardSubBank != null" >
+        card_sub_bank = #{cardSubBank,jdbcType=VARCHAR},
+      </if>
+      <if test="cardProvince != null" >
+        card_province = #{cardProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="cardCity != null" >
+        card_city = #{cardCity,jdbcType=VARCHAR},
+      </if>
+      <if test="cardArea != null" >
+        card_area = #{cardArea,jdbcType=VARCHAR},
+      </if>
+      <if test="cardBankNo != null" >
+        card_bank_no = #{cardBankNo,jdbcType=VARCHAR},
+      </if>
+      <if test="cardNo != null" >
+        card_no = #{cardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardNo != null" >
+        id_card_no = #{idCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardPicturePos != null" >
+        id_card_picture_pos = #{idCardPicturePos,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardPictureRev != null" >
+        id_card_picture_rev = #{idCardPictureRev,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardPicture != null" >
+        id_card_picture = #{idCardPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="bankPicturePos != null" >
+        bank_picture_pos = #{bankPicturePos,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.BankInfo" >
+    update bank_info
+    set agent_id = #{agentId,jdbcType=INTEGER},
+      card_bank = #{cardBank,jdbcType=VARCHAR},
+      card_sub_bank = #{cardSubBank,jdbcType=VARCHAR},
+      card_province = #{cardProvince,jdbcType=VARCHAR},
+      card_city = #{cardCity,jdbcType=VARCHAR},
+      card_area = #{cardArea,jdbcType=VARCHAR},
+      card_bank_no = #{cardBankNo,jdbcType=VARCHAR},
+      card_no = #{cardNo,jdbcType=VARCHAR},
+      id_card_no = #{idCardNo,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      id_card_picture_pos = #{idCardPicturePos,jdbcType=VARCHAR},
+      id_card_picture_rev = #{idCardPictureRev,jdbcType=VARCHAR},
+      id_card_picture = #{idCardPicture,jdbcType=VARCHAR},
+      bank_picture_pos = #{bankPicturePos,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByAgentId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from bank_info
+    where agentId = #{agentId,jdbcType=INTEGER}
+  </select>
+</mapper>

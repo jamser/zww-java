@@ -9,7 +9,7 @@ public interface AgentTokenMapper {
 
     int insertSelective(AgentToken record);
 
-    AgentToken selectByPrimaryKey(String token);
+    AgentToken selectByToken(String token);
 
     int updateByPrimaryKeySelective(AgentToken record);
 
