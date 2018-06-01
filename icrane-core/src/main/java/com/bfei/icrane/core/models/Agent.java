@@ -23,11 +23,11 @@ public class Agent {
 
     private Integer status;
 
-    private Long agentId;
+    private Integer agentId;
 
-    private Long agentOneId;
+    private Integer agentOneId;
 
-    private Long agentTwoId;
+    private Integer agentTwoId;
 
     private Date createTime;
 
@@ -39,5 +39,5 @@ public class Agent {
 
     private Long balanceDisabled;
 
-    private Long withdraw;
+
 }
