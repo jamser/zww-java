@@ -206,6 +206,8 @@ public class Enviroment {
     public static final String CODE_INVITE_BONUS_COUNT = "INVITE_BONUS_COUNT";//邀请奖励上限
     public static final String TYPE_INCOME = "income";
     public static final String METHOD_INVITE = "由邀请好友获取";
+    public static final String BALANCE_CHANGE_TIME = "BALANCE_CHANGE_TIME";//代理不可用余额转化时间
+
 
     /**
      * 收货地址相关
