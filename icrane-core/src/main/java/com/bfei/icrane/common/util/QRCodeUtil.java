@@ -10,6 +10,7 @@ import java.util.Objects;
 import javax.imageio.ImageIO;
 
 import com.bfei.icrane.common.wx.utils.WxConfig;
+import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.Member;
 import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
 import org.apache.commons.lang3.StringUtils;
@@ -230,6 +231,26 @@ public class QRCodeUtil {
             QRCodeUrl = myDrawLogoQRCode(logoFile, getshareUrl(member.getMemberID(), member.getRegisterChannel(), index), note);
             //缓存地址到redis
             redisUtil.setString(RedisKeyGenerator.getQRCodeKey(member.getMemberID() + member.getRegisterChannel()) + shareIMGversion, QRCodeUrl, 2147483647);
+            return QRCodeUrl;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return QRCodeUrl;
+    }
+
+    public static String getAgentUrl(Agent agent, String note, Integer index) {
+        //先查询redis
+        RedisUtil redisUtil = new RedisUtil();
+        String QRCodeUrl = redisUtil.getString(RedisKeyGenerator.getAgentCodeKey(agent.getId().toString()) + shareIMGversion);
+        //如果redis中有就从redis中查询
+        if (StringUtils.isNotEmpty(QRCodeUrl)) {
+            return QRCodeUrl;
+        }
+        try {
+            File logoFile = new File("/home/font/logo.png");
+            QRCodeUrl = myDrawLogoQRCode(logoFile, getshareUrl("agent" + agent.getId(), "qulin", index), note);
+            //缓存地址到redis
+            redisUtil.setString(RedisKeyGenerator.getAgentCodeKey(agent.getId().toString() + shareIMGversion), QRCodeUrl, 2147483647);
             return QRCodeUrl;
         } catch (Exception e) {
             e.printStackTrace();

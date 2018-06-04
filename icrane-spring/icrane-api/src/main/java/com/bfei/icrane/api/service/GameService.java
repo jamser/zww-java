@@ -193,5 +193,7 @@ public interface GameService {
 
     Map<String, String> getQRCodeImgUrl(Integer memberId, Integer version, Integer index);
 
+    Map<String, String> getAgentImgUrl(Integer agentId, Integer version, Integer index);
+
     Integer gameResult(Integer memberId, Integer dollId);
 }

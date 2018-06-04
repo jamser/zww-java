@@ -138,6 +138,7 @@ public class RedisKeyGenerator {
 
         return "machine_" + dollId + "_3";
     }
+
     //机器概率基数
     public static String getMachineBaseNum(Integer dollId) {
 
@@ -195,7 +196,7 @@ public class RedisKeyGenerator {
 
         return "room_" + dollId;
     }
-    
+
     //获取用户抓取娃娃数量    占卜房    练习房除外
     public static String getMemberToyNum(Integer memberId) {
 
@@ -258,5 +259,9 @@ public class RedisKeyGenerator {
 
     public static String getQRCodeKey(String memberId) {
         return "QRCodeKey" + memberId + "_Key";
+    }
+
+    public static String getAgentCodeKey(String agent) {
+        return "AgentCodeKey" + agent + "_Key";
     }
 }

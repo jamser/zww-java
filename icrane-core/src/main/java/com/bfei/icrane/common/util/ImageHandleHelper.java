@@ -1,5 +1,6 @@
 package com.bfei.icrane.common.util;
 
+import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.DivinationImage;
 import com.bfei.icrane.core.models.DivinationTopic;
 import com.bfei.icrane.core.models.Member;
@@ -552,7 +553,69 @@ public class ImageHandleHelper {
         InputStream is = new ByteArrayInputStream(os.toByteArray());
         AliyunServiceImpl.getInstance().putFileStreamToOSS(ossBucketName, NewFileKey, is);
         String newFileUrl = AliyunServiceImpl.getInstance().generatePresignedUrl(ossBucketName, NewFileKey, 10 * 24 * 365
-                 ).toString();
+        ).toString();
+        return newFileUrl;
+    }
+
+    public String getAgentShareUrl(Agent agent, String qrUrl, Integer version) {
+        File baseImgFile;
+        if (version == null) {
+            baseImgFile = new File("/home/share/1_3/365_dai.jpg"); // 原始图片文件
+        } else if (version == 2) {
+            baseImgFile = new File("/home/share/1_3/xiaoyaojing_dai.jpg"); // 原始图片文件
+        } else {
+            baseImgFile = new File("/home/share/1_3/365_dai.jpg"); // 原始图片文件
+        }
+        BufferedImage baseImg = null;
+        try {
+            baseImg = ImageIO.read(baseImgFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        BufferedImage qrCard = getQRCard(qrUrl, 359);
+        String agentId = agent.getId().toString();
+        Graphics2D g = baseImg.createGraphics();
+        //字体抗锯齿
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        int x = (baseImg.getWidth() - qrCard.getWidth()) / 2;
+        int y = 647;
+        //贴二维码
+        g.drawImage(qrCard, x, y, qrCard.getWidth(), qrCard.getHeight(), null);
+        //贴名字
+        int orgStringWight = g.getFontMetrics().stringWidth(agentId);
+        int orgStringLength = agentId.length();
+        Font font = getDefinedFont(2, 64);
+        g.setColor(new Color(0, 0, 0)); //根据图片的背景设置水印颜色
+        g.setFont(font);
+        String tempStr;
+        orgStringWight = g.getFontMetrics().stringWidth(agentId);
+        orgStringLength = agentId.length();
+        x = (int) (baseImg.getWidth() - orgStringWight * 0.9) / 2;
+        y = 1490;
+        while (agentId.length() > 0) {
+            tempStr = agentId.substring(0, 1);
+            agentId = agentId.substring(1, agentId.length());
+            g.drawString(tempStr, x, y);
+            x = (int) (x + (double) orgStringWight / (double) orgStringLength * 0.9);
+        }
+        g.dispose();
+
+
+        //上传云
+        PropFileManager propFileMgr = new PropFileManager("interface.properties");
+        String ossBucketName = propFileMgr.getProperty("aliyun.ossBucketName");
+        String fileKey = StringUtils.getRandomUUID();
+        String NewFileKey = fileKey + ".jpg";
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(baseImg, "123.jpg".split("\\.")[1], os);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        InputStream is = new ByteArrayInputStream(os.toByteArray());
+        AliyunServiceImpl.getInstance().putFileStreamToOSS(ossBucketName, NewFileKey, is);
+        String newFileUrl = AliyunServiceImpl.getInstance().generatePresignedUrl(ossBucketName, NewFileKey, 10 * 24 * 365
+        ).toString();
         return newFileUrl;
     }
 }

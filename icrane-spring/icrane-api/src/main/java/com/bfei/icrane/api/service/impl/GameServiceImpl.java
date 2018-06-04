@@ -7,9 +7,7 @@ import java.util.Map;
 import com.bfei.icrane.api.service.*;
 import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.models.*;
-import com.bfei.icrane.core.service.AccountService;
-import com.bfei.icrane.core.service.ChargeOrderService;
-import com.bfei.icrane.core.service.DivinationService;
+import com.bfei.icrane.core.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import com.bfei.icrane.api.facade.ServiceFacade;
 import com.bfei.icrane.core.pojos.MemberInfoPojo;
-import com.bfei.icrane.core.service.DollService;
 import com.bfei.icrane.game.GameProcessUtil;
 import com.bfei.icrane.game.GameStatusEnum;
 
@@ -45,6 +42,8 @@ public class GameServiceImpl implements GameService {
     private SystemPrefService systemPrefService;
     @Autowired
     private CatchHistoryService catchHistoryService;
+    @Autowired
+    private AgentService agentService;
 
     @Override
     public void enterDoll(Integer dollId, Integer memberId) {
@@ -599,6 +598,43 @@ public class GameServiceImpl implements GameService {
         }
         try {
             shareImgUrl = imageHandleHelper.getshareUrl(member, qrUrl, version);
+            //缓存地址到redis
+            redisUtil.setString(shareUrl + QRCodeUtil.shareIMGversion, shareImgUrl, 2147483647);
+            map.put("shareImgUrl", shareImgUrl);
+            map.put("shareUrl", shareUrl);
+            return map;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, String> getAgentImgUrl(Integer agentId, Integer version, Integer index) {
+        Agent agent = agentService.selectByPrimaryKey(agentId);
+        Map<String, String> map = new HashMap<>();
+        if (agent == null) {
+            map.put("message", "查询不到该代理");
+            return map;
+        }
+
+        String shareUrl = QRCodeUtil.getshareUrl("agent" + agent.getId(), systemPrefService.selectByPrimaryKey("CHANNEL").getValue(), index);
+        //先查询redis
+        String shareImgUrl = redisUtil.getString(shareUrl + QRCodeUtil.shareIMGversion);
+        //如果redis中有就从redis中查询
+        if (StringUtils.isNotEmpty(shareImgUrl)) {
+            map.put("shareImgUrl", shareImgUrl);
+            map.put("shareUrl", shareUrl);
+            return map;
+        }
+        ImageHandleHelper imageHandleHelper = new ImageHandleHelper();
+        //拼接
+        String qrUrl = QRCodeUtil.getAgentUrl(agent, null, index);
+        if (StringUtils.isEmpty(qrUrl)) {
+            qrUrl = "https://lanao.oss-cn-shenzhen.aliyuncs.com/other/20180604144534.png";
+        }
+        try {
+            shareImgUrl = imageHandleHelper.getAgentShareUrl(agent, qrUrl, version);
             //缓存地址到redis
             redisUtil.setString(shareUrl + QRCodeUtil.shareIMGversion, shareImgUrl, 2147483647);
             map.put("shareImgUrl", shareImgUrl);

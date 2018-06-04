@@ -11,11 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 /**
@@ -95,5 +93,18 @@ public class ShareController {
             e.printStackTrace();
             return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
         }
+    }
+
+
+    @RequestMapping(value = "/AgentImgUrl", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap AgentImgUrl(@RequestParam(required = true) Integer agentId,
+                                 @RequestParam(required = true) String token, Integer version, Integer index) {
+
+        Map<String, String> shareUrl = gameService.getAgentImgUrl(agentId, version, index);
+        ResultMap resultMap = new ResultMap("right token");
+        resultMap.setResultData(shareUrl);
+        return resultMap;
+
     }
 }
