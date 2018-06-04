@@ -17,4 +17,12 @@ public interface AgentChargeService {
     int updateByPrimaryKeySelective(AgentCharge record);
 
     int updateByPrimaryKey(AgentCharge record);
+
+    long selectByAgentSuperId(Integer agentId);
+
+    long selectByAgentOneId(Integer agentId);
+
+    long selectByAgentTwoId(Integer agentId);
+
+    long selectByAgentThreeId(Integer agentId);
 }

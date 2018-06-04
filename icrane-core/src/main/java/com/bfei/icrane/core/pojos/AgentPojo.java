@@ -1,19 +1,22 @@
-package com.bfei.icrane.core.models;
+package com.bfei.icrane.core.pojos;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
+/**
+ * Created by moying on 2018/6/4.
+ */
 @Data
-public class Agent {
+@AllArgsConstructor
+@NoArgsConstructor
+public class AgentPojo {
     private Integer id;
 
     private String username;
-
-    private String password;
-
-    private String salt;
 
     private String phone;
 
@@ -21,17 +24,11 @@ public class Agent {
 
     private Integer level;
 
-    private Integer status;
-
     private Integer agentId;
 
     private Integer agentOneId;
 
     private Integer agentTwoId;
-
-    private Date createTime;
-
-    private Date updateTime;
 
     private BigDecimal fee;
 
@@ -40,6 +37,5 @@ public class Agent {
     private Long balanceDisabled;
 
     private Long withdraw;
-
 
 }

@@ -1,6 +1,8 @@
 package com.bfei.icrane.core.service;
 
+import com.bfei.icrane.core.form.AgentForm;
 import com.bfei.icrane.core.models.Agent;
+import com.bfei.icrane.core.models.AgentToken;
 import com.bfei.icrane.core.models.BankInfo;
 
 import java.util.List;
@@ -23,7 +25,14 @@ public interface AgentService {
 
     int updateAgentBalance(Agent record);
 
+
     int insertBankInfo(BankInfo bankInfo);
 
-    List<BankInfo>  getBankInfoList(int agentId);
+    List<BankInfo> getBankInfoList(int agentId);
+
+    Agent selectByUserName(String username);
+
+    AgentToken getAgentLogin(Agent agent);
+
+    int insertAgent(Agent record,AgentForm agentForm);
 }

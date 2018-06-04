@@ -16,4 +16,6 @@ public interface AgentMapper {
     int updateByPrimaryKey(Agent record);
 
     int updateAgentBalance(Agent record);
+
+    Agent selectByUserName(String username);
 }

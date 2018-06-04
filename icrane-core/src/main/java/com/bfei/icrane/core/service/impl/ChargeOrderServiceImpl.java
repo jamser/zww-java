@@ -269,7 +269,7 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
         Member member = memberDao.selectByAgent(chargeOrder.getMemberId());
         BigDecimal price = new BigDecimal(chargeOrder.getPrice());
         AgentCharge agentCharge = new AgentCharge();
-        agentCharge.setOrderId(chargeOrder.getId(   ));
+        agentCharge.setOrderId(chargeOrder.getId());
         Agent agent = new Agent();
         agent.setUpdateTime(new Date());
         BigDecimal income;
@@ -278,6 +278,8 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                 !StringUtils.isEmpty(member.getAgentOne()) ||
                 !StringUtils.isEmpty(member.getAgentTwo()) ||
                 !StringUtils.isEmpty(member.getAgentThree())) {
+
+            Integer time = Integer.valueOf(systemPrefDao.selectByPrimaryKey(Enviroment.BALANCE_CHANGE_TIME).getValue());
 
 
             //计算代理收益价格
@@ -291,7 +293,11 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                 }
                 agentCharge.setAgentSuperIncome(income.longValue());
                 agent.setId(member.getAgentSuper().getId());
-                agent.setBalance(income.longValue());
+                if (time > 0) {
+                    agent.setBalanceDisabled(income.longValue());
+                } else {
+                    agent.setBalance(income.longValue());
+                }
                 agentService.updateAgentBalance(agent);
                 logger.info("代理 {} ,增加金额 {},订单号 {}", member.getAgentSuperId(), income.longValue(), agentCharge.getOrderId());
             }
@@ -305,7 +311,11 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                 }
                 agentCharge.setAgentOneIncome(income.longValue());
                 agent.setId(member.getAgentOne().getId());
-                agent.setBalance(income.longValue());
+                if (time > 0) {
+                    agent.setBalanceDisabled(income.longValue());
+                } else {
+                    agent.setBalance(income.longValue());
+                }
                 agentService.updateAgentBalance(agent);
                 logger.info("代理 {} ,增加金额 {},订单号 {}", member.getAgentOneId(), income.longValue(), agentCharge.getOrderId());
             }
@@ -319,7 +329,11 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                 }
                 agentCharge.setAgentTwoIncome(income.longValue());
                 agent.setId(member.getAgentTwo().getId());
-                agent.setBalance(income.longValue());
+                if (time > 0) {
+                    agent.setBalanceDisabled(income.longValue());
+                } else {
+                    agent.setBalance(income.longValue());
+                }
                 agentService.updateAgentBalance(agent);
                 logger.info("代理 {} ,增加金额 {},订单号 {}", member.getAgentTwoId(), income.longValue(), agentCharge.getOrderId());
             }
@@ -329,7 +343,11 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                 income = member.getAgentThree().getFee().multiply(price.multiply(new BigDecimal(100)));
                 agentCharge.setAgentThreeIncome(income.longValue());
                 agent.setId(member.getAgentThree().getId());
-                agent.setBalance(income.longValue());
+                if (time > 0) {
+                    agent.setBalanceDisabled(income.longValue());
+                } else {
+                    agent.setBalance(income.longValue());
+                }
                 agentService.updateAgentBalance(agent);
                 logger.info("代理 {} ,增加金额 {},订单号 {}", member.getAgentThreeId(), income.longValue(), agentCharge.getOrderId());
             }

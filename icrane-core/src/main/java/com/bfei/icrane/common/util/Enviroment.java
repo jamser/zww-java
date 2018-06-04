@@ -109,6 +109,9 @@ public class Enviroment {
      * 登录相关
      */
     public static final String CODE_REPEAT = "重复登录";
+    public static final String USERNAME_ERROR = "该用户不存在";
+    public static final String USERNAME_EXIST = "该用户已存在";
+    public static final String PASSWORD_ERROR = "密码错误";
     public static final String CODE_IS_NULL = "code无效";
     public static final String ACCOUNT_DISABLED = "账号已禁用";
     public static final String REGISTRATION_FAILED = "注册失败";
@@ -203,11 +206,21 @@ public class Enviroment {
     public static final String CODE_INVITE_BONUS_COUNT = "INVITE_BONUS_COUNT";//邀请奖励上限
     public static final String TYPE_INCOME = "income";
     public static final String METHOD_INVITE = "由邀请好友获取";
+    public static final String BALANCE_CHANGE_TIME = "BALANCE_CHANGE_TIME";//代理不可用余额转化时间
+
 
     /**
      * 收货地址相关
      */
     public static final int ISDEFAULTFLG = 1;
     public static final int NOTDEFAULTFLG = 0;
+
+    /**
+     * 代理相关
+     */
+    public static final String ADD_AGENT_SUCCESS = "添加代理成功";
+    public static final String ADD_AGENT_ERROER = "添加代理失败";
+    public static final String AGENT_LOGIN_ERROR = "代理登陆失败";
+
 
 }
