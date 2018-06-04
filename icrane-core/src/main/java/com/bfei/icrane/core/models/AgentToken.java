@@ -1,8 +1,12 @@
 package com.bfei.icrane.core.models;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+import java.io.Serializable;
 import java.util.Date;
 
-public class AgentToken extends MemberToken {
+public class AgentToken implements Serializable {
+    private static final long serialVersionUID = -3645575585891396520L;
     private String token;
 
     private Integer agentId;

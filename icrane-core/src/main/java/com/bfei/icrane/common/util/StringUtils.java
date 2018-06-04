@@ -104,6 +104,18 @@ public class StringUtils {
     }
 
     /**
+     * 代理登录token
+     *
+     * @return
+     */
+    public static String getAgentToken() {
+        return "agent_" + getRandomUUID();
+    }
+
+
+
+
+    /**
      * 手机登录token
      *
      * @return

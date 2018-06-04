@@ -44,4 +44,24 @@ public class AgentChargeServiceImpl implements AgentChargeService {
     public int updateByPrimaryKey(AgentCharge record) {
         return agentChargeMapper.updateByPrimaryKey(record);
     }
+
+    @Override
+    public long selectByAgentSuperId(Integer agentId) {
+        return agentChargeMapper.selectByAgentSuperId(agentId);
+    }
+
+    @Override
+    public long selectByAgentOneId(Integer agentId) {
+        return agentChargeMapper.selectByAgentOneId(agentId);
+    }
+
+    @Override
+    public long selectByAgentTwoId(Integer agentId) {
+        return agentChargeMapper.selectByAgentTwoId(agentId);
+    }
+
+    @Override
+    public long selectByAgentThreeId(Integer agentId) {
+        return agentChargeMapper.selectByAgentThreeId(agentId);
+    }
 }

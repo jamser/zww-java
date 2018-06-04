@@ -2,7 +2,9 @@ package com.bfei.icrane.core.service.impl;
 
 
 import com.bfei.icrane.core.dao.AgentTokenMapper;
+import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.AgentToken;
+import com.bfei.icrane.core.service.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,9 @@ public class ValidateTokenServiceImpl implements ValidateTokenService {
 
     @Autowired
     private AgentTokenMapper agentTokenMapper;
+
+    @Autowired
+    private AgentService agentService;
 
     @Override
     public MemberToken selectByMemberId(int memberId) {
@@ -74,8 +79,8 @@ public class ValidateTokenServiceImpl implements ValidateTokenService {
                 redisUtil.setString(token, String.valueOf(agentId), 3600 * 24);
                 return true;
             } else {
-                AgentToken agentToken = agentTokenMapper.selectByAgentId(Integer.parseInt(vAgentId));
-                if (agentToken != null && agentToken.getAgentId().equals(String.valueOf(agentId))) {
+                Agent agent = agentService.selectByPrimaryKey(Integer.parseInt(vAgentId));
+                if (agent != null && agent.getAgentId().equals(String.valueOf(agentId))) {
                     redisUtil.setString(token, String.valueOf(agentId), 3600 * 24);
                     return true;
                 }

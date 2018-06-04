@@ -1,21 +1,23 @@
 package com.bfei.icrane.api.controller;
 
-import com.bfei.icrane.common.util.Enviroment;
-import com.bfei.icrane.common.util.ResultMap;
-import com.bfei.icrane.common.util.StringUtils;
+import com.bfei.icrane.common.util.*;
+import com.bfei.icrane.core.form.AgentForm;
+import com.bfei.icrane.core.form.AgentLoginForm;
 import com.bfei.icrane.core.models.Agent;
-import com.bfei.icrane.core.models.AgentCharge;
+import com.bfei.icrane.core.models.AgentToken;
+import com.bfei.icrane.core.pojos.AgentPojo;
 import com.bfei.icrane.core.service.AgentChargeService;
 import com.bfei.icrane.core.service.AgentService;
 import com.bfei.icrane.core.service.ValidateTokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * Created by moying on 2018/6/1.
@@ -36,6 +38,63 @@ public class AgentController {
     @Autowired
     private AgentChargeService agentChargeService;
 
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap agentLogin(@Valid AgentLoginForm agentLoginForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            logger.error("{【代理登陆】参数不正确, agentLoginForm={}", agentLoginForm);
+            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, bindingResult.getFieldError().getDefaultMessage());
+        }
+        Agent agent = agentService.selectByUserName(agentLoginForm.getUsername());
+        if (null == agent) {
+            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.USERNAME_ERROR);
+        } else {
+            if (agent.getPassword().equals(MD5Utils.md5(agentLoginForm.getPassword(), agent.getSalt()))) {
+                AgentToken token = agentService.getAgentLogin(agent);
+                if (null == token) {
+                    return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.AGENT_LOGIN_ERROR);
+                } else {
+                    return new ResultMap(Enviroment.RETURN_SUCCESS_CODE, token);
+                }
+            }
+            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.PASSWORD_ERROR);
+        }
+    }
+
+    /**
+     * 添加代理商
+     *
+     * @return
+     */
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap addAgent(@Valid AgentForm agentForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            logger.error("{【添加代理】参数不正确, agentForm={}", agentForm);
+            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, bindingResult.getFieldError().getDefaultMessage());
+        }
+//        验证token
+        if (!validateTokenService.validataAgentToken(agentForm.getToken(), agentForm.getAgentId())) {
+            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+        }
+        Agent agent = agentService.selectByPrimaryKey(agentForm.getAgentId());
+        if (agent.getLevel() == 0 || agent.getLevel() == 1 || agent.getLevel() == 2) {
+
+            Agent newAgent = agentService.selectByUserName(agentForm.getUsername());
+            if (null != newAgent) {
+                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.USERNAME_EXIST);
+            }
+            if (agentService.insertAgent(agent, agentForm) == 1) {
+                return new ResultMap(Enviroment.ADD_AGENT_SUCCESS);
+            }
+            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.ADD_AGENT_ERROER);
+        }
+        return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.ADD_AGENT_ERROER);
+    }
+
+
     /**
      * 代理商登陆
      *
@@ -43,47 +102,41 @@ public class AgentController {
      * @param token
      * @return
      */
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/userInfo", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap getAccount(Integer agentId, String token) {
+    public ResultMap getAccount(@RequestParam(value = "agentId", required = true) Integer agentId,
+                                @RequestParam(value = "token", required = true) String token) {
         try {
             logger.info("代理账户接口参数:memberId=" + agentId + ",token=" + token);
-           /* if (agentId == null || StringUtils.isEmpty(token)) {
-                logger.info("用户账户接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }*/
             //验证token
-           /* if (!validateTokenService.validataAgentToken(token, agentId)) {
+            if (!validateTokenService.validataAgentToken(token, agentId)) {
                 logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
                 return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }*/
-            //return accountService.selectById(memberId);
+            }
             Agent agent = agentService.selectByPrimaryKey(agentId);
+
             Long withdraw = 0L;
-            AgentCharge agentCharge = new AgentCharge();
 
             switch (agent.getLevel()) {
                 case 0:
-                    agentCharge.setAgentSuperId(agent.getId());
-                    agentChargeService.insertSelective(agentCharge);
+                    withdraw = agentChargeService.selectByAgentSuperId(agent.getId());
                     break;
                 case 1:
-                    agentCharge.setAgentOneId(agent.getId());
-                    agentChargeService.insertSelective(agentCharge);
+                    withdraw = agentChargeService.selectByAgentOneId(agent.getId());
                     break;
                 case 2:
-                    agentCharge.setAgentTwoId(agent.getId());
-                    agentChargeService.insertSelective(agentCharge);
+                    withdraw = agentChargeService.selectByAgentTwoId(agent.getId());
                     break;
                 case 3:
-                    agentCharge.setAgentThreeId(agent.getId());
-                    agentChargeService.insertSelective(agentCharge);
+                    withdraw = agentChargeService.selectByAgentThreeId(agent.getId());
                     break;
                 default:
                     break;
             }
-
-            return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, agent);
+            agent.setWithdraw(withdraw);
+            AgentPojo agentPojo = new AgentPojo();
+            BeanUtils.copyProperties(agent, agentPojo);
+            return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, agentPojo);
         } catch (Exception e) {
             logger.error("用户账户接口参数异常=" + e.getMessage());
             e.printStackTrace();

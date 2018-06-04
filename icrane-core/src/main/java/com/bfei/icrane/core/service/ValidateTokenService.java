@@ -15,7 +15,7 @@ public interface ValidateTokenService {
 
     boolean validataToken(String token, Integer memberId);
 
-    boolean validataAgentToken(String token, Integer memberId);
+    boolean validataAgentToken(String token, Integer agentId);
 
     MemberToken selectByMemberId(int memberId);
 
