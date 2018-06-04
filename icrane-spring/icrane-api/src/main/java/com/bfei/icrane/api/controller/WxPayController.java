@@ -304,7 +304,7 @@ public class WxPayController {
             if (register != 1) {
                 return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.ERROR_CODE, Enviroment.RISK_CONTROL_ABNORMAL);
             }
-            return loginService.wxLogin(member, lastLoginFrom, channel, phoneModel);
+            return loginService.wxLogin(member, lastLoginFrom, channel, phoneModel,null);
         } catch (IOException e) {
             e.printStackTrace();
             logger.info(e.getMessage());

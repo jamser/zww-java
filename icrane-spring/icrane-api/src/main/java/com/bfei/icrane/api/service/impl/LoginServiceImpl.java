@@ -10,6 +10,7 @@ import java.util.Random;
 import com.bfei.icrane.api.service.ChargeService;
 import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.models.*;
+import com.bfei.icrane.core.service.AgentService;
 import com.bfei.icrane.core.service.ChargeOrderService;
 import com.bfei.icrane.core.service.RiskManagementService;
 import org.apache.commons.lang.ArrayUtils;
@@ -55,9 +56,11 @@ public class LoginServiceImpl implements LoginService {
     private RedisUtil redisUtil = new RedisUtil();
     @Autowired
     private MemberDao memberDao;
+    @Autowired
+    private AgentService agentService;
 
     @Override
-    public IcraneResult wxLogin(Member member, String lastLoginFrom, String channel, String phoneModel) {
+    public IcraneResult wxLogin(Member member, String lastLoginFrom, String channel, String phoneModel, String agentId) {
         //账号封禁检测
         if (member.isActiveFlg() == false) {
             logger.info("微信登录异常:账号已禁用");
@@ -88,6 +91,32 @@ public class LoginServiceImpl implements LoginService {
         mtoken.setMemberId(member.getId());
         member.setLoginChannel(channel);
         member.setPhoneModel(phoneModel);
+        //判断代理
+        if (!StringUtils.isEmpty(agentId)) {
+            Agent agent = agentService.selectByPrimaryKey(Integer.valueOf(agentId));
+            if (null != agent) {
+                switch (agent.getLevel()) {
+                    case 0:
+                        member.setAgentSuperId(agent.getId());
+                        break;
+                    case 1:
+                        member.setAgentSuperId(agent.getAgentId());
+                        member.setAgentOneId(agent.getId());
+                        break;
+                    case 2:
+                        member.setAgentSuperId(agent.getAgentId());
+                        member.setAgentOneId(agent.getAgentOneId());
+                        member.setAgentTwoId(agent.getId());
+                        break;
+                    case 3:
+                        member.setAgentSuperId(agent.getAgentId());
+                        member.setAgentOneId(agent.getAgentOneId());
+                        member.setAgentTwoId(agent.getAgentTwoId());
+                        member.setAgentThreeId(agent.getId());
+                        break;
+                }
+            }
+        }
         // 更新token
         Integer result = memberService.updateMember(member, mtoken);
         logger.info("已存在用户微信登录更新token结果:{}", result > 0 ? "success" : "fail");
@@ -417,7 +446,7 @@ public class LoginServiceImpl implements LoginService {
      * 登出服务
      *
      * @param memberId 用户userID
-    // * @param token    用户token
+     *                 // * @param token    用户token
      */
     @Override
     public ResultMap logout(Integer memberId
@@ -452,7 +481,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public ResultMap weChatLogin(HttpServletRequest request, String code, String memberId, String lastLoginFrom, String IMEI, String phoneModel, String channel, String userId) {
+    public ResultMap weChatLogin(HttpServletRequest request, String code, String memberId, String lastLoginFrom, String IMEI, String phoneModel, String channel, String userId, String agentId) {
         try {
             String ipAdrress = HttpClientUtil.getIpAdrress(request);
             //logger.info("多级渠道注册 code=" + code + ",IP=" + ipAdrress + ",memberId=" + memberId + ",lastLoginFrom=" + lastLoginFrom + ",channel=" + channel);
@@ -492,7 +521,7 @@ public class LoginServiceImpl implements LoginService {
                             IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.REGISTRATION_FAILED);
                         }
 
-                        redisUtil.setString("register" + member.getId(), wopenid +"+"+ unionId, 604800);
+                        redisUtil.setString("register" + member.getId(), wopenid + "+" + unionId, 604800);
                         if (!StringUtils.isEmpty(memberId)) {
                             if (systemPrefService.selectByPrimaryKey(Enviroment.CODE_INVITE_BONUS).getType() == 1) {
                                 //绑定邀请
@@ -514,7 +543,7 @@ public class LoginServiceImpl implements LoginService {
                 }
             } else {
                 //使用openIdUnionid登录
-                member = memberService.selectByOpenId(openIdUnionid.substring(0,openIdUnionid.indexOf("+")));
+                member = memberService.selectByOpenId(openIdUnionid.substring(0, openIdUnionid.indexOf("+")));
             }
 
             //老用户直接登录
@@ -527,7 +556,7 @@ public class LoginServiceImpl implements LoginService {
             if (register != 1) {
                 return new ResultMap(Enviroment.ERROR_CODE, Enviroment.RISK_CONTROL_ABNORMAL);
             }
-            IcraneResult icraneResult = loginService.wxLogin(member, lastLoginFrom, channel, phoneModel);
+            IcraneResult icraneResult = loginService.wxLogin(member, lastLoginFrom, channel, phoneModel, agentId);
             return new ResultMap(icraneResult.getMessage(), icraneResult.getResultData());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

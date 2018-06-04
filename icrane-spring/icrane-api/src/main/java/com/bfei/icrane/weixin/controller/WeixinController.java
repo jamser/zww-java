@@ -24,14 +24,21 @@ public class WeixinController {
             phoneModel) throws Exception {
         try {
             //request.setCharacterEncoding("UTF-8");
-            int endIndex = state.indexOf("-");
+            String agentId = "";
             String memberId = "";
             String index = "";
             String chnnerl = state;
             String userId = "";
+
+            int endIndex = state.indexOf("-");
             if (endIndex > -1) {
-                memberId = state.substring(0, endIndex);
-                chnnerl = state.substring(endIndex + 1, state.length());
+                if (state.contains("agent")) {
+                    agentId = state.substring(0, endIndex).replace("agent", "");
+                    chnnerl = state.substring(endIndex + 1, state.length());
+                } else {
+                    memberId = state.substring(0, endIndex);
+                    chnnerl = state.substring(endIndex + 1, state.length());
+                }
             }
             endIndex = chnnerl.indexOf("_");
             int endUserId = chnnerl.indexOf("=");
@@ -46,7 +53,7 @@ public class WeixinController {
             if (StringUtils.isEmpty(phoneModel)) {
                 phoneModel = "未知";
             }
-            MemberInfo member = (MemberInfo) loginService.weChatLogin(request, code, memberId, "wxWeb", "IMEI", phoneModel, chnnerl, userId).getResultData();
+            MemberInfo member = (MemberInfo) loginService.weChatLogin(request, code, memberId, "wxWeb", "IMEI", phoneModel, chnnerl, userId, agentId).getResultData();
             String s = "http://h5.lanao.fun/lanaokj/wxLogin.html?memberId=" + member.getMember().getId() + "&token=" + member.getToken();
             if (StringUtils.isNotEmpty(index)) {
                 s += "&index=" + index;

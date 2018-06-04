@@ -23,7 +23,7 @@ public interface LoginService {
      *
      * @return
      */
-    IcraneResult wxLogin(Member member, String lastLoginFrom, String channel, String phoneModel);
+    IcraneResult wxLogin(Member member, String lastLoginFrom, String channel, String phoneModel,String agentId);
 
     /**
      * 微信新用户注册
@@ -60,6 +60,6 @@ public interface LoginService {
                      // , String token
     );
 
-    ResultMap weChatLogin(HttpServletRequest request, String code, String memberId, String lastLoginFrom, String IMEI, String phoneModel, String channel,String userId);
+    ResultMap weChatLogin(HttpServletRequest request, String code, String memberId, String lastLoginFrom, String IMEI, String phoneModel, String channel,String userId,String agentId);
 
 }

@@ -283,6 +283,18 @@
             <if test="phoneModel != null">
                 phone_model = #{phoneModel,jdbcType=VARCHAR},
             </if>
+            <if test="agentSuperId != null">
+                agent_super_id = #{agentSuperId,jdbcType=INTEGER},
+            </if>
+            <if test="agentOneId != null">
+                agent_one_id = #{agentOneId,jdbcType=INTEGER},
+            </if>
+            <if test="agentTwoId != null">
+                agent_two_id = #{agentTwoId,jdbcType=INTEGER},
+            </if>
+            <if test="agentThreeId != null">
+                agent_three_id = #{agentThreeId,jdbcType=INTEGER},
+            </if>
         </set>
         WHERE
         id = #{id}
@@ -1013,12 +1025,16 @@
     <select id="selectOutTokenUserId" resultType="java.lang.Integer">
         <![CDATA[
 
+
+
         SELECT
             member_id
         FROM
             t_member_token
         WHERE
             valid_start_date < NOW() - INTERVAL 24 HOUR;
+
+
 
         ]]>
     </select>
