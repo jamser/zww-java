@@ -144,13 +144,13 @@ public class AccountServiceImpl implements AccountService {
 
         switch (basevip.getLevel()) {
             case 0:
-                map.put("myPermission", "http://zww-image-prod.oss-cn-shanghai.aliyuncs.com/0ff28718-b187-4215-82fd-d776436ef1aa.png?Expires=5122809546&OSSAccessKeyId=LTAIR9bpEjEQwnHO&Signature=SvAj%2BH%2B1Rqq%2FksLupZpFjcTs4NQ%3D");
+                map.put("myPermission", "https://lanao.oss-cn-shenzhen.aliyuncs.com/other/0ff28718-b187-4215-82fd-d776436ef1aa.png");
                 break;
             case 1:
-                map.put("myPermission", "http://zww-image-prod.oss-cn-shanghai.aliyuncs.com/a1892b7c-7ae2-4a80-b9f0-0db0acc88ce7.png?Expires=5122809648&OSSAccessKeyId=LTAIR9bpEjEQwnHO&Signature=e%2BMXPPKTWSqAvrKA%2BpsELmUzZww%3D");
+                map.put("myPermission", "https://lanao.oss-cn-shenzhen.aliyuncs.com/other/a1892b7c-7ae2-4a80-b9f0-0db0acc88ce7.png");
                 break;
             default:
-                map.put("myPermission", "http://zww-image-prod.oss-cn-shanghai.aliyuncs.com/d8650796-d74c-43ef-add8-9c948d2b821f.png?Expires=5122809702&OSSAccessKeyId=LTAIR9bpEjEQwnHO&Signature=%2FWCN5XioQ0igo8CBlybmTwW8UMw%3D");
+                map.put("myPermission", "https://lanao.oss-cn-shenzhen.aliyuncs.com/other/d8650796-d74c-43ef-add8-9c948d2b821f.png");
                 break;
         }
 

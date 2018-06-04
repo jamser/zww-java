@@ -367,7 +367,7 @@ public class MemberServiceImpl implements MemberService {
         List<InitializeHeads> list = memberDao.selectInitializeHeads();
         InitializeHeads initializeHeads = list.get(getRandom().nextInt(list.size()));
         if (initializeHeads == null) {
-            return new InitializeHeads("兔先生", "http://zww-image-dev.oss-cn-shanghai.aliyuncs.com/dolls/1456561438145638.jpg");
+            return new InitializeHeads("兔先生", "https://lanao.oss-cn-shenzhen.aliyuncs.com/other/1456561438145638.jpg");
         }
         return initializeHeads;
     }

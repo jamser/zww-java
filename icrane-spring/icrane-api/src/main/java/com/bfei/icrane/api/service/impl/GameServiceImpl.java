@@ -470,7 +470,7 @@ public class GameServiceImpl implements GameService {
         if (SHARE_QR_CARD != null && StringUtils.isNotEmpty(SHARE_QR_CARD.getValue())) {
             qrUrl = SHARE_QR_CARD.getValue();
         } else {
-            qrUrl = "http://zww-image-dev.oss-cn-shanghai.aliyuncs.com/2eb4e519-8419-466e-a2f4-12af7db045ec.png?Expires=5118078815&OSSAccessKeyId=LTAIR9bpEjEQwnHO&Signature=escwmdX24vPRmtz%2BfI4EHOUbgUc%3D";
+            qrUrl = "https://lanao.oss-cn-shenzhen.aliyuncs.com/other/20180604144534.png";
         }
         try {
             shareUrl = imageHandleHelper.getImgUrl(divinationTopic, divinationUrl, member, qrUrl);
@@ -510,7 +510,7 @@ public class GameServiceImpl implements GameService {
         if (SHARE_QR_CARD != null && StringUtils.isNotEmpty(SHARE_QR_CARD.getValue())) {
             qrUrl = SHARE_QR_CARD.getValue();
         } else {
-            qrUrl = "http://zww-image-dev.oss-cn-shanghai.aliyuncs.com/2eb4e519-8419-466e-a2f4-12af7db045ec.png?Expires=5118078815&OSSAccessKeyId=LTAIR9bpEjEQwnHO&Signature=escwmdX24vPRmtz%2BfI4EHOUbgUc%3D";
+            qrUrl = "https://lanao.oss-cn-shenzhen.aliyuncs.com/other/20180604144534.png";
         }
         try {
             shareUrl = imageHandleHelper.getshareUrl(member, qrUrl, version);
@@ -595,7 +595,7 @@ public class GameServiceImpl implements GameService {
         //拼接
         String qrUrl = QRCodeUtil.getQrUrl(member, null, index);
         if (StringUtils.isEmpty(qrUrl)) {
-            qrUrl = "http://zww-image-dev.oss-cn-shanghai.aliyuncs.com/2eb4e519-8419-466e-a2f4-12af7db045ec.png?Expires=5118078815&OSSAccessKeyId=LTAIR9bpEjEQwnHO&Signature=escwmdX24vPRmtz%2BfI4EHOUbgUc%3D";
+            qrUrl = "https://lanao.oss-cn-shenzhen.aliyuncs.com/other/20180604144534.png";
         }
         try {
             shareImgUrl = imageHandleHelper.getshareUrl(member, qrUrl, version);
