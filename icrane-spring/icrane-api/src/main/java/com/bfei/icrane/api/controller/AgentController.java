@@ -6,9 +6,7 @@ import com.bfei.icrane.core.form.AgentLoginForm;
 import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.AgentToken;
 import com.bfei.icrane.core.pojos.AgentPojo;
-import com.bfei.icrane.core.service.AgentChargeService;
-import com.bfei.icrane.core.service.AgentService;
-import com.bfei.icrane.core.service.ValidateTokenService;
+import com.bfei.icrane.core.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -37,6 +35,12 @@ public class AgentController {
 
     @Autowired
     private AgentChargeService agentChargeService;
+
+    @Autowired
+    private AdvertisementInfoService advertisementInfoService;
+
+    @Autowired
+    private SysNotifyService sysNotifyService;
 
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -144,4 +148,61 @@ public class AgentController {
         }
     }
 
+    /**
+     * 获取文案列表
+     * @param agentId
+     * @param token
+     * @return
+     */
+
+    @RequestMapping(value = "/ad_list", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap adList(@RequestParam(value = "agentId", required = true) Integer agentId,
+                            @RequestParam(value = "token", required = true) String token) {
+        //验证token
+        if (!validateTokenService.validataAgentToken(token, agentId)) {
+            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+        }
+        return new ResultMap("文案列表", advertisementInfoService.selectAdInfoLists());
+    }
+
+    /**
+     * 添加文案次数
+     * @param agentId
+     * @param token
+     * @param adId
+     * @return
+     */
+    @RequestMapping(value = "/ad_add", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap adList(@RequestParam(value = "agentId", required = true) Integer agentId,
+                            @RequestParam(value = "token", required = true) String token,
+                            @RequestParam(value = "adId", required = true) Integer adId) {
+        //验证token
+        if (!validateTokenService.validataAgentToken(token, agentId)) {
+            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+        }
+        advertisementInfoService.updateByDownCount(adId);
+        return new ResultMap("操作成功");
+    }
+
+    /**
+     * 获取系统通知
+     * @param agentId
+     * @param token
+     * @return
+     */
+    @RequestMapping(value = "/sysNotify", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap sysNotifyLists(@RequestParam(value = "agentId", required = true) Integer agentId,
+                                    @RequestParam(value = "token", required = true) String token) {
+        //验证token
+        if (!validateTokenService.validataAgentToken(token, agentId)) {
+            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+        }
+        return new ResultMap("公告列表", sysNotifyService.selectBySysNotifyLists());
+    }
 }
