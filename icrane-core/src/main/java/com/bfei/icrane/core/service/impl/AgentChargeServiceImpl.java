@@ -6,6 +6,8 @@ import com.bfei.icrane.core.service.AgentChargeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by moying on 2018/5/25.
  */
@@ -63,5 +65,10 @@ public class AgentChargeServiceImpl implements AgentChargeService {
     @Override
     public long selectByAgentThreeId(Integer agentId) {
         return agentChargeMapper.selectByAgentThreeId(agentId);
+    }
+
+    @Override
+    public List<AgentCharge> selectIncomeByAgentId(Integer agentId) {
+        return null;
     }
 }

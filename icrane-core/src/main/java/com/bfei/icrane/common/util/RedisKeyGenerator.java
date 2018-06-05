@@ -264,4 +264,7 @@ public class RedisKeyGenerator {
     public static String getAgentCodeKey(String agent) {
         return "AgentCodeKey" + agent + "_Key";
     }
+    public static String getCodeAentKey(String mobile) {
+        return "codeAgentPwdKey_" + mobile + "_code";
+    }
 }

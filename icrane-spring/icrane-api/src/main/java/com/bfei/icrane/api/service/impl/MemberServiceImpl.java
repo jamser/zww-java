@@ -482,6 +482,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public List<Member> getMemberListByAgentId(Integer id, Integer level) {
+        return memberDao.getMemberListByAgentId(id, level);
+    }
+
+    @Override
     public String[] getSuperUsers() {
         return memberDao.getSuperUsers();
     }

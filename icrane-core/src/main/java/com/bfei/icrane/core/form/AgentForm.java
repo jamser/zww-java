@@ -24,7 +24,7 @@ public class AgentForm {
     private String username;
 
     @NotEmpty
-    @Size(min = 6,max = 12,message = "密码长度在6～12")
+    @Pattern(regexp = "^[0-9a-zA-Z]{6,16}$", message = "密码只能是英文字符或者数字")
     private String password;
 
     @NotEmpty(message = "手机号不能为空")

@@ -1,12 +1,19 @@
 package com.bfei.icrane.api.controller;
 
+import com.bfei.icrane.api.service.MemberService;
 import com.bfei.icrane.common.util.*;
+import com.bfei.icrane.common.wx.utils.MD5Util;
+import com.bfei.icrane.core.form.AgentChangePwdForm;
 import com.bfei.icrane.core.form.AgentForm;
 import com.bfei.icrane.core.form.AgentLoginForm;
 import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.AgentToken;
+import com.bfei.icrane.core.models.Member;
 import com.bfei.icrane.core.pojos.AgentPojo;
 import com.bfei.icrane.core.service.*;
+import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
+import com.github.qcloudsms.SmsSingleSender;
+import com.github.qcloudsms.SmsSingleSenderResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -16,6 +23,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by moying on 2018/6/1.
@@ -42,6 +51,7 @@ public class AgentController {
     @Autowired
     private SysNotifyService sysNotifyService;
 
+    private RedisUtil redisUtil = new RedisUtil();
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
@@ -150,6 +160,7 @@ public class AgentController {
 
     /**
      * 获取文案列表
+     *
      * @param agentId
      * @param token
      * @return
@@ -169,6 +180,7 @@ public class AgentController {
 
     /**
      * 添加文案次数
+     *
      * @param agentId
      * @param token
      * @param adId
@@ -190,6 +202,7 @@ public class AgentController {
 
     /**
      * 获取系统通知
+     *
      * @param agentId
      * @param token
      * @return
@@ -204,5 +217,114 @@ public class AgentController {
             return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
         }
         return new ResultMap("公告列表", sysNotifyService.selectBySysNotifyLists());
+    }
+
+    /**
+     * 代理获取验证码
+     *
+     * @param phone
+     * @return
+     */
+
+    @RequestMapping(value = "/getSmsCodeByAgent", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap agentChangePwd(@RequestParam String phone) {
+
+        Agent agent = agentService.selectByPhone(phone);
+
+        if (null == agent) {
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.AGENT_PHONE_NOT_EXIT);
+        }
+        return sendPhoneCode(phone);
+    }
+
+
+    /**
+     * 修改密码
+     *
+     * @param changePwdForm
+     * @return
+     */
+    @RequestMapping(value = "/agentChangePwd", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap agentChangePwd(@Valid AgentChangePwdForm changePwdForm) {
+
+
+        //验证code
+        String trueCode = redisUtil.getString(RedisKeyGenerator.getCodeAentKey(changePwdForm.getPhone()));
+        if (StringUtils.isEmpty(trueCode)) {
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.SMSCODE_IS_OVER);
+        }
+        if (!changePwdForm.getSmsCode().equals(trueCode)) {
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.SMSCODE_IS_FALSE);
+        }
+        logger.info("【代理修改密码请求参数】");
+        Agent agent = agentService.selectByPhone(changePwdForm.getPhone());
+
+        //验证密码
+        if (!changePwdForm.getPassword().equals(changePwdForm.getConfirmPassword())) {
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.AGENT_PASSWORD_ERROR);
+        }
+        agent.setPassword(MD5Utils.md5(changePwdForm.getPassword(), agent.getSalt()));
+        int i = agentService.updateByPrimaryKeySelective(agent);
+        if (i == 1) {
+            logger.info("【代理修改密码成功】agent={}", agent);
+            return new ResultMap("修改成功");
+        }
+        return new ResultMap(Enviroment.ERROR_CODE, Enviroment.AGENT_PHONE_ERROR);
+    }
+
+    /**
+     * 获取代理商邀请人数
+     *
+     * @param agentId
+     * @param token
+     * @return
+     */
+
+    @RequestMapping(value = "/invite", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap agentChangePwd(@RequestParam(value = "agentId") Integer agentId,
+                                    @RequestParam(value = "token") String token) {
+        //验证token
+        if (!validateTokenService.validataAgentToken(token, agentId)) {
+            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+        }
+        return agentService.getInviteCount(agentId);
+    }
+
+    private ResultMap sendPhoneCode(String mobile) {
+        PropFileManager propFileMgr = new PropFileManager("interface.properties");
+        // 生成短信验证码
+        String smsCode = StringUtils.getSmsCode();
+        // 获取配置文件
+        // 发送短信
+        try {
+            if (AliyunServiceImpl.getInstance().sendSMSForCode(mobile, propFileMgr.getProperty("aliyun.smsModelCode.name"),
+                    propFileMgr.getProperty("aliyun.smsModelCode.reg"), smsCode)) {
+                redisUtil.setString(RedisKeyGenerator.getCodeAentKey(mobile), smsCode, Enviroment.SMS_ENDTIME);
+                logger.info("发送绑定手机验证码成功=" + Enviroment.TEXT_MESSAGING_SUCCESS);
+                return new ResultMap(Enviroment.TEXT_MESSAGING_SUCCESS);
+            } else {
+                SmsSingleSender sender = new SmsSingleSender(Integer.valueOf(propFileMgr.getProperty("qcloudsms.AppID")), propFileMgr.getProperty("qcloudsms.AppKEY"));
+                ArrayList<String> params = new ArrayList<String>();
+                params.add(smsCode);
+                params.add("5");
+                SmsSingleSenderResult result = sender.sendWithParam(propFileMgr.getProperty("qcloudsms.nationCode"), mobile, Integer.valueOf(propFileMgr.getProperty("qcloudsms.templId")), params, "", "", "");
+                if ("OK".equals(result.errMsg)) {
+                    redisUtil.setString(RedisKeyGenerator.getCodeAentKey(mobile), smsCode, Enviroment.SMS_ENDTIME);
+                    logger.info("发送绑定手机验证码成功=" + Enviroment.TEXT_MESSAGING_SUCCESS);
+                    return new ResultMap(Enviroment.TEXT_MESSAGING_SUCCESS);
+                } else {
+                    logger.info("发送绑定手机验证码失败=" + Enviroment.TEXT_MESSAGING_FAILURE);
+                    return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.TEXT_MESSAGING_FAILURE);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("发送绑定手机验证码出错", e);
+            e.printStackTrace();
+        }
+        return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
     }
 }

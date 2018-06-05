@@ -178,4 +178,6 @@ public interface MemberService {
     int updateMemberPhoneModel(Integer memberId, String phoneModel);
 
     String selectLevelById(int hostId);
+
+    List<Member> getMemberListByAgentId(Integer id, Integer lever);
 }

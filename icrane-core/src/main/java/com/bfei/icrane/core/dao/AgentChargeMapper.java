@@ -2,6 +2,8 @@ package com.bfei.icrane.core.dao;
 
 import com.bfei.icrane.core.models.AgentCharge;
 
+import java.util.List;
+
 public interface AgentChargeMapper {
     int deleteByPrimaryKey(Long id);
 
@@ -22,4 +24,6 @@ public interface AgentChargeMapper {
     long selectByAgentTwoId(Integer agentId);
 
     long selectByAgentThreeId(Integer agentId);
+
+    List<AgentCharge> selectIncomeByAgentId(Integer agentId);
 }

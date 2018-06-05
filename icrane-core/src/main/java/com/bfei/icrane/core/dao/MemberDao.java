@@ -207,4 +207,6 @@ public interface MemberDao {
     int updateMemberPhoneModel(@Param("memberId") Integer memberId, @Param("phoneModel") String phoneModel);
 
     String selectLevelById(int hostId);
+
+    List<Member> getMemberListByAgentId(@Param("id") Integer id, @Param("level") Integer level);
 }

@@ -18,4 +18,6 @@ public interface AgentMapper {
     int updateAgentBalance(Agent record);
 
     Agent selectByUserName(String username);
+
+    Agent selectByPhone(String phone);
 }

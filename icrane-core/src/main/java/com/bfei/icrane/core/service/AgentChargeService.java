@@ -2,6 +2,8 @@ package com.bfei.icrane.core.service;
 
 import com.bfei.icrane.core.models.AgentCharge;
 
+import java.util.List;
+
 /**
  * Created by moying on 2018/5/25.
  */
@@ -25,4 +27,6 @@ public interface AgentChargeService {
     long selectByAgentTwoId(Integer agentId);
 
     long selectByAgentThreeId(Integer agentId);
+
+    List<AgentCharge> selectIncomeByAgentId(Integer agentId);
 }

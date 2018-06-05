@@ -3,10 +3,7 @@ package com.bfei.icrane.core.service.impl;
 import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.dao.*;
 import com.bfei.icrane.core.form.AgentForm;
-import com.bfei.icrane.core.models.Agent;
-import com.bfei.icrane.core.models.AgentToken;
-import com.bfei.icrane.core.models.BankInfo;
-import com.bfei.icrane.core.models.SysUser;
+import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.service.AgentService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by moying on 2018/5/25.
@@ -42,6 +41,9 @@ public class AgentServiceImpl implements AgentService {
     @Autowired
     private SysUserMapper sysUserMapper;
 
+    @Autowired
+    private MemberDao memberDao;
+
     private RedisUtil redisUtil = new RedisUtil();
 
 
@@ -65,6 +67,11 @@ public class AgentServiceImpl implements AgentService {
     @Override
     public Agent selectByPrimaryKey(Integer id) {
         return agentMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public Agent selectByPhone(String phone) {
+        return agentMapper.selectByPhone(phone);
     }
 
     @Override
@@ -152,9 +159,26 @@ public class AgentServiceImpl implements AgentService {
         sysUser.setName(newAgent.getNickName());
         sysUser.setRoleid("18");
         sysUser.setDeptid(1);
-        sysUser.setStatus(1 );
+        sysUser.setStatus(1);
         sysUser.setCreatetime(new Date());
         sysUserMapper.insertSelective(sysUser);
         return agentMapper.insertSelective(newAgent);
+    }
+
+    @Override
+    public ResultMap getInviteCount(Integer agentId) {
+        Map<String, Object> hashMap = new HashMap<>();
+        int inviteActivity = 0;
+        Agent agent = agentMapper.selectByPrimaryKey(agentId);
+        List<Member> memberList = memberDao.getMemberListByAgentId(agent.getId(), agent.getLevel());
+        for (int i = 0; i < memberList.size(); i++) {
+            if (memberList.get(i).isActiveFlg()) {
+                inviteActivity++;
+            }
+        }
+        hashMap.put("inviteNumber", memberList.size());
+        hashMap.put("activeNumber", inviteActivity);
+        hashMap.put("notActiveNumber", memberList.size() - inviteActivity);
+        return new ResultMap("获取列表成功", hashMap);
     }
 }

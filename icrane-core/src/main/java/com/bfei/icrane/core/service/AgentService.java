@@ -1,5 +1,6 @@
 package com.bfei.icrane.core.service;
 
+import com.bfei.icrane.common.util.ResultMap;
 import com.bfei.icrane.core.form.AgentForm;
 import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.AgentToken;
@@ -19,6 +20,8 @@ public interface AgentService {
 
     Agent selectByPrimaryKey(Integer id);
 
+    Agent selectByPhone(String phone);
+
     int updateByPrimaryKeySelective(Agent record);
 
     int updateByPrimaryKey(Agent record);
@@ -34,5 +37,7 @@ public interface AgentService {
 
     AgentToken getAgentLogin(Agent agent);
 
-    int insertAgent(Agent record,AgentForm agentForm);
+    int insertAgent(Agent record, AgentForm agentForm);
+
+    ResultMap getInviteCount(Integer agentId);
 }

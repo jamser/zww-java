@@ -106,6 +106,9 @@
         id, password, memberID, name, mobile, weixin_id,open_id,union_id,gender,birthday,catch_number,register_date,modified_date,modified_by,last_login_date,last_logoff_date,online_flg,icon_context_path,icon_file_name,icon_real_path,easemob_uuid,
         active_flg,invite_flg,invite_flg_web,register_from,last_login_from,first_login,first_charge,register_channel,login_channel,phone_model,agent_super_id,agent_one_id,agent_two_id,agent_three_id
     </sql>
+    <sql id="Base_Member_List">
+        id, password, memberID, mobile, weixin_id,open_id,union_id,active_flg,invite_flg
+    </sql>
     <sql id="Member_Column_List">
         id, password, memberID, name, mobile, weixin_id,gender,birthday,catch_number,register_date,modified_date,modified_by,last_login_date,last_logoff_date,online_flg,icon_context_path,icon_file_name,icon_real_path,easemob_uuid,
     active_flg,invite_flg,invite_flg_web,register_from,last_login_from,first_login,first_charge,register_channel,login_channel,phone_model,agent_super_id,agent_one_id,agent_two_id,agent_three_id
@@ -1027,12 +1030,26 @@
 
 
 
+
+
+
+
+
+
+
         SELECT
             member_id
         FROM
             t_member_token
         WHERE
             valid_start_date < NOW() - INTERVAL 24 HOUR;
+
+
+
+
+
+
+
 
 
 
@@ -1099,4 +1116,27 @@
             `level` DESC
         LIMIT 1;
     </select>
+    <select id="getMemberListByAgentId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        <!-- 具体的sql -->
+        SELECT
+        id,active_flg,name
+        FROM
+        t_member m
+        WHERE
+        <if test="level == 0">
+            agent_super_id=#{id,jdbcType=INTEGER}
+        </if>
+        <if test="level == 1">
+            agent_one_id=#{id,jdbcType=INTEGER}
+
+        </if>
+        <if test="level == 2">
+            agent_two_id=#{id,jdbcType=INTEGER}
+        </if>
+        <if test="level == 3">
+            agent_three_id=#{id,jdbcType=INTEGER}
+        </if>
+    </select>
+
+
 </mapper>
