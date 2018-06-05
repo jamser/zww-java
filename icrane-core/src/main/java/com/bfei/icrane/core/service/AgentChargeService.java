@@ -29,4 +29,8 @@ public interface AgentChargeService {
     long selectByAgentThreeId(Integer agentId);
 
     List<AgentCharge> selectIncomeByAgentId(Integer agentId);
+
+    List<AgentCharge> selectByStatus(Integer status);
+
+    int updateStatus(Long id);
 }

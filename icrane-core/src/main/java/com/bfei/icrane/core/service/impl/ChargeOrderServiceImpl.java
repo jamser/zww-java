@@ -280,7 +280,11 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                 !StringUtils.isEmpty(member.getAgentThree())) {
 
             Integer time = Integer.valueOf(systemPrefDao.selectByPrimaryKey(Enviroment.BALANCE_CHANGE_TIME).getValue());
-
+            if (time > 0) {
+                agentCharge.setStatus(0);
+            } else {
+                agentCharge.setStatus(1);
+            }
 
             //计算代理收益价格
             if (AgentUtils.isNotNull(member.getAgentSuper())) {
@@ -293,9 +297,7 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                 }
                 agentCharge.setAgentSuperIncome(income.longValue());
                 agent.setId(member.getAgentSuper().getId());
-                if (time > 0) {
-                    agent.setBalanceDisabled(income.longValue());
-                } else {
+                if (time <= 0) {
                     agent.setBalance(income.longValue());
                 }
                 agentService.updateAgentBalance(agent);
@@ -311,9 +313,7 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                 }
                 agentCharge.setAgentOneIncome(income.longValue());
                 agent.setId(member.getAgentOne().getId());
-                if (time > 0) {
-                    agent.setBalanceDisabled(income.longValue());
-                } else {
+                if (time <= 0) {
                     agent.setBalance(income.longValue());
                 }
                 agentService.updateAgentBalance(agent);
@@ -329,9 +329,7 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                 }
                 agentCharge.setAgentTwoIncome(income.longValue());
                 agent.setId(member.getAgentTwo().getId());
-                if (time > 0) {
-                    agent.setBalanceDisabled(income.longValue());
-                } else {
+                if (time <= 0) {
                     agent.setBalance(income.longValue());
                 }
                 agentService.updateAgentBalance(agent);
@@ -343,9 +341,7 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                 income = member.getAgentThree().getFee().multiply(price.multiply(new BigDecimal(100)));
                 agentCharge.setAgentThreeIncome(income.longValue());
                 agent.setId(member.getAgentThree().getId());
-                if (time > 0) {
-                    agent.setBalanceDisabled(income.longValue());
-                } else {
+                if (time <= 0) {
                     agent.setBalance(income.longValue());
                 }
                 agentService.updateAgentBalance(agent);

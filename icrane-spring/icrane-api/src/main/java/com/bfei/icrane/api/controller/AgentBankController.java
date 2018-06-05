@@ -47,7 +47,7 @@ public class AgentBankController {
 
     // 银行卡上传
     @ResponseBody
-        @RequestMapping(value = "/uploadBankImg", method = RequestMethod.POST)
+    @RequestMapping(value = "/uploadBankImg", method = RequestMethod.POST)
     public Map<String, Object> uploadBankImg(@RequestParam("file") MultipartFile file,
                                              @RequestParam("agentId") String agentIdStr, @RequestParam("token") String token, HttpSession session) throws Exception {
         int agentId = Integer.valueOf(agentIdStr);
@@ -124,20 +124,12 @@ public class AgentBankController {
         }
 
         List<BankInfo> list = agentService.getBankInfoList(Integer.valueOf(agentIdStr));
-        if (list.size() == 0) {
-            resultMap.put("success", Enviroment.RETURN_FAILE);
-            resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
-            resultMap.put("message", "获取银行卡列表失败！该代理名下没有添加过银行卡");
-            return resultMap;
-        } else {
-            resultMap.put("success", Enviroment.RETURN_SUCCESS);
-            resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
-            resultMap.put("message", "获取银行卡列表成功！");
-            return resultMap;
-        }
+        resultMap.put("success", Enviroment.RETURN_SUCCESS);
+        resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
+        resultMap.put("message", "获取银行卡列表成功！");
+        resultMap.put("resultData", list);
+        return resultMap;
     }
-
-
 
 
     /**
@@ -163,6 +155,21 @@ public class AgentBankController {
             resultMap.put("message", Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
             return resultMap;
         }
+
+        String trueCode = redisUtil.getString(RedisKeyGenerator.getCodeAentKey(bankInfoForm.getPhone()));
+        if (StringUtils.isEmpty(trueCode)) {
+            resultMap.put("success", Enviroment.RETURN_FAILE);
+            resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
+            resultMap.put("message", Enviroment.SMSCODE_IS_OVER);
+            return resultMap;
+        }
+        if (!bankInfoForm.getSmsCode().equals(trueCode)) {
+            resultMap.put("success", Enviroment.RETURN_FAILE);
+            resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
+            resultMap.put("message", Enviroment.SMSCODE_IS_FALSE);
+            return resultMap;
+        }
+
         BankInfo bankInfo = new BankInfo();
         BeanUtils.copyProperties(bankInfoForm, bankInfo);
         int i = agentService.insertBankInfo(bankInfo);

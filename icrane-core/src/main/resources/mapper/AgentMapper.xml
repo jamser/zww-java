@@ -49,8 +49,7 @@
     <update id="updateAgentBalance">
         UPDATE t_agent
         SET
-        <if test="balance != null">balance = balance + #{balance}</if>
-        <if test="balanceDisabled != null">balance_disabled = balance_disabled + #{balanceDisabled}</if>
+        balance = balance + #{balance}
         WHERE
         id = #{id}
     </update>

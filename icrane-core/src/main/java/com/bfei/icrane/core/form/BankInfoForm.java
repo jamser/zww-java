@@ -58,4 +58,7 @@ public class BankInfoForm {
 
     @NotEmpty(message = "银行卡正面不能为空")
     private String bankPicturePos;
+
+    @NotEmpty(message = "验证码")
+    private String smsCode;
 }

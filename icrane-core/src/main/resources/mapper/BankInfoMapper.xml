@@ -250,6 +250,6 @@
     select
     <include refid="Base_Column_List" />
     from bank_info
-    where agentId = #{agentId,jdbcType=INTEGER}
+    where agent_id = #{agentId,jdbcType=INTEGER}
   </select>
 </mapper>

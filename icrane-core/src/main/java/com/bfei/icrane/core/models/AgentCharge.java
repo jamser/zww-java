@@ -38,4 +38,7 @@ public class AgentCharge {
     private Date updateTime;
 
     private Date createTime;
+
+    private Integer status;
+
 }

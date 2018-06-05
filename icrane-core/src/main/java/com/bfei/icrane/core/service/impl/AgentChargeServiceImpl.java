@@ -71,4 +71,15 @@ public class AgentChargeServiceImpl implements AgentChargeService {
     public List<AgentCharge> selectIncomeByAgentId(Integer agentId) {
         return null;
     }
+
+    @Override
+    public List<AgentCharge> selectByStatus(Integer status) {
+        return agentChargeMapper.selectByStatus(status);
+    }
+
+    @Override
+    public int updateStatus(Long id) {
+        return agentChargeMapper.updateStatus(id);
+    }
+
 }
