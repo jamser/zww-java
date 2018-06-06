@@ -476,7 +476,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public ResultMap weChatLogin(HttpServletRequest request, String code, String memberId, String lastLoginFrom, String IMEI, String phoneModel, String channel, String userId, String agentId) {
+    public ResultMap weChatLogin(HttpServletRequest request, String code, String memberId, String lastLoginFrom, String IMEI, String phoneModel, String channel, String agentId) {
         try {
             String ipAdrress = HttpClientUtil.getIpAdrress(request);
             //logger.info("多级渠道注册 code=" + code + ",IP=" + ipAdrress + ",memberId=" + memberId + ",lastLoginFrom=" + lastLoginFrom + ",channel=" + channel);
@@ -489,19 +489,20 @@ public class LoginServiceImpl implements LoginService {
             Member member = null;
 
             //根据redis中的缓存判断是否注册是否要重新登录
-            String openIdUnionid = redisUtil.getString("register" + userId);
+            String openIdUnionid = redisUtil.getString(code);
             if (StringUtils.isEmpty(openIdUnionid)) {
                 //新用户或者未登录H5的APP用户(redis中不存在,那么表示code是新的)
                 String result = WXUtil.getOauthInfo(code, "老子是H5");
                 JSONObject object = JSONObject.fromObject(result);
                 if (object.has("access_token")) {
                     String accessToken = object.getString("access_token");
-                    String unionId = object.getString("unionid");
+                    String unionId = "aaaaaa324234";
                     String wopenid = object.getString("openid");
                     //检查add表如果没有就存入
                     if (StringUtils.isEmpty(memberService.selectGzhopenIdByUnionId(unionId))) {
                         memberService.insertmember_add(wopenid, unionId);
                     }
+                    redisUtil.setString(code, wopenid + unionId, 86400);
                     //unionId登录兼容问题
                     String openId = memberService.selectOpenIdByUnionId(unionId);
                     if (StringUtils.isEmpty(openId)) {
@@ -516,7 +517,6 @@ public class LoginServiceImpl implements LoginService {
                             IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.REGISTRATION_FAILED);
                         }
 
-                        redisUtil.setString("register" + member.getId(), wopenid + "+" + unionId, 604800);
                         if (!StringUtils.isEmpty(memberId)) {
                             if (systemPrefService.selectByPrimaryKey(Enviroment.CODE_INVITE_BONUS).getType() == 1) {
                                 //绑定邀请
@@ -524,21 +524,11 @@ public class LoginServiceImpl implements LoginService {
                             }
                         }
                         member = memberService.selectById(member.getId());
-                    } else {
-                        //APP老客户
-                        //检查是否绑定如果没有绑定就去绑定
-                        if (!member.isInviteFlgWeb()) {
-                            int register = riskManagementService.register(member.getId(), IMEI, HttpClientUtil.getIpAdrress(request));
-                            if (register != 1) {
-                                return new ResultMap(Enviroment.ERROR_CODE, Enviroment.RISK_CONTROL_ABNORMAL);
-                            }
-                            chargeService.invite(member.getId(), memberId);
-                        }
                     }
                 }
             } else {
                 //使用openIdUnionid登录
-                member = memberService.selectByOpenId(openIdUnionid.substring(0, openIdUnionid.indexOf("+")));
+                member = memberService.selectByOpenId(openIdUnionid.substring(openIdUnionid.indexOf("+"), openIdUnionid.length()));
             }
 
             //老用户直接登录
