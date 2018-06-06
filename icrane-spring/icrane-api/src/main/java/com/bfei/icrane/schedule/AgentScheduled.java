@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +36,7 @@ public class AgentScheduled {
     private AgentService agentService;
 
 
-        @Scheduled(cron = "0 0 1 * * ?") //每天一点执行
+            @Scheduled(cron = "0 0 1 * * ?") //每天一点执行
 //    @Scheduled(cron = "0/5 * *  * * ? ")
     public void agentIncomeTrans() {
         List<AgentCharge> chargeList = chargeService.selectByStatus(0);
@@ -60,7 +61,11 @@ public class AgentScheduled {
             calendar.add(Calendar.DAY_OF_MONTH, -(time + count));
             Date oldDate = calendar.getTime();
             logger.info("当前时间==={},订单时间=={},结算时间==={}", new Date(), agentCharge.getCreateTime(), oldDate);
-            if (agentCharge.getCreateTime().before(oldDate)) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String format = sdf.format(agentCharge.getCreateTime());
+            String format1 = sdf.format(oldDate);
+
+            if (format.compareTo(format1) <= 0) {
                 if (agentCharge.getAgentOneIncome() > 0) {
                     agent = new Agent();
                     agent.setId(agentCharge.getAgentSuperId());
@@ -90,7 +95,7 @@ public class AgentScheduled {
                     logger.info("【订单任务】代理商 == {},转入余额 {}", agent.getId(), agent.getBalance());
                 }
                 int type = chargeService.updateStatus(agentCharge.getId());
-                logger.info("【订单任务】修改代理交易状态 ，成功为{}", type);
+                logger.info("【订单任务】代理交易ID === {} 用户订单ID ==== {} ，成功为{}", agentCharge.getId(), agentCharge.getOrderId(), type);
             }
 
 
