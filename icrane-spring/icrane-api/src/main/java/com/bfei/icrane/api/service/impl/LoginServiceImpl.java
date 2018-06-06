@@ -496,7 +496,7 @@ public class LoginServiceImpl implements LoginService {
                 JSONObject object = JSONObject.fromObject(result);
                 if (object.has("access_token")) {
                     String accessToken = object.getString("access_token");
-                    String unionId = "aaaaaa324234";
+                    String unionId = object.getString("unionid");
                     String wopenid = object.getString("openid");
                     //检查add表如果没有就存入
                     if (StringUtils.isEmpty(memberService.selectGzhopenIdByUnionId(unionId))) {
