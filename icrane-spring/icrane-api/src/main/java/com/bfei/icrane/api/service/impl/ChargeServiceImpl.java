@@ -214,7 +214,7 @@ public class ChargeServiceImpl implements ChargeService {
         logger.info("changeCount 参数:{}", dollOrderList);
         Charge charge = new Charge();
         DollOrder dOrder = new DollOrder();
-      //  List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        //  List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         Integer result = 0;
         for (DollOrder dollOrder : dollOrderList) {
             /*List<DollOrderItem> orderItem = dollOrder.getOrderItems();
@@ -328,6 +328,9 @@ public class ChargeServiceImpl implements ChargeService {
     public ResultMap invite(Integer memberId, String inviteCode) {
         //被邀请人信息
         Member member = memberService.selectById(memberId);
+        if (null == member) {
+            logger.info("邀请异常,无此用户");
+        }
         //验证是否已经被邀请过
         if (member.isInviteFlgWeb() == true) {
             logger.info("邀请异常=" + Enviroment.RECEIVED_INVITATION_AWARD);
