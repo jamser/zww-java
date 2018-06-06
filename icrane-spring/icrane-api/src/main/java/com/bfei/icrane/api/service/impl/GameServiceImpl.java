@@ -627,17 +627,15 @@ public class GameServiceImpl implements GameService {
             map.put("shareUrl", shareUrl);
             return map;
         }
-        ImageHandleHelper imageHandleHelper = new ImageHandleHelper();
         //拼接
         String qrUrl = QRCodeUtil.getAgentUrl(agent, null, index);
         if (StringUtils.isEmpty(qrUrl)) {
             qrUrl = "https://lanao.oss-cn-shenzhen.aliyuncs.com/other/20180604144534.png";
         }
         try {
-            shareImgUrl = imageHandleHelper.getAgentShareUrl(agent, qrUrl, version);
             //缓存地址到redis
-            redisUtil.setString(shareUrl + QRCodeUtil.shareIMGversion, shareImgUrl, 2147483647);
-            map.put("shareImgUrl", shareImgUrl);
+            redisUtil.setString(shareUrl + QRCodeUtil.shareIMGversion, qrUrl, 2147483647);
+            map.put("shareImgUrl", qrUrl);
             map.put("shareUrl", shareUrl);
             return map;
         } catch (Exception e) {

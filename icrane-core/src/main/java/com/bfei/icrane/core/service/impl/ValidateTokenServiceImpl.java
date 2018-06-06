@@ -1,10 +1,10 @@
 package com.bfei.icrane.core.service.impl;
 
 
+import com.bfei.icrane.core.dao.AgentMapper;
 import com.bfei.icrane.core.dao.AgentTokenMapper;
 import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.AgentToken;
-import com.bfei.icrane.core.service.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ public class ValidateTokenServiceImpl implements ValidateTokenService {
     private AgentTokenMapper agentTokenMapper;
 
     @Autowired
-    private AgentService agentService;
+    private AgentMapper agentService;
 
     @Override
     public MemberToken selectByMemberId(int memberId) {

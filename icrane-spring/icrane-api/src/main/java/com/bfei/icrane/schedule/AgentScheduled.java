@@ -1,13 +1,12 @@
 package com.bfei.icrane.schedule;
 
 import com.bfei.icrane.api.controller.AgentBankController;
-import com.bfei.icrane.api.service.ChargeService;
+import com.bfei.icrane.api.service.AgentService;
 import com.bfei.icrane.api.service.SystemPrefService;
 import com.bfei.icrane.common.util.Enviroment;
 import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.AgentCharge;
 import com.bfei.icrane.core.service.AgentChargeService;
-import com.bfei.icrane.core.service.AgentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,7 @@ public class AgentScheduled {
     private AgentService agentService;
 
 
-            @Scheduled(cron = "0 0 1 * * ?") //每天一点执行
+    @Scheduled(cron = "0 0 1 * * ?") //每天一点执行
 //    @Scheduled(cron = "0/5 * *  * * ? ")
     public void agentIncomeTrans() {
         List<AgentCharge> chargeList = chargeService.selectByStatus(0);

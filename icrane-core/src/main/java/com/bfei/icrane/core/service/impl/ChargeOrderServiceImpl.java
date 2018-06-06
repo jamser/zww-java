@@ -10,7 +10,6 @@ import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.models.vo.ChannelChargeOrder;
 import com.bfei.icrane.core.service.AccountService;
 import com.bfei.icrane.core.service.AgentChargeService;
-import com.bfei.icrane.core.service.AgentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,7 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
     @Autowired
     private AgentChargeService agentChargeService;
     @Autowired
-    private AgentService agentService;
+    private AgentMapper agentService;
 
     @Override
     public int createChareOrder(ChargeOrder order) {

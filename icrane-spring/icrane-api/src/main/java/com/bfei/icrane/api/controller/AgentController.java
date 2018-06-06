@@ -1,19 +1,17 @@
 package com.bfei.icrane.api.controller;
 
-import com.bfei.icrane.api.service.MemberService;
+import com.bfei.icrane.api.service.AgentService;
 import com.bfei.icrane.common.util.*;
-import com.bfei.icrane.common.wx.utils.MD5Util;
 import com.bfei.icrane.core.form.AgentChangePwdForm;
 import com.bfei.icrane.core.form.AgentForm;
 import com.bfei.icrane.core.form.AgentLoginForm;
 import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.AgentToken;
-import com.bfei.icrane.core.models.Member;
 import com.bfei.icrane.core.pojos.AgentPojo;
-import com.bfei.icrane.core.service.*;
-import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
-import com.github.qcloudsms.SmsSingleSender;
-import com.github.qcloudsms.SmsSingleSenderResult;
+import com.bfei.icrane.core.service.AdvertisementInfoService;
+import com.bfei.icrane.core.service.AgentChargeService;
+import com.bfei.icrane.core.service.SysNotifyService;
+import com.bfei.icrane.core.service.ValidateTokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -23,8 +21,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by moying on 2018/6/1.
@@ -33,8 +29,8 @@ import java.util.List;
 @RequestMapping(value = "/agent")
 @CrossOrigin
 public class AgentController {
-    private static final Logger logger = LoggerFactory.getLogger(AgentController.class);
 
+    private static final Logger logger = LoggerFactory.getLogger(AgentController.class);
 
     @Autowired
     private ValidateTokenService validateTokenService;
@@ -235,10 +231,16 @@ public class AgentController {
         if (null == agent) {
             return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.AGENT_PHONE_NOT_EXIT);
         }
-        return sendPhoneCode(phone);
+        return agentService.sendPhoneCode(phone, "忘记密码");
     }
 
-
+    /**
+     * 获取代理验证码
+     *
+     * @param agentId
+     * @param token
+     * @return
+     */
     @RequestMapping(value = "/getBankSmsCodeByAgent", method = RequestMethod.POST)
     @ResponseBody
     public ResultMap getBankSmsCodeByAgent(@RequestParam(value = "agentId") Integer agentId,
@@ -252,7 +254,7 @@ public class AgentController {
         if (StringUtils.isEmpty(agent.getPhone())) {
             return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.AGENT_PHONE_NOT_EXIT);
         }
-        return sendPhoneCode(agent.getPhone());
+        return agentService.sendPhoneCode(agent.getPhone(), "添加银行卡");
     }
 
 
@@ -264,8 +266,11 @@ public class AgentController {
      */
     @RequestMapping(value = "/agentChangePwd", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap agentChangePwd(@Valid AgentChangePwdForm changePwdForm) {
-
+    public ResultMap agentChangePwd(@Valid AgentChangePwdForm changePwdForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            logger.error("{【忘记密码】参数不正确, changePwdForm={}", changePwdForm);
+            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, bindingResult.getFieldError().getDefaultMessage());
+        }
 
         //验证code
         String trueCode = redisUtil.getString(RedisKeyGenerator.getCodeAentKey(changePwdForm.getPhone()));
@@ -309,39 +314,5 @@ public class AgentController {
             return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
         }
         return agentService.getInviteCount(agentId);
-    }
-
-    private ResultMap sendPhoneCode(String mobile) {
-        PropFileManager propFileMgr = new PropFileManager("interface.properties");
-        // 生成短信验证码
-        String smsCode = StringUtils.getSmsCode();
-        // 获取配置文件
-        // 发送短信
-        try {
-            if (AliyunServiceImpl.getInstance().sendSMSForCode(mobile, propFileMgr.getProperty("aliyun.smsModelCode.name"),
-                    propFileMgr.getProperty("aliyun.smsModelCode.reg"), smsCode)) {
-                redisUtil.setString(RedisKeyGenerator.getCodeAentKey(mobile), smsCode, Enviroment.SMS_ENDTIME);
-                logger.info("发送绑定手机验证码成功=" + Enviroment.TEXT_MESSAGING_SUCCESS);
-                return new ResultMap(Enviroment.TEXT_MESSAGING_SUCCESS);
-            } else {
-                SmsSingleSender sender = new SmsSingleSender(Integer.valueOf(propFileMgr.getProperty("qcloudsms.AppID")), propFileMgr.getProperty("qcloudsms.AppKEY"));
-                ArrayList<String> params = new ArrayList<String>();
-                params.add(smsCode);
-                params.add("5");
-                SmsSingleSenderResult result = sender.sendWithParam(propFileMgr.getProperty("qcloudsms.nationCode"), mobile, Integer.valueOf(propFileMgr.getProperty("qcloudsms.templId")), params, "", "", "");
-                if ("OK".equals(result.errMsg)) {
-                    redisUtil.setString(RedisKeyGenerator.getCodeAentKey(mobile), smsCode, Enviroment.SMS_ENDTIME);
-                    logger.info("发送绑定手机验证码成功=" + Enviroment.TEXT_MESSAGING_SUCCESS);
-                    return new ResultMap(Enviroment.TEXT_MESSAGING_SUCCESS);
-                } else {
-                    logger.info("发送绑定手机验证码失败=" + Enviroment.TEXT_MESSAGING_FAILURE);
-                    return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.TEXT_MESSAGING_FAILURE);
-                }
-            }
-        } catch (Exception e) {
-            logger.error("发送绑定手机验证码出错", e);
-            e.printStackTrace();
-        }
-        return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
     }
 }

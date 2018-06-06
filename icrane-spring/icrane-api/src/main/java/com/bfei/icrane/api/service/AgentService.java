@@ -1,4 +1,4 @@
-package com.bfei.icrane.core.service;
+package com.bfei.icrane.api.service;
 
 import com.bfei.icrane.common.util.ResultMap;
 import com.bfei.icrane.core.form.AgentForm;
@@ -40,4 +40,6 @@ public interface AgentService {
     int insertAgent(Agent record, AgentForm agentForm);
 
     ResultMap getInviteCount(Integer agentId);
+
+    ResultMap sendPhoneCode(String phone, String message);
 }

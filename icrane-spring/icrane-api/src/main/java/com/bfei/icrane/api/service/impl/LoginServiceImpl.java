@@ -7,11 +7,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.bfei.icrane.api.service.ChargeService;
+import com.bfei.icrane.api.service.*;
 import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.models.*;
-import com.bfei.icrane.core.service.AgentService;
-import com.bfei.icrane.core.service.ChargeOrderService;
 import com.bfei.icrane.core.service.RiskManagementService;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.http.HttpResponse;
@@ -22,9 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bfei.icrane.api.controller.WxPayController;
-import com.bfei.icrane.api.service.LoginService;
-import com.bfei.icrane.api.service.MemberService;
-import com.bfei.icrane.api.service.SystemPrefService;
 import com.bfei.icrane.core.dao.MemberDao;
 import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
 import com.github.qcloudsms.SmsSingleSender;

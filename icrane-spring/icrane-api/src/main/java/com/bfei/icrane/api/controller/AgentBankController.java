@@ -1,12 +1,9 @@
 package com.bfei.icrane.api.controller;
 
-import com.bfei.icrane.api.service.MemberService;
+import com.bfei.icrane.api.service.AgentService;
 import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.form.BankInfoForm;
-import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.BankInfo;
-import com.bfei.icrane.core.models.Member;
-import com.bfei.icrane.core.service.AgentService;
 import com.bfei.icrane.core.service.ValidateTokenService;
 import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
 import org.slf4j.Logger;
@@ -15,11 +12,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;

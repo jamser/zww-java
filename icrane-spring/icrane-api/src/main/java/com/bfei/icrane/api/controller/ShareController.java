@@ -96,6 +96,14 @@ public class ShareController {
     }
 
 
+    /**
+     * 代理分享
+     * @param agentId
+     * @param token
+     * @param version
+     * @param index
+     * @return
+     */
     @RequestMapping(value = "/AgentImgUrl", method = RequestMethod.POST)
     @ResponseBody
     public ResultMap AgentImgUrl(@RequestParam(required = true) Integer agentId,

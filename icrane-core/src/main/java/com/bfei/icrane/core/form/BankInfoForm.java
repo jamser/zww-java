@@ -34,7 +34,7 @@ public class BankInfoForm {
     private String cardBankNo;
 
     @NotEmpty(message = "卡号不能为空")
-    @Pattern(regexp = "^[0-9]{16,19}$", message = "密码只能是英文字符或者数字")
+    @Pattern(regexp = "^[0-9]{16,19}$", message = "卡号位数不够")
     private String cardNo;
 
     @NotEmpty(message = "身份证号不能为空")
