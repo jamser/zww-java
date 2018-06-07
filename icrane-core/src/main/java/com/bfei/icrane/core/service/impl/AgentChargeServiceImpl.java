@@ -2,6 +2,7 @@ package com.bfei.icrane.core.service.impl;
 
 import com.bfei.icrane.core.dao.AgentChargeMapper;
 import com.bfei.icrane.core.models.AgentCharge;
+import com.bfei.icrane.core.models.AgentIncome;
 import com.bfei.icrane.core.service.AgentChargeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,8 +69,8 @@ public class AgentChargeServiceImpl implements AgentChargeService {
     }
 
     @Override
-    public List<AgentCharge> selectIncomeByAgentId(Integer agentId) {
-        return null;
+    public List<AgentIncome> selectIncomeByAgentId(Integer agentId) {
+        return agentChargeMapper.selectIncomeByAgentId(agentId);
     }
 
     @Override

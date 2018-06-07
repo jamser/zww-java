@@ -1,6 +1,7 @@
 package com.bfei.icrane.core.dao;
 
 import com.bfei.icrane.core.models.AgentCharge;
+import com.bfei.icrane.core.models.AgentIncome;
 
 import java.util.List;
 
@@ -28,4 +29,6 @@ public interface AgentChargeMapper {
     List<AgentCharge> selectByStatus(Integer status);
 
     int updateStatus(Long id);
+
+    List<AgentIncome> selectIncomeByAgentId(Integer id);
 }

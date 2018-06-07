@@ -119,6 +119,9 @@ public class AgentBankController {
         }
 
         List<BankInfo> list = agentService.getBankInfoList(Integer.valueOf(agentIdStr));
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i).setCardNo(HideDataUtil.hideCardNo(list.get(i).getCardNo()));
+        }
         resultMap.put("success", Enviroment.RETURN_SUCCESS);
         resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
         resultMap.put("message", "获取银行卡列表成功！");

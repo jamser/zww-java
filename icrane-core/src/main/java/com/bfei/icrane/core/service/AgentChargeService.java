@@ -1,6 +1,7 @@
 package com.bfei.icrane.core.service;
 
 import com.bfei.icrane.core.models.AgentCharge;
+import com.bfei.icrane.core.models.AgentIncome;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public interface AgentChargeService {
 
     long selectByAgentThreeId(Integer agentId);
 
-    List<AgentCharge> selectIncomeByAgentId(Integer agentId);
+    List<AgentIncome> selectIncomeByAgentId(Integer agentId);
 
     List<AgentCharge> selectByStatus(Integer status);
 

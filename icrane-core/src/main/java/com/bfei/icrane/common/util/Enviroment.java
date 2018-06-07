@@ -219,11 +219,13 @@ public class Enviroment {
      * 代理相关
      */
     public static final String ADD_AGENT_SUCCESS = "添加代理成功";
+    public static final String AGENT_LOGIN_FAILE = "该账户已失效或者被冻结";
     public static final String ADD_AGENT_ERROER = "添加代理失败";
     public static final String AGENT_LOGIN_ERROR = "代理登陆失败";
     public static final String AGENT_PHONE_ERROR = "代理手机号不匹配";
     public static final String AGENT_PASSWORD_ERROR = "密码不一致";
     public static final String AGENT_PHONE_NOT_EXIT = "手机号不存在，请到代理后台修改";
+    public static final String ADD_AGENT_ERROER_MESSAGE = "该代理没有添加代理权限";
 
 
 }

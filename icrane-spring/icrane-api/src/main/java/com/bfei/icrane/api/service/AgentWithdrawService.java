@@ -1,8 +1,11 @@
-package com.bfei.icrane.core.dao;
+package com.bfei.icrane.api.service;
 
 import com.bfei.icrane.core.models.agentWithdraw;
 
-public interface agentWithdrawMapper {
+/**
+ * Created by moying on 2018/6/6.
+ */
+public interface AgentWithdrawService {
     int deleteByPrimaryKey(Integer id);
 
     int insert(agentWithdraw record);
@@ -14,4 +17,6 @@ public interface agentWithdrawMapper {
     int updateByPrimaryKeySelective(agentWithdraw record);
 
     int updateByPrimaryKey(agentWithdraw record);
+
+    Long selectByWithdraw(Integer id);
 }

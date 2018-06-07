@@ -137,7 +137,7 @@ public class AgentServiceImpl implements AgentService {
         newAgent.setLevel(agentEnum.getCode());
         newAgent.setFee(new BigDecimal(systemPrefDao.selectByPrimaryKey(agentEnum.getInfo()).getValue()));
         String salt = ToolUtil.getRandomString(5);
-        newAgent.setPassword(MD5Utils.md5(agentForm.getPassword().trim(), salt));
+        newAgent.setPassword(MD5Utils.md5("123456", salt));
         newAgent.setSalt(salt);
         SysUser sysUser = new SysUser();
         sysUser.setAccount(newAgent.getUsername());

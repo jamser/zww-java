@@ -1,6 +1,7 @@
 package com.bfei.icrane.api.controller;
 
 import com.bfei.icrane.api.service.AgentService;
+import com.bfei.icrane.api.service.AgentWithdrawService;
 import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.form.AgentChangePwdForm;
 import com.bfei.icrane.core.form.AgentForm;
@@ -47,6 +48,9 @@ public class AgentController {
     @Autowired
     private SysNotifyService sysNotifyService;
 
+    @Autowired
+    private AgentWithdrawService agentWithdrawService;
+
     private RedisUtil redisUtil = new RedisUtil();
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -60,13 +64,18 @@ public class AgentController {
         if (null == agent) {
             return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.USERNAME_ERROR);
         } else {
-            if (agent.getPassword().equals(MD5Utils.md5(agentLoginForm.getPassword(), agent.getSalt()))) {
-                AgentToken token = agentService.getAgentLogin(agent);
-                if (null == token) {
-                    return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.AGENT_LOGIN_ERROR);
-                } else {
-                    return new ResultMap(Enviroment.RETURN_SUCCESS_CODE, token);
+            if (agent.getStatus() == 1 || agent.getStatus() == 3) {
+
+                if (agent.getPassword().equals(MD5Utils.md5(agentLoginForm.getPassword(), agent.getSalt()))) {
+                    AgentToken token = agentService.getAgentLogin(agent);
+                    if (null == token) {
+                        return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.AGENT_LOGIN_ERROR);
+                    } else {
+                        return new ResultMap(Enviroment.RETURN_SUCCESS_CODE, token);
+                    }
                 }
+            } else {
+                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.AGENT_LOGIN_FAILE);
             }
             return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.PASSWORD_ERROR);
         }
@@ -101,7 +110,7 @@ public class AgentController {
             }
             return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.ADD_AGENT_ERROER);
         }
-        return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.ADD_AGENT_ERROER);
+        return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.ADD_AGENT_ERROER_MESSAGE);
     }
 
 
@@ -125,25 +134,24 @@ public class AgentController {
             }
             Agent agent = agentService.selectByPrimaryKey(agentId);
 
-            Long withdraw = 0L;
-
+            Long withdraw = agentWithdrawService.selectByWithdraw(agentId);
+            agent.setWithdraw(withdraw);
             switch (agent.getLevel()) {
                 case 0:
-                    withdraw = agentChargeService.selectByAgentSuperId(agent.getId());
+                    agent.setBalanceDisabled(agentChargeService.selectByAgentSuperId(agent.getId()));
                     break;
                 case 1:
-                    withdraw = agentChargeService.selectByAgentOneId(agent.getId());
+                    agent.setBalanceDisabled(agentChargeService.selectByAgentOneId(agent.getId()));
                     break;
                 case 2:
-                    withdraw = agentChargeService.selectByAgentTwoId(agent.getId());
+                    agent.setBalanceDisabled(agentChargeService.selectByAgentTwoId(agent.getId()));
                     break;
                 case 3:
-                    withdraw = agentChargeService.selectByAgentThreeId(agent.getId());
+                    agent.setBalanceDisabled(agentChargeService.selectByAgentThreeId(agent.getId()));
                     break;
                 default:
                     break;
             }
-            agent.setWithdraw(withdraw);
             AgentPojo agentPojo = new AgentPojo();
             BeanUtils.copyProperties(agent, agentPojo);
             return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, agentPojo);

@@ -248,7 +248,7 @@ public class QRCodeUtil {
         }
         try {
             File logoFile = new File("/home/font/logo.png");
-            QRCodeUrl = myDrawLogoQRCode(logoFile, getshareUrl("agent" + agent.getId(), "qulin", index), note);
+            QRCodeUrl = myDrawLogoQRCode(logoFile, getshareUrl("agent" + agent.getId(), "lanaokj", index), note);
             //缓存地址到redis
             redisUtil.setString(RedisKeyGenerator.getAgentCodeKey(agent.getId().toString() + shareIMGversion), QRCodeUrl, 2147483647);
             return QRCodeUrl;

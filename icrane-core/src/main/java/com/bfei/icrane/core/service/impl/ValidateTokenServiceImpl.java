@@ -73,25 +73,37 @@ public class ValidateTokenServiceImpl implements ValidateTokenService {
 
     @Override
     public boolean validataAgentToken(String token, Integer agentId) {
+
         if (redisUtil.existsKey(token)) {
             String vAgentId = redisUtil.getString(token);
-            if (vAgentId.equals(String.valueOf(agentId))) {
-                redisUtil.setString(token, String.valueOf(agentId), 3600 * 24);
-                return true;
-            } else {
-                Agent agent = agentService.selectByPrimaryKey(Integer.parseInt(vAgentId));
-                if (agent != null && agent.getAgentId().equals(String.valueOf(agentId))) {
-                    redisUtil.setString(token, String.valueOf(agentId), 3600 * 24);
-                    return true;
+            Agent agent = agentService.selectByPrimaryKey(Integer.parseInt(vAgentId));
+            if (null != agent) {
+                if (agent.getStatus() == 1 || agent.getStatus() == 2) {
+                    if (vAgentId.equals(String.valueOf(agentId))) {
+                        redisUtil.setString(token, String.valueOf(agentId), 3600 * 24);
+                        return true;
+                    } else {
+                        if (agent.getAgentId().equals(String.valueOf(agentId))) {
+                            redisUtil.setString(token, String.valueOf(agentId), 3600 * 24);
+                            return true;
+                        }
+                        redisUtil.delKey(token);
+                        return false;
+                    }
                 }
-                redisUtil.delKey(token);
                 return false;
             }
         }
         AgentToken agentToken = agentTokenMapper.selectByToken(token);
+
         if (agentToken != null && String.valueOf(agentToken.getAgentId()).equals(String.valueOf(agentId))) {
-            redisUtil.setString(token, String.valueOf(agentId), 3600 * 24);
-            return true;
+            Agent agent = agentService.selectByPrimaryKey(agentToken.getAgentId());
+            if (null != agent) {
+                if (agent.getStatus() == 1 || agent.getStatus() == 2) {
+                    redisUtil.setString(token, String.valueOf(agentId), 3600 * 24);
+                    return true;
+                }
+            }
         }
         agentTokenMapper.deleteByAgentId(agentId);
         return false;
