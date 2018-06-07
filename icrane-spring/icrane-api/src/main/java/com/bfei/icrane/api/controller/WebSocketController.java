@@ -101,7 +101,7 @@ public class WebSocketController {
                        @PathParam(value = "token") String token) throws Exception {
 
         try {
-            //logger.info("进来了onOpen。。。。。。。。。。。。。。。。" );
+            logger.info("进来了onOpen。。。。。。。。。。。。。。。。" );
             this.dollId = Integer.parseInt(dollId);
             this.userId = Integer.parseInt(memberId);
             //如果已经有人在玩则关闭session
@@ -190,7 +190,7 @@ public class WebSocketController {
 
     public void ReceivingMessage(String queueName) {
         try {
-           // logger.info("进来了ReceivingMessage。。。。。。。。。。。。。。。。" );
+            logger.info("进来了ReceivingMessage。。。。。。。。。。。。。。。。" );
         	RoomSession roomSession = roomSessionMap.get(this.dollId);
             Message message = null;
             String messageRawBody = "";
@@ -240,7 +240,7 @@ public class WebSocketController {
             if (webSocketMap.get(dollId) != null && webSocketMap.get(dollId).isOpen() && webSocketMap.get(dollId).getBasicRemote()!=null && popSend && info!=null) {
  /*           	String[] infos = info.split("}");
             	final String sText = infos[0] + "}";*/
-               // logger.info("进来了sendMessage后。。。。。。。。。。。。。。。。" + info);
+            //    logger.info("进来了sendMessage后。。。。。。。。。。。。。。。。" + info);
             	webSocketMap.get(dollId).getBasicRemote().sendText(info);
                 //logger.info("向在娃娃机" + dollId + "手机端" + roomSessionMap.get(dollId).getMemberId() + "转发消息:" + info);
             } else {
@@ -258,7 +258,7 @@ public class WebSocketController {
      */
     @OnMessage
     public void onMessage(String message, Session session) throws Exception {
-     //   logger.info("进来了onMessage。。。。。。。。。。。。。。。。" + message);
+        logger.info("进来了onMessage。。。。。。。。。。。。。。。。" + message);
         // 调用阿里物联网套件接口
         RoomSession roomSession = roomSessionMap.get(this.dollId);
         //Message msg=new Gson().fromJson(message.getPayload().toString(),Message.class);
@@ -303,7 +303,7 @@ public class WebSocketController {
     }
     
     private void pubMessageIot(String productKey,String iotControlTopic,String message) throws ServerException, ClientException {
-    		//logger.info("==========测试===================productKey：{}，iotControlTopic：{}", productKey, iotControlTopic);
+    		logger.info("==========测试===================productKey：{}，iotControlTopic：{}", productKey, iotControlTopic);
     		 PubResponse response = (PubResponse) aliyunService.pubMessageIot(productKey, iotControlTopic, message);
          	if (response.getSuccess()) {
              //logger.info("向阿里云物联网套件发送消息成功：" + message);
@@ -318,7 +318,7 @@ public class WebSocketController {
      */
     @OnClose
     public void onClose() {
-        //logger.info("进来了onClose。。。。。。。。。。。。。。。。" );
+        logger.info("进来了onClose。。。。。。。。。。。。。。。。" );
         RoomSession roomSession = roomSessionMap.get(this.dollId);
         String tokenStr = roomSession.getToken();
         Integer userId = roomSession.getMemberId();
