@@ -108,7 +108,7 @@ public class MachineServiceImpl  {
 	public static void sendMsg(String msg,Integer dollId,Integer userId) {
 		try {
 			if(!machineSocketMap.containsKey(dollId)) {
-                logger.info("php socket ip={},port={}",serverIp,port);
+               // logger.info("php socket ip={},port={}",serverIp,port);
 				Socket socket = new Socket(serverIp,port);
 				machineSocketMap.put(dollId, socket);
 				socketRunning.put(dollId, true);
