@@ -130,7 +130,7 @@ public class QRCodeUtil {
     }
 
     // 生成带logo的二维码图片
-    public static String myDrawLogoQRCode(File logoFile, String qrUrl, String note) {
+    public static String myDrawLogoQRCode(String type, String id, File logoFile, String qrUrl, String note) {
         try {
             MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
             // 参数顺序分别为：编码内容，编码类型，生成图片宽度，生成图片高度，设置参数
@@ -201,7 +201,12 @@ public class QRCodeUtil {
             PropFileManager propFileMgr = new PropFileManager("interface.properties");
             String ossBucketName = propFileMgr.getProperty("aliyun.ossBucketName");
             String fileKey = com.bfei.icrane.common.util.StringUtils.getRandomUUID();
-            String NewFileKey = fileKey + ".jpg";
+            String NewFileKey;
+            if (type.equals("agent")) {
+                NewFileKey = type + "/share/" + id + "/" + fileKey + ".jpg";
+            } else {
+                NewFileKey = type + "/share/" + id + "/" + fileKey + ".jpg";
+            }
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             try {
                 ImageIO.write(image, "123.jpg".split("\\.")[1], os);
@@ -228,7 +233,7 @@ public class QRCodeUtil {
         }
         try {
             File logoFile = new File("/home/font/logo.png");
-            QRCodeUrl = myDrawLogoQRCode(logoFile, getshareUrl(member.getMemberID(), member.getRegisterChannel(), index), note);
+            QRCodeUrl = myDrawLogoQRCode("member", String.valueOf(member.getId()), logoFile, getshareUrl(member.getMemberID(), member.getRegisterChannel(), index), note);
             //缓存地址到redis
             redisUtil.setString(RedisKeyGenerator.getQRCodeKey(member.getMemberID() + member.getRegisterChannel()) + shareIMGversion, QRCodeUrl, 2147483647);
             return QRCodeUrl;
@@ -248,7 +253,7 @@ public class QRCodeUtil {
         }
         try {
             File logoFile = new File("/home/font/logo.png");
-            QRCodeUrl = myDrawLogoQRCode(logoFile, getshareUrl("agent" + agent.getId(), "lanaokj", index), note);
+            QRCodeUrl = myDrawLogoQRCode("agent", String.valueOf(agent.getId()), logoFile, getshareUrl("agent" + agent.getId(), "lanaokj", index), note);
             //缓存地址到redis
             redisUtil.setString(RedisKeyGenerator.getAgentCodeKey(agent.getId().toString() + shareIMGversion), QRCodeUrl, 2147483647);
             return QRCodeUrl;
