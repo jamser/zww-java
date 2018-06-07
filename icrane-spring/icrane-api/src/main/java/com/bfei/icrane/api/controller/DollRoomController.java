@@ -208,7 +208,7 @@ public class DollRoomController {
     @RequestMapping(value = "/getDollRoom", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> getDollRoom(Integer dollId, Integer count, String token) throws Exception {
-        logger.info("获取房间信息接口参数：dollId:{},token:{},count:{}", dollId, token, count);
+       // logger.info("获取房间信息接口参数：dollId:{},token:{},count:{}", dollId, token, count);
         Map<String, Object> resultMap = new HashedMap<String, Object>();
         // DollRoom dollRoom = new DollRoom();
         // int offset = 0;
@@ -271,7 +271,7 @@ public class DollRoomController {
                 resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
                 resultMap.put("message", Enviroment.RETURN_FAILE_MESSAGE);
             }
-            logger.info("获取房间信息resultMap=success");
+           // logger.info("获取房间信息resultMap=success");
             return resultMap;
         } catch (Exception e) {
             logger.error("获取房间信息出错", e);
