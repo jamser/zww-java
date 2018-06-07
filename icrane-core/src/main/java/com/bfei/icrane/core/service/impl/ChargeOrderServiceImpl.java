@@ -298,8 +298,8 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                 agent.setId(member.getAgentSuper().getId());
                 if (time <= 0) {
                     agent.setBalance(income.longValue());
+                    agentService.updateAgentBalance(agent);
                 }
-                agentService.updateAgentBalance(agent);
                 logger.info("代理 {} ,增加金额 {},订单号 {}", member.getAgentSuperId(), income.longValue(), agentCharge.getOrderId());
             }
             if (AgentUtils.isNotNull(member.getAgentOne())) {
@@ -314,8 +314,9 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                 agent.setId(member.getAgentOne().getId());
                 if (time <= 0) {
                     agent.setBalance(income.longValue());
+                    agentService.updateAgentBalance(agent);
                 }
-                agentService.updateAgentBalance(agent);
+
                 logger.info("代理 {} ,增加金额 {},订单号 {}", member.getAgentOneId(), income.longValue(), agentCharge.getOrderId());
             }
             if (AgentUtils.isNotNull(member.getAgentTwo())) {
@@ -330,8 +331,8 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                 agent.setId(member.getAgentTwo().getId());
                 if (time <= 0) {
                     agent.setBalance(income.longValue());
+                    agentService.updateAgentBalance(agent);
                 }
-                agentService.updateAgentBalance(agent);
                 logger.info("代理 {} ,增加金额 {},订单号 {}", member.getAgentTwoId(), income.longValue(), agentCharge.getOrderId());
             }
             if (AgentUtils.isNotNull(member.getAgentThree())) {
@@ -342,8 +343,8 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                 agent.setId(member.getAgentThree().getId());
                 if (time <= 0) {
                     agent.setBalance(income.longValue());
+                    agentService.updateAgentBalance(agent);
                 }
-                agentService.updateAgentBalance(agent);
                 logger.info("代理 {} ,增加金额 {},订单号 {}", member.getAgentThreeId(), income.longValue(), agentCharge.getOrderId());
             }
             agentCharge.setCreateTime(new Date());

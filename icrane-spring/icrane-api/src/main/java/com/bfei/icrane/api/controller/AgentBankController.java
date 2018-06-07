@@ -91,7 +91,7 @@ public class AgentBankController {
 
             } else {
                 resultMap.put("success", Enviroment.RETURN_FAILE);
-                resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
+                resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE1);
                 resultMap.put("message", "文件大小为空！");
                 return resultMap;
             }
