@@ -133,7 +133,7 @@ public class DollOrderController {
     @RequestMapping(value = "/createDollOrder", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> createDollOrder(Integer memberId, Integer dollId, Integer dollNum) throws Exception {
-
+        logger.info("【createDollOrder】参数 memberId={},dollId={},dollNum={}", memberId, dollId, dollNum);
         Map<String, Object> resultMap = new HashedMap<String, Object>();
 
         try {

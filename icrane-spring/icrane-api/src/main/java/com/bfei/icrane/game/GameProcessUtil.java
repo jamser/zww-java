@@ -310,8 +310,8 @@ public class GameProcessUtil {
 	       
 		 String clawPro = redisUtil.getString(RedisKeyGenerator.getMachineHost(dollId));
 		 //新用户  未充值  只出现一次强抓
-	        //if (chargeSum==0 && memberNew==1 && strongClawNum==0 && "weakClaw".equals(message)) {
-		 if (chargeSum==0 && memberNew==1 && "weakClaw".equals(message) && redisUtil.existsKey(RedisKeyGenerator.getMemberToyNum(userId))) {//新用户 存在抓中保证
+		logger.info("【contrClaw方法】参数 chargeSum={},memberNew={},userId={},message={},memberNewKey={},strongClawNumKey={}", chargeSum, memberNew, userId, message, memberNewKey, strongClawNumKey);
+		if (chargeSum==0 && memberNew==1 && "weakClaw".equals(message) && redisUtil.existsKey(RedisKeyGenerator.getMemberToyNum(userId))) {//新用户 存在抓中保证
 	        	//Random p1Rdom = new Random();
 	        	//Integer p1Num =  p1Rdom.nextInt(p1);//随机数
 	        	//if (p1Num==1) {

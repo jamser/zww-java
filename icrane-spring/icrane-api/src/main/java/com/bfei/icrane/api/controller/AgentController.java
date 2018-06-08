@@ -126,7 +126,7 @@ public class AgentController {
     public ResultMap getAccount(@RequestParam(value = "agentId", required = true) Integer agentId,
                                 @RequestParam(value = "token", required = true) String token) {
         try {
-            logger.info("代理账户接口参数:memberId=" + agentId + ",token=" + token);
+            logger.info("【userInfo】参数:memberId=" + agentId + ",token=" + token);
             //验证token
             if (!validateTokenService.validataAgentToken(token, agentId)) {
                 logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
@@ -288,7 +288,7 @@ public class AgentController {
         if (!changePwdForm.getSmsCode().equals(trueCode)) {
             return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.SMSCODE_IS_FALSE);
         }
-        logger.info("【代理修改密码请求参数】");
+        logger.info("【agentChangePwd】修改密码 参数AgentChangePwdForm={}", changePwdForm);
         Agent agent = agentService.selectByPhone(changePwdForm.getPhone());
 
         //验证密码
