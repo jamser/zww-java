@@ -16,12 +16,12 @@ public class AdvertisementInfo {
 
     private Long downCount;
 
+    private Double xAxis;
+
+    private Double yAxis;
+
     private Date createDate;
 
     private Date updateDate;
-
-    public Integer getId() {
-        return id;
-    }
 
 }
