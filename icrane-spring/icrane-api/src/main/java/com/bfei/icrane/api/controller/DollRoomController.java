@@ -226,13 +226,9 @@ public class DollRoomController {
 
                 return resultMap;
             }
-            //logger.info("获取在线人数入参：{},roomKey:{}", dollId, RedisKeyGenerator.getRoomKey(dollId));
-            //Long dollRoomCount = redisUtil.getSCard(RedisKeyGenerator.getRoomKey(dollId));
             Long dollRoomCount = gameService.onLineCount(dollId);
             //logger.info("获取在线人数服务器返回：{}", dollRoomCount);
             if (dollRoomCount != 0) {
-                //logger.info("获取count个用户头像入参getRoomKey：{},count:{}", RedisKeyGenerator.getRoomKey(dollId), count);
-                //List<String> memberHeadIdList = redisUtil.srandMember(RedisKeyGenerator.getRoomKey(dollId), count);
                 List<String> memberHeadIdList = gameService.takeRoomMembers(dollId, count);
                 List<Member> memberHeadList = new ArrayList<>();
                 for (String memberHeadId : memberHeadIdList) {

@@ -308,11 +308,10 @@ public class GameController {
             //logger.info("刷新指定数量" + members + "的在线用户的基本信息（头像）" + "," + "token=" + token);
             //List<String> memberIds = redisUtil.srandMember(RedisKeyGenerator.getRoomKey(dollId), members);
             List<String> memberIds = gameService.takeRoomMembers(dollId, members);
-            int memberId;
             //String memberInfoKey;
             List<MemberInfoPojo> resultData = new ArrayList<MemberInfoPojo>();
-            for (int i = 0; i < memberIds.size(); i++) {
-                memberId = Integer.parseInt(memberIds.get(i));
+            for (String memberHeadId : memberIds) {
+                int  memberId = Integer.parseInt(memberHeadId);
                 //memberInfoKey = RedisKeyGenerator.getMemberInfoKey(memberId);
                 MemberInfoPojo memberInfoPojo = new MemberInfoPojo();
                 //if(redisUtil.existsKey(memberInfoKey)){
