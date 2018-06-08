@@ -1124,14 +1124,17 @@
         t_member m
         WHERE
         <if test="level == 0">
-            agent_super_id=#{id,jdbcType=INTEGER}
+            agent_super_id=#{id,jdbcType=INTEGER} and
+            agent_one_id=0
         </if>
         <if test="level == 1">
-            agent_one_id=#{id,jdbcType=INTEGER}
+            agent_one_id=#{id,jdbcType=INTEGER} and
+            agent_two_id=0
 
         </if>
         <if test="level == 2">
-            agent_two_id=#{id,jdbcType=INTEGER}
+            agent_two_id=#{id,jdbcType=INTEGER} and
+            agent_three_id=0
         </if>
         <if test="level == 3">
             agent_three_id=#{id,jdbcType=INTEGER}
