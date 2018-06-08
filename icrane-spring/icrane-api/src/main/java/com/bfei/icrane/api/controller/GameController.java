@@ -187,7 +187,7 @@ public class GameController {
     @ResponseBody
     public IcraneResult endRound(Integer memberId, Integer dollId, Integer gotDoll, String token, String state, Integer version) throws Exception {
         //logger.info("结束本轮游戏endRound token="+token);
-        //logger.info("结束本轮游戏保持socket连接并调用的接口memberId=" + memberId + "," + "dollId=" + dollId + "," + "gotDoll" + gotDoll + "," + "token=" + token);
+        logger.info("结束本轮游戏保持socket连接并调用的接口memberId=" + memberId + "," + "dollId=" + dollId + "," + "gotDoll" + gotDoll + "," + "token=" + token + ",state=" + state);
         try {
             //验证token有效性
             if (memberId == null || StringUtils.isEmpty(token) || !validateTokenService.validataToken(token, memberId)) {

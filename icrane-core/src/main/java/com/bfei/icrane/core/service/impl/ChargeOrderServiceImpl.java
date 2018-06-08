@@ -300,7 +300,7 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                     agent.setBalance(income.longValue());
                     agentService.updateAgentBalance(agent);
                 }
-                logger.info("代理 {} ,增加金额 {},订单ID {}", member.getAgentSuperId(), income.longValue(), agentCharge.getOrderId());
+                logger.info("代理 {} ,增加金额 {},订单号 {}", member.getAgentSuperId(), income.longValue(), chargeOrder.getOrderNo());
             }
             if (AgentUtils.isNotNull(member.getAgentOne())) {
                 agentCharge.setAgentOneId(member.getAgentOneId());
@@ -317,7 +317,7 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                     agentService.updateAgentBalance(agent);
                 }
 
-                logger.info("代理 {} ,增加金额 {},订单ID {}", member.getAgentOneId(), income.longValue(), agentCharge.getOrderId());
+                logger.info("代理 {} ,增加金额 {},订单号 {}", member.getAgentOneId(), income.longValue(), chargeOrder.getOrderNo());
             }
             if (AgentUtils.isNotNull(member.getAgentTwo())) {
                 agentCharge.setAgentTwoId(member.getAgentTwoId());
@@ -333,7 +333,7 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                     agent.setBalance(income.longValue());
                     agentService.updateAgentBalance(agent);
                 }
-                logger.info("代理 {} ,增加金额 {},订单ID {}", member.getAgentTwoId(), income.longValue(), agentCharge.getOrderId());
+                logger.info("代理 {} ,增加金额 {},订单号 {}", member.getAgentTwoId(), income.longValue(), chargeOrder.getOrderNo());
             }
             if (AgentUtils.isNotNull(member.getAgentThree())) {
                 agentCharge.setAgentThreeId(member.getAgentThreeId());
@@ -345,7 +345,7 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                     agent.setBalance(income.longValue());
                     agentService.updateAgentBalance(agent);
                 }
-                logger.info("代理 {} ,增加金额 {},订单ID {}", member.getAgentThreeId(), income.longValue(), agentCharge.getOrderId());
+                logger.info("代理 {} ,增加金额 {},订单号 {}", member.getAgentThreeId(), income.longValue(), chargeOrder.getOrderNo());
             }
             agentCharge.setCreateTime(new Date());
             agentCharge.setUpdateTime(new Date());
