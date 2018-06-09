@@ -54,10 +54,7 @@
         </javaClientGenerator>
         <!-- 指定数据库表 -->
 
-        <table schema="" tableName="agent_withdraw" domainObjectName="agentWithdraw" enableCountByExample="false" enableUpdateByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
-        </table>
-        <table schema="" tableName="bank_info" domainObjectName="BankInfo" enableCountByExample="false" enableUpdateByExample="false"
+        <table schema="" tableName="t_agent" domainObjectName="Agent1" enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
         </table>
     </context>

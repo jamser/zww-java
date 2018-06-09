@@ -18,10 +18,11 @@
         <result column="fee" property="fee" jdbcType="DECIMAL"/>
         <result column="balance" property="balance" jdbcType="BIGINT"/>
         <result column="balance_disabled" property="balanceDisabled" jdbcType="BIGINT"/>
+        <result column="is_oem" property="isOem" jdbcType="BIT"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, username, password, salt, phone, nick_name, level, status, agent_id, agent_one_id, 
-    agent_two_id, create_time, update_time, fee, balance, balance_disabled
+    agent_two_id, create_time, update_time, fee, balance, balance_disabled,is_oem
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -57,175 +58,184 @@
     delete from t_agent
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.bfei.icrane.core.models.Agent">
-    insert into t_agent (id, username, password, 
-      salt, phone, nick_name, 
-      level, status, agent_id, 
-      agent_one_id, agent_two_id, create_time, 
-      update_time, fee, balance, 
-      balance_disabled)
-    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{salt,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, 
-      #{level,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{agentId,jdbcType=INTEGER}, 
-      #{agentOneId,jdbcType=INTEGER}, #{agentTwoId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{fee,jdbcType=DECIMAL}, #{balance,jdbcType=BIGINT}, 
-      #{balanceDisabled,jdbcType=BIGINT})
+    <insert id="insert" parameterType="com.bfei.icrane.core.models.Agent" >
+    insert into t_agent (id, username, password,
+      salt, phone, nick_name,
+      level, is_oem, status, fee,
+      balance, balance_disabled, agent_id,
+      agent_one_id, agent_two_id, create_time,
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{salt,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR},
+      #{level,jdbcType=INTEGER}, #{isOem,jdbcType=BIT}, #{status,jdbcType=INTEGER}, #{fee,jdbcType=DECIMAL},
+      #{balance,jdbcType=BIGINT}, #{balanceDisabled,jdbcType=BIGINT}, #{agentId,jdbcType=INTEGER},
+      #{agentOneId,jdbcType=INTEGER}, #{agentTwoId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-    <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.Agent">
+    <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.Agent" >
         insert into t_agent
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
                 id,
             </if>
-            <if test="username != null">
+            <if test="username != null" >
                 username,
             </if>
-            <if test="password != null">
+            <if test="password != null" >
                 password,
             </if>
-            <if test="salt != null">
+            <if test="salt != null" >
                 salt,
             </if>
-            <if test="phone != null">
+            <if test="phone != null" >
                 phone,
             </if>
-            <if test="nickName != null">
+            <if test="nickName != null" >
                 nick_name,
             </if>
-            <if test="level != null">
+            <if test="level != null" >
                 level,
             </if>
-            <if test="status != null">
+            <if test="isOem != null" >
+                is_oem,
+            </if>
+            <if test="status != null" >
                 status,
             </if>
-            <if test="agentId != null">
-                agent_id,
-            </if>
-            <if test="agentOneId != null">
-                agent_one_id,
-            </if>
-            <if test="agentTwoId != null">
-                agent_two_id,
-            </if>
-            <if test="createTime != null">
-                create_time,
-            </if>
-            <if test="updateTime != null">
-                update_time,
-            </if>
-            <if test="fee != null">
+            <if test="fee != null" >
                 fee,
             </if>
-            <if test="balance != null">
+            <if test="balance != null" >
                 balance,
             </if>
-            <if test="balanceDisabled != null">
+            <if test="balanceDisabled != null" >
                 balance_disabled,
             </if>
+            <if test="agentId != null" >
+                agent_id,
+            </if>
+            <if test="agentOneId != null" >
+                agent_one_id,
+            </if>
+            <if test="agentTwoId != null" >
+                agent_two_id,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="updateTime != null" >
+                update_time,
+            </if>
         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
                 #{id,jdbcType=INTEGER},
             </if>
-            <if test="username != null">
+            <if test="username != null" >
                 #{username,jdbcType=VARCHAR},
             </if>
-            <if test="password != null">
+            <if test="password != null" >
                 #{password,jdbcType=VARCHAR},
             </if>
-            <if test="salt != null">
+            <if test="salt != null" >
                 #{salt,jdbcType=VARCHAR},
             </if>
-            <if test="phone != null">
+            <if test="phone != null" >
                 #{phone,jdbcType=VARCHAR},
             </if>
-            <if test="nickName != null">
+            <if test="nickName != null" >
                 #{nickName,jdbcType=VARCHAR},
             </if>
-            <if test="level != null">
+            <if test="level != null" >
                 #{level,jdbcType=INTEGER},
             </if>
-            <if test="status != null">
+            <if test="isOem != null" >
+                #{isOem,jdbcType=BIT},
+            </if>
+            <if test="status != null" >
                 #{status,jdbcType=INTEGER},
             </if>
-            <if test="agentId != null">
-                #{agentId,jdbcType=INTEGER},
-            </if>
-            <if test="agentOneId != null">
-                #{agentOneId,jdbcType=INTEGER},
-            </if>
-            <if test="agentTwoId != null">
-                #{agentTwoId,jdbcType=INTEGER},
-            </if>
-            <if test="createTime != null">
-                #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="updateTime != null">
-                #{updateTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="fee != null">
+            <if test="fee != null" >
                 #{fee,jdbcType=DECIMAL},
             </if>
-            <if test="balance != null">
+            <if test="balance != null" >
                 #{balance,jdbcType=BIGINT},
             </if>
-            <if test="balanceDisabled != null">
+            <if test="balanceDisabled != null" >
                 #{balanceDisabled,jdbcType=BIGINT},
+            </if>
+            <if test="agentId != null" >
+                #{agentId,jdbcType=INTEGER},
+            </if>
+            <if test="agentOneId != null" >
+                #{agentOneId,jdbcType=INTEGER},
+            </if>
+            <if test="agentTwoId != null" >
+                #{agentTwoId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.bfei.icrane.core.models.Agent">
+    <update id="updateByPrimaryKeySelective" parameterType="com.bfei.icrane.core.models.Agent" >
         update t_agent
-        <set>
-            <if test="username != null">
+        <set >
+            <if test="username != null" >
                 username = #{username,jdbcType=VARCHAR},
             </if>
-            <if test="password != null">
+            <if test="password != null" >
                 password = #{password,jdbcType=VARCHAR},
             </if>
-            <if test="salt != null">
+            <if test="salt != null" >
                 salt = #{salt,jdbcType=VARCHAR},
             </if>
-            <if test="phone != null">
+            <if test="phone != null" >
                 phone = #{phone,jdbcType=VARCHAR},
             </if>
-            <if test="nickName != null">
+            <if test="nickName != null" >
                 nick_name = #{nickName,jdbcType=VARCHAR},
             </if>
-            <if test="level != null">
+            <if test="level != null" >
                 level = #{level,jdbcType=INTEGER},
             </if>
-            <if test="status != null">
+            <if test="isOem != null" >
+                is_oem = #{isOem,jdbcType=BIT},
+            </if>
+            <if test="status != null" >
                 status = #{status,jdbcType=INTEGER},
             </if>
-            <if test="agentId != null">
-                agent_id = #{agentId,jdbcType=INTEGER},
-            </if>
-            <if test="agentOneId != null">
-                agent_one_id = #{agentOneId,jdbcType=INTEGER},
-            </if>
-            <if test="agentTwoId != null">
-                agent_two_id = #{agentTwoId,jdbcType=INTEGER},
-            </if>
-            <if test="createTime != null">
-                create_time = #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="updateTime != null">
-                update_time = #{updateTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="fee != null">
+            <if test="fee != null" >
                 fee = #{fee,jdbcType=DECIMAL},
             </if>
-            <if test="balance != null">
+            <if test="balance != null" >
                 balance = #{balance,jdbcType=BIGINT},
             </if>
-            <if test="balanceDisabled != null">
+            <if test="balanceDisabled != null" >
                 balance_disabled = #{balanceDisabled,jdbcType=BIGINT},
+            </if>
+            <if test="agentId != null" >
+                agent_id = #{agentId,jdbcType=INTEGER},
+            </if>
+            <if test="agentOneId != null" >
+                agent_one_id = #{agentOneId,jdbcType=INTEGER},
+            </if>
+            <if test="agentTwoId != null" >
+                agent_two_id = #{agentTwoId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null" >
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.Agent">
+    <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.Agent" >
     update t_agent
     set username = #{username,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
@@ -233,15 +243,16 @@
       phone = #{phone,jdbcType=VARCHAR},
       nick_name = #{nickName,jdbcType=VARCHAR},
       level = #{level,jdbcType=INTEGER},
+      is_oem = #{isOem,jdbcType=BIT},
       status = #{status,jdbcType=INTEGER},
+      fee = #{fee,jdbcType=DECIMAL},
+      balance = #{balance,jdbcType=BIGINT},
+      balance_disabled = #{balanceDisabled,jdbcType=BIGINT},
       agent_id = #{agentId,jdbcType=INTEGER},
       agent_one_id = #{agentOneId,jdbcType=INTEGER},
       agent_two_id = #{agentTwoId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      fee = #{fee,jdbcType=DECIMAL},
-      balance = #{balance,jdbcType=BIGINT},
-      balance_disabled = #{balanceDisabled,jdbcType=BIGINT}
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

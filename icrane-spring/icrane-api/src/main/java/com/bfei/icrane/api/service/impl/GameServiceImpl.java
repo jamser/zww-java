@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.bfei.icrane.api.service.*;
 import com.bfei.icrane.common.util.*;
+import com.bfei.icrane.core.dao.OemMapper;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.service.*;
 import org.slf4j.Logger;
@@ -44,6 +45,8 @@ public class GameServiceImpl implements GameService {
     private CatchHistoryService catchHistoryService;
     @Autowired
     private AgentService agentService;
+    @Autowired
+    private OemMapper oemMapper;
 
     @Override
     public void enterDoll(Integer dollId, Integer memberId) {
@@ -617,8 +620,19 @@ public class GameServiceImpl implements GameService {
             map.put("message", "查询不到该代理");
             return map;
         }
-
-        String shareUrl = QRCodeUtil.getshareUrl("agent" + agent.getId(), systemPrefService.selectByPrimaryKey("CHANNEL").getValue(), index);
+        //贴牌
+        String channel = "lanaokj";
+        if(agent.getLevel() == 0 && agent.getIsOem()){//为贴牌商
+            Oem oem = oemMapper.selectByPrimaryKey(agent.getId());
+            if(oem != null) channel = oem.getCode();
+        }else if(agent.getLevel() != 0){
+            Agent superAgent = agentService.selectByPrimaryKey(agent.getAgentId());
+            if(superAgent.getIsOem()){
+                Oem oem = oemMapper.selectByPrimaryKey(superAgent.getId());
+                if(oem != null) channel = oem.getCode();
+            }
+        }
+        String shareUrl = QRCodeUtil.getshareUrl("agent" + agent.getId(), channel, index);
         //先查询redis
         String shareImgUrl = redisUtil.getString(shareUrl + QRCodeUtil.shareIMGversion);
         //如果redis中有就从redis中查询

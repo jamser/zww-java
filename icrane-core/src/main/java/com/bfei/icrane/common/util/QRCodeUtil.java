@@ -20,12 +20,15 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * Created by SUN on 2018/3/8.
  */
 public class QRCodeUtil {
+    protected static final Logger logger = LoggerFactory.getLogger(QRCodeUtil.class);
 
     private static final int QRCOLOR = 0xFF000000; // 默认是黑色
     private static final int BGWHITE = 0xFFFFFFFF; // 背景颜色
@@ -253,7 +256,11 @@ public class QRCodeUtil {
         }
         try {
             File logoFile = new File("/home/font/logo.png");
-            QRCodeUrl = myDrawLogoQRCode("agent", String.valueOf(agent.getId()), logoFile, getshareUrl("agent" + agent.getId(), "lanaokj", index), note);
+            String lanaokj = getshareUrl("agent" + agent.getId(), "lanaokj", index);
+           // logger.info("生成长链接前："+lanaokj);
+            lanaokj =  WXUtil.short_url(lanaokj);
+           // logger.info("长链接后："+lanaokj);
+            QRCodeUrl = myDrawLogoQRCode("agent", String.valueOf(agent.getId()), logoFile, lanaokj, note);
             //缓存地址到redis
             redisUtil.setString(RedisKeyGenerator.getAgentCodeKey(agent.getId().toString() + shareIMGversion), QRCodeUrl, 2147483647);
             return QRCodeUrl;
@@ -266,7 +273,7 @@ public class QRCodeUtil {
     public static final String GET_SHARE_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect";
 
 
-    public static String getshareUrl(String memberId, String channel, Integer index) {
-        return GET_SHARE_URL.replace("APPID", WxConfig.GZHAPPID).replace("REDIRECT_URI", "http%3A%2F%2Flanao.nat300.top/icrane/api/h5login").replace("SCOPE", "snsapi_userinfo").replace("STATE", memberId + "-" + channel + "_" + index);
+    public static String getshareUrl(String id, String channel, Integer index) {
+        return GET_SHARE_URL.replace("APPID", WxConfig.GZHAPPID).replace("REDIRECT_URI", "http%3A%2F%2Flanao.nat300.top/icrane/api/h5login").replace("SCOPE", "snsapi_userinfo").replace("STATE", id + "-" + channel + "_" + index);
     }
 }

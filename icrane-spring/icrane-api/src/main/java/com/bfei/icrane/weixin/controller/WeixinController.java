@@ -17,13 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 public class WeixinController {
     @Autowired
     private LoginService loginService;
-
     @RequestMapping("/h5login")
     @ResponseBody
     public void web(HttpServletRequest request, HttpServletResponse response, String code, String state, String
             phoneModel) throws Exception {
         try {
-
+            //state = agent3-lanaokj_null
+            //state = 61159167-lanaokj_null
             int endIndex = state.indexOf("-");
             String agentId = "";
             String memberId = "";
@@ -56,5 +56,7 @@ public class WeixinController {
             e.printStackTrace();
         }
     }
+
+
 }
 

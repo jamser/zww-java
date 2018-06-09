@@ -29,7 +29,7 @@ import javax.swing.*;
 public class ImageHandleHelper {
 
     /**
-     * @param srcFile源图片、targetFile截好后图片全名、startAcross 开始截取位置横坐标、StartEndlong开始截图位置纵坐标、width截取的长，hight截取的高
+     * @param srcFile 源图片、targetFile截好后图片全名、startAcross 开始截取位置横坐标、StartEndlong开始截图位置纵坐标、width截取的长，hight截取的高
      * @Description:截图
      * @author:liuyc
      * @time:2016年5月27日 上午10:18:23
@@ -53,7 +53,7 @@ public class ImageHandleHelper {
 
     /**
      * @param files 要拼接的文件列表
-     * @param type1 横向拼接， 2 纵向拼接
+     * @param type 1 横向拼接， 2 纵向拼接
      * @Description:图片拼接 （注意：必须两张图片长宽一致哦）
      * @author:liuyc
      * @time:2016年5月27日 下午5:52:24
@@ -496,14 +496,14 @@ public class ImageHandleHelper {
 
 
     public String getshareUrl(Member member, String qrUrl, Integer version) {
-        File baseImgFile;
-        if (version == null) {
-            baseImgFile = new File("/home/share/1_3/365_dai.jpg"); // 原始图片文件
+        File baseImgFile  = new File("/home/share/1_3/20180608140425.jpg");
+        /*if (version == null) {
+            baseImgFile // 原始图片文件
         } else if (version == 2) {
             baseImgFile = new File("/home/share/1_3/xiaoyaojing_dai.jpg"); // 原始图片文件
         } else {
             baseImgFile = new File("/home/share/1_3/365_dai.jpg"); // 原始图片文件
-        }
+        }*/
         BufferedImage baseImg = null;
         try {
             baseImg = ImageIO.read(baseImgFile);
@@ -558,14 +558,14 @@ public class ImageHandleHelper {
     }
 
     public String getAgentShareUrl(Agent agent, String qrUrl, Integer version) {
-        File baseImgFile;
-        if (version == null) {
+        File baseImgFile  = new File("/home/share/1_3/20180608140425.jpg");
+       /* if (version == null) {
             baseImgFile = new File("/home/share/1_3/365_dai.jpg"); // 原始图片文件
         } else if (version == 2) {
             baseImgFile = new File("/home/share/1_3/xiaoyaojing_dai.jpg"); // 原始图片文件
         } else {
             baseImgFile = new File("/home/share/1_3/365_dai.jpg"); // 原始图片文件
-        }
+        }*/
         BufferedImage baseImg = null;
         try {
             baseImg = ImageIO.read(baseImgFile);

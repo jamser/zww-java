@@ -9,6 +9,7 @@ import java.util.Random;
 
 import com.bfei.icrane.api.service.*;
 import com.bfei.icrane.common.util.*;
+import com.bfei.icrane.core.dao.OemMapper;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.service.RiskManagementService;
 import org.apache.commons.lang.ArrayUtils;
@@ -53,6 +54,8 @@ public class LoginServiceImpl implements LoginService {
     private MemberDao memberDao;
     @Autowired
     private AgentService agentService;
+    @Autowired
+    private OemMapper oemMapper;
 
     @Override
     public IcraneResult wxLogin(Member member, String lastLoginFrom, String channel, String phoneModel, String agentId) {
@@ -478,14 +481,17 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public ResultMap weChatLogin(HttpServletRequest request, String code, String memberId, String lastLoginFrom, String IMEI, String phoneModel, String channel, String agentId) {
         try {
-            String ipAdrress = HttpClientUtil.getIpAdrress(request);
+          //  String ipAdrress = HttpClientUtil.getIpAdrress(request);
             //logger.info("多级渠道注册 code=" + code + ",IP=" + ipAdrress + ",memberId=" + memberId + ",lastLoginFrom=" + lastLoginFrom + ",channel=" + channel);
             //获取渠道信息
             Member inviter = memberService.selectByMemberID(memberId);
             if (inviter != null) {
                 channel = inviter.getRegisterChannel();
             }
-
+            Oem oem = oemMapper.selectByCode(channel);
+            if(oem == null){
+                channel = "lanaokj";
+            }
             Member member = null;
 
             //根据redis中的缓存判断是否注册是否要重新登录

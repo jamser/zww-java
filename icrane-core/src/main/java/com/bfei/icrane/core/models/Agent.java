@@ -41,5 +41,7 @@ public class Agent {
 
     private Long withdraw;
 
+    private Boolean isOem;
+
 
 }
