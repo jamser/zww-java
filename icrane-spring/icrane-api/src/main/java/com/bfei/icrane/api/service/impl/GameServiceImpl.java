@@ -584,7 +584,11 @@ public class GameServiceImpl implements GameService {
             map.put("message", "查询不到该用户");
             return map;
         }
-        String shareUrl = QRCodeUtil.getshareUrl(member.getMemberID(), member.getRegisterChannel(), index);
+        Oem oem = oemMapper.selectByCode(member.getRegisterChannel());
+        if(oem == null){
+            oem = oemMapper.selectByCode("lanaokj");
+        }
+        String shareUrl = QRCodeUtil.getshareUrl(member.getMemberID(), member.getRegisterChannel(), index,oem);
         //先查询redis
         String shareImgUrl = redisUtil.getString(shareUrl + QRCodeUtil.shareIMGversion);
         //如果redis中有就从redis中查询
@@ -595,7 +599,7 @@ public class GameServiceImpl implements GameService {
         }
         ImageHandleHelper imageHandleHelper = new ImageHandleHelper();
         //拼接
-        String qrUrl = QRCodeUtil.getQrUrl(member, null, index);
+        String qrUrl = QRCodeUtil.getQrUrl(member, null, index,oem);
         if (StringUtils.isEmpty(qrUrl)) {
             qrUrl = "https://lanao.oss-cn-shenzhen.aliyuncs.com/other/20180604144534.png";
         }
@@ -622,17 +626,23 @@ public class GameServiceImpl implements GameService {
         }
         //贴牌
         String channel = "lanaokj";
-        if(agent.getLevel() == 0 && agent.getIsOem()){//为贴牌商
-            Oem oem = oemMapper.selectByPrimaryKey(agent.getId());
-            if(oem != null) channel = oem.getCode();
+        Oem oem = null;
+        if(agent.getLevel() == 0){//为贴牌商
+            if(agent.getIsOem()){
+                oem  = oemMapper.selectByPrimaryKey(agent.getId());
+                if(oem != null) channel = oem.getCode();
+            }
         }else if(agent.getLevel() != 0){
             Agent superAgent = agentService.selectByPrimaryKey(agent.getAgentId());
             if(superAgent.getIsOem()){
-                Oem oem = oemMapper.selectByPrimaryKey(superAgent.getId());
+                oem = oemMapper.selectByPrimaryKey(superAgent.getId());
                 if(oem != null) channel = oem.getCode();
             }
         }
-        String shareUrl = QRCodeUtil.getshareUrl("agent" + agent.getId(), channel, index);
+        if(oem == null){
+            oem = oemMapper.selectByCode(channel);
+        }
+        String shareUrl = QRCodeUtil.getshareUrl("agent" + agent.getId(), channel, index,oem);
         //先查询redis
         String shareImgUrl = redisUtil.getString(shareUrl + QRCodeUtil.shareIMGversion);
         //如果redis中有就从redis中查询
@@ -642,7 +652,7 @@ public class GameServiceImpl implements GameService {
             return map;
         }
         //拼接
-        String qrUrl = QRCodeUtil.getAgentUrl(agent, null, index);
+        String qrUrl = QRCodeUtil.getAgentUrl(agent, null, index,oem);
         if (StringUtils.isEmpty(qrUrl)) {
             qrUrl = "https://lanao.oss-cn-shenzhen.aliyuncs.com/other/20180604144534.png";
         }

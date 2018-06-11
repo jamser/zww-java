@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 import com.bfei.icrane.common.wx.utils.WxConfig;
 import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.Member;
+import com.bfei.icrane.core.models.Oem;
 import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import com.google.zxing.BarcodeFormat;
@@ -226,7 +227,7 @@ public class QRCodeUtil {
         return null;
     }
 
-    public static String getQrUrl(Member member, String note, Integer index) {
+    public static String getQrUrl(Member member, String note, Integer index,Oem oem) {
         //先查询redis
         RedisUtil redisUtil = new RedisUtil();
         String QRCodeUrl = redisUtil.getString(RedisKeyGenerator.getQRCodeKey(member.getMemberID()) + shareIMGversion);
@@ -236,7 +237,9 @@ public class QRCodeUtil {
         }
         try {
             File logoFile = new File("/home/font/logo.png");
-            QRCodeUrl = myDrawLogoQRCode("member", String.valueOf(member.getId()), logoFile, getshareUrl(member.getMemberID(), member.getRegisterChannel(), index), note);
+            String lanaokj = getshareUrl(member.getMemberID(), member.getRegisterChannel(), index,oem);
+            lanaokj =  WXUtil.short_url(lanaokj);
+            QRCodeUrl = myDrawLogoQRCode("member", String.valueOf(member.getId()), logoFile,lanaokj , note);
             //缓存地址到redis
             redisUtil.setString(RedisKeyGenerator.getQRCodeKey(member.getMemberID() + member.getRegisterChannel()) + shareIMGversion, QRCodeUrl, 2147483647);
             return QRCodeUrl;
@@ -246,7 +249,7 @@ public class QRCodeUtil {
         return QRCodeUrl;
     }
 
-    public static String getAgentUrl(Agent agent, String note, Integer index) {
+    public static String getAgentUrl(Agent agent, String note, Integer index,Oem oem) {
         //先查询redis
         RedisUtil redisUtil = new RedisUtil();
         String QRCodeUrl = redisUtil.getString(RedisKeyGenerator.getAgentCodeKey(agent.getId().toString()) + shareIMGversion);
@@ -256,7 +259,7 @@ public class QRCodeUtil {
         }
         try {
             File logoFile = new File("/home/font/logo.png");
-            String lanaokj = getshareUrl("agent" + agent.getId(), "lanaokj", index);
+            String lanaokj = getshareUrl("agent" + agent.getId(), "lanaokj", index,oem);
            // logger.info("生成长链接前："+lanaokj);
             lanaokj =  WXUtil.short_url(lanaokj);
            // logger.info("长链接后："+lanaokj);
@@ -273,7 +276,10 @@ public class QRCodeUtil {
     public static final String GET_SHARE_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect";
 
 
-    public static String getshareUrl(String id, String channel, Integer index) {
-        return GET_SHARE_URL.replace("APPID", WxConfig.GZHAPPID).replace("REDIRECT_URI", "http%3A%2F%2Flanao.nat300.top/icrane/api/h5login").replace("SCOPE", "snsapi_userinfo").replace("STATE", id + "-" + channel + "_" + index);
+    public static String getshareUrl(String id, String channel, Integer index,Oem oem) {
+        return GET_SHARE_URL.replace("APPID", oem.getAppid())
+                .replace("REDIRECT_URI", "http%3A%2F%2Flanao.nat300.top/icrane/api/h5login")
+                .replace("SCOPE", "snsapi_userinfo")
+                .replace("STATE", id + "-" + channel + "_" + index);
     }
 }
