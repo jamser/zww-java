@@ -43,12 +43,14 @@ public class AgentScheduled {
         if (time == 0) {
             return;
         }
+
         for (int i = 0; i < chargeList.size(); i++) {
             Calendar calendar = Calendar.getInstance();
             AgentCharge agentCharge = chargeList.get(i);
             Agent agent = new Agent();
-            int count = 0;
-            for (int j = 1; j <= time; j++) {
+            int count = time;
+
+            for (int j = 1; j <= count; j++) {
                 calendar.setTime(new Date());
                 calendar.add(Calendar.DAY_OF_MONTH, -j);
                 Date date = calendar.getTime();
@@ -57,9 +59,11 @@ public class AgentScheduled {
                 }
             }
             calendar.setTime(new Date());
-            calendar.add(Calendar.DAY_OF_MONTH, -(time + count));
-            Date oldDate = calendar.getTime();
-            logger.info("当前时间==={},订单时间=={},结算时间==={}", new Date(), agentCharge.getCreateTime(), oldDate);
+            calendar.add(Calendar.DAY_OF_MONTH, -count);
+            Date oldDate = isThursday(calendar.getTime());
+            logger.info("当前时间==={},订单时间=={},结算时间==={}",
+                    new Date(), agentCharge.getCreateTime(), oldDate);
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String format = sdf.format(agentCharge.getCreateTime());
             String format1 = sdf.format(oldDate);
@@ -110,4 +114,14 @@ public class AgentScheduled {
         return false;
     }
 
+
+    public Date isThursday(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        if (cal.get(Calendar.DAY_OF_WEEK) - 1 == 5) {
+            cal.add(Calendar.DAY_OF_MONTH, +2);
+            return cal.getTime();
+        }
+        return date;
+    }
 }
