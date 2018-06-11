@@ -193,6 +193,7 @@ public class LocalMachineServiceImpl implements LocalMachineService {
 				}
 			});
 			t.start();*/
+             logger.info("【onMessage】 message={},dollId={},userId={}",sb.toString(),dollId,userId);
 			 MachineServiceImpl.sendMsg(sb.toString(), dollId, userId);
 			 return IotMessage;
 		 }

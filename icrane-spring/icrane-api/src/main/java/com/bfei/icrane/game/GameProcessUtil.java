@@ -331,7 +331,8 @@ public class GameProcessUtil {
 	         logger.info("只出现一次强抓xxxxxxxclawPro"+clawPro+", strong:"+clawNum+",message:weakClaw"+message+",strongClawNum="+strongClawNum);
 	        	message = "weakClaw";
 	        } */
-	        if (chargeSum>0) {//充钱用户
+		logger.info("contrClaw方法】参数 chargeSum={},clawPro={}, baseNum={},clawNumKey={},clawNum={},strongClawNumKey={}", chargeSum, clawPro, baseNum, clawNumKey, clawNum, strongClawNumKey);
+		if (chargeSum>0) {//充钱用户
 	        	 Integer range = Integer.parseInt(clawPro);
 	        	 if (clawNum<=0) {//产生随机数
 	        		 Random r1 = new Random();
@@ -342,6 +343,7 @@ public class GameProcessUtil {
 	    		
 	    		if (redisUtil.existsKey(clawNumKey)) {//clawNum - 1 局之后 出现强抓
 	    			clawNum = Integer.parseInt(redisUtil.getString(clawNumKey)) - 1;
+	    			logger.info("contrClaw clawNum={}",clawNum);
 	    			 if (clawNum==1 || range==0) {
 	    				message = "strongClaw"; 	
 	    			} else {
