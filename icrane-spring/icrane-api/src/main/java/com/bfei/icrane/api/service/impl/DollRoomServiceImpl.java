@@ -246,7 +246,7 @@ public class DollRoomServiceImpl implements DollRoomService {
         // Integer num = Integer.parseInt(redisUtil.getString(RedisKeyGenerator.getMemberClaw(member.getId())));
         //扣费计数
         Integer num = GameProcessUtil.getInstance().addCountGameLock(member.getId(), doll.getId(), GameProcessEnum.GAME_CONSUME);
-        // logger.info("consumePlay 参数doll:{},member:{},已执行次数:{}", doll.getId(), member.getId(),num);
+         logger.info("consumePlay 参数doll:{},member:{},已执行次数:{}", doll.getId(), member.getId(),num);
         if (num == 1) {//扣费一次
             //扣费操作
             Account baseAccount = member.getAccount();
@@ -306,7 +306,7 @@ public class DollRoomServiceImpl implements DollRoomService {
                 // chargeDao.insertChargeHistory(chargeRecord);
             }
             Integer recordNum = GameProcessUtil.getInstance().addCountGameLock(member.getId(),doll.getId(), GameProcessEnum.GAME_CHARGE_HISTORY);
-            // logger.info("recordNum:"+recordNum+"正常结束生成消费计数");
+             logger.info("recordNum:"+recordNum+"正常结束生成消费计数");
             if (recordNum == 1) {//记录一次
                 chargeDao.insertChargeHistory(chargeRecord);
             }
