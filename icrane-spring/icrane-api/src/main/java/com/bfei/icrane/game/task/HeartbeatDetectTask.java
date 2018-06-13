@@ -59,7 +59,9 @@ public class HeartbeatDetectTask implements Runnable {
         //boolean heartbeatFlag = roomSession.isHeartbeatFlag();
         //Date heartbeatDetectTime = roomSession.getHeartbeatDetectTime();
         SystemPref systemPref = systemPrefService.selectByPrimaryKey("CLOSE_TIME");
+        logger.info("[systemPref ]={}",systemPref.toString());
         Integer WAIT_TIMEOUT = Integer.valueOf(systemPref.getValue());
+        logger.info("关闭连接时间  ={}"+WAIT_TIMEOUT);
 
         try {
             while (this.heartbeatFlag) {
