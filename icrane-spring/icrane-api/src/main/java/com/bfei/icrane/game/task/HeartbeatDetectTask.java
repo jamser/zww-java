@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class HeartbeatDetectTask implements Runnable {
 
-//    private static final int WAIT_TIMEOUT = 40;//等待60秒还没有从客户端收到消息则断开连接，停止接受消息线程
+    private static final int WAIT_TIMEOUT = 5;//等待60秒还没有从客户端收到消息则断开连接，停止接受消息线程
 
     private static final Logger logger = LoggerFactory.getLogger(HeartbeatDetectTask.class);
 
@@ -39,8 +39,8 @@ public class HeartbeatDetectTask implements Runnable {
 
     private Date heartbeatDetectTime = new Date();
 
-    @Autowired
-    private SystemPrefService systemPrefService;
+//    @Autowired
+//    private SystemPrefService systemPrefService;
 
 
     public HeartbeatDetectTask(String dollId, String memberId, String token, String endGameUrl, String exitDollRoomUrl) {
@@ -58,15 +58,15 @@ public class HeartbeatDetectTask implements Runnable {
     public void run() {
         //boolean heartbeatFlag = roomSession.isHeartbeatFlag();
         //Date heartbeatDetectTime = roomSession.getHeartbeatDetectTime();
-        SystemPref systemPref = systemPrefService.selectByPrimaryKey("CLOSE_TIME");
-        logger.info("[systemPref ]={}",systemPref.toString());
-        Integer WAIT_TIMEOUT = Integer.valueOf(systemPref.getValue());
+//        SystemPref systemPref = systemPrefService.selectByPrimaryKey("CLOSE_TIME");
+//        logger.info("[systemPref ]={}",systemPref.toString());
+//        Integer WAIT_TIMEOUT = Integer.valueOf(systemPref.getValue());
         logger.info("关闭连接时间  ={}"+WAIT_TIMEOUT);
 
         try {
             while (this.heartbeatFlag) {
                 //如果超过60秒没有收到客户端的消息，则关闭连接，并强制调用结束游戏和退房接口
-                //logger.info("房间【" + dollId + "】用户id【" + memberId + "】心跳检测时间" + (WAIT_TIMEOUT - (TimeUtil.getTime().getTime() - heartbeatDetectTime.getTime()) / 1000) + "秒");
+                logger.info("房间【" + dollId + "】用户id【" + memberId + "】心跳检测时间" + (WAIT_TIMEOUT - (TimeUtil.getTime().getTime() - heartbeatDetectTime.getTime()) / 1000) + "秒");
                 if ((TimeUtil.getTime().getTime() - heartbeatDetectTime.getTime()) > 1000 * WAIT_TIMEOUT) {
                     logger.info("在娃娃机" + dollId + "的用户" + memberId + "已超时" + WAIT_TIMEOUT + "秒，强制关闭连接！");
                     //如果房间楼主还是本用户则调用结束游戏接口
