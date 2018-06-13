@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import com.bfei.icrane.api.service.SystemPrefService;
+import com.bfei.icrane.core.models.SystemPref;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
@@ -15,11 +17,12 @@ import com.bfei.icrane.common.util.RedisKeyGenerator;
 import com.bfei.icrane.common.util.RedisUtil;
 import com.bfei.icrane.common.util.TimeUtil;
 import com.bfei.icrane.game.RoomSession;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class HeartbeatDetectTask implements Runnable {
 
-    private static final int WAIT_TIMEOUT = 40;//等待60秒还没有从客户端收到消息则断开连接，停止接受消息线程
+//    private static final int WAIT_TIMEOUT = 40;//等待60秒还没有从客户端收到消息则断开连接，停止接受消息线程
 
     private static final Logger logger = LoggerFactory.getLogger(HeartbeatDetectTask.class);
 
@@ -35,6 +38,9 @@ public class HeartbeatDetectTask implements Runnable {
     private boolean heartbeatFlag = true;
 
     private Date heartbeatDetectTime = new Date();
+
+    @Autowired
+    private SystemPrefService systemPrefService;
 
 
     public HeartbeatDetectTask(String dollId, String memberId, String token, String endGameUrl, String exitDollRoomUrl) {
@@ -52,6 +58,8 @@ public class HeartbeatDetectTask implements Runnable {
     public void run() {
         //boolean heartbeatFlag = roomSession.isHeartbeatFlag();
         //Date heartbeatDetectTime = roomSession.getHeartbeatDetectTime();
+        SystemPref systemPref = systemPrefService.selectByPrimaryKey("CLOSE_TIME");
+        Integer WAIT_TIMEOUT = Integer.valueOf(systemPref.getValue());
 
         try {
             while (this.heartbeatFlag) {
