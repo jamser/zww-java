@@ -168,6 +168,13 @@ public class AgentBankController {
             return resultMap;
         }
 
+        BankInfo byCardNo = agentService.selectByCardNo(bankInfoForm.getCardNo());
+        if (null != byCardNo) {
+            resultMap.put("success", Enviroment.RETURN_FAILE);
+            resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
+            resultMap.put("message", "添加银行卡失败！已经添加过该卡号的银行卡");
+            return resultMap;
+        }
         BankInfo bankInfo = new BankInfo();
         BeanUtils.copyProperties(bankInfoForm, bankInfo);
         int i = agentService.insertBankInfo(bankInfo);

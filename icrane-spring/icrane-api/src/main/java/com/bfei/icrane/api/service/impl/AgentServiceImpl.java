@@ -100,6 +100,11 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
+    public BankInfo selectByCardNo(String cardNo) {
+        return bankInfoMapper.selectByCardNo(cardNo);
+    }
+
+    @Override
     public List<BankInfo> getBankInfoList(int agentId) {
         return bankInfoMapper.selectByAgentId(agentId);
     }
