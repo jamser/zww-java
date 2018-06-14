@@ -13,11 +13,12 @@ public interface BankInfoMapper {
 
     BankInfo selectByPrimaryKey(Integer id);
 
-    BankInfo selectByCardNo(String cardNo);
-
     int updateByPrimaryKeySelective(BankInfo record);
 
     int updateByPrimaryKey(BankInfo record);
 
+    BankInfo selectByCardNo(String cardNo);
+
     List<BankInfo> selectByAgentId(Integer agentId);
+
 }

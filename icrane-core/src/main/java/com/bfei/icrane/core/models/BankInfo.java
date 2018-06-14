@@ -1,10 +1,11 @@
 package com.bfei.icrane.core.models;
+
 import lombok.Data;
 
 import java.util.Date;
+
 @Data
 public class BankInfo {
-
     public interface SaveValidate { }
 
     private Integer id;
@@ -42,5 +43,7 @@ public class BankInfo {
     private Date createTime;
 
     private Date updateTime;
+
+    private Integer cardBankType;
 
 }
