@@ -526,7 +526,7 @@ public class LoginServiceImpl implements LoginService {
                         if (!StringUtils.isEmpty(memberId)) {
                             if (systemPrefService.selectByPrimaryKey(Enviroment.CODE_INVITE_BONUS).getType() == 1) {
                                 //绑定邀请
-                                ResultMap resultMap = chargeService.invite(2, memberId);
+                                ResultMap resultMap = chargeService.invite(member.getId(), memberId);
                             }
                         }
                         member = memberService.selectById(member.getId());
