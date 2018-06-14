@@ -30,7 +30,7 @@ public class BankInfoForm {
     @NotEmpty(message = "发行区域不能为空")
     private String cardArea;
 
-    @NotEmpty(message = "银行联行号不能为空")
+//    @NotEmpty(message = "银行联行号不能为空")
     private String cardBankNo;
 
     @NotEmpty(message = "卡号不能为空")
