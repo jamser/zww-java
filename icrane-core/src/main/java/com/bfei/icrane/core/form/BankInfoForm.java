@@ -62,6 +62,6 @@ public class BankInfoForm {
     @NotEmpty(message = "验证码不能为空")
     private String smsCode;
 
-    @NotEmpty(message = "银行类型不能为空")
+    @NotNull
     private Integer cardBankType;
 }

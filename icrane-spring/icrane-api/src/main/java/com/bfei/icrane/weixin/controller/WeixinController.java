@@ -22,8 +22,9 @@ public class WeixinController {
     public void web(HttpServletRequest request, HttpServletResponse response, String code, String state, String
             phoneModel) throws Exception {
         try {
-            //state = agent3-lanaokj_null
-            //state = 61159167-lanaokj_null
+            if(state == null){
+                return;
+            }
             int endIndex = state.indexOf("-");
             String agentId = "";
             String memberId = "";

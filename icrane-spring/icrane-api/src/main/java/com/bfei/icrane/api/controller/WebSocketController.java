@@ -232,7 +232,7 @@ public class WebSocketController {
     //向所有客户端发送消息
     public synchronized void sendMessage(String info, Integer dollId,boolean popSend) {
         try {
-          //  logger.info("进来了sendMessage前。。。。。。。。。。。。。。。。" + info);
+        //    logger.info("进来了sendMessage前。。。。。。。。。。。。。。。。" + info);
 //				for (Map.Entry<Integer, WebSocketController> entry : webSocketMap.entrySet()) {
 //					entry.getValue().session.getBasicRemote().sendText(info);
 //					logger.info("向手机端" + entry.getKey() + "转发消息:"+info);
@@ -240,7 +240,7 @@ public class WebSocketController {
             if (webSocketMap.get(dollId) != null && webSocketMap.get(dollId).isOpen() && webSocketMap.get(dollId).getBasicRemote()!=null && popSend && info!=null) {
  /*           	String[] infos = info.split("}");
             	final String sText = infos[0] + "}";*/
-            //    logger.info("进来了sendMessage后。。。。。。。。。。。。。。。。" + info);
+              logger.info("进来了sendMessage后。。。。。。。。。。。。。。。。" + info);
             	webSocketMap.get(dollId).getBasicRemote().sendText(info);
                 //logger.info("向在娃娃机" + dollId + "手机端" + roomSessionMap.get(dollId).getMemberId() + "转发消息:" + info);
             } else {
@@ -276,6 +276,7 @@ public class WebSocketController {
 		heartTask.setHeartbeatDetectTime(TimeUtil.getTime());
         try {
         	IotMessage = localMachineService.onMessage(newMachineType, message, roomSession.getMemberId(), dollId, roomSession.getDevice());
+            logger.info("IotMessage：" + IotMessage);
         	if ("维修中".equals(IotMessage)) {
         		webSocketMap.get(dollId).close();//清除状态
         		webSocketMap.remove(dollId);
