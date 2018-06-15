@@ -241,12 +241,12 @@ public class LocalMachineServiceImpl implements LocalMachineService {
 	 */
 	@Override
 	public boolean onReceived(String info ,Integer userId,Integer dollId) {
-		//System.out.println("收到机器指令info:"+info);
+		logger.info("收到机器指令info={},userId={},dollId={}",info,userId,dollId);
 		if (info==null || "".equals(info)) {
 			return false;
 		}
 		if (info.indexOf("idle")>0) {
-			//System.out.println("==========向["+dollId+"]转发机器指令idle:"+info);
+			System.out.println("==========向["+dollId+"]转发机器指令idle:"+info);
 			return process.getIdle(userId,dollId);
         }
 		if (info.indexOf("ready")>0) {
@@ -254,7 +254,7 @@ public class LocalMachineServiceImpl implements LocalMachineService {
 			return process.getReady(userId,dollId);
         }
 		if (info.indexOf("gotToy")>0) {
-		//	System.out.println("==========向["+dollId+"]转发机器指令gotToy:"+info);
+			System.out.println("==========向["+dollId+"]转发机器指令gotToy:"+info);
 			return process.getCatch(userId,dollId);
 		}
 		if (info.indexOf("claw")>0) {

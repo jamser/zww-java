@@ -232,7 +232,7 @@ public class WebSocketController {
     //向所有客户端发送消息
     public synchronized void sendMessage(String info, Integer dollId,boolean popSend) {
         try {
-        //    logger.info("进来了sendMessage前。。。。。。。。。。。。。。。。" + info);
+            logger.info("进来了sendMessage前。。。。。。。。。。。。。。。。" + info);
 //				for (Map.Entry<Integer, WebSocketController> entry : webSocketMap.entrySet()) {
 //					entry.getValue().session.getBasicRemote().sendText(info);
 //					logger.info("向手机端" + entry.getKey() + "转发消息:"+info);
@@ -244,7 +244,7 @@ public class WebSocketController {
             	webSocketMap.get(dollId).getBasicRemote().sendText(info);
                 //logger.info("向在娃娃机" + dollId + "手机端" + roomSessionMap.get(dollId).getMemberId() + "转发消息:" + info);
             } else {
-                //logger.info("会话已断开，不向在娃娃机" + dollId + "的玩家" + roomSessionMap.get(dollId).getMemberId() + "转发消息:" + info);
+                logger.info("会话已断开，不向在娃娃机" + dollId + "的玩家" + roomSessionMap.get(dollId).getMemberId() + "转发消息:" + info);
             }
         } catch (IOException e) {
             logger.error("向手机端转发消息失败", e);
