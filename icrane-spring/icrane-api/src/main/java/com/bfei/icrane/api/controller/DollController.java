@@ -654,7 +654,7 @@ public class DollController {
                         roomStatus.setStatus("维修中");
                     }
                     resultData.add(roomStatus);
-                    if (StringUtils.isEmpty(resultData.get(0).getHostInfo()) && !StringUtils.isEmpty(dollId)) {
+                    if (StringUtils.isEmpty(resultData.get(0).getHostInfo()) && "游戏中".equals(resultData.get(0).getStatus()) && !StringUtils.isEmpty(dollId)) {
                         redisUtil.delKey(RedisKeyGenerator.getRoomStatusKey(dollId));
                         Doll newDoll = new Doll();
                         newDoll.setId(dollId);
