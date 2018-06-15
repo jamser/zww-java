@@ -446,7 +446,7 @@ public class GameProcessUtil {
 	public boolean getCatch(Integer userId ,Integer dollId) {
 		Integer num = countGameLock(userId ,dollId ,GameProcessEnum.GAME_CATCH);
 		logger.info("抓中娃娃标示 num={}",num);
-		if (num==0 || num==null) {
+		if (null == num||num==0) {
 			addCountGameLock(userId ,dollId ,GameProcessEnum.GAME_CATCH);
 			redisUtil.delKey(RedisKeyGenerator.getMemberToyNum(userId));//获得抓中娃娃指令后删除用户抓中保障
 			return true;
