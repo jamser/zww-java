@@ -96,4 +96,6 @@ public interface DollService {
 
     Doll spareRoom();
 
+    int updateClean(Doll doll);
+
 }

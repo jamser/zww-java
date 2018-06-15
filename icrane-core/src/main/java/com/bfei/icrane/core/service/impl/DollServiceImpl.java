@@ -329,4 +329,9 @@ public class DollServiceImpl implements DollService {
         return dolls.get(1);
     }
 
+    @Override
+    public int updateClean(Doll doll) {
+        return dollDao.updateClean(doll);
+    }
+
 }

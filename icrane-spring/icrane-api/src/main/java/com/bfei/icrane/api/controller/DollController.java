@@ -1,9 +1,6 @@
 package com.bfei.icrane.api.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -489,15 +486,15 @@ public class DollController {
     }
 
 
-        /*
-         * 获取娃娃机列表(Id分页查询)
-         *
-         * @param memberId 用户UserId
-         * @param token    登陆令牌
-         * @param startId  起始房间Id
-         * @return
-         * @throws Exception
-         */
+    /*
+     * 获取娃娃机列表(Id分页查询)
+     *
+     * @param memberId 用户UserId
+     * @param token    登陆令牌
+     * @param startId  起始房间Id
+     * @return
+     * @throws Exception
+     */
    /* @RequestMapping(value = "/DollPage", method = RequestMethod.POST)
     @ResponseBody
     public ResultMap DollPage(Integer memberId, String token, Integer startId, Integer pageSize, Integer dollTopic) throws Exception {
@@ -657,6 +654,13 @@ public class DollController {
                         roomStatus.setStatus("维修中");
                     }
                     resultData.add(roomStatus);
+                    if (StringUtils.isEmpty(resultData.get(0).getHostInfo()) && !StringUtils.isEmpty(dollId)) {
+                        redisUtil.delKey(RedisKeyGenerator.getRoomStatusKey(dollId));
+                        Doll newDoll = new Doll();
+                        newDoll.setId(dollId);
+                        newDoll.setMachineStatus("空闲中");
+                        dollService.updateClean(newDoll);
+                    }
                 }
 
                 resultMap.put("resultData", resultData);
@@ -680,6 +684,7 @@ public class DollController {
 
     /**
      * 获取bannner(H5用)
+     *
      * @param memberId
      * @param token
      * @return
@@ -700,12 +705,12 @@ public class DollController {
                 //logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
                 return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
             }
-           Member member =  memberService.selectById(memberId);
-           Oem oem =oemService.selectByCode(member.getLoginChannel());
-           if(oem == null){
-               oem =oemService.selectByCode("lanaokj");
-           }
-           List<OemBanner> list = oemService.selectByOemId(oem.getId());
+            Member member = memberService.selectById(memberId);
+            Oem oem = oemService.selectByCode(member.getLoginChannel());
+            if (oem == null) {
+                oem = oemService.selectByCode("lanaokj");
+            }
+            List<OemBanner> list = oemService.selectByOemId(oem.getId());
             //logger.info("获取娃娃机列表resultMap=" + Enviroment.RETURN_SUCCESS_MESSAGE);
             return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, list);
         } catch (Exception e) {
