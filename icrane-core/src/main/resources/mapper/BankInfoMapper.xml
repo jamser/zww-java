@@ -21,11 +21,12 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="card_bank_type" property="cardBankType" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, agent_id, card_bank, card_sub_bank, card_province, card_city, card_area, card_bank_no, 
     card_no, id_card_no, name, phone, id_card_picture_pos, id_card_picture_rev, id_card_picture, 
-    bank_picture_pos, create_time, update_time, card_bank_type
+    bank_picture_pos, create_time, update_time, card_bank_type, status
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -33,20 +34,6 @@
     from bank_info
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="selectByCardNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select
-    <include refid="Base_Column_List" />
-    from bank_info
-    where card_no = #{cardNo,jdbcType=VARCHAR}
-  </select>
-  <select id="selectByAgentId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select
-    <include refid="Base_Column_List" />
-    from bank_info
-    where agent_id = #{agentId,jdbcType=INTEGER}
-  </select>
-
-
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from bank_info
     where id = #{id,jdbcType=INTEGER}
@@ -58,14 +45,14 @@
       id_card_no, name, phone, 
       id_card_picture_pos, id_card_picture_rev, id_card_picture, 
       bank_picture_pos, create_time, update_time, 
-      card_bank_type)
+      card_bank_type, status)
     values (#{id,jdbcType=INTEGER}, #{agentId,jdbcType=INTEGER}, #{cardBank,jdbcType=VARCHAR}, 
       #{cardSubBank,jdbcType=VARCHAR}, #{cardProvince,jdbcType=VARCHAR}, #{cardCity,jdbcType=VARCHAR}, 
       #{cardArea,jdbcType=VARCHAR}, #{cardBankNo,jdbcType=VARCHAR}, #{cardNo,jdbcType=VARCHAR}, 
       #{idCardNo,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
       #{idCardPicturePos,jdbcType=VARCHAR}, #{idCardPictureRev,jdbcType=VARCHAR}, #{idCardPicture,jdbcType=VARCHAR}, 
       #{bankPicturePos,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{cardBankType,jdbcType=INTEGER})
+      #{cardBankType,jdbcType=INTEGER}, #{status,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.BankInfo" >
     insert into bank_info
@@ -127,6 +114,9 @@
       <if test="cardBankType != null" >
         card_bank_type,
       </if>
+      <if test="status != null" >
+        status,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -185,6 +175,9 @@
       </if>
       <if test="cardBankType != null" >
         #{cardBankType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -245,6 +238,9 @@
       <if test="cardBankType != null" >
         card_bank_type = #{cardBankType,jdbcType=INTEGER},
       </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -267,7 +263,20 @@
       bank_picture_pos = #{bankPicturePos,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      card_bank_type = #{cardBankType,jdbcType=INTEGER}
+      card_bank_type = #{cardBankType,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectByCardNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from bank_info
+    where card_no = #{cardNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByAgentId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from bank_info
+    where agent_id = #{agentId,jdbcType=INTEGER}
+  </select>
 </mapper>

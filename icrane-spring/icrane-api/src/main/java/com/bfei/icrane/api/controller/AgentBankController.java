@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -177,6 +178,8 @@ public class AgentBankController {
         }
         BankInfo bankInfo = new BankInfo();
         BeanUtils.copyProperties(bankInfoForm, bankInfo);
+        bankInfo.setCreateTime(new Date());
+        bankInfo.setUpdateTime(new Date());
         int i = agentService.insertBankInfo(bankInfo);
         if (i == 0) {
             resultMap.put("success", Enviroment.RETURN_FAILE);
