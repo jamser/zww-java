@@ -12,10 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import com.bfei.icrane.api.service.*;
 import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.common.wx.utils.*;
-import com.bfei.icrane.core.models.Vip;
-import com.bfei.icrane.core.models.WxPay;
-import com.bfei.icrane.core.service.RiskManagementService;
-import com.bfei.icrane.core.service.VipService;
+import com.bfei.icrane.core.models.*;
+import com.bfei.icrane.core.service.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -27,10 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import com.bfei.icrane.core.models.ChargeRules;
-import com.bfei.icrane.core.models.Member;
-import com.bfei.icrane.core.service.ChargeOrderService;
-import com.bfei.icrane.core.service.ValidateTokenService;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
@@ -58,6 +52,9 @@ public class WxPayController {
     private RiskManagementService riskManagementService;
     @Autowired
     private VipService vipService;
+    @Autowired
+    private OemService oemService;
+
 
 
     private RedisUtil redisUtil = new RedisUtil();
@@ -117,6 +114,10 @@ public class WxPayController {
                 String out_trade_no = orderNo;
 
 
+                Member member = memberService.selectById(memberId);
+                Oem oem = oemService.selectByCode(member.getRegisterChannel());
+
+
                 if (new BigDecimal(vip.getDiscount()).compareTo(new BigDecimal(10)) < 0) {
                     body = body + "-" + vip.getName() + vip.getDiscount() + "折";
                 }
@@ -128,8 +129,8 @@ public class WxPayController {
                 String notify_url = propFileMgr.getProperty("wx.notify");
                 SortedMap<String, String> packageParams = new TreeMap<>();
                 packageParams.put("trade_type", "APP");
-                packageParams.put("appid", WxConfig.APPID);
-                packageParams.put("mch_id", WxConfig.PARTNER);
+                packageParams.put("appid", oem.getAppid());
+                packageParams.put("mch_id", oem.getPartner());
 
 
                 if (StringUtils.isNotEmpty(IP) && !"老子是公众号".equals(IP)) {
@@ -153,9 +154,9 @@ public class WxPayController {
                 if ("老子是公众号".equals(IP)) {
                     packageParams.put("openid", gzhopenId);
                     packageParams.put("trade_type", "JSAPI");
-                    packageParams.put("appid", WxConfig.GZHAPPID);
-                    packageParams.put("mch_id", WxConfig.PARTNER);
-                    reqHandler.init(WxConfig.GZHAPPID, WxConfig.GZHSECRET, WxConfig.PARTNERKEY);
+                    packageParams.put("appid", oem.getAppid());
+                    packageParams.put("mch_id", oem.getPartner());
+                    reqHandler.init(oem.getAppid(), oem.getAppsecret(), oem.getPartnerKey());
                 }
 
                 String sign = reqHandler.createSign(packageParams);
@@ -182,15 +183,15 @@ public class WxPayController {
                     String timestamp = Sha1Util.getTimeStamp();
                     String nonceStr2 = nonce_str;
                     if ("老子是公众号".equals(IP)) {
-                        finalpackage.put("appId", WxConfig.GZHAPPID);
+                        finalpackage.put("appId", oem.getAppid());
                         finalpackage.put("timeStamp", timestamp);
                         finalpackage.put("nonceStr", nonceStr2);
                         finalpackage.put("package", "prepay_id=" + prepay_id);
                         finalpackage.put("signType", "MD5");
                         //finalpackage.put("paySign", prepay_id);
                     } else {
-                        finalpackage.put("appid", WxConfig.APPID);
-                        finalpackage.put("partnerid", WxConfig.PARTNER);
+                        finalpackage.put("appid", oem.getAppid());
+                        finalpackage.put("partnerid", oem.getPartner());
                         finalpackage.put("timestamp", timestamp);
                         finalpackage.put("noncestr", nonceStr2);
                         finalpackage.put("prepayid", prepay_id);
@@ -253,7 +254,7 @@ public class WxPayController {
                 if (state != null) {
                     return IcraneResult.build(Enviroment.RETURN_SUCCESS, Enviroment.RETURN_SUCCESS_REAPEAT, Enviroment.CODE_REPEAT);
                 }
-                String result = WXUtil.getOauthInfo(code, head);
+                String result = WXUtil.getOauthInfo(code, head,null);
                 if (result != null) {
                     redisUtil.setString(code, result, 60);
                     object = JSONObject.fromObject(result);
