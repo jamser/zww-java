@@ -44,4 +44,6 @@ public interface AgentService {
     ResultMap getInviteCount(Integer agentId);
 
     ResultMap sendPhoneCode(String phone, String message);
+
+    ResultMap getInviteLists(Integer agentId);
 }

@@ -51,6 +51,25 @@
     </resultMap>
 
 
+    <resultMap id="AgentInviteResultMap" type="com.bfei.icrane.core.models.Member">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="memberID" jdbcType="VARCHAR" property="memberID"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="icon_real_path" jdbcType="VARCHAR" property="iconRealPath"/>
+        <result column="gender" jdbcType="VARCHAR" property="gender"/>
+        <result column="register_date" jdbcType="TIMESTAMP" property="registerDate"/>
+        <result column="active_flg" jdbcType="VARCHAR" property="activeFlg"/>
+        <result column="invite_flg" jdbcType="VARCHAR" property="inviteFlg"/>
+        <result column="agent_super_id" property="agentSuperId" jdbcType="INTEGER"/>
+        <result column="agent_one_id" property="agentOneId" jdbcType="INTEGER"/>
+        <result column="agent_two_id" property="agentTwoId" jdbcType="INTEGER"/>
+        <result column="agent_three_id" property="agentThreeId" jdbcType="INTEGER"/>
+        <association property="account" javaType="com.bfei.icrane.core.models.Account"
+                     select="com.bfei.icrane.core.dao.AccountDao.selectById" column="id">
+        </association>
+    </resultMap>
+
+
     <resultMap id="AgentResultMap" type="com.bfei.icrane.core.models.Member">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="password" jdbcType="VARCHAR" property="password"/>
@@ -1116,10 +1135,10 @@
             `level` DESC
         LIMIT 1;
     </select>
-    <select id="getMemberListByAgentId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    <select id="getMemberListByAgentId" resultMap="AgentInviteResultMap" parameterType="java.lang.Integer">
         <!-- 具体的sql -->
         SELECT
-        id,active_flg,name
+        id,active_flg,name,icon_real_path,register_date
         FROM
         t_member m
         WHERE
@@ -1139,6 +1158,7 @@
         <if test="level == 3">
             agent_three_id=#{id,jdbcType=INTEGER}
         </if>
+        order by register_date desc
     </select>
 
 

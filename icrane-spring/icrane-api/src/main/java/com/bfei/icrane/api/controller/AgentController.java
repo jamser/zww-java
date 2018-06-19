@@ -115,7 +115,7 @@ public class AgentController {
 
 
     /**
-     * 代理商登陆
+     * 代理商信息
      *
      * @param agentId
      * @param token
@@ -242,33 +242,9 @@ public class AgentController {
         return agentService.sendPhoneCode(phone, "忘记密码");
     }
 
-    /**
-     * 获取代理验证码
-     *
-     * @param agentId
-     * @param token
-     * @return
-     */
-    @RequestMapping(value = "/getBankSmsCodeByAgent", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap getBankSmsCodeByAgent(@RequestParam(value = "agentId") Integer agentId,
-                                           @RequestParam(value = "token") String token,
-                                           @RequestParam String phone) {
-        //验证token
-        if (!validateTokenService.validataAgentToken(token, agentId)) {
-            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-        }
-//        Agent agent = agentService.selectByPrimaryKey(agentId);
-//        if (StringUtils.isEmpty(agent.getPhone())) {
-//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.AGENT_PHONE_NOT_EXIT);
-//        }
-        return agentService.sendPhoneCode(phone, "添加银行卡");
-    }
-
 
     /**
-     * 修改密码
+     * 忘记密码
      *
      * @param changePwdForm
      * @return
@@ -315,13 +291,31 @@ public class AgentController {
 
     @RequestMapping(value = "/invite", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap agentChangePwd(@RequestParam(value = "agentId") Integer agentId,
-                                    @RequestParam(value = "token") String token) {
+    public ResultMap getAgentInvites(@RequestParam(value = "agentId") Integer agentId,
+                                     @RequestParam(value = "token") String token) {
         //验证token
         if (!validateTokenService.validataAgentToken(token, agentId)) {
             logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
             return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
         }
         return agentService.getInviteCount(agentId);
+    }
+
+    /**
+     * 获取代理商邀请列表
+     * @param agentId
+     * @param token
+     * @return
+     */
+    @RequestMapping(value = "/inviteLists", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap getAgentInviteLists(@RequestParam(value = "agentId") Integer agentId,
+                                         @RequestParam(value = "token") String token) {
+//        验证token
+//        if (!validateTokenService.validataAgentToken(token, agentId)) {
+//            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//        }
+        return agentService.getInviteLists(agentId);
     }
 }

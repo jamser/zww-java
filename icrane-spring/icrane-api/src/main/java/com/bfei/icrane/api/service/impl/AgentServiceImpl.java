@@ -193,6 +193,7 @@ public class AgentServiceImpl implements AgentService {
         return new ResultMap("获取列表成功", hashMap);
     }
 
+
     @Override
     public ResultMap sendPhoneCode(String mobile, String message) {
         PropFileManager propFileMgr = new PropFileManager("interface.properties");
@@ -226,5 +227,12 @@ public class AgentServiceImpl implements AgentService {
             e.printStackTrace();
         }
         return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
+    }
+
+    @Override
+    public ResultMap getInviteLists(Integer agentId) {
+        Agent agent = agentMapper.selectByPrimaryKey(agentId);
+        List<Member> memberList = memberDao.getMemberListByAgentId(agent.getId(), agent.getLevel());
+        return new ResultMap("获取列表成功", memberList);
     }
 }
