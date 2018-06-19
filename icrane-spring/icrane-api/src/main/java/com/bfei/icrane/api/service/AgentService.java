@@ -46,4 +46,6 @@ public interface AgentService {
     ResultMap sendPhoneCode(String phone, String message);
 
     ResultMap getInviteLists(Integer agentId);
+
+    BankInfo selectByBankId(Integer id);
 }

@@ -218,4 +218,17 @@ public class AgentBankController {
 //        }
         return agentService.sendPhoneCode(phone, "添加银行卡");
     }
+
+    @RequestMapping(value = "/getBankInfo", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap getBankInfo(@RequestParam(value = "agentId") Integer agentId,
+                                 @RequestParam(value = "token") String token,
+                                 @RequestParam Integer bankId) {
+        //验证token
+//        if (!validateTokenService.validataAgentToken(token, agentId)) {
+//            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//        }
+        return new ResultMap("获取银行卡信息", agentService.selectByBankId(bankId));
+    }
 }

@@ -46,4 +46,6 @@ public class BankInfo {
 
     private Integer cardBankType;
 
+    private Integer status;
+
 }

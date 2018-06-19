@@ -235,4 +235,9 @@ public class AgentServiceImpl implements AgentService {
         List<Member> memberList = memberDao.getMemberListByAgentId(agent.getId(), agent.getLevel());
         return new ResultMap("获取列表成功", memberList);
     }
+
+    @Override
+    public BankInfo selectByBankId(Integer id) {
+        return bankInfoMapper.selectByPrimaryKey(id);
+    }
 }
