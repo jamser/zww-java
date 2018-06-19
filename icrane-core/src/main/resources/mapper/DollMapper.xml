@@ -198,7 +198,7 @@
         ) r ORDER BY r.id
     </select>
 
-    <select id="getH5DollTopicList" resultMap="BaseResultMap">
+    <select id="getH5DollTopicList" resultMap="BaseResultMap"  parameterType="java.lang.Integer">
         SELECT
             a.id,
             a. NAME,
@@ -233,6 +233,7 @@
                 machine_status = '空闲中'
                 OR machine_status = '游戏中'
             )
+            AND  a.machine_type=#{type,jdbcType=INTEGER}
         AND a.machine_url in (SELECT machine_name from machine_status where machine_state='ONLINE' AND rtmp_state='开启')
         AND delete_status = 1
         ORDER BY

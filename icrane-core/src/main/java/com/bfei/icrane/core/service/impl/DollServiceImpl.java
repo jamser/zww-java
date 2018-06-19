@@ -162,9 +162,9 @@ public class DollServiceImpl implements DollService {
     }*/
 
     @Override
-    @Cacheable(value = "h5DollList", key = "#worker+''")
-    public List<Doll> getH5DollList(boolean worker) {
-        List<Doll> dollTopicList = dollDao.getH5DollTopicList();
+    @Cacheable(value = "h5DollList", key = "#worker+''+#type")
+    public List<Doll> getH5DollList(Integer type,boolean worker) {
+        List<Doll> dollTopicList = dollDao.getH5DollTopicList(type);
         if (worker) {
             for (Doll doll : dollTopicList) {
                 int endIndex = doll.getName().indexOf("-");

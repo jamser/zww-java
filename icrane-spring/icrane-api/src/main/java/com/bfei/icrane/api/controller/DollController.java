@@ -353,7 +353,8 @@ public class DollController {
      */
     @RequestMapping(value = "/getH5DollList", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap getH5DollList(String token, Integer memberId) throws Exception {
+    public ResultMap getH5DollList(String token, Integer memberId,
+                                   @RequestParam(value = "type",defaultValue = "0",required = false) Integer type) throws Exception {
         try {
             //logger.info("获取娃娃机列表接口参数：token=" + token + ",memberId=" + memberId);
             //验证参数
@@ -366,7 +367,7 @@ public class DollController {
                 //logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
                 return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
             }*/
-            List<Doll> dollList = dollService.getH5DollList(memberService.isWorker(memberId));
+            List<Doll> dollList = dollService.getH5DollList(type,memberService.isWorker(memberId));
             //logger.info("获取娃娃机列表resultMap=" + Enviroment.RETURN_SUCCESS_MESSAGE);
             return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, dollList);
         } catch (Exception e) {

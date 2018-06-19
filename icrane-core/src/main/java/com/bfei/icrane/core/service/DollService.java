@@ -51,7 +51,7 @@ public interface DollService {
      */
     //List<Doll> DollPageById(Integer startId, Integer pageSize, Integer dollTopic, Boolean worker);
 
-    List<Doll> getH5DollList(boolean worker);
+    List<Doll> getH5DollList(Integer type,boolean worker);
 
     List<Doll> selectDollHistory(Integer memberId);
 
