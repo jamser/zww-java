@@ -12,6 +12,8 @@ import javax.validation.constraints.Pattern;
 @Data
 public class BankInfoForm {
 
+    private Integer id;
+
     @NotNull
     private Integer agentId;
 

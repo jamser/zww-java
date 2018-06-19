@@ -100,6 +100,11 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
+    public int updateBankInfo(BankInfo bankInfo) {
+        return bankInfoMapper.updateByPrimaryKeySelective(bankInfo);
+    }
+
+    @Override
     public BankInfo selectByCardNo(String cardNo) {
         return bankInfoMapper.selectByCardNo(cardNo);
     }

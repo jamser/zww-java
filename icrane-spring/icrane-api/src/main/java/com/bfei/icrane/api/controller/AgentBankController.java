@@ -136,45 +136,42 @@ public class AgentBankController {
      */
     @RequestMapping(value = "/addbank", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> addbank(@Valid BankInfoForm bankInfoForm, BindingResult bindingResult, @RequestParam("token") String token) throws Exception {
+    public ResultMap addbank(@Valid BankInfoForm bankInfoForm, BindingResult bindingResult, @RequestParam("token") String token) throws Exception {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
         if (bindingResult.hasErrors()) {
             logger.error("{【添加银行卡】参数不正确, bankInfoForm={}", bankInfoForm);
-            resultMap.put("success", Enviroment.RETURN_FAILE);
-            resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE1);
-            resultMap.put("message", bindingResult.getFieldError().getDefaultMessage());
-            return resultMap;
+            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1,bindingResult.getFieldError().getDefaultMessage());
         }
 
         //验证token有效性
         if (token == null || "".equals(token) || !validateTokenService.validataAgentToken(token)) {
-            resultMap.put("success", Enviroment.RETURN_FAILE);
-            resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
-            resultMap.put("message", Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            return resultMap;
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE,"token失效");
         }
 
         String trueCode = redisUtil.getString(RedisKeyGenerator.getCodeAentKey(bankInfoForm.getPhone()));
         if (StringUtils.isEmpty(trueCode)) {
-            resultMap.put("success", Enviroment.RETURN_FAILE);
-            resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
-            resultMap.put("message", Enviroment.SMSCODE_IS_OVER);
-            return resultMap;
+            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, "验证码存在");
         }
         if (!bankInfoForm.getSmsCode().equals(trueCode)) {
-            resultMap.put("success", Enviroment.RETURN_FAILE);
-            resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
-            resultMap.put("message", Enviroment.SMSCODE_IS_FALSE);
-            return resultMap;
+            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.SMSCODE_IS_FALSE);
+        }
+
+        if (bankInfoForm.getId() != null) {
+            BankInfo bankInfo = agentService.selectByBankId(bankInfoForm.getId());
+            if (null != bankInfo && bankInfo.getStatus() == 2) {
+                BeanUtils.copyProperties(bankInfoForm, bankInfo);
+                bankInfo.setUpdateTime(new Date());
+                bankInfo.setStatus(0);
+                agentService.updateBankInfo(bankInfo);
+                return new ResultMap("添加银行卡成功！");
+            }
+            return new ResultMap( Enviroment.RETURN_UNAUTHORIZED_CODE1,"添加银行卡失败！写入失败");
         }
 
         BankInfo byCardNo = agentService.selectByCardNo(bankInfoForm.getCardNo());
         if (null != byCardNo) {
-            resultMap.put("success", Enviroment.RETURN_FAILE);
-            resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
-            resultMap.put("message", "添加银行卡失败！已经添加过该卡号的银行卡");
-            return resultMap;
+            return new ResultMap( Enviroment.RETURN_UNAUTHORIZED_CODE1,"添加银行卡失败！该卡号已存在");
         }
         BankInfo bankInfo = new BankInfo();
         BeanUtils.copyProperties(bankInfoForm, bankInfo);
@@ -182,15 +179,9 @@ public class AgentBankController {
         bankInfo.setUpdateTime(new Date());
         int i = agentService.insertBankInfo(bankInfo);
         if (i == 0) {
-            resultMap.put("success", Enviroment.RETURN_FAILE);
-            resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
-            resultMap.put("message", "添加银行卡失败！写入失败");
-            return resultMap;
+            return new ResultMap( Enviroment.RETURN_UNAUTHORIZED_CODE1,"添加银行卡失败！写入失败");
         } else {
-            resultMap.put("success", Enviroment.RETURN_SUCCESS);
-            resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
-            resultMap.put("message", "添加银行卡成功！");
-            return resultMap;
+            return new ResultMap("添加银行卡成功！");
         }
     }
 
@@ -219,16 +210,24 @@ public class AgentBankController {
         return agentService.sendPhoneCode(phone, "添加银行卡");
     }
 
+    /**
+     * 获取银行卡详细信息
+     *
+     * @param agentId
+     * @param token
+     * @param bankId
+     * @return
+     */
     @RequestMapping(value = "/getBankInfo", method = RequestMethod.POST)
     @ResponseBody
     public ResultMap getBankInfo(@RequestParam(value = "agentId") Integer agentId,
                                  @RequestParam(value = "token") String token,
                                  @RequestParam Integer bankId) {
         //验证token
-//        if (!validateTokenService.validataAgentToken(token, agentId)) {
-//            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-//        }
+        if (!validateTokenService.validataAgentToken(token, agentId)) {
+            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+        }
         return new ResultMap("获取银行卡信息", agentService.selectByBankId(bankId));
     }
 }

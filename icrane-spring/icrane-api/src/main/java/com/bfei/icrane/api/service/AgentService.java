@@ -31,6 +31,8 @@ public interface AgentService {
 
     int insertBankInfo(BankInfo bankInfo);
 
+    int updateBankInfo(BankInfo bankInfo);
+
     BankInfo selectByCardNo(String cardNo);
 
     List<BankInfo> getBankInfoList(int agentId);
