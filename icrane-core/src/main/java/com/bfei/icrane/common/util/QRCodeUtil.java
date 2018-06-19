@@ -280,6 +280,6 @@ public class QRCodeUtil {
         return GET_SHARE_URL.replace("APPID", oem.getAppid())
                 .replace("REDIRECT_URI", "http%3A%2F%2Flanao.nat300.top/icrane/api/h5login")
                 .replace("SCOPE", "snsapi_userinfo")
-                .replace("STATE", id + "-" + channel + "_" + index);
+                .replace("STATE", id + "-" + oem.getCode() + "_" + index);
     }
 }

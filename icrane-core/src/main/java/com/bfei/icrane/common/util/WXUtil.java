@@ -1,6 +1,7 @@
 package com.bfei.icrane.common.util;
 
 import com.bfei.icrane.common.wx.utils.WxConfig;
+import com.bfei.icrane.core.models.Oem;
 import net.sf.json.JSONObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -75,12 +76,12 @@ public class WXUtil {
     public static Long expiresTime_1 = 0L;
 
 
-    public static HttpResponse getOauth2(String code, String head) {
-        String wxUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WxConfig.APPID + "&secret=" + WxConfig.SECRET + "&code=" + code + "&grant_type=authorization_code";
+    public static HttpResponse getOauth2(String code, String head,Oem oem) {
+        String wxUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + oem.getAppid() + "&secret=" + oem.getAppsecret() + "&code=" + code + "&grant_type=authorization_code";
         //logger.info("微信登录请求微信服务器:url={}", wxUrl);
         if (StringUtils.isNotEmpty(head)) {
             if ("老子是H5".equals(head)) {
-                wxUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WxConfig.GZHAPPID + "&secret=" + WxConfig.GZHSECRET + "&code=" + code + "&grant_type=authorization_code";
+                wxUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + oem.getAppid() + "&secret=" + oem.getAppsecret() + "&code=" + code + "&grant_type=authorization_code";
             } else if ("老子是小程序".equals(head)) {
                 wxUrl = "https://api.weixin.qq.com/sns/jscode2session?appid=" + WxConfig.XCXAPPID + "&secret=" + WxConfig.XCXSECRET + "&js_code=" + code + "&grant_type=authorization_code";
             }
@@ -105,11 +106,11 @@ public class WXUtil {
      *
      * @return
      */
-    public static String getOauthInfo(String code, String head) {
+    public static String getOauthInfo(String code, String head,Oem oem) {
         //根据code请求用户openid unionid
         HttpResponse response = null;
         try {
-            response = getOauth2(code, head);
+            response = getOauth2(code, head,oem);
             //响应参数
             int statusCode = response.getStatusLine().getStatusCode();
             logger.info("请求微信服务器响应结果(200表示成功):{}", statusCode);

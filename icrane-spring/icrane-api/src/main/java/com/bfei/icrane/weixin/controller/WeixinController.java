@@ -4,6 +4,8 @@ import com.bfei.icrane.api.service.LoginService;
 import com.bfei.icrane.common.util.StringUtils;
 import com.bfei.icrane.core.models.MemberInfo;
 
+import com.bfei.icrane.core.models.Oem;
+import com.bfei.icrane.core.service.OemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,14 +17,23 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class WeixinController {
+
     @Autowired
     private LoginService loginService;
+
+    @Autowired
+    private OemService oemService;
+
+    private String host="http://h5.lanao.fun";
+
+
+
     @RequestMapping("/h5login")
     @ResponseBody
     public void web(HttpServletRequest request, HttpServletResponse response, String code, String state, String
             phoneModel) throws Exception {
         try {
-            if(state == null){
+            if(null == state){
                 return;
             }
             int endIndex = state.indexOf("-");
@@ -48,11 +59,18 @@ public class WeixinController {
             }
 
             MemberInfo member = (MemberInfo) loginService.weChatLogin(request, code, memberId, "wxWeb", "IMEI", phoneModel, chnnerl, agentId).getResultData();
-            String s = "http://h5.lanao.fun/lanaokj/wxLogin.html?memberId=" + member.getMember().getId() + "&token=" + member.getToken();
-            if (StringUtils.isNotEmpty(index)) {
-                s += "&index=" + index;
+            if (null == member) {
+                return;
             }
-            response.sendRedirect(s);
+            Oem oem = oemService.selectByCode(chnnerl);
+            if (null != oem) {
+                host = oem.getUrl();
+            }
+            String url = host+"/"+chnnerl+"/wxLogin.html?memberId=" + member.getMember().getId() + "&token=" + member.getToken();
+            if (StringUtils.isNotEmpty(index)) {
+                url += "&index=" + index;
+            }
+            response.sendRedirect(url);
         } catch (Exception e) {
             e.printStackTrace();
         }

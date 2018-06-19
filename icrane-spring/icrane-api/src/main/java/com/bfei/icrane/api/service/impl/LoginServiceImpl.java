@@ -481,7 +481,7 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public ResultMap weChatLogin(HttpServletRequest request, String code, String memberId, String lastLoginFrom, String IMEI, String phoneModel, String channel, String agentId) {
         try {
-          //  String ipAdrress = HttpClientUtil.getIpAdrress(request);
+            //  String ipAdrress = HttpClientUtil.getIpAdrress(request);
             //logger.info("多级渠道注册 code=" + code + ",IP=" + ipAdrress + ",memberId=" + memberId + ",lastLoginFrom=" + lastLoginFrom + ",channel=" + channel);
             //获取渠道信息
             Member inviter = memberService.selectByMemberID(memberId);
@@ -489,53 +489,45 @@ public class LoginServiceImpl implements LoginService {
                 channel = inviter.getRegisterChannel();
             }
             Oem oem = oemMapper.selectByCode(channel);
-            if(oem == null){
-                channel = "lanaokj";
+            if (null == oem) {
+                oem = oemMapper.selectByCode("lanaokj");
             }
+
             Member member = null;
 
-            //根据redis中的缓存判断是否注册是否要重新登录
-//            String openIdUnionid = redisUtil.getString(code);
-//            if (StringUtils.isEmpty(openIdUnionid)) {
-                //新用户或者未登录H5的APP用户(redis中不存在,那么表示code是新的)
-                String result = WXUtil.getOauthInfo(code, "老子是H5");
-                JSONObject object = JSONObject.fromObject(result);
-                if (object.has("access_token")) {
-                    String accessToken = object.getString("access_token");
-                    String unionId = object.getString("unionid");
-                    String wopenid = object.getString("openid");
-                    //检查add表如果没有就存入
-                    if (StringUtils.isEmpty(memberService.selectGzhopenIdByUnionId(unionId))) {
-                        memberService.insertmember_add(wopenid, unionId);
-                    }
-//                    redisUtil.setString(code, wopenid + unionId, 86400);
-                    //unionId登录兼容问题
-                    String openId = memberService.selectOpenIdByUnionId(unionId);
-                    if (StringUtils.isEmpty(openId)) {
-                        openId = wopenid;
-                    }
-                    member = memberService.selectByOpenId(openId);
-                    //根据openId获取登录信息
-                    if (member == null) {
-                        //新用户先注册
-                        member = loginService.wxRegistered(openId, channel, null, accessToken, lastLoginFrom, unionId);
-                        if (member == null) {
-                            IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.REGISTRATION_FAILED);
-                        }
-
-                        if (!StringUtils.isEmpty(memberId)) {
-                            if (systemPrefService.selectByPrimaryKey(Enviroment.CODE_INVITE_BONUS).getType() == 1) {
-                                //绑定邀请
-                                ResultMap resultMap = chargeService.invite(member.getId(), memberId);
-                            }
-                        }
-                        member = memberService.selectById(member.getId());
-                    }
+            String result = WXUtil.getOauthInfo(code, "老子是H5", oem);
+            JSONObject object = JSONObject.fromObject(result);
+            if (object.has("access_token")) {
+                String accessToken = object.getString("access_token");
+                String unionId = object.getString("unionid");
+                String wopenid = object.getString("openid");
+                //检查add表如果没有就存入
+                if (StringUtils.isEmpty(memberService.selectGzhopenIdByUnionId(unionId))) {
+                    memberService.insertmember_add(wopenid, unionId);
                 }
-//            } else {
-                //使用openIdUnionid登录
-//                member = memberService.selectByOpenId(openIdUnionid.substring(openIdUnionid.indexOf("+"), openIdUnionid.length()));
-//            }
+                //unionId登录兼容问题
+                String openId = memberService.selectOpenIdByUnionId(unionId);
+                if (StringUtils.isEmpty(openId)) {
+                    openId = wopenid;
+                }
+                member = memberService.selectByOpenId(openId);
+                //根据openId获取登录信息
+                if (member == null) {
+                    //新用户先注册
+                    member = loginService.wxRegistered(openId, channel, null, accessToken, lastLoginFrom, unionId);
+                    if (member == null) {
+                        IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.REGISTRATION_FAILED);
+                    }
+
+                    if (!StringUtils.isEmpty(memberId)) {
+                        if (systemPrefService.selectByPrimaryKey(Enviroment.CODE_INVITE_BONUS).getType() == 1) {
+                            //绑定邀请
+                            ResultMap resultMap = chargeService.invite(member.getId(), memberId);
+                        }
+                    }
+                    member = memberService.selectById(member.getId());
+                }
+            }
 
             //老用户直接登录
             //登录前记录IMEI和IP]
