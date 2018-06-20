@@ -278,7 +278,7 @@ public class QRCodeUtil {
 
     public static String getshareUrl(String id, String channel, Integer index,Oem oem) {
         return GET_SHARE_URL.replace("APPID", oem.getAppid())
-                .replace("REDIRECT_URI", "http%3A%2F%2Flanao.nat300.top/icrane/api/h5login")
+                .replace("REDIRECT_URI", "http%3A%2F%2F"+oem.getNatappUrl()+"/icrane/api/h5login")
                 .replace("SCOPE", "snsapi_userinfo")
                 .replace("STATE", id + "-" + oem.getCode() + "_" + index);
     }
