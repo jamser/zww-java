@@ -50,7 +50,7 @@ public class ReceiveWatchDog implements Runnable{
     					int read = in.read(bytes);
     					if(read != -1){
     						String info =new String(bytes, 0, read);
-							logger.info("++++++++++++"+info+"新机器接受指令" + this.dollId);
+							logger.info("++++++++++++"+info+"新机器接受指令"+"userId={},dollId={}",userId,dollId);
     						//if(info.indexOf("gotToy")>0) {
     							//redisUtil.setString(RedisKeyGenerator.getUserGameCatch(userId), "1", 60*2);
     			           // }

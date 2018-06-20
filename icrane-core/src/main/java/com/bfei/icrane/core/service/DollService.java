@@ -51,7 +51,7 @@ public interface DollService {
      */
     //List<Doll> DollPageById(Integer startId, Integer pageSize, Integer dollTopic, Boolean worker);
 
-    List<Doll> getH5DollList(Integer type,boolean worker);
+    List<Doll> getH5DollList(Integer type,boolean worker, List<String>channels);
 
     List<Doll> selectDollHistory(Integer memberId);
 
@@ -97,5 +97,9 @@ public interface DollService {
     Doll spareRoom();
 
     int updateClean(Doll doll);
+
+    List<Doll> selectByTYpeAndChannel(Integer type, List<String> channel);
+
+
 
 }

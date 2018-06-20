@@ -163,8 +163,8 @@ public class DollServiceImpl implements DollService {
 
     @Override
     @Cacheable(value = "h5DollList", key = "#worker+''+#type")
-    public List<Doll> getH5DollList(Integer type,boolean worker) {
-        List<Doll> dollTopicList = dollDao.getH5DollTopicList(type);
+    public List<Doll> getH5DollList(Integer type,boolean worker,List<String> channels) {
+        List<Doll> dollTopicList = dollDao.getH5DollTopicList(type,channels);
         if (worker) {
             for (Doll doll : dollTopicList) {
                 int endIndex = doll.getName().indexOf("-");
@@ -332,6 +332,11 @@ public class DollServiceImpl implements DollService {
     @Override
     public int updateClean(Doll doll) {
         return dollDao.updateClean(doll);
+    }
+
+    @Override
+    public List<Doll> selectByTYpeAndChannel(Integer type, List<String> channel) {
+        return dollDao.getH5DollTopicList(type,channel);
     }
 
 }

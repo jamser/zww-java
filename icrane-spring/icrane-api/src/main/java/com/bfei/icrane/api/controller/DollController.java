@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.bfei.icrane.api.service.MemberService;
@@ -353,22 +354,33 @@ public class DollController {
      */
     @RequestMapping(value = "/getH5DollList", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap getH5DollList(String token, Integer memberId,
+    public ResultMap getH5DollList(@RequestParam String token, @RequestParam Integer memberId,
                                    @RequestParam(value = "type",defaultValue = "0",required = false) Integer type) throws Exception {
         try {
-            //logger.info("获取娃娃机列表接口参数：token=" + token + ",memberId=" + memberId);
-            //验证参数
-            /*if (StringUtils.isEmpty(token) || memberId == null) {
-                //logger.info("用户账户接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }
             //验证token
-            if (!validateTokenService.validataToken(token, memberId)) {
-                //logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }*/
-            List<Doll> dollList = dollService.getH5DollList(type,memberService.isWorker(memberId));
-            //logger.info("获取娃娃机列表resultMap=" + Enviroment.RETURN_SUCCESS_MESSAGE);
+//            if (!validateTokenService.validataToken(token, memberId)) {
+//                //logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
+
+            Member member = memberService.selectById(memberId);
+            Oem oem = oemService.selectByCode(member.getRegisterChannel());
+            List<String> channels = new ArrayList<>();
+            if (!ObjectUtils.isEmpty(oem) && oem.getIsDollMerge() == 0) {
+                channels.add(oem.getCode());
+            }else {
+                List<String> demos = new ArrayList<>();
+                demos.add(oem.getCode());
+                List<Doll> dolls = dollService.selectByTYpeAndChannel(type, demos);
+                if (dolls.size() > 0) {
+                    channels.add(member.getRegisterChannel());
+                    channels.add("lanaokj");
+                }else {
+                    channels.add("lanaokj");
+                }
+            }
+
+            List<Doll> dollList = dollService.getH5DollList(type,memberService.isWorker(memberId),channels);
             return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, dollList);
         } catch (Exception e) {
             //logger.error("获取H5娃娃机列表出错", e);

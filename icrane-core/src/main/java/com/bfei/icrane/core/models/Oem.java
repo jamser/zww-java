@@ -3,9 +3,9 @@ package com.bfei.icrane.core.models;
 import lombok.Data;
 
 import java.util.Date;
+
 @Data
 public class Oem {
-
     private Integer id;
 
     private String name;
@@ -35,4 +35,7 @@ public class Oem {
     private Date createTime;
 
     private Date updateTime;
+
+    private Integer isDollMerge;
+
 }

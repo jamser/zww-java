@@ -75,7 +75,7 @@ public interface DollDao {
      *
      * @return
      */
-    List<Doll> getH5DollTopicList(@Param("type") Integer type);
+    List<Doll> getH5DollTopicList(@Param("type") Integer type,@Param("channels") List<String> channels);
 
     //获取娃娃机数据总数量
     int getTotalCount();
