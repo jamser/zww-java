@@ -77,7 +77,7 @@ public class DollRepairsController {
     @RequestMapping(value = "/repairsProblem", method = RequestMethod.POST)
     @ResponseBody
     public ResultMap RepairsProblem(String token) {
-        logger.info("报修列表接口参数：" + "token=" + token);
+//        logger.info("报修列表接口参数：" + "token=" + token);
         try {
             // 验证token有效性
             if (token == null) {

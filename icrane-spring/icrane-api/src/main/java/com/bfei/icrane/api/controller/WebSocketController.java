@@ -232,7 +232,7 @@ public class WebSocketController {
     //向所有客户端发送消息
     public synchronized void sendMessage(String info, Integer dollId,boolean popSend) {
         try {
-            logger.info("进来了sendMessage前。。。。。。。。。。。。。。。。" + info);
+//            logger.info("进来了sendMessage前。。。。。。。。。。。。。。。。" + info);
 //				for (Map.Entry<Integer, WebSocketController> entry : webSocketMap.entrySet()) {
 //					entry.getValue().session.getBasicRemote().sendText(info);
 //					logger.info("向手机端" + entry.getKey() + "转发消息:"+info);
@@ -258,7 +258,7 @@ public class WebSocketController {
      */
     @OnMessage
     public void onMessage(String message, Session session) throws Exception {
-        logger.info("进来了onMessage。。。。。。。。。。。。。。。。" + message);
+//        logger.info("进来了onMessage。。。。。。。。。。。。。。。。" + message);
         // 调用阿里物联网套件接口
         RoomSession roomSession = roomSessionMap.get(this.dollId);
         //Message msg=new Gson().fromJson(message.getPayload().toString(),Message.class);
@@ -276,7 +276,7 @@ public class WebSocketController {
 		heartTask.setHeartbeatDetectTime(TimeUtil.getTime());
         try {
         	IotMessage = localMachineService.onMessage(newMachineType, message, roomSession.getMemberId(), dollId, roomSession.getDevice());
-            logger.info("IotMessage：" + IotMessage);
+//            logger.info("IotMessage：" + IotMessage);
         	if ("维修中".equals(IotMessage)) {
         		webSocketMap.get(dollId).close();//清除状态
         		webSocketMap.remove(dollId);

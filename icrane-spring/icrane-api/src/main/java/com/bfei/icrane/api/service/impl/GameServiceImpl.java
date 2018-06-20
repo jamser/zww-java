@@ -54,12 +54,12 @@ public class GameServiceImpl implements GameService {
         //如果用户已在房间则直接设置用户房间key的value
         //lcc  如果不在 房间就添加 用户到房间
         if (!redisUtil.sIsMember(RedisKeyGenerator.getRoomKey(dollId), String.valueOf(memberId))) {
-            logger.info("在缓存中设置房间包含的玩家集合getRoomKey:{},memberId:{}" + RedisKeyGenerator.getRoomKey(dollId), String.valueOf(memberId));
+//            logger.info("在缓存中设置房间包含的玩家集合getRoomKey:{},memberId:{}" + RedisKeyGenerator.getRoomKey(dollId), String.valueOf(memberId));
             // 在缓存中设置房间包含的玩家集合
             redisUtil.addSet(RedisKeyGenerator.getRoomKey(dollId), String.valueOf(memberId));
         }
         // 在缓存中设置玩家对应的房间id
-        logger.info("在缓存中设置玩家对应的房间id入参 getMemberRoomKey:{},dollId:{}", RedisKeyGenerator.getMemberRoomKey(memberId), String.valueOf(dollId));
+//        logger.info("在缓存中设置玩家对应的房间id入参 getMemberRoomKey:{},dollId:{}", RedisKeyGenerator.getMemberRoomKey(memberId), String.valueOf(dollId));
         //如果玩家还在其他房间则清除其他房间key下的set
         if (redisUtil.existsKey(RedisKeyGenerator.getMemberRoomKey(memberId))) {
             int otherDollId = Integer.parseInt(redisUtil.getString(RedisKeyGenerator.getMemberRoomKey(memberId)));
@@ -248,7 +248,7 @@ public class GameServiceImpl implements GameService {
             if (dollRoomService.startPlay(dollId, userId)) {
                 //if (dollRoomService.startPlay(dollId, member)) {
                 //设置用户当前下抓id
-                logger.info("玩家" + userId + "在娃娃机" + dollId + "的游戏开始成功");
+//                logger.info("玩家" + userId + "在娃娃机" + dollId + "的游戏开始成功");
                 return GameStatusEnum.GAME_START_SUCCESS;
             } else {
                 logger.info("玩家" + userId + "在娃娃机" + dollId + "的游戏开始失败");

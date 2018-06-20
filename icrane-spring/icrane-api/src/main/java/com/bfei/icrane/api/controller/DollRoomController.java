@@ -97,7 +97,7 @@ public class DollRoomController {
             if (userId > 0) {//兼容memberId 传错了 userId
                 memberId = userId;
             }
-            logger.info("判断 元素是否是集合 key的成员入参getRoomKey:{},memberId:{}" + RedisKeyGenerator.getRoomKey(dollId), String.valueOf(memberId));
+//            logger.info("判断 元素是否是集合 key的成员入参getRoomKey:{},memberId:{}" + RedisKeyGenerator.getRoomKey(dollId), String.valueOf(memberId));
             //用户进入房间
             gameService.enterDoll(dollId, memberId);
             Member member = memberService.selectById(memberId);

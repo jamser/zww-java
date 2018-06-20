@@ -518,7 +518,7 @@ public class DollController {
     @RequestMapping(value = "/getDollHistory", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> getDollHistory(Integer memberId, String token) throws Exception {
-        logger.info("获取抓取记录接口传入参数memberId=" + memberId + ",token=" + token);
+//        logger.info("获取抓取记录接口传入参数memberId=" + memberId + ",token=" + token);
         Map<String, Object> resultMap = new HashedMap<String, Object>();
         try {
             // 验证token有效性
@@ -555,7 +555,7 @@ public class DollController {
                 resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
                 resultMap.put("message", Enviroment.RETURN_FAILE_MESSAGE);
             }
-            logger.info("获取抓取记录成功");
+//            logger.info("获取抓取记录成功");
             return resultMap;
         } catch (Exception e) {
             logger.error("获取我的娃娃出错", e);

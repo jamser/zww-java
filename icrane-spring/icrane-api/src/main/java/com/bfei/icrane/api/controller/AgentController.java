@@ -312,10 +312,10 @@ public class AgentController {
     public ResultMap getAgentInviteLists(@RequestParam(value = "agentId") Integer agentId,
                                          @RequestParam(value = "token") String token) {
 //        验证token
-//        if (!validateTokenService.validataAgentToken(token, agentId)) {
-//            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-//        }
+        if (!validateTokenService.validataAgentToken(token, agentId)) {
+            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+        }
         return agentService.getInviteLists(agentId);
     }
 }

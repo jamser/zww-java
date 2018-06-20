@@ -102,14 +102,14 @@ public class DollRoomServiceImpl implements DollRoomService {
     @Override
     public List<DollImgPojo> getDollImg(Integer dollId) {
         // TODO Auto-generated method stub
-        logger.info("getDollImg 参数dollId:{}", dollId);
+//        logger.info("getDollImg 参数dollId:{}", dollId);
         return dollRoomDao.getDollImg(dollId);
     }
 
     @Override
     public List<CatchDollPojo> getCatchDoll(Integer dollId) {
-        // TODO Auto-generated method stub
-        logger.info("getCatchDoll 参数dollId:{}", dollId);
+        // TODO Auto-generated methodF stub
+//        logger.info("getCatchDoll 参数dollId:{}", dollId);
         return dollRoomDao.getCatchDoll(dollId);
     }
 
