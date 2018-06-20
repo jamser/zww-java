@@ -6,8 +6,6 @@ import java.util.Date;
 
 @Data
 public class BankInfo {
-    public interface SaveValidate { }
-
     private Integer id;
 
     private Integer agentId;
@@ -47,5 +45,7 @@ public class BankInfo {
     private Integer cardBankType;
 
     private Integer status;
+
+    private String message;
 
 }

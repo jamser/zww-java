@@ -22,11 +22,12 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="card_bank_type" property="cardBankType" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, agent_id, card_bank, card_sub_bank, card_province, card_city, card_area, card_bank_no, 
     card_no, id_card_no, name, phone, id_card_picture_pos, id_card_picture_rev, id_card_picture, 
-    bank_picture_pos, create_time, update_time, card_bank_type, status
+    bank_picture_pos, create_time, update_time, card_bank_type, status, message
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -45,15 +46,30 @@
       id_card_no, name, phone, 
       id_card_picture_pos, id_card_picture_rev, id_card_picture, 
       bank_picture_pos, create_time, update_time, 
-      card_bank_type, status)
+      card_bank_type, status, message
+      )
     values (#{id,jdbcType=INTEGER}, #{agentId,jdbcType=INTEGER}, #{cardBank,jdbcType=VARCHAR}, 
       #{cardSubBank,jdbcType=VARCHAR}, #{cardProvince,jdbcType=VARCHAR}, #{cardCity,jdbcType=VARCHAR}, 
       #{cardArea,jdbcType=VARCHAR}, #{cardBankNo,jdbcType=VARCHAR}, #{cardNo,jdbcType=VARCHAR}, 
       #{idCardNo,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
       #{idCardPicturePos,jdbcType=VARCHAR}, #{idCardPictureRev,jdbcType=VARCHAR}, #{idCardPicture,jdbcType=VARCHAR}, 
       #{bankPicturePos,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{cardBankType,jdbcType=INTEGER}, #{status,jdbcType=INTEGER})
+      #{cardBankType,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{message,jdbcType=VARCHAR}
+      )
   </insert>
+  <select id="selectByCardNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from bank_info
+    where card_no = #{cardNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByAgentId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from bank_info
+    where agent_id = #{agentId,jdbcType=INTEGER}
+  </select>
+
   <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.BankInfo" >
     insert into bank_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -117,6 +133,9 @@
       <if test="status != null" >
         status,
       </if>
+      <if test="message != null" >
+        message,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -178,6 +197,9 @@
       </if>
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -241,6 +263,9 @@
       <if test="status != null" >
         status = #{status,jdbcType=INTEGER},
       </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -264,19 +289,8 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       card_bank_type = #{cardBankType,jdbcType=INTEGER},
-      status = #{status,jdbcType=INTEGER}
+      status = #{status,jdbcType=INTEGER},
+      message = #{message,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectByCardNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select
-    <include refid="Base_Column_List" />
-    from bank_info
-    where card_no = #{cardNo,jdbcType=VARCHAR}
-  </select>
-  <select id="selectByAgentId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select
-    <include refid="Base_Column_List" />
-    from bank_info
-    where agent_id = #{agentId,jdbcType=INTEGER}
-  </select>
 </mapper>
