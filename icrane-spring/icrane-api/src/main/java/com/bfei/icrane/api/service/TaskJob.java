@@ -150,8 +150,8 @@ public class TaskJob {
             String format1 = sdf.format(oldDate);
 
             if (format.compareTo(format1) <= 0) {
-                if (agentCharge.getAgentOneIncome() > 0) {
-                    Agent   agent = new Agent();
+                if (agentCharge.getAgentSuperIncome() > 0) {
+                    Agent agent = new Agent();
                     agent.setId(agentCharge.getAgentSuperId());
                     agent.setBalance(agentCharge.getAgentSuperIncome());
                     agentService.updateAgentBalance(agent);
