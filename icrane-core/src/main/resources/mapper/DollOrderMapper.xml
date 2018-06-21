@@ -28,7 +28,7 @@
         </association>
         <collection property="orderItems" ofType="DollOrderItem"
                     column="order_id">
-            <id property="id" column="item_id" javaType="int" jdbcType="INTEGER"/>
+            <id property="id" column="item_id" jdbcType="INTEGER"/>
             <result column="item_created_date" jdbcType="TIMESTAMP"
                     property="createdDate"/>
             <result column="item_modified_date" jdbcType="TIMESTAMP"

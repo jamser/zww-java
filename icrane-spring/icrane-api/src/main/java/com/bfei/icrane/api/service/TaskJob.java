@@ -54,16 +54,16 @@ public class TaskJob {
     /**
      * 兑换每日过期娃娃
      */
-    @Scheduled(cron = "0 0 3 * * ?")
-    public void job() {
-        List<DollOrder> dollOrders = dollOrderService.selectOutTimeDolls();
-        if (dollOrders.size() > 0) {
-            for (DollOrder dollOrder : dollOrders) {
-                logger.info("过期娃娃自动兑换" + dollOrder.getId());
-                chargeService.insertChargeHistory(new Charge(), dollOrder.getOrderBy(), new Long[]{dollOrder.getId()});
-            }
-        }
-    }
+//    @Scheduled(cron = "0 0 3 * * ?")
+//    public void job() {
+//        List<DollOrder> dollOrders = dollOrderService.selectOutTimeDolls();
+//        if (dollOrders.size() > 0) {
+//            for (DollOrder dollOrder : dollOrders) {
+//                logger.info("过期娃娃自动兑换" + dollOrder.getId());
+//                chargeService.insertChargeHistory(new Charge(), dollOrder.getOrderBy(), new Long[]{dollOrder.getId()});
+//            }
+//        }
+//    }
 
     /**
      * 每日清除房间内残余信息
