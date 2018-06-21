@@ -32,6 +32,13 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
 
+    <select id="selectByDollId" resultType="CatchHistory">
+        select
+        <include refid="Base_Column_List"/>
+        from t_doll_catch_history
+        where doll_id=#{dollId,jdbcType=INTEGER} AND catch_status='抓取成功' AND catch_date >=DATE_SUB(NOW(),INTERVAL 5 MINUTE);
+    </select>
+
     <!-- 抓取记录 -->
     <select id="selectHistoryDetail" resultType="com.bfei.icrane.core.models.vo.GameHistoryDetail">
 		SELECT

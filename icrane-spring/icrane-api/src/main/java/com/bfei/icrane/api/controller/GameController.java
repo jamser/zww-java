@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bfei.icrane.api.service.DollRoomService;
 import com.bfei.icrane.common.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,8 @@ public class GameController {
     private ServiceFacade serviceFacade;
     @Autowired
     private GameService gameService;
+    @Autowired
+    private DollRoomService dollRoomService;
 
     //开始本轮游戏建立socket前调用的接口
     @RequestMapping(value = "/start", method = RequestMethod.POST)
@@ -202,6 +205,8 @@ public class GameController {
             GameStatusEnum result = gameService.endRound(dollId, memberId, gotDoll, gameNum, state);
             switch (result) {
                 case GAME_END_ROUND_SUCCESS:
+                    //频繁抓中娃娃处理
+                    dollRoomService.endPlayByCatchCount(memberId, dollId);
                     Map<String, Object> gameNumMap = new HashMap<>();
                     gameNumMap.put("gameNum", gameNum);
                     String stsTokenUrl = propFileMgr.getProperty("aliyun.sts");
@@ -311,7 +316,7 @@ public class GameController {
             //String memberInfoKey;
             List<MemberInfoPojo> resultData = new ArrayList<MemberInfoPojo>();
             for (String memberHeadId : memberIds) {
-                int  memberId = Integer.parseInt(memberHeadId);
+                int memberId = Integer.parseInt(memberHeadId);
                 //memberInfoKey = RedisKeyGenerator.getMemberInfoKey(memberId);
                 MemberInfoPojo memberInfoPojo = new MemberInfoPojo();
                 //if(redisUtil.existsKey(memberInfoKey)){

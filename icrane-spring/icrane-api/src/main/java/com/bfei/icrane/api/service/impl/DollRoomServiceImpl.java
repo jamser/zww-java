@@ -385,6 +385,7 @@ public class DollRoomServiceImpl implements DollRoomService {
         // 	num = Integer.parseInt(redisUtil.getString(RedisKeyGenerator.getGameCatchHistory(dollId))) + 1;
         // }
         // redisUtil.setString(RedisKeyGenerator.getGameCatchHistory(dollId), String.valueOf(num), 60 * 5);
+
         Integer num = GameProcessUtil.getInstance().addCountGameLock(memberId, dollId, GameProcessEnum.GAME_HISTORY);
         if (num <= 1) {
             //生成抓取记录
@@ -411,6 +412,7 @@ public class DollRoomServiceImpl implements DollRoomService {
             member.setCatchNumber(member.getCatchNumber() + 1);
             memberDao.updateByPrimaryKeySelective(member);
         }
+
         String machineStatus = machine.getMachineStatus();
         if ("维修中".equals(machineStatus) || "维护中".equals(machineStatus) || "未上线".equals(machineStatus)) {
             redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(dollId), "维修中");
@@ -440,13 +442,38 @@ public class DollRoomServiceImpl implements DollRoomService {
 
     @Override
     @Transactional
+    public void endPlayByCatchCount(Integer memberId, Integer dollId) {
+        //  判断五分钟内是否三次抓取成功
+        List<CatchHistory> catchHistories = catchHistoryDao.selectByDollId(dollId);
+        Doll doll = new Doll();
+        doll.setId(dollId);
+        if(catchHistories.size()>=3){
+            doll.setMachineStatus("维修中");
+            dollDao.updateClean(doll);
+            redisUtil.delKey(RedisKeyGenerator.getRoomHostKey(dollId));
+            Doll machine = dollDao.selectByPrimaryKey(dollId);
+            String machineStatus = machine.getMachineStatus();
+            if ("维修中".equals(machineStatus) || "维护中".equals(machineStatus) ||
+                    "未上线".equals(machineStatus)) {
+                redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(dollId), "维修中");
+            } else {
+                redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(dollId), "空闲中");
+            }
+            logger.info("dollId={}房间频繁抓中，将房间设为维修中",dollId);
+        }
+    }
+
+    @Override
+    @Transactional
     public boolean endPlay(Integer dollId, Integer memberId) {
         // TODO Auto-generated method stub
         //dollRoomDao.clearPlayFlagByDollId(dollId);
         // logger.info("endPlay 参数dollId:{},memberId:{}", dollId, memberId);
+
         Doll doll = new Doll();
         doll.setId(dollId);
         doll.setMachineStatus("空闲中");
+
         dollDao.updateClean(doll);
         redisUtil.delKey(RedisKeyGenerator.getRoomHostKey(dollId));
         Doll machine = dollDao.selectByPrimaryKey(dollId);

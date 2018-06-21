@@ -241,7 +241,7 @@
         AND a.machine_url in (SELECT machine_name from machine_status where machine_state='ONLINE' AND rtmp_state='开启')
         AND delete_status = 1
         ORDER BY
-            watching_number;
+             machine_status desc;
     </select>
 
 

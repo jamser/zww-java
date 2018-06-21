@@ -78,4 +78,6 @@ public interface DollRoomService {
      * @return
      */
     ResultMap selectDollParticularsById(Integer dollId);
+
+    void endPlayByCatchCount(Integer memberId, Integer dollId);
 }

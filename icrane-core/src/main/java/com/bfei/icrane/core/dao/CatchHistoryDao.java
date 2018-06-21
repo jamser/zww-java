@@ -42,4 +42,6 @@ public interface CatchHistoryDao {
     GameHistoryDetail selectHistoryDetailByGameNum(@Param("gameNum") String gameNum, @Param("userId") Integer userId);
 
     String getRecenGameNum(@Param("memberId") Integer memberId, @Param("dollId") Integer dollId);
+
+    List<CatchHistory> selectByDollId(@Param("dollId") Integer dollId);
 }
