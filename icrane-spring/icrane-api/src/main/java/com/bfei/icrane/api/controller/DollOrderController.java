@@ -177,7 +177,7 @@ public class DollOrderController {
      */
     @RequestMapping(value = "/beforeSendDoll", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap beforeSendDoll(Integer memberId, Long[] orderIds, String token) throws Exception {
+    public ResultMap beforeSendDoll(@RequestParam Integer memberId, @RequestParam Long[] orderIds, @RequestParam String token) throws Exception {
         try {
             //验证参数
             if (memberId == null || StringUtils.isEmpty(token) || orderIds == null || orderIds.length < 1) {
@@ -201,7 +201,7 @@ public class DollOrderController {
             }
             return dollOrderService.beforeSendDoll(memberId, orderIds);
         } catch (Exception e) {
-            logger.error("发货出错", e);
+            logger.error("发货出错,参数 memberId={},orderIds={},addrId={},token={},note={}",memberId,orderIds,token);
             throw e;
         }
 
@@ -251,7 +251,7 @@ public class DollOrderController {
             }
             return dollOrderService.sendOrder(memberId, orderIds, addrId, note);
         } catch (Exception e) {
-            logger.error("发货出错", e);
+            logger.error("发货出错,参数 memberId={},orderIds={},addrId={},token={},note={}",memberId,orderIds,addrId,token,note);
             throw e;
         }
 

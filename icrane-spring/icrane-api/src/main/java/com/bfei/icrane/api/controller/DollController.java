@@ -529,7 +529,7 @@ public class DollController {
     }*/
     @RequestMapping(value = "/getDollHistory", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> getDollHistory(Integer memberId, String token) throws Exception {
+    public Map<String, Object> getDollHistory(@RequestParam Integer memberId, @RequestParam String token) throws Exception {
 //        logger.info("获取抓取记录接口传入参数memberId=" + memberId + ",token=" + token);
         Map<String, Object> resultMap = new HashedMap<String, Object>();
         try {

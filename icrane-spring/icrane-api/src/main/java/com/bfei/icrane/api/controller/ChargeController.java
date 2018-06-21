@@ -91,7 +91,7 @@ public class ChargeController {
      */
     @RequestMapping(value = "/chargeHistory", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap chargeHistory(Integer memberId, String token) throws Exception {
+    public ResultMap chargeHistory(@RequestParam Integer memberId, @RequestParam String token) throws Exception {
         logger.info("充值历史接口参数：" + "memberId=" + memberId + "," + "token=" + token);
         Map<String, Object> resultMap = new HashedMap<String, Object>();
         try {

@@ -10,10 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.bfei.icrane.api.service.DollRoomService;
 import com.bfei.icrane.api.service.GameService;
@@ -82,7 +79,7 @@ public class DollRoomController {
      */
     @RequestMapping(value = "/enterDoll", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> enterDoll(Integer memberId, Integer dollId, String token) throws Exception {
+    public Map<String, Object> enterDoll(@RequestParam Integer memberId, @RequestParam Integer dollId, @RequestParam String token) throws Exception {
         logger.info("进房接口参数memberId:{},dollId:{},token:{}" + memberId, dollId, token);
         Map<String, Object> resultMap = new HashedMap<>();
         try {
@@ -122,7 +119,7 @@ public class DollRoomController {
      */
     @RequestMapping(value = "/exitDoll", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> exitDoll(Integer memberId, String token) throws Exception {
+    public Map<String, Object> exitDoll(@RequestParam Integer memberId, @RequestParam String token) throws Exception {
         logger.info("离开房接口参数memberId:{},token:{}" + memberId, token);
         Map<String, Object> resultMap = new HashedMap<String, Object>();
         try {

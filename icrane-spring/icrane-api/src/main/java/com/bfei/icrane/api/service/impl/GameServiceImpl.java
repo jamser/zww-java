@@ -189,15 +189,15 @@ public class GameServiceImpl implements GameService {
         Account account = accountService.select(userId);
         Doll doll = dollService.selectByPrimaryKey(dollId);
         //检测游戏币不足
-        if (doll.getMachineType() != 2) {
+//        if (doll.getMachineType() != 2) {
             if (doll.getPrice() > account.getCoins()) {
                 return GameStatusEnum.GAME_PRICE_NOT_ENOUGH;
             }
-        } else {
-            if (doll.getPrice() > account.getSuperTicket()) {
-                return GameStatusEnum.GAME_PRICE_NOT_SuperTicket;
-            }
-        }
+//        } else {
+//            if (doll.getPrice() > account.getSuperTicket()) {
+//                return GameStatusEnum.GAME_PRICE_NOT_SuperTicket;
+//            }
+//        }
         //数据库状态 空闲  但是 缓存为  维修中  同步数据库空闲状态
         if ("空闲中".equals(doll.getMachineStatus()) && "维修中".equals(takeRoomState(dollId))) {
             redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(dollId), "空闲中");
@@ -306,6 +306,9 @@ public class GameServiceImpl implements GameService {
         }*/
         Member member = memberService.selectById(userId);
         Doll doll = dollService.selectByPrimaryKey(dollId);
+        if (doll.getPrice() > member.getCoins()) {
+            return false;
+        }
         return dollRoomService.consumePlay(doll, member, state);//扣费
     }
 
