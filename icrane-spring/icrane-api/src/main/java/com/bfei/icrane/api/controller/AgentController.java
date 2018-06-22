@@ -8,11 +8,9 @@ import com.bfei.icrane.core.form.AgentForm;
 import com.bfei.icrane.core.form.AgentLoginForm;
 import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.AgentToken;
+import com.bfei.icrane.core.models.Oem;
 import com.bfei.icrane.core.pojos.AgentPojo;
-import com.bfei.icrane.core.service.AdvertisementInfoService;
-import com.bfei.icrane.core.service.AgentChargeService;
-import com.bfei.icrane.core.service.SysNotifyService;
-import com.bfei.icrane.core.service.ValidateTokenService;
+import com.bfei.icrane.core.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -50,6 +48,9 @@ public class AgentController {
 
     @Autowired
     private AgentWithdrawService agentWithdrawService;
+
+    @Autowired
+    private OemService oemService;
 
     private RedisUtil redisUtil = new RedisUtil();
 
@@ -235,11 +236,10 @@ public class AgentController {
     public ResultMap agentChangePwd(@RequestParam String phone) {
 
         Agent agent = agentService.selectByPhone(phone);
-
         if (null == agent) {
             return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.AGENT_PHONE_NOT_EXIT);
         }
-        return agentService.sendPhoneCode(phone, "忘记密码");
+        return agentService.sendPhoneCode(phone, "忘记密码", agent);
     }
 
 
@@ -303,6 +303,7 @@ public class AgentController {
 
     /**
      * 获取代理商邀请列表
+     *
      * @param agentId
      * @param token
      * @return

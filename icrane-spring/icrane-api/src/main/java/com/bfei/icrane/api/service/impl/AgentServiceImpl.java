@@ -6,6 +6,7 @@ import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.dao.*;
 import com.bfei.icrane.core.form.AgentForm;
 import com.bfei.icrane.core.models.*;
+import com.bfei.icrane.core.service.OemService;
 import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
 import com.github.qcloudsms.SmsSingleSender;
 import com.github.qcloudsms.SmsSingleSenderResult;
@@ -47,6 +48,9 @@ public class AgentServiceImpl implements AgentService {
 
     @Autowired
     private MemberDao memberDao;
+
+    @Autowired
+    private OemMapper oemMapper;
 
     private RedisUtil redisUtil = new RedisUtil();
 
@@ -200,33 +204,44 @@ public class AgentServiceImpl implements AgentService {
 
 
     @Override
-    public ResultMap sendPhoneCode(String mobile, String message) {
+    public ResultMap sendPhoneCode(String mobile, String message, Agent agent) {
         PropFileManager propFileMgr = new PropFileManager("interface.properties");
         // 生成短信验证码
         String smsCode = StringUtils.getSmsCode();
+
+        Oem oem = new Oem();
+        if (agent.getIsOem()) {
+            oem = oemMapper.selectByPrimaryKey(agent.getId());
+        }  else if (agent.getLevel() != 0) {
+            oem = oemMapper.selectByPrimaryKey(agent.getAgentId());
+        }
+        if(null == oem){
+            oem = oemMapper.selectByCode("lanaokj");
+        }
         // 获取配置文件
         // 发送短信
         try {
-            if (AliyunServiceImpl.getInstance().sendSMSForCode(mobile, propFileMgr.getProperty("aliyun.smsModelCode.name"),
-                    propFileMgr.getProperty("aliyun.smsModelCode.reg"), smsCode)) {
-                redisUtil.setString(RedisKeyGenerator.getCodeAentKey(mobile), smsCode, Enviroment.SMS_ENDTIME);
-                logger.info("发送" + message + "验证码成功=" + Enviroment.TEXT_MESSAGING_SUCCESS);
-                return new ResultMap(Enviroment.TEXT_MESSAGING_SUCCESS);
-            } else {
-                SmsSingleSender sender = new SmsSingleSender(Integer.valueOf(propFileMgr.getProperty("qcloudsms.AppID")), propFileMgr.getProperty("qcloudsms.AppKEY"));
-                ArrayList<String> params = new ArrayList<String>();
-                params.add(smsCode);
-                params.add("5");
-                SmsSingleSenderResult result = sender.sendWithParam(propFileMgr.getProperty("qcloudsms.nationCode"), mobile, Integer.valueOf(propFileMgr.getProperty("qcloudsms.templId")), params, "", "", "");
-                if ("OK".equals(result.errMsg)) {
+
+                if (AliyunServiceImpl.getInstance().sendSMSForCode(mobile, oem.getSmsName(),
+                        oem.getSmsCode(), smsCode)) {
                     redisUtil.setString(RedisKeyGenerator.getCodeAentKey(mobile), smsCode, Enviroment.SMS_ENDTIME);
                     logger.info("发送" + message + "验证码成功=" + Enviroment.TEXT_MESSAGING_SUCCESS);
                     return new ResultMap(Enviroment.TEXT_MESSAGING_SUCCESS);
                 } else {
-                    logger.info("发送" + message + "验证码失败=" + Enviroment.TEXT_MESSAGING_FAILURE);
-                    return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.TEXT_MESSAGING_FAILURE);
+                    SmsSingleSender sender = new SmsSingleSender(Integer.valueOf(propFileMgr.getProperty("qcloudsms.AppID")), propFileMgr.getProperty("qcloudsms.AppKEY"));
+                    ArrayList<String> params = new ArrayList<String>();
+                    params.add(smsCode);
+                    params.add("5");
+                    SmsSingleSenderResult result = sender.sendWithParam(propFileMgr.getProperty("qcloudsms.nationCode"), mobile, Integer.valueOf(propFileMgr.getProperty("qcloudsms.templId")), params, "", "", "");
+                    if ("OK".equals(result.errMsg)) {
+                        redisUtil.setString(RedisKeyGenerator.getCodeAentKey(mobile), smsCode, Enviroment.SMS_ENDTIME);
+                        logger.info("发送" + message + "验证码成功=" + Enviroment.TEXT_MESSAGING_SUCCESS);
+                        return new ResultMap(Enviroment.TEXT_MESSAGING_SUCCESS);
+                    } else {
+                        logger.info("发送" + message + "验证码失败=" + Enviroment.TEXT_MESSAGING_FAILURE);
+                        return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.TEXT_MESSAGING_FAILURE);
+                    }
                 }
-            }
         } catch (Exception e) {
             logger.error("发送" + message + "验证码", e);
             e.printStackTrace();

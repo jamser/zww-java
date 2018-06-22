@@ -3,7 +3,10 @@ package com.bfei.icrane.api.controller;
 import com.bfei.icrane.api.service.AgentService;
 import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.form.BankInfoForm;
+import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.BankInfo;
+import com.bfei.icrane.core.models.Oem;
+import com.bfei.icrane.core.service.OemService;
 import com.bfei.icrane.core.service.ValidateTokenService;
 import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
 import org.slf4j.Logger;
@@ -38,6 +41,8 @@ public class AgentBankController {
     private ValidateTokenService validateTokenService;
     @Autowired
     private AgentService agentService;
+    @Autowired
+    private OemService oemService;
 
     RedisUtil redisUtil = new RedisUtil();
 
@@ -141,12 +146,12 @@ public class AgentBankController {
 
         if (bindingResult.hasErrors()) {
             logger.error("{【添加银行卡】参数不正确, bankInfoForm={}", bankInfoForm);
-            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1,bindingResult.getFieldError().getDefaultMessage());
+            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, bindingResult.getFieldError().getDefaultMessage());
         }
 
         //验证token有效性
         if (token == null || "".equals(token) || !validateTokenService.validataAgentToken(token)) {
-            return new ResultMap(Enviroment.RETURN_FAILE_CODE,"token失效");
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, "token失效");
         }
 
         String trueCode = redisUtil.getString(RedisKeyGenerator.getCodeAentKey(bankInfoForm.getPhone()));
@@ -166,12 +171,12 @@ public class AgentBankController {
                 agentService.updateBankInfo(bankInfo);
                 return new ResultMap("添加银行卡成功！");
             }
-            return new ResultMap( Enviroment.RETURN_UNAUTHORIZED_CODE1,"添加银行卡失败！写入失败");
+            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, "添加银行卡失败！写入失败");
         }
 
         BankInfo byCardNo = agentService.selectByCardNo(bankInfoForm.getCardNo());
         if (null != byCardNo) {
-            return new ResultMap( Enviroment.RETURN_UNAUTHORIZED_CODE1,"添加银行卡失败！该卡号已存在");
+            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, "添加银行卡失败！该卡号已存在");
         }
         BankInfo bankInfo = new BankInfo();
         BeanUtils.copyProperties(bankInfoForm, bankInfo);
@@ -179,7 +184,7 @@ public class AgentBankController {
         bankInfo.setUpdateTime(new Date());
         int i = agentService.insertBankInfo(bankInfo);
         if (i == 0) {
-            return new ResultMap( Enviroment.RETURN_UNAUTHORIZED_CODE1,"添加银行卡失败！写入失败");
+            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, "添加银行卡失败！写入失败");
         } else {
             return new ResultMap("添加银行卡成功！");
         }
@@ -203,11 +208,8 @@ public class AgentBankController {
             logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
             return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
         }
-//        Agent agent = agentService.selectByPrimaryKey(agentId);
-//        if (StringUtils.isEmpty(agent.getPhone())) {
-//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.AGENT_PHONE_NOT_EXIT);
-//        }
-        return agentService.sendPhoneCode(phone, "添加银行卡");
+        Agent agent = agentService.selectByPrimaryKey(agentId);
+        return agentService.sendPhoneCode(phone, "添加银行卡", agent);
     }
 
     /**

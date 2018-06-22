@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.bfei.icrane.common.util.*;
+import com.bfei.icrane.core.dao.*;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.service.AccountService;
 import com.bfei.icrane.core.service.VipService;
@@ -23,10 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bfei.icrane.api.controller.EasemobIMUsersController;
 import com.bfei.icrane.api.service.MemberService;
 import com.bfei.icrane.common.util.RedisUtil;
-import com.bfei.icrane.core.dao.ChargeDao;
-import com.bfei.icrane.core.dao.MemberDao;
-import com.bfei.icrane.core.dao.SystemPrefDao;
-import com.bfei.icrane.core.dao.ValidateTokenDao;
 
 import io.swagger.client.model.RegisterUsers;
 import io.swagger.client.model.User;
@@ -50,6 +47,8 @@ public class MemberServiceImpl implements MemberService {
     private SystemPrefDao systemPrefDao;
     @Autowired
     private ChargeDao chargeDao;
+    @Autowired
+    private OemMapper oemMapper;
 
     private RedisUtil redisUtil = new RedisUtil();
 
@@ -375,21 +374,22 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public ResultMap sendLinkMobileSMS(String mobile, String token) {
         try {
-            //被绑用户没绑过
-            if (selectByMobile(mobile) != null) {
-                logger.info("发送绑定手机验证码失败=" + Enviroment.LINK_NO_SUCCESS2);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE, Enviroment.LINK_NO_SUCCESS2);
-            }
+
             //被绑手机没注册过
             Member member = selectByMobile(mobile);
             if (member == null) {
+
+                MemberToken memberToken = validateTokenDao.selectByToken(token);
+                Member user=selectById(memberToken.getMemberId());
+                Oem oem = oemMapper.selectByCode(user.getRegisterChannel());
+
                 PropFileManager propFileMgr = new PropFileManager("interface.properties");
                 // 生成短信验证码
                 String smsCode = StringUtils.getSmsCode();
                 // 获取配置文件
                 // 发送短信
-                if (AliyunServiceImpl.getInstance().sendSMSForCode(mobile, propFileMgr.getProperty("aliyun.smsModelCode.name"),
-                        propFileMgr.getProperty("aliyun.smsModelCode.reg"), smsCode)) {
+                if (AliyunServiceImpl.getInstance().sendSMSForCode(mobile, oem.getSmsName(),
+                        oem.getSmsCode(), smsCode)) {
                     //验证码信息存入redis
                     redisUtil.setString(RedisKeyGenerator.getLinkMobileCodeKey(mobile), smsCode, Enviroment.SMS_ENDTIME);
                     logger.info("发送绑定手机验证码成功=" + Enviroment.TEXT_MESSAGING_SUCCESS);

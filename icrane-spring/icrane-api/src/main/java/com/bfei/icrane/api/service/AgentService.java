@@ -5,6 +5,7 @@ import com.bfei.icrane.core.form.AgentForm;
 import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.AgentToken;
 import com.bfei.icrane.core.models.BankInfo;
+import com.bfei.icrane.core.models.Oem;
 
 import java.util.List;
 
@@ -45,7 +46,7 @@ public interface AgentService {
 
     ResultMap getInviteCount(Integer agentId);
 
-    ResultMap sendPhoneCode(String phone, String message);
+    ResultMap sendPhoneCode(String phone, String message, Agent agent);
 
     ResultMap getInviteLists(Integer agentId);
 
