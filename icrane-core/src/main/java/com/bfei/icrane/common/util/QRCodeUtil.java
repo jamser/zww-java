@@ -258,12 +258,12 @@ public class QRCodeUtil {
             return QRCodeUrl;
         }
         try {
-            File logoFile = new File("/home/font/logo.png");
+//            File logoFile = new File("/home/font/logo.png");
             String lanaokj = getshareUrl("agent" + agent.getId(), "lanaokj", index,oem);
            // logger.info("生成长链接前："+lanaokj);
             lanaokj =  WXUtil.short_url(lanaokj);
            // logger.info("长链接后："+lanaokj);
-            QRCodeUrl = myDrawLogoQRCode("agent", String.valueOf(agent.getId()), logoFile, lanaokj, note);
+            QRCodeUrl = myDrawLogoQRCode("agent", String.valueOf(agent.getId()), null, lanaokj, note);
             //缓存地址到redis
             redisUtil.setString(RedisKeyGenerator.getAgentCodeKey(agent.getId().toString() + shareIMGversion), QRCodeUrl, 2147483647);
             return QRCodeUrl;
