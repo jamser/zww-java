@@ -308,6 +308,11 @@ public class DollOrderServiceImpl implements DollOrderService {
             dollOrderGoods.setDeliverCoins(deliverCoin);
             Charge charge = new Charge();
             Member member = memberDao.selectById(memberId);
+
+            //判断金币是否足够
+            if(deliverCoin>member.getCoins()){
+                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, "您当前金币不满足发货条件哦！！");
+            }
             charge.setMemberId(memberId);
             charge.setCoins(member.getCoins());
             //charge.setCoinsSum(doll.getRedeemCoins() + member.getCoins());

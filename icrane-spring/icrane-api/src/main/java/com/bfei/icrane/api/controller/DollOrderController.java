@@ -220,7 +220,7 @@ public class DollOrderController {
      */
     @RequestMapping(value = "/sendDoll", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap sendDoll(Integer memberId, Long[] orderIds, Integer addrId, String token, String note) throws Exception {
+    public ResultMap sendDoll(@RequestParam Integer memberId,@RequestParam Long[] orderIds, @RequestParam Integer addrId, @RequestParam String token, String note) throws Exception {
         try {
             //验证参数
             if (memberId == null || StringUtils.isEmpty(token) || orderIds == null || orderIds.length < 1 || addrId == null || (note != null && note.length() > 255)) {
