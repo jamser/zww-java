@@ -156,29 +156,29 @@ public class DollOrderServiceImpl implements DollOrderService {
         dollOrder.setOrderBy(memberId);
         dollOrder.setStatus("寄存中");
         String machineType = String.valueOf(doll.getMachineType());
-        if ("1".equals(machineType) || "3".equals(machineType)) {//练习房 直接兑换
-            dollOrder.setStatus("已兑换");
-            //SystemPref practiceRoom = systemPrefDao.selectByPrimaryKey("PRACTICE_ROOM_BONUS");
-            //String procticeCoins = practiceRoom==null?"0":practiceRoom.getValue();
-            //dollOrder.setDeliverCoins(Integer.parseInt(procticeCoins));
-            dollOrder.setDeliverCoins(doll.getRedeemCoins());
-            Charge charge = new Charge();
-            Member member = memberDao.selectById(memberId);
-            charge.setMemberId(memberId);
-            charge.setCoins(member.getAccount().getCoins());
-            //charge.setCoinsSum(doll.getRedeemCoins() + member.getCoins());
-            charge.setCoinsSum(doll.getRedeemCoins());//练习房兑换奖励
-            charge.setChargeDate(TimeUtil.getTime());
-            charge.setType("income");
-            charge.setDollId(doll.getId());
-            charge.setChargeMethod("由<练习房抓中娃娃赠送币," + doll.getDollID() + ">兑换获取");
-            if ("3".equals(machineType)) {
-                charge.setChargeMethod("由<占卜房抓中娃娃赠送币," + doll.getDollID() + ">兑换获取");
-            }
-            charge.setChargeDate(TimeUtil.getTime());
-            chargeDao.updateMemberCount(charge);
-            chargeDao.insertChargeHistory(charge);
-        }
+//        if ("1".equals(machineType) || "3".equals(machineType)) {//练习房 直接兑换
+//            dollOrder.setStatus("已兑换");
+//            //SystemPref practiceRoom = systemPrefDao.selectByPrimaryKey("PRACTICE_ROOM_BONUS");
+//            //String procticeCoins = practiceRoom==null?"0":practiceRoom.getValue();
+//            //dollOrder.setDeliverCoins(Integer.parseInt(procticeCoins));
+//            dollOrder.setDeliverCoins(doll.getRedeemCoins());
+//            Charge charge = new Charge();
+//            Member member = memberDao.selectById(memberId);
+//            charge.setMemberId(memberId);
+//            charge.setCoins(member.getAccount().getCoins());
+//            //charge.setCoinsSum(doll.getRedeemCoins() + member.getCoins());
+//            charge.setCoinsSum(doll.getRedeemCoins());//练习房兑换奖励
+//            charge.setChargeDate(TimeUtil.getTime());
+//            charge.setType("income");
+//            charge.setDollId(doll.getId());
+//            charge.setChargeMethod("由<练习房抓中娃娃赠送币," + doll.getDollID() + ">兑换获取");
+//            if ("3".equals(machineType)) {
+//                charge.setChargeMethod("由<占卜房抓中娃娃赠送币," + doll.getDollID() + ">兑换获取");
+//            }
+//            charge.setChargeDate(TimeUtil.getTime());
+//            chargeDao.updateMemberCount(charge);
+//            chargeDao.insertChargeHistory(charge);
+//        }
         dollOrder.setStockValidDate(TimeUtil.plusDay(validDate));
         dollOrderDao.insertOrder(dollOrder);
 

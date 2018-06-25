@@ -115,21 +115,21 @@ public class MemberComplaintServiceImpl implements MemberComplaintService {
                 Account account = accountDao.selectById(memberComplaintAll.getMemberId());
                 Doll doll = dollDao.selectByPrimaryKey(memberComplaintAll.getDollId());
                 if(doll != null){
-                   if(doll.getMachineType() == 2){
-                       //生成消费记录 返钻石
-                       Charge chargeRecord = new Charge();
-                       chargeRecord.setChargeDate(TimeUtil.getTime());
-                       chargeRecord.setChargeMethod("申诉返钻石(" + doll.getName() + ")");
-                       chargeRecord.setCoins(account.getCoins());
-                       chargeRecord.setCoinsSum(0);
-                       chargeRecord.setSuperTicket(account.getSuperTicket());
-                       chargeRecord.setSuperTicketSum(doll.getPrice());
-                       chargeRecord.setDollId(doll.getId());
-                       chargeRecord.setMemberId(account.getId());
-                       chargeRecord.setType("sincome");
-                       chargeDao.updateMemberCount(chargeRecord);
-                       chargeDao.insertChargeHistory(chargeRecord);
-                   }else {
+//                   if(doll.getMachineType() == 2){
+//                       //生成消费记录 返钻石
+//                       Charge chargeRecord = new Charge();
+//                       chargeRecord.setChargeDate(TimeUtil.getTime());
+//                       chargeRecord.setChargeMethod("申诉返钻石(" + doll.getName() + ")");
+//                       chargeRecord.setCoins(account.getCoins());
+//                       chargeRecord.setCoinsSum(0);
+//                       chargeRecord.setSuperTicket(account.getSuperTicket());
+//                       chargeRecord.setSuperTicketSum(doll.getPrice());
+//                       chargeRecord.setDollId(doll.getId());
+//                       chargeRecord.setMemberId(account.getId());
+//                       chargeRecord.setType("sincome");
+//                       chargeDao.updateMemberCount(chargeRecord);
+//                       chargeDao.insertChargeHistory(chargeRecord);
+//                   }else {
                        //生成消费记录 返娃娃币
                        Charge chargeRecord = new Charge();
                        chargeRecord.setChargeDate(TimeUtil.getTime());
@@ -142,7 +142,7 @@ public class MemberComplaintServiceImpl implements MemberComplaintService {
                        chargeDao.updateMemberCount(chargeRecord);
                        chargeDao.insertChargeHistory(chargeRecord);
                    }
-                }
+//                }
 
             }
             return memberComplaintDao.updateComplaintResult(id, state, checkReason, dates);
@@ -172,22 +172,22 @@ public class MemberComplaintServiceImpl implements MemberComplaintService {
                 dollOrder.setOrderDate(TimeUtil.getTime());
                 dollOrder.setOrderBy(memberComplaintAll.getMemberId());
                 dollOrder.setStatus("寄存中");
-                if ("1".equals(String.valueOf(doll.getMachineType()))) {//练习房 直接兑换
-                    dollOrder.setStatus("已兑换");
-                    dollOrder.setDeliverCoins(doll.getRedeemCoins());
-                    Charge charge = new Charge();
-                    Member member = memberDao.selectById(memberComplaintAll.getMemberId());
-                    charge.setMemberId(memberComplaintAll.getMemberId());
-                    charge.setCoins(member.getAccount().getCoins());
-                    charge.setCoinsSum(doll.getRedeemCoins());//练习房兑换奖励
-                    charge.setChargeDate(TimeUtil.getTime());
-                    charge.setType("income");
-                    charge.setDollId(doll.getId());
-                    charge.setChargeMethod("由<练习房申诉," + doll.getDollID() + ">兑换获取");
-                    charge.setChargeDate(TimeUtil.getTime());
-                    chargeDao.updateMemberCount(charge);
-                    chargeDao.insertChargeHistory(charge);
-                }
+//                if ("1".equals(String.valueOf(doll.getMachineType()))) {//练习房 直接兑换
+//                    dollOrder.setStatus("已兑换");
+//                    dollOrder.setDeliverCoins(doll.getRedeemCoins());
+//                    Charge charge = new Charge();
+//                    Member member = memberDao.selectById(memberComplaintAll.getMemberId());
+//                    charge.setMemberId(memberComplaintAll.getMemberId());
+//                    charge.setCoins(member.getAccount().getCoins());
+//                    charge.setCoinsSum(doll.getRedeemCoins());//练习房兑换奖励
+//                    charge.setChargeDate(TimeUtil.getTime());
+//                    charge.setType("income");
+//                    charge.setDollId(doll.getId());
+//                    charge.setChargeMethod("由<练习房申诉," + doll.getDollID() + ">兑换获取");
+//                    charge.setChargeDate(TimeUtil.getTime());
+//                    chargeDao.updateMemberCount(charge);
+//                    chargeDao.insertChargeHistory(charge);
+//                }
                 dollOrder.setStockValidDate(TimeUtil.plusDay(validDate));
                 dollOrderDao.insertOrder(dollOrder);
 
