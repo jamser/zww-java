@@ -64,7 +64,7 @@ public class ChargeRulesController {
             String memberId = redisUtil.getString(token);
             //充值过的不显示首充
             if (memberService.selectById(Integer.valueOf(memberId)).getAccount().getCoinFirstCharge()) {
-                getChargeRules.remove(2);
+                getChargeRules.remove(0);
             }
             if (getChargeRules != null) {
                 logger.info("获取用户消息resultMap=" + resultMap);

@@ -260,35 +260,45 @@ public class DollRoomServiceImpl implements DollRoomService {
             memberDao.updateByPrimaryKeySelective(member);
             //生成消费记录
             Charge chargeRecord = new Charge();
-//            if (doll.getMachineType() != 2) {//普通及练习房
-                Integer currCoins = baseAccount.getCoins();
-                //扣费操作
-                //account.setCoins(currCoins - doll.getPrice());
-                account.setCoins(-doll.getPrice());
-                if("1".equals(state)) {//异常结束
-                	account.setCoins(0);
-                }
-                //accountService.updateById(account);
-                accountService.updateMemberCoin(account);
-                chargeRecord.setChargeDate(TimeUtil.getTime());
-                chargeRecord.setChargeMethod("普通房间(" + doll.getName() + ")消费");
-                if (doll.getMachineType() == 2) {
-                    chargeRecord.setChargeMethod("化妆房间(" + doll.getName() + ")消费");
-                }
-                if (doll.getMachineType() == 3) {
+
+            Integer currCoins = baseAccount.getCoins();
+            //扣费操作
+            //account.setCoins(currCoins - doll.getPrice());
+            account.setCoins(-doll.getPrice());
+            if("1".equals(state)) {//异常结束
+                account.setCoins(0);
+            }
+
+            //accountService.updateById(account);
+            accountService.updateMemberCoin(account);
+            chargeRecord.setChargeDate(TimeUtil.getTime());
+            chargeRecord.setChargeMethod("普通房间(" + doll.getName() + ")消费");
+            if (doll.getMachineType() == 1) {
+                chargeRecord.setChargeMethod("练习房间(" + doll.getName() + ")消费");
+            }
+            if (doll.getMachineType() == 2) {
+                chargeRecord.setChargeMethod("化妆房间(" + doll.getName() + ")消费");
+            }
+            if (doll.getMachineType() == 3) {
                 chargeRecord.setChargeMethod("数码房间(" + doll.getName() + ")消费");
-                }
-                chargeRecord.setCoins(currCoins);
-                chargeRecord.setCoinsSum(-doll.getPrice());
-                if("1".equals(state)) {//异常结束
-                	chargeRecord.setCoinsSum(0);
-                	chargeRecord.setChargeMethod("异常币已返回");
-                }
-                chargeRecord.setDollId(doll.getId());
-                chargeRecord.setMemberId(member.getId());
-                chargeRecord.setType("expense");
-                // chargeDao.insertChargeHistory(chargeRecord);
-//            }
+            }
+
+            chargeRecord.setCoins(currCoins);
+            chargeRecord.setCoinsSum(-doll.getPrice());
+            if("1".equals(state)) {//异常结束
+                chargeRecord.setCoinsSum(0);
+                chargeRecord.setChargeMethod("异常币已返回");
+            }
+            chargeRecord.setDollId(doll.getId());
+            chargeRecord.setMemberId(member.getId());
+            chargeRecord.setType("expense");
+            // chargeDao.insertChargeHistory(chargeRecord);
+
+            Integer recordNum = GameProcessUtil.getInstance().addCountGameLock(member.getId(),doll.getId(), GameProcessEnum.GAME_CHARGE_HISTORY);
+            logger.info("recordNum:"+recordNum+"正常结束生成消费计数");
+            if (recordNum == 1) {//记录一次
+                chargeDao.insertChargeHistory(chargeRecord);
+            }
         }
         return true;
     }
