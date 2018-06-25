@@ -227,7 +227,7 @@ public class QRCodeUtil {
         return null;
     }
 
-    public static String getQrUrl(Member member, String note, Integer index,Oem oem) {
+    public static String getQrUrl(Member member, String note, String index,Oem oem) {
         //先查询redis
         RedisUtil redisUtil = new RedisUtil();
         String QRCodeUrl = redisUtil.getString(RedisKeyGenerator.getQRCodeKey(member.getMemberID()) + shareIMGversion);
@@ -249,7 +249,7 @@ public class QRCodeUtil {
         return QRCodeUrl;
     }
 
-    public static String getAgentUrl(Agent agent, String note, Integer index,Oem oem) {
+    public static String getAgentUrl(Agent agent, String note, String index,Oem oem) {
         //先查询redis
         RedisUtil redisUtil = new RedisUtil();
         String QRCodeUrl = redisUtil.getString(RedisKeyGenerator.getAgentCodeKey(agent.getId().toString()) + shareIMGversion);
@@ -276,7 +276,7 @@ public class QRCodeUtil {
     public static final String GET_SHARE_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect";
 
 
-    public static String getshareUrl(String id, String channel, Integer index,Oem oem) {
+    public static String getshareUrl(String id, String channel, String index,Oem oem) {
         return GET_SHARE_URL.replace("APPID", oem.getAppid())
                 .replace("REDIRECT_URI", "http%3A%2F%2F"+oem.getNatappUrl()+"/icrane/api/h5login")
                 .replace("SCOPE", "snsapi_userinfo")

@@ -579,8 +579,9 @@ public class GameServiceImpl implements GameService {
         return map;
     }
 
+
     @Override
-    public Map<String, String> getQRCodeImgUrl(Integer memberId, Integer version, Integer index) {
+    public Map<String, String> getQRCodeImgUrl(Integer memberId, Integer version, String index) {
         Member member = memberService.selectById(memberId);
         Map<String, String> map = new HashMap<>();
         if (member == null) {
@@ -620,7 +621,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Map<String, String> getAgentImgUrl(Integer agentId, Integer version, Integer index) {
+    public Map<String, String> getAgentImgUrl(Integer agentId, Integer version, String index) {
         Agent agent = agentService.selectByPrimaryKey(agentId);
         Map<String, String> map = new HashMap<>();
         if (agent == null) {

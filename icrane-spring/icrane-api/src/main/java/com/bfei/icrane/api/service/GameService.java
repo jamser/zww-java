@@ -191,9 +191,9 @@ public interface GameService {
 
     Map<String, Object> Share(Integer memberId);
 
-    Map<String, String> getQRCodeImgUrl(Integer memberId, Integer version, Integer index);
+    Map<String, String> getQRCodeImgUrl(Integer memberId, Integer version, String index);
 
-    Map<String, String> getAgentImgUrl(Integer agentId, Integer version, Integer index);
+    Map<String, String> getAgentImgUrl(Integer agentId, Integer version, String index);
 
     Integer gameResult(Integer memberId, Integer dollId);
 }

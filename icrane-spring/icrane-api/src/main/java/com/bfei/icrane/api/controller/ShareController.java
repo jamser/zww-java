@@ -72,7 +72,7 @@ public class ShareController {
      */
     @RequestMapping(value = "/QRCodeImgUrl", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap QRCodeImgUrl(Integer memberId, String token, Integer version, Integer index) {
+    public ResultMap QRCodeImgUrl(Integer memberId, String token, Integer version, String index) {
         //logger.info("用户邀请二维码图 memberId=" + memberId);
         try {
             if (memberId == null || StringUtils.isEmpty(token)) {
@@ -107,7 +107,7 @@ public class ShareController {
     @RequestMapping(value = "/AgentImgUrl", method = RequestMethod.POST)
     @ResponseBody
     public ResultMap AgentImgUrl(@RequestParam(required = true) Integer agentId,
-                                 @RequestParam(required = true) String token, Integer version, Integer index) {
+                                 @RequestParam(required = true) String token, Integer version, String index) {
 
         Map<String, String> shareUrl = gameService.getAgentImgUrl(agentId, version, index);
         ResultMap resultMap = new ResultMap("right token");
