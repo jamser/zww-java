@@ -156,6 +156,11 @@ public class RedisKeyGenerator {
         return "machine_" + dollId + "_charge";
     }
 
+    //机器类型
+    public static String getMachineType(Integer dollId) {
+        return "machine_" + dollId + "_type";
+    }
+
     //新用户标志  1为新用户 0为老用户
     public static String getMemberNew(Integer dollId) {
         return "machine_" + dollId + "_MemberNew";

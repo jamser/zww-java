@@ -149,6 +149,9 @@ public class DollRoomServiceImpl implements DollRoomService {
             Integer chargeSum = machineDao.findMemberCharge(memberId);
             chargeSum = chargeSum==null? 0 : chargeSum;
             redisUtil.setString(RedisKeyGenerator.getMachineCharge(dollId),String.valueOf(chargeSum));
+            //标记房间类型
+            Doll doll1 = dollDao.selectByPrimaryKey(dollId);
+            redisUtil.setString(RedisKeyGenerator.getMachineType(dollId),String.valueOf(doll1.getMachineType()));
             Member member =  memberDao.selectById(memberId);
             Timestamp loginDate = member.getLastLoginDate();
             Timestamp registerDate = member.getRegisterDate();

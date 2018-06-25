@@ -239,7 +239,7 @@ public class QRCodeUtil {
             File logoFile = new File("/home/font/logo.png");
             String lanaokj = getshareUrl(member.getMemberID(), member.getRegisterChannel(), index,oem);
             lanaokj =  WXUtil.short_url(lanaokj);
-            QRCodeUrl = myDrawLogoQRCode("member", String.valueOf(member.getId()), logoFile,lanaokj , note);
+            QRCodeUrl = myDrawLogoQRCode("member", String.valueOf(member.getId()), null,lanaokj , note);
             //缓存地址到redis
             redisUtil.setString(RedisKeyGenerator.getQRCodeKey(member.getMemberID() + member.getRegisterChannel()) + shareIMGversion, QRCodeUrl, 2147483647);
             return QRCodeUrl;

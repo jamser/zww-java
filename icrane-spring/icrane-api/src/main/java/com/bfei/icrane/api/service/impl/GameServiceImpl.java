@@ -593,30 +593,30 @@ public class GameServiceImpl implements GameService {
         }
         String shareUrl = QRCodeUtil.getshareUrl(member.getMemberID(), member.getRegisterChannel(), index,oem);
         //先查询redis
-        String shareImgUrl = redisUtil.getString(shareUrl + QRCodeUtil.shareIMGversion);
-        //如果redis中有就从redis中查询
-        if (StringUtils.isNotEmpty(shareImgUrl)) {
-            map.put("shareImgUrl", shareImgUrl);
+//        String shareImgUrl = redisUtil.getString(shareUrl + QRCodeUtil.shareIMGversion);
+//        //如果redis中有就从redis中查询
+//        if (StringUtils.isNotEmpty(shareImgUrl)) {
+            map.put("shareImgUrl", null);
             map.put("shareUrl", shareUrl);
             return map;
-        }
-        ImageHandleHelper imageHandleHelper = new ImageHandleHelper();
-        //拼接
-        String qrUrl = QRCodeUtil.getQrUrl(member, null, index,oem);
-        if (StringUtils.isEmpty(qrUrl)) {
-            qrUrl = "https://lanao.oss-cn-shenzhen.aliyuncs.com/other/20180604144534.png";
-        }
-        try {
-            shareImgUrl = imageHandleHelper.getshareUrl(member, qrUrl, version);
-            //缓存地址到redis
-            redisUtil.setString(shareUrl + QRCodeUtil.shareIMGversion, shareImgUrl, 2147483647);
-            map.put("shareImgUrl", shareImgUrl);
-            map.put("shareUrl", shareUrl);
-            return map;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return map;
+//        }
+//        ImageHandleHelper imageHandleHelper = new ImageHandleHelper();
+//        //拼接
+//        String qrUrl = QRCodeUtil.getQrUrl(member, null, index,oem);
+//        if (StringUtils.isEmpty(qrUrl)) {
+//            qrUrl = "https://lanao.oss-cn-shenzhen.aliyuncs.com/other/20180604144534.png";
+//        }
+//        try {
+//            shareImgUrl = imageHandleHelper.getshareUrl(member, qrUrl, version);
+//            //缓存地址到redis
+//            redisUtil.setString(shareUrl + QRCodeUtil.shareIMGversion, shareImgUrl, 2147483647);
+//            map.put("shareImgUrl", shareImgUrl);
+//            map.put("shareUrl", shareUrl);
+//            return map;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return map;
     }
 
     @Override

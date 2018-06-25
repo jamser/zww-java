@@ -2,6 +2,8 @@ package com.bfei.icrane.game;
 
 import java.util.Random;
 
+import com.bfei.icrane.core.models.Doll;
+import com.bfei.icrane.core.service.DollService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,22 +11,23 @@ import com.bfei.icrane.api.controller.WebSocketController;
 import com.bfei.icrane.common.util.RedisKeyGenerator;
 import com.bfei.icrane.common.util.RedisUtil;
 import com.bfei.icrane.common.util.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 游戏过程  状态管理
  */
 public class GameProcessUtil {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(GameProcessUtil.class);
-	
+
 	private static final Integer CACHE_TIME = 3 * 60;
-	
+
 	private static final Integer USER_STRONG = 60 * 60 * 24 ;//1天 保留
-	
+
 	private volatile static GameProcessUtil _instance;
-	
+
 	private RedisUtil redisUtil = new RedisUtil();
-	
+
 	public static GameProcessUtil getInstance() {
 		synchronized (GameProcessUtil.class) {
 			if(_instance == null) {
@@ -33,8 +36,10 @@ public class GameProcessUtil {
 		}
 			return _instance;
 	}
-	
-	
+	@Autowired
+	private DollService dollService;
+
+
 	/**
 	 * 是否补发   当前游戏编号存在    当前命令次数为 0
 	 * @param userId
@@ -138,7 +143,7 @@ public class GameProcessUtil {
 		  }
 	      return num;
 	}
-	
+
 	/**
 	 * 站机
 	 * @param userId
@@ -150,7 +155,7 @@ public class GameProcessUtil {
 		 if (redisUtil.existsKey(roomHostKey) && !redisUtil.getString(roomHostKey).equals(userId)) {
 			 logger.info("玩家" + redisUtil.getString(roomHostKey) + "已抢到机器");
 			 return true;
-        } 
+        }
 		return false;
 	}
 	/**
@@ -171,7 +176,7 @@ public class GameProcessUtil {
         initCountGameLock(Integer.parseInt(userId) ,dollId, GameProcessEnum.GAME_IDLE);//游戏空闲指令计数0
         //logger.info("初始化" + dollId + "IDLE指令计数0");
 	}
-	
+
 	/**
 	 * 机器是否能投币
 	 * @param dollId
@@ -210,11 +215,11 @@ public class GameProcessUtil {
 	        logger.info("用户ID"+userId+"向"+dollId+"投币");
 			return true;
 		}
-		
+
         return false;
 	}
 
-	
+
 	/**
 	 * 游戏编号 是否存在
 	 * @param dollId
@@ -235,7 +240,7 @@ public class GameProcessUtil {
 		String gameNum = "";
 		if (redisUtil.existsKey(RedisKeyGenerator.getRoomGameNumKey(userId,dollId))) {
 			gameNum = redisUtil.getString(RedisKeyGenerator.getRoomGameNumKey(userId,dollId));
-		} 
+		}
 		return gameNum;
 	}
 	/**
@@ -249,9 +254,9 @@ public class GameProcessUtil {
 		if (redisUtil.existsKey(key)) {
 			catchDoll = Integer.parseInt(redisUtil.getString(key));
 		}
-		return catchDoll;	
+		return catchDoll;
 	}
-	
+
 	/**
 	 * 下抓
 	 * @param userId
@@ -261,16 +266,16 @@ public class GameProcessUtil {
 		//redisUtil.setString(RedisKeyGenerator.getGameResult(dollId), "1", 60 * 5);//下过抓指令
 		addCountGameLock(userId ,dollId ,GameProcessEnum.GAME_CLAW);//下抓计数
 	}
-	
+
 	private Integer getRedisValue(String key,Integer defaultNum) {
 		if (redisUtil.existsKey(key)) {
 			return Integer.parseInt(redisUtil.getString(key));
 		}
 		return defaultNum;
 	}
-	
+
 	/**
-	 * 获取强弱抓 概率  
+	 * 获取强弱抓 概率
 	 * 强弱抓概率 控制     1小时内 最多连续2次抢抓
 	 */
 	public String contrClaw(Integer userId, Integer dollId) {
@@ -281,15 +286,15 @@ public class GameProcessUtil {
 		String p1Key = RedisKeyGenerator.getMachineP1(dollId);
 		Integer p1 = 15;
 		p1 = getRedisValue( p1Key ,p1);
-	
+
 		String chargeKey = RedisKeyGenerator.getMachineCharge(dollId);
 		 Integer chargeSum = 0;
 		 chargeSum = getRedisValue( chargeKey ,chargeSum);//当前房主充值金额
-		
+
 		 String memberNewKey = RedisKeyGenerator.getMemberNew(dollId);
 		 Integer memberNew = 0;
 		 memberNew = getRedisValue( memberNewKey , memberNew);//当前房主充值金额
-		
+
 		 //下抓次数计数
 		 Integer clawNum = 0;
 		 String clawNumKey = RedisKeyGenerator.getMemberClawNum(userId, dollId);
@@ -301,13 +306,13 @@ public class GameProcessUtil {
 	        }  else {//1小时
 	            redisUtil.setString(clawNumKey, "0",USER_STRONG);
 	        }
-	        
+
 	        if (redisUtil.existsKey(strongClawNumKey)) {
 	        	strongClawNum = Integer.parseInt(redisUtil.getString(strongClawNumKey)) ;
 	        } else {
 	        	 redisUtil.setString(strongClawNumKey, "0");
 	        }
-	       
+
 		 String clawPro = redisUtil.getString(RedisKeyGenerator.getMachineHost(dollId));
 		 //新用户  未充值  只出现一次强抓
 		logger.info("【contrClaw方法】参数 chargeSum={},memberNew={},userId={},message={},memberNewKey={},strongClawNumKey={}", chargeSum, memberNew, userId, message, memberNewKey, strongClawNumKey);
@@ -315,6 +320,12 @@ public class GameProcessUtil {
 	        	//Random p1Rdom = new Random();
 	        	//Integer p1Num =  p1Rdom.nextInt(p1);//随机数
 	        	//if (p1Num==1) {
+					Integer machineType = Integer.valueOf(redisUtil.getString(RedisKeyGenerator.getMachineType(dollId)));
+					if(machineType ==2 ||machineType==3){
+						logger.info("新用户化妆房第一次弱抓machineType={}",machineType);
+						return "weakClaw";
+					}
+
 	        		strongClawNum = Integer.parseInt(redisUtil.getString(strongClawNumKey)) + 1;
 	        		redisUtil.setString(strongClawNumKey, String.valueOf(strongClawNum) );
 	        		logger.info("新用户 存在保证抓中,强抓xxxxxxxclawPro"+clawPro+", strong:"+clawNum+",message:strongClaw"+message+",strongClawNum="+strongClawNum);
@@ -340,12 +351,12 @@ public class GameProcessUtil {
 					 logger.info("userId={},dollId={},clawNum={},range={},baseNum={}",userId,dollId,clawNum,range,baseNum);
 	        		 redisUtil.setString(clawNumKey, String.valueOf(clawNum) ,USER_STRONG);
 	        	 }
-	    		
+
 	    		if (redisUtil.existsKey(clawNumKey)) {//clawNum - 1 局之后 出现强抓
 	    			clawNum = Integer.parseInt(redisUtil.getString(clawNumKey)) - 1;
 	    			logger.info("计数值 userId={},dollId={},clawNum={}",userId,dollId,clawNum);
 	    			 if (clawNum==1 || range==0) {
-	    				message = "strongClaw"; 	
+	    				message = "strongClaw";
 	    			} else {
 	    				message = "weakClaw";
 	    			}
@@ -361,7 +372,7 @@ public class GameProcessUtil {
 	        }
 		 return message;
 	}
-	
+
 	/**
 	 * 游戏结束状态控制
 	 */
@@ -438,7 +449,7 @@ public class GameProcessUtil {
         initCountGameLock(userId,dollId, GameProcessEnum.GAME_READY);//游戏空闲指令计数0
     	return true;
 	}
-	
+
 	/**
 	 * 抓中娃娃
 	 * @param dollId
@@ -453,6 +464,6 @@ public class GameProcessUtil {
 		}
 		return false;
 	}
-	
-	
+
+
 }
