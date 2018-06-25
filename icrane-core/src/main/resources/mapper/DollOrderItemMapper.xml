@@ -88,15 +88,13 @@
         SELECT
         a.*, b.*, b.modified_date modifiedDate,
         c.id AS doll_id,
-        ifnull(dinfo.dollName, c. NAME) NAME,
+        a.doll_name AS NAME,
         IFNULL(
         b.doll_redeem_coins,
         c.redeem_coins
         ) redeem_coins,
-        ifnull(
-        dinfo.img_url,
-        c.tbimg_real_path
-        ) tbimg_real_path
+        a.doll_url AS
+         tbimg_real_path
         FROM
         t_doll_order_item a
         INNER JOIN t_doll_order b ON a.order_id = b.id
@@ -105,9 +103,6 @@
         WHERE
         b.order_by = #{memberId,jdbcType=INTEGER}
         AND b. STATUS = #{orderStatus,jdbcType=VARCHAR}
-        <if test="orderStatus == '寄存中'">
-            AND b.order_date > CURRENT_TIMESTAMP - INTERVAL 15 DAY
-        </if>
         ORDER BY
         order_date DESC;
     </select>
@@ -134,10 +129,11 @@
 	</delete>
     <insert id="insert" parameterType="com.bfei.icrane.core.models.DollOrderItem">
 		insert into t_doll_order_item (id, order_id, doll_id,
-		created_date,quantity,doll_code)
+		created_date,quantity,doll_code,doll_url,doll_name)
 		values (#{id,jdbcType=BIGINT}, #{dollOrder.id,jdbcType=BIGINT},
 		#{doll.id,jdbcType=INTEGER},
-		#{createdDate,jdbcType=TIMESTAMP},#{quantity,jdbcType=INTEGER},#{doll.dollID,jdbcType=VARCHAR})
+		#{createdDate,jdbcType=TIMESTAMP},#{quantity,jdbcType=INTEGER},#{doll.dollID,jdbcType=VARCHAR},
+		#{doll.tbimgRealPath,jdbcType=VARCHAR},#{doll.name,jdbcType=VARCHAR})
 	</insert>
     <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.DollOrderItem">
         insert into t_doll_order_item

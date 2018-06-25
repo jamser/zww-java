@@ -12,10 +12,12 @@
         <result column="game_num" property="gameNum" jdbcType="VARCHAR"/>
         <result column="machine_type" property="machineType" jdbcType="INTEGER"/>
         <result column="doll_code" property="dollCode" jdbcType="INTEGER"/>
+        <result column="doll_name" property="dollName" jdbcType="VARCHAR"/>
+        <result column="doll_url" property="dollUrl" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-		id,doll_id,member_id,catch_date,catch_status,game_num,machine_type,doll_code
+		id,doll_id,member_id,catch_date,catch_status,game_num,machine_type,doll_code,doll_url,doll_name
 	</sql>
 
     <select id="totalCount" resultType="java.lang.Integer">
@@ -145,6 +147,12 @@
             <if test="dollCode != null">
                 doll_code,
             </if>
+            <if test="dollName != null">
+                doll_name,
+            </if>
+            <if test="dollUrl != null">
+                doll_url,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="dollId != null">
@@ -170,6 +178,12 @@
             </if>
             <if test="dollCode != null">
                 #{dollCode,jdbcType=INTEGER},
+            </if>
+            <if test="dollName != null">
+                #{dollName,jdbcType=VARCHAR},
+            </if>
+            <if test="dollUrl != null">
+                #{dollUrl,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>

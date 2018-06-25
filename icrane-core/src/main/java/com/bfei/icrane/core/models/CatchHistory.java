@@ -23,5 +23,8 @@ public class CatchHistory implements Serializable {
     private String gameNum;
     private Integer machineType;
     private String dollCode;
+    private String dollName;
+    private String dollUrl;
+
 
 }

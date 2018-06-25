@@ -384,6 +384,8 @@ public class DollRoomServiceImpl implements DollRoomService {
             catchHistory.setGameNum(gameNum);
             catchHistory.setMachineType(machine.getMachineType());
             catchHistory.setDollCode(machine.getDollID());
+            catchHistory.setDollName(machine.getName());
+            catchHistory.setDollUrl(machine.getTbimgRealPath());
             catchHistoryDao.insertCatchHistory(catchHistory);
 
             //用户抓取次数加1
