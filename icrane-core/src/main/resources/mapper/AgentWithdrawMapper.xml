@@ -18,6 +18,16 @@
         <result column="update_date" property="updateDate" jdbcType="TIMESTAMP"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
     </resultMap>
+
+    <resultMap id="RecordResultMap" type="com.bfei.icrane.core.models.vo.AgentWithdrawVO">
+        <result column="amount" property="amount" jdbcType="BIGINT"/>
+        <result column="actual_amount" property="actualAmount" jdbcType="BIGINT"/>
+        <result column="card_no" property="cardNo" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="card_bank_type" property="cardBankType" jdbcType="INTEGER"/>
+    </resultMap>
     <sql id="Base_Column_List">
     id, agentId, amount, fee, actual_amount, card_no, name, phone, id_card_no, trade_no, 
     status, confirm_date, create_date, update_date, remark
@@ -36,10 +46,10 @@
     where agentId = #{agentId,jdbcType=INTEGER} and status In(0,1)
   </select>
 
-    <select id="selectByWithdrawLists" parameterType="java.lang.Integer" resultMap="BaseResultMap" >
-        select *
-        from agent_withdraw
-        where agentId = #{agentId,jdbcType=INTEGER} and status In(0,1) ORDER BY create_date desc
+    <select id="selectByWithdrawLists" parameterType="java.lang.Integer" resultMap="RecordResultMap">
+    select a.amount,a.actual_amount,a.create_date,a.card_no,b.card_bank_type,a.remark,a.status
+    from agent_withdraw a , bank_info b
+    where a.card_no=b.card_no AND agentId = #{agentId,jdbcType=INTEGER} and a.status In(0,1) ORDER BY create_date desc
     </select>
 
 

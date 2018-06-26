@@ -1,6 +1,5 @@
 package com.bfei.icrane.core.models.vo;
 
-import com.bfei.icrane.core.models.AgentIncome;
 import lombok.Data;
 
 import java.util.List;

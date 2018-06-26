@@ -1,6 +1,7 @@
 package com.bfei.icrane.api.service;
 
 import com.bfei.icrane.core.models.AgentWithdraw;
+import com.bfei.icrane.core.models.vo.AgentWithdrawVO;
 
 import java.util.List;
 
@@ -22,5 +23,5 @@ public interface AgentWithdrawService {
 
     Long selectByWithdraw(Integer id);
 
-    List<AgentWithdraw> selectByWithdrawLists(Integer id);
+    List<AgentWithdrawVO> selectByWithdrawLists(Integer id);
 }

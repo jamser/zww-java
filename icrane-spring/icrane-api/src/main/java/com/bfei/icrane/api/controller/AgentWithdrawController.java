@@ -37,15 +37,21 @@ public class AgentWithdrawController {
     @Autowired
     private ValidateTokenService validateTokenService;
 
+    /**
+     * 获取分润列表
+     * @param token
+     * @param agentId
+     * @return
+     */
 
     @PostMapping(value = "/lists")
     @ResponseBody
     public ResultMap getIncomeLists(@RequestParam String token, @RequestParam Integer agentId) {
         //验证token
-        if (!validateTokenService.validataAgentToken(token, agentId)) {
-            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-        }
+//        if (!validateTokenService.validataAgentToken(token, agentId)) {
+//            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//        }
         Agent agent = agentService.selectByPrimaryKey(agentId);
         AgentProfitVO agentProfitVO = new AgentProfitVO();
         switch (agent.getLevel()) {
@@ -72,14 +78,20 @@ public class AgentWithdrawController {
         return new ResultMap("获取数据成功", agentProfitVO);
     }
 
+    /**
+     * 获取提现记录
+     * @param token
+     * @param agentId
+     * @return
+     */
     @PostMapping(value = "/records")
     @ResponseBody
     public ResultMap getIncomeRecords(@RequestParam String token, @RequestParam Integer agentId) {
         //验证token
-        if (!validateTokenService.validataAgentToken(token, agentId)) {
-            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-        }
+//        if (!validateTokenService.validataAgentToken(token, agentId)) {
+//            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//        }
         Agent agent = agentService.selectByPrimaryKey(agentId);
         return new ResultMap("获取数据成功", withdrawService.selectByWithdrawLists(agent.getId()));
     }

@@ -3,6 +3,7 @@ package com.bfei.icrane.api.service.impl;
 import com.bfei.icrane.api.service.AgentWithdrawService;
 import com.bfei.icrane.core.dao.AgentWithdrawMapper;
 import com.bfei.icrane.core.models.AgentWithdraw;
+import com.bfei.icrane.core.models.vo.AgentWithdrawVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +54,7 @@ public class AgentWithdrawServiceImpl implements AgentWithdrawService {
     }
 
     @Override
-    public List<AgentWithdraw> selectByWithdrawLists(Integer id) {
+    public List<AgentWithdrawVO> selectByWithdrawLists(Integer id) {
         return agentWithdrawMapper.selectByWithdrawLists(id);
     }
 }
