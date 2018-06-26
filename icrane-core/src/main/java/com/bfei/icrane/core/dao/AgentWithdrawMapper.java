@@ -1,19 +1,23 @@
 package com.bfei.icrane.core.dao;
 
-import com.bfei.icrane.core.models.agentWithdraw;
+import com.bfei.icrane.core.models.AgentWithdraw;
+
+import java.util.List;
 
 public interface AgentWithdrawMapper {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(agentWithdraw record);
+    int insert(AgentWithdraw record);
 
-    int insertSelective(agentWithdraw record);
+    int insertSelective(AgentWithdraw record);
 
-    agentWithdraw selectByPrimaryKey(Integer id);
+    AgentWithdraw selectByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(agentWithdraw record);
+    int updateByPrimaryKeySelective(AgentWithdraw record);
 
-    int updateByPrimaryKey(agentWithdraw record);
+    int updateByPrimaryKey(AgentWithdraw record);
 
     Long selectByWithdraw(Integer id);
+
+    List<AgentWithdraw>selectByWithdrawLists(Integer id);
 }

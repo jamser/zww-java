@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.util.Date;
 @Data
-public class agentWithdraw {
+public class AgentWithdraw {
     private Integer id;
 
     private Integer agentid;

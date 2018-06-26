@@ -23,11 +23,11 @@
 
     <resultMap id="BaseIncomeResultMap" type="com.bfei.icrane.core.models.AgentIncome">
         <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="memberName" jdbcType="INTEGER" property="memberName"/>
-        <result column="nickName" jdbcType="INTEGER" property="nickName"/>
+        <result column="member_name" jdbcType="VARCHAR" property="memberName"/>
+        <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
         <result column="price" jdbcType="DECIMAL" property="price"/>
-        <result column="agentIncome" jdbcType="BIGINT" property="agentIncome"/>
-        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="agent_income" jdbcType="BIGINT" property="agentIncome"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createTime"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -242,39 +242,64 @@
       status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
-    <select id="selectByAgentSuperId" parameterType="java.lang.Integer" resultType="java.lang.Long">
-    select
-    COALESCE(sum(agent_super_income),0)
-    from agent_charge
-    where agent_super_id = #{agentSuperId,jdbcType=INTEGER} AND status=0
-  </select>
+    <select id="selectByAgentSuperId" resultType="java.lang.Long">
+        select
+        COALESCE(sum(agent_super_income),0)
+        from agent_charge
+        where agent_super_id = #{agentId,jdbcType=INTEGER}
+        <if test="status != null">
+            AND status=#{status,jdbcType=INTEGER}
+        </if>
+        <if test="date != null">
+            AND TO_DAYS(create_time) = TO_DAYS(NOW())
+        </if>
+    </select>
 
-    <select id="selectByAgentOneId" parameterType="java.lang.Integer" resultType="java.lang.Long">
-    select
-    COALESCE(sum(agent_one_income),0)
-    from agent_charge
-    where agent_one_id = #{agentOneId,jdbcType=INTEGER} AND status=0
-  </select>
+
+    <select id="selectByAgentOneId" resultType="java.lang.Long">
+        select
+        COALESCE(sum(agent_one_income),0)
+        from agent_charge
+        where agent_one_id = #{agentId,jdbcType=INTEGER}
+        <if test="status != null">
+            AND status=#{status,jdbcType=INTEGER}
+        </if>
+        <if test="date != null">
+            AND TO_DAYS(create_time) = TO_DAYS(NOW())
+        </if>
+    </select>
 
     <select id="selectByAgentTwoId" parameterType="java.lang.Integer" resultType="java.lang.Long">
-    select
-    COALESCE(sum(agent_two_income),0)
-    from agent_charge
-    where agent_two_id = #{agentTwoId,jdbcType=INTEGER} AND status=0
-  </select>
+        select
+        COALESCE(sum(agent_two_income),0)
+        from agent_charge
+        where agent_two_id = #{agentId,jdbcType=INTEGER}
+        <if test="status != null">
+            AND status=#{status,jdbcType=INTEGER}
+        </if>
+        <if test="date != null">
+            AND TO_DAYS(create_time) = TO_DAYS(NOW())
+        </if>
+    </select>
 
     <select id="selectByAgentThreeId" parameterType="java.lang.Integer" resultType="java.lang.Long">
-    select
-    COALESCE(sum(agent_three_income),0)
-    from agent_charge
-    where agent_three_id = #{agentThreeId,jdbcType=INTEGER} AND status=0
-  </select>
+        select
+        COALESCE(sum(agent_three_income),0)
+        from agent_charge
+        where agent_three_id = #{agentId,jdbcType=INTEGER}
+        <if test="status != null">
+            AND status=#{status,jdbcType=INTEGER}
+        </if>
+        <if test="date != null">
+            AND TO_DAYS(create_time) = TO_DAYS(NOW())
+        </if>
+    </select>
 
     <select id="selectByStatus" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from agent_charge
-        where status = #{status,jdbcType=BIGINT}
+        where status = #{status,jdbcType=INTEGER}
     </select>
     <update id="updateStatus" parameterType="java.lang.Long">
         update agent_charge
@@ -283,10 +308,28 @@
         where id = #{id,jdbcType=BIGINT}
     </update>
 
-    <select id="selectIncomeByAgentId" parameterType="java.lang.Integer" resultMap="BaseIncomeResultMap">
-        select
-        *
-        from agent_charge
-        where status = #{status,jdbcType=BIGINT}
+    <select id="selectIncomeByAgentSuperId" parameterType="java.lang.Integer" resultMap="BaseIncomeResultMap">
+         SELECT a.id,c.member_name,c.create_date,t.nick_name,c.price,a.agent_super_income AS agent_income
+         FROM agent_charge a,charge_order c ,t_agent t
+         WHERE a.order_id=c.id AND t.id=a.agent_super_id AND t.id=#{agentId,jdbcType=INTEGER} ORDER BY c.create_date desc
     </select>
+
+    <select id="selectIncomeByAgentOneId" parameterType="java.lang.Integer" resultMap="BaseIncomeResultMap">
+        SELECT a.id,c.member_name,c.create_date,t.nick_name,c.price,a.agent_one_income AS agent_income
+        FROM agent_charge a,charge_order c ,t_agent t
+        WHERE a.order_id=c.id AND t.id=a.agent_one_id AND t.id=#{agentId,jdbcType=INTEGER} ORDER BY c.create_date desc
+    </select>
+
+    <select id="selectIncomeByAgentTwoId" parameterType="java.lang.Integer" resultMap="BaseIncomeResultMap">
+        SELECT a.id,c.member_name,c.create_date,t.nick_name,c.price,a.agent_two_income AS agent_income
+        FROM agent_charge a,charge_order c ,t_agent t
+        WHERE a.order_id=c.id AND t.id=a.agent_two_id AND t.id=#{agentId,jdbcType=INTEGER} ORDER BY c.create_date desc
+    </select>
+
+    <select id="selectIncomeByAgentThreeId" parameterType="java.lang.Integer" resultMap="BaseIncomeResultMap">
+        SELECT a.id,c.member_name,c.create_date,t.nick_name,c.price,a.agent_three_income AS agent_income
+        FROM agent_charge a,charge_order c ,t_agent t
+        WHERE a.order_id=c.id AND t.id=a.agent_three_id AND t.id=#{agentId,jdbcType=INTEGER} ORDER BY c.create_date desc
+    </select>
+
 </mapper>

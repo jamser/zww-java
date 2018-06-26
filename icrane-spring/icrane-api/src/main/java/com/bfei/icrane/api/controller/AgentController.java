@@ -122,11 +122,11 @@ public class AgentController {
      */
     @RequestMapping(value = "/userInfo", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap getAccount(@RequestParam(value = "agentId", required = true) Integer agentId,
-                                @RequestParam(value = "token", required = true) String token) {
+    public ResultMap getAccount(@RequestParam(value = "agentId") Integer agentId,
+                                @RequestParam(value = "token") String token) {
         try {
             logger.info("【userInfo】参数:memberId=" + agentId + ",token=" + token);
-            //验证token
+//            验证token
             if (!validateTokenService.validataAgentToken(token, agentId)) {
                 logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
                 return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
@@ -137,16 +137,16 @@ public class AgentController {
             agent.setWithdraw(withdraw);
             switch (agent.getLevel()) {
                 case 0:
-                    agent.setBalanceDisabled(agentChargeService.selectByAgentSuperId(agent.getId()));
+                    agent.setBalanceDisabled(agentChargeService.selectByAgentSuperId(agent.getId(), 0, null));
                     break;
                 case 1:
-                    agent.setBalanceDisabled(agentChargeService.selectByAgentOneId(agent.getId()));
+                    agent.setBalanceDisabled(agentChargeService.selectByAgentOneId(agent.getId(), 0, null));
                     break;
                 case 2:
-                    agent.setBalanceDisabled(agentChargeService.selectByAgentTwoId(agent.getId()));
+                    agent.setBalanceDisabled(agentChargeService.selectByAgentTwoId(agent.getId(), 0, null));
                     break;
                 case 3:
-                    agent.setBalanceDisabled(agentChargeService.selectByAgentThreeId(agent.getId()));
+                    agent.setBalanceDisabled(agentChargeService.selectByAgentThreeId(agent.getId(), 0, null));
                     break;
                 default:
                     break;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.bfei.icrane.core.dao.AgentWithdrawMapper">
-    <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.agentWithdraw">
+    <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.AgentWithdraw">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="agentId" property="agentid" jdbcType="INTEGER"/>
         <result column="amount" property="amount" jdbcType="BIGINT"/>
@@ -36,12 +36,18 @@
     where agentId = #{agentId,jdbcType=INTEGER} and status In(0,1)
   </select>
 
+    <select id="selectByWithdrawLists" parameterType="java.lang.Integer" resultMap="BaseResultMap" >
+        select *
+        from agent_withdraw
+        where agentId = #{agentId,jdbcType=INTEGER} and status In(0,1) ORDER BY create_date desc
+    </select>
+
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from agent_withdraw
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.bfei.icrane.core.models.agentWithdraw">
+    <insert id="insert" parameterType="com.bfei.icrane.core.models.AgentWithdraw">
     insert into agent_withdraw (id, agentId, amount, 
       fee, actual_amount, card_no, 
       name, phone, id_card_no, 
@@ -55,7 +61,7 @@
       #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
       )
   </insert>
-    <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.agentWithdraw">
+    <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.AgentWithdraw">
         insert into agent_withdraw
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -152,7 +158,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.bfei.icrane.core.models.agentWithdraw">
+    <update id="updateByPrimaryKeySelective" parameterType="com.bfei.icrane.core.models.AgentWithdraw">
         update agent_withdraw
         <set>
             <if test="agentid != null">
@@ -200,7 +206,7 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.agentWithdraw">
+    <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.AgentWithdraw">
     update agent_withdraw
     set agentId = #{agentid,jdbcType=INTEGER},
       amount = #{amount,jdbcType=BIGINT},

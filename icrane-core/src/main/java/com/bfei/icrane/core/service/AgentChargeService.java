@@ -1,8 +1,11 @@
 package com.bfei.icrane.core.service;
 
+import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.AgentCharge;
 import com.bfei.icrane.core.models.AgentIncome;
+import com.bfei.icrane.core.models.vo.AgentIncomeVO;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,15 +24,16 @@ public interface AgentChargeService {
 
     int updateByPrimaryKey(AgentCharge record);
 
-    long selectByAgentSuperId(Integer agentId);
+    long selectByAgentSuperId(Integer agentId, Integer status, Date date);
 
-    long selectByAgentOneId(Integer agentId);
+    long selectByAgentOneId(Integer agentId, Integer status, Date date);
 
-    long selectByAgentTwoId(Integer agentId);
+    long selectByAgentTwoId(Integer agentId, Integer status, Date date);
 
-    long selectByAgentThreeId(Integer agentId);
+    long selectByAgentThreeId(Integer agentId, Integer status, Date date);
 
-    List<AgentIncome> selectIncomeByAgentId(Integer agentId);
+    List<AgentIncomeVO> selectIncomeByAgent(Agent agent);
+
 
     List<AgentCharge> selectByStatus(Integer status);
 

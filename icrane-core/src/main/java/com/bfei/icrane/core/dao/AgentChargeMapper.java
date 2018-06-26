@@ -2,7 +2,9 @@ package com.bfei.icrane.core.dao;
 
 import com.bfei.icrane.core.models.AgentCharge;
 import com.bfei.icrane.core.models.AgentIncome;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface AgentChargeMapper {
@@ -18,17 +20,24 @@ public interface AgentChargeMapper {
 
     int updateByPrimaryKey(AgentCharge record);
 
-    long selectByAgentSuperId(Integer agentId);
+    long selectByAgentSuperId(@Param("agentId")Integer agentId, @Param("status")Integer status, @Param("date")Date date);
 
-    long selectByAgentOneId(Integer agentId);
+    long selectByAgentOneId(@Param("agentId")Integer agentId, @Param("status")Integer status, @Param("date")Date date);
 
-    long selectByAgentTwoId(Integer agentId);
+    long selectByAgentTwoId(@Param("agentId")Integer agentId, @Param("status")Integer status, @Param("date")Date date);
 
-    long selectByAgentThreeId(Integer agentId);
+    long selectByAgentThreeId(@Param("agentId")Integer agentId, @Param("status")Integer status, @Param("date")Date date);
 
     List<AgentCharge> selectByStatus(Integer status);
 
     int updateStatus(Long id);
 
-    List<AgentIncome> selectIncomeByAgentId(Integer id);
+    List<AgentIncome> selectIncomeByAgentSuperId(Integer agentId);
+
+    List<AgentIncome> selectIncomeByAgentOneId(Integer id);
+
+    List<AgentIncome> selectIncomeByAgentTwoId(Integer id);
+
+    List<AgentIncome> selectIncomeByAgentThreeId(Integer id);
+
 }
