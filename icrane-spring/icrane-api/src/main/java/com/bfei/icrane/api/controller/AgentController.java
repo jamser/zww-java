@@ -49,8 +49,6 @@ public class AgentController {
     @Autowired
     private AgentWithdrawService agentWithdrawService;
 
-    @Autowired
-    private OemService oemService;
 
     private RedisUtil redisUtil = new RedisUtil();
 
@@ -257,7 +255,7 @@ public class AgentController {
             return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, bindingResult.getFieldError().getDefaultMessage());
         }
 
-        //验证code
+//        验证code
         String trueCode = redisUtil.getString(RedisKeyGenerator.getCodeAentKey(changePwdForm.getPhone()));
         if (StringUtils.isEmpty(trueCode)) {
             return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.SMSCODE_IS_OVER);
@@ -268,11 +266,17 @@ public class AgentController {
         logger.info("【agentChangePwd】修改密码 参数AgentChangePwdForm={}", changePwdForm);
         Agent agent = agentService.selectByPhone(changePwdForm.getPhone());
 
+        if (null == agent) {
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.AGENT_NOT_EXIT);
+        }
+
         //验证密码
         if (!changePwdForm.getPassword().equals(changePwdForm.getConfirmPassword())) {
             return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.AGENT_PASSWORD_ERROR);
         }
+
         agent.setPassword(MD5Utils.md5(changePwdForm.getPassword(), agent.getSalt()));
+
         int i = agentService.updateByPrimaryKeySelective(agent);
         if (i == 1) {
             logger.info("【代理修改密码成功】agent={}", agent);

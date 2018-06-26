@@ -426,7 +426,7 @@ public class DollOrderServiceImpl implements DollOrderService {
             map.put("details", vip.getName() + freeQt + "个以上包邮");
         } else {
             map.put("deliverCoins", deliverCoin);
-            map.put("details", "邮费" + deliverCoin + "Hi币");
+            map.put("details", "两个起包邮（注意：发货一个需扣"+ deliverCoin +"金币");
         }
         return new ResultMap("操作成功", map);
     }

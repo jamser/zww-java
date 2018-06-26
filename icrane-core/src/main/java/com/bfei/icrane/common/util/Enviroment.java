@@ -219,6 +219,7 @@ public class Enviroment {
      * 代理相关
      */
     public static final String ADD_AGENT_SUCCESS = "添加代理成功";
+    public static final String AGENT_NOT_EXIT = "添加代理成功";
     public static final String AGENT_LOGIN_FAILE = "该账户已失效或者被冻结";
     public static final String ADD_AGENT_ERROER = "添加代理失败";
     public static final String AGENT_LOGIN_ERROR = "代理登陆失败";

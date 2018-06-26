@@ -108,7 +108,7 @@
     select
     <include refid="Base_Column_List" />
     from t_oem_banner
-    where oem_id = #{oemId,jdbcType=INTEGER}
+    where oem_id = #{oemId,jdbcType=INTEGER} AND status=1 order by sort
   </select>
 
   <select id="selectAllOemBanner" resultMap="BaseResultMap">

@@ -83,7 +83,11 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
+    @Transactional
     public int updateByPrimaryKeySelective(Agent record) {
+        SysUser sysUser = sysUserMapper.selectByAccount(record.getUsername());
+        sysUser.setPassword(record.getPassword());
+        sysUserMapper.updateByPrimaryKeySelective(sysUser);
         return agentMapper.updateByPrimaryKeySelective(record);
     }
 
