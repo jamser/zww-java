@@ -1,6 +1,7 @@
 package com.bfei.icrane.core.form;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
@@ -18,6 +19,6 @@ public class AgentLoginForm {
 
 
     @NotEmpty(message = "密码不能为空")
-    @Pattern(regexp = "^[0-9a-zA-Z]{6,16}$", message = "密码只能是英文字符或者数字")
+    @Pattern(regexp = "^[0-9a-zA-Z]{6,16}$", message = "密码只能6～16位英文字符或者数字")
     private String password;
 }

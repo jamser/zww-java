@@ -213,7 +213,7 @@ public class AgentServiceImpl implements AgentService {
         // 生成短信验证码
         String smsCode = StringUtils.getSmsCode();
 
-        Oem oem = new Oem();
+        Oem oem =null;
         if (agent.getIsOem()) {
             oem = oemMapper.selectByPrimaryKey(agent.getId());
         }  else if (agent.getLevel() != 0) {
