@@ -58,7 +58,7 @@ public class LoginServiceImpl implements LoginService {
     private OemMapper oemMapper;
 
     @Override
-    public IcraneResult wxLogin(Member member, String lastLoginFrom, String channel, String phoneModel, String agentId) {
+    public IcraneResult wxLogin(Member member, String lastLoginFrom, String channel, String phoneModel, String agentId, Integer type) {
         //账号封禁检测
         if (member.isActiveFlg() == false) {
             logger.info("微信登录异常:账号已禁用");
@@ -91,27 +91,30 @@ public class LoginServiceImpl implements LoginService {
         member.setPhoneModel(phoneModel);
         //判断代理
         if (!StringUtils.isEmpty(agentId)) {
-            Agent agent = agentService.selectByPrimaryKey(Integer.valueOf(agentId));
-            if (null != agent) {
-                switch (agent.getLevel()) {
-                    case 0:
-                        member.setAgentSuperId(agent.getId());
-                        break;
-                    case 1:
-                        member.setAgentSuperId(agent.getAgentId());
-                        member.setAgentOneId(agent.getId());
-                        break;
-                    case 2:
-                        member.setAgentSuperId(agent.getAgentId());
-                        member.setAgentOneId(agent.getAgentOneId());
-                        member.setAgentTwoId(agent.getId());
-                        break;
-                    case 3:
-                        member.setAgentSuperId(agent.getAgentId());
-                        member.setAgentOneId(agent.getAgentOneId());
-                        member.setAgentTwoId(agent.getAgentTwoId());
-                        member.setAgentThreeId(agent.getId());
-                        break;
+            if (type == 1) {
+                logger.info("新用户注册agengId={}", agentId);
+                Agent agent = agentService.selectByPrimaryKey(Integer.valueOf(agentId));
+                if (null != agent) {
+                    switch (agent.getLevel()) {
+                        case 0:
+                            member.setAgentSuperId(agent.getId());
+                            break;
+                        case 1:
+                            member.setAgentSuperId(agent.getAgentId());
+                            member.setAgentOneId(agent.getId());
+                            break;
+                        case 2:
+                            member.setAgentSuperId(agent.getAgentId());
+                            member.setAgentOneId(agent.getAgentOneId());
+                            member.setAgentTwoId(agent.getId());
+                            break;
+                        case 3:
+                            member.setAgentSuperId(agent.getAgentId());
+                            member.setAgentOneId(agent.getAgentOneId());
+                            member.setAgentTwoId(agent.getAgentTwoId());
+                            member.setAgentThreeId(agent.getId());
+                            break;
+                    }
                 }
             }
         }
@@ -492,6 +495,7 @@ public class LoginServiceImpl implements LoginService {
             if (null == oem) {
                 oem = oemMapper.selectByCode("lanaokj");
             }
+            int type = 0;
 
             Member member = null;
 
@@ -515,6 +519,7 @@ public class LoginServiceImpl implements LoginService {
                 if (member == null) {
                     //新用户先注册
                     member = loginService.wxRegistered(openId, channel, null, accessToken, lastLoginFrom, unionId);
+                    type = 1;
                     if (member == null) {
                         IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.REGISTRATION_FAILED);
                     }
@@ -539,7 +544,7 @@ public class LoginServiceImpl implements LoginService {
             if (register != 1) {
                 return new ResultMap(Enviroment.ERROR_CODE, Enviroment.RISK_CONTROL_ABNORMAL);
             }
-            IcraneResult icraneResult = loginService.wxLogin(member, lastLoginFrom, channel, phoneModel, agentId);
+            IcraneResult icraneResult = loginService.wxLogin(member, lastLoginFrom, channel, phoneModel, agentId, type);
             return new ResultMap(icraneResult.getMessage(), icraneResult.getResultData());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

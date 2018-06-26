@@ -24,6 +24,6 @@ public class AgentChangePwdForm {
     @Pattern(regexp = "^1[34578]\\d{9}", message = "手机号格式不规范")
     String phone;
 
-    @NotEmpty(message = "验证码")
+    @NotEmpty(message = "验证码不能为空")
     String smsCode;
 }

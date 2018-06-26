@@ -23,7 +23,7 @@ public interface LoginService {
      *
      * @return
      */
-    IcraneResult wxLogin(Member member, String lastLoginFrom, String channel, String phoneModel,String agentId);
+    IcraneResult wxLogin(Member member, String lastLoginFrom, String channel, String phoneModel,String agentId,Integer type);
 
     /**
      * 微信新用户注册
