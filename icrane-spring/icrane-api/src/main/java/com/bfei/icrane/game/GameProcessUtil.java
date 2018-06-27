@@ -340,7 +340,7 @@ public class GameProcessUtil {
         String clawPro = redisUtil.getString(RedisKeyGenerator.getMachineHost(dollId));
         //新用户  未充值  只出现一次强抓
         logger.info("【contrClaw方法】参数 chargeSum={},memberNew={},userId={},message={},memberNewKey={},strongClawNumKey={},newMemberCatchNum={}", chargeSum, memberNew, userId, message, memberNewKey, strongClawNumKey, newMemberCatchNum);
-        if (chargeSum == 0 && memberNew == 1  && strongClawNum == 0 && newMemberCatchNum <= 2) {//新用户 存在抓中保证
+        if (chargeSum == 0 && memberNew == 1 && strongClawNum == 0 && newMemberCatchNum <= 2 && redisUtil.existsKey(RedisKeyGenerator.getMemberToyNum(userId))) {//新用户 存在抓中保证
 //            Integer machineType = Integer.valueOf(redisUtil.getString(RedisKeyGenerator.getMachineType(dollId)));
 //            if (machineType == 2 || machineType == 3) {
 //                logger.info("新用户化妆房或数码房第一次弱抓machineType={}", machineType);
