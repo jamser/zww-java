@@ -22,4 +22,12 @@ public class AgentIncome {
     private Long agentIncome;
 
     private Date createTime;
+
+    private Integer agentSuperId;
+
+    private Integer agentOneId;
+
+    private Integer agentTwoId;
+
+    private Integer agentThreeId;
 }

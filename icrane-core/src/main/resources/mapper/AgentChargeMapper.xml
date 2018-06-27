@@ -24,10 +24,13 @@
     <resultMap id="BaseIncomeResultMap" type="com.bfei.icrane.core.models.AgentIncome">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="member_name" jdbcType="VARCHAR" property="memberName"/>
-        <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
         <result column="price" jdbcType="DECIMAL" property="price"/>
         <result column="agent_income" jdbcType="BIGINT" property="agentIncome"/>
         <result column="create_date" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="agent_super_id" jdbcType="INTEGER" property="agentSuperId"/>
+        <result column="agent_one_id" jdbcType="INTEGER" property="agentOneId"/>
+        <result column="agent_two_id" jdbcType="INTEGER" property="agentTwoId"/>
+        <result column="agent_three_id" jdbcType="INTEGER" property="agentThreeId"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -309,27 +312,31 @@
     </update>
 
     <select id="selectIncomeByAgentSuperId" parameterType="java.lang.Integer" resultMap="BaseIncomeResultMap">
-         SELECT a.id,c.member_name,c.create_date,t.nick_name,c.price,a.agent_super_income AS agent_income
-         FROM agent_charge a,charge_order c ,t_agent t
-         WHERE a.order_id=c.id AND t.id=a.agent_super_id AND t.id=#{agentId,jdbcType=INTEGER} ORDER BY c.create_date desc
+         SELECT a.id,c.member_name,c.create_date,c.price,a.agent_super_income AS agent_income,
+         a.agent_super_id, a.agent_one_id, a.agent_two_id, a.agent_three_id
+         FROM agent_charge a,charge_order c
+         WHERE a.order_id=c.id AND a.agent_super_id=#{agentId,jdbcType=INTEGER} ORDER BY c.create_date desc
     </select>
 
     <select id="selectIncomeByAgentOneId" parameterType="java.lang.Integer" resultMap="BaseIncomeResultMap">
-        SELECT a.id,c.member_name,c.create_date,t.nick_name,c.price,a.agent_one_income AS agent_income
-        FROM agent_charge a,charge_order c ,t_agent t
-        WHERE a.order_id=c.id AND t.id=a.agent_one_id AND t.id=#{agentId,jdbcType=INTEGER} ORDER BY c.create_date desc
+        SELECT a.id,c.member_name,c.create_date,c.price,a.agent_one_income AS agent_income,
+         a.agent_super_id, a.agent_one_id, a.agent_two_id, a.agent_three_id
+        FROM agent_charge a,charge_order c
+        WHERE a.order_id=c.id AND a.agent_one_id=#{agentId,jdbcType=INTEGER} ORDER BY c.create_date desc
     </select>
 
     <select id="selectIncomeByAgentTwoId" parameterType="java.lang.Integer" resultMap="BaseIncomeResultMap">
-        SELECT a.id,c.member_name,c.create_date,t.nick_name,c.price,a.agent_two_income AS agent_income
-        FROM agent_charge a,charge_order c ,t_agent t
-        WHERE a.order_id=c.id AND t.id=a.agent_two_id AND t.id=#{agentId,jdbcType=INTEGER} ORDER BY c.create_date desc
+        SELECT a.id,c.member_name,c.create_date,c.price,a.agent_two_income AS agent_income,
+        a.agent_super_id, a.agent_one_id, a.agent_two_id, a.agent_three_id
+        FROM agent_charge a,charge_order c
+        WHERE a.order_id=c.id AND a.agent_two_id=#{agentId,jdbcType=INTEGER} ORDER BY c.create_date desc
     </select>
 
     <select id="selectIncomeByAgentThreeId" parameterType="java.lang.Integer" resultMap="BaseIncomeResultMap">
-        SELECT a.id,c.member_name,c.create_date,t.nick_name,c.price,a.agent_three_income AS agent_income
-        FROM agent_charge a,charge_order c ,t_agent t
-        WHERE a.order_id=c.id AND t.id=a.agent_three_id AND t.id=#{agentId,jdbcType=INTEGER} ORDER BY c.create_date desc
+        SELECT a.id,c.member_name,c.create_date,c.price,a.agent_three_income AS agent_income,
+        a.agent_super_id, a.agent_one_id, a.agent_two_id, a.agent_three_id
+        FROM agent_charge a,charge_order c
+        WHERE a.order_id=c.id AND a.agent_three_id=#{agentId,jdbcType=INTEGER} ORDER BY c.create_date desc
     </select>
 
 </mapper>

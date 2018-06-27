@@ -1,6 +1,7 @@
 package com.bfei.icrane.core.service.impl;
 
 import com.bfei.icrane.core.dao.AgentChargeMapper;
+import com.bfei.icrane.core.dao.AgentMapper;
 import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.AgentCharge;
 import com.bfei.icrane.core.models.AgentIncome;
@@ -23,6 +24,9 @@ public class AgentChargeServiceImpl implements AgentChargeService {
 
     @Autowired
     private AgentChargeMapper agentChargeMapper;
+
+    @Autowired
+    private AgentMapper agentMapper;
 
     @Override
     public int deleteByPrimaryKey(Long id) {
@@ -97,7 +101,21 @@ public class AgentChargeServiceImpl implements AgentChargeService {
             agentIncomeVO.setAgentIncome(agentIncome.getAgentIncome());
             agentIncomeVO.setCreateTime(agentIncome.getCreateTime());
             agentIncomeVO.setMemberName(agentIncome.getMemberName());
-            agentIncomeVO.setNickName(agentIncome.getNickName());
+            if(agentIncome.getAgentThreeId()==0){
+                if (agentIncome.getAgentTwoId() == 0) {
+                    if (agentIncome.getAgentOneId() == 0) {
+                        agentIncomeVO.setNickName(agentMapper.selectByPrimaryKey(agentIncome.getAgentSuperId()).getNickName());
+                    }else {
+                        agentIncomeVO.setNickName(agentMapper.selectByPrimaryKey(agentIncome.getAgentOneId()).getNickName());
+                    }
+                }else {
+                    agentIncomeVO.setNickName(agentMapper.selectByPrimaryKey(agentIncome.getAgentTwoId()).getNickName());
+                }
+
+            }else {
+                agentIncomeVO.setNickName(agentMapper.selectByPrimaryKey(agentIncome.getAgentThreeId()).getNickName());
+            }
+
             agentIncomeVO.setPrice(agentIncome.getPrice().multiply(new BigDecimal(100)).longValue());
             agentIncomeVOList.add(agentIncomeVO);
         }
