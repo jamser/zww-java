@@ -178,6 +178,12 @@ public class RedisKeyGenerator {
         return "member_" + userId + "_Strongclaw";
     }
 
+    //新用户抓取次数
+    public static String getNewMemberCatchNum(Integer userId) {
+
+        return "member_" + userId + "_CatchNum";
+    }
+
     //获取短信验证码的key
     public static String getLinkMobileCodeKey(String mobile) {
 
