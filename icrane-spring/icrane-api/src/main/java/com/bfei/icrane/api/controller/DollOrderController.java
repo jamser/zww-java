@@ -185,10 +185,10 @@ public class DollOrderController {
                 return new ResultMap(Enviroment.FAILE_CODE, Enviroment.RETURN_INVALID_PARA_MESSAGE);
             }
             //看看是不是VIP
-            if (!memberService.isVIP(memberId)) {
-                logger.info("申请发货接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
-                return new ResultMap(Enviroment.NO_VIP_CODE, "您当前累计充值金额未达到" + systemPrefDao.selectByPrimaryKey("DELIVERY_NOFEE_COINS").getValue() + "元，不满足发货条件哦！");
-            }
+//            if (!memberService.isVIP(memberId)) {
+//                logger.info("申请发货接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//                return new ResultMap(Enviroment.NO_VIP_CODE, "您当前累计充值金额未达到" + systemPrefDao.selectByPrimaryKey("DELIVERY_NOFEE_COINS").getValue() + "元，不满足发货条件哦！");
+//            }
             //看看是不是白名单
             /*if (memberService.isWorker(memberId) || memberId == 127051) {
                 logger.info("申请发货接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
@@ -228,10 +228,10 @@ public class DollOrderController {
                 return new ResultMap(Enviroment.FAILE_CODE, Enviroment.RETURN_INVALID_PARA_MESSAGE);
             }
             //看看是不是VIP
-            if (!memberService.isVIP(memberId)) {
-                logger.info("申请发货接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
-                return new ResultMap(Enviroment.NO_VIP_CODE, "您当前累计充值金额未达到" + systemPrefDao.selectByPrimaryKey("DELIVERY_NOFEE_COINS").getValue() + "元，不满足发货条件哦！");
-            }
+//            if (!memberService.isVIP(memberId)) {
+//                logger.info("申请发货接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//                return new ResultMap(Enviroment.NO_VIP_CODE, "您当前累计充值金额未达到" + systemPrefDao.selectByPrimaryKey("DELIVERY_NOFEE_COINS").getValue() + "元，不满足发货条件哦！");
+//            }
             //看看是不是白名单
             /*if (memberService.isWorker(memberId) || memberId == 127051) {
                 logger.info("申请发货接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);

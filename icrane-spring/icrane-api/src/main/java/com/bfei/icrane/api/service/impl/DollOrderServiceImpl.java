@@ -295,35 +295,35 @@ public class DollOrderServiceImpl implements DollOrderService {
         dollOrderGoods.setCreatedDate(TimeUtil.getTime());
         dollOrderGoods.setNote(note);
         //SystemPref systemPref = systemPrefDao.selectByPrimaryKey("DELIVERY_FREE_QT");
-        Vip vip = vipService.selectVipByMemberId(memberId);
-        Integer freeQt = Integer.valueOf(vip.getExemptionPostageNumber());
-        if (orderIds.length >= freeQt
-                //新用户包邮
-                //|| dollOrderGoodsDao.selectByMemberId(memberId).size() < 1
-                ) {
+//        Vip vip = vipService.selectVipByMemberId(memberId);
+//        Integer freeQt = Integer.valueOf(vip.getExemptionPostageNumber());
+//        if (orderIds.length >= freeQt
+//                //新用户包邮
+//                //|| dollOrderGoodsDao.selectByMemberId(memberId).size() < 1
+//                ) {
             dollOrderGoods.setDeliverCoins(0);
-        } else {
-            SystemPref deliverCoins = systemPrefDao.selectByPrimaryKey("DELIVERY_COINS");
-            Integer deliverCoin = deliverCoins == null ? 0 : Integer.valueOf(deliverCoins.getValue());
-            dollOrderGoods.setDeliverCoins(deliverCoin);
-            Charge charge = new Charge();
-            Member member = memberDao.selectById(memberId);
-
-            //判断金币是否足够
-            if(deliverCoin>member.getCoins()){
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, "您当前金币不满足发货条件哦！！");
-            }
-            charge.setMemberId(memberId);
-            charge.setCoins(member.getCoins());
-            //charge.setCoinsSum(doll.getRedeemCoins() + member.getCoins());
-            charge.setCoinsSum(-deliverCoin);//练习房兑换奖励
-            charge.setChargeDate(TimeUtil.getTime());
-            charge.setType("expense");
-            charge.setChargeMethod("邮费扣除" + deliverCoin);
-            charge.setChargeDate(TimeUtil.getTime());
-            chargeDao.updateMemberCount(charge);
-            chargeDao.insertChargeHistory(charge);
-        }
+//        } else {
+//            SystemPref deliverCoins = systemPrefDao.selectByPrimaryKey("DELIVERY_COINS");
+//            Integer deliverCoin = deliverCoins == null ? 0 : Integer.valueOf(deliverCoins.getValue());
+//            dollOrderGoods.setDeliverCoins(deliverCoin);
+//            Charge charge = new Charge();
+//            Member member = memberDao.selectById(memberId);
+//
+//            //判断金币是否足够
+//            if(deliverCoin>member.getCoins()){
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, "您当前金币不满足发货条件哦！！");
+//            }
+//            charge.setMemberId(memberId);
+//            charge.setCoins(member.getCoins());
+//            //charge.setCoinsSum(doll.getRedeemCoins() + member.getCoins());
+//            charge.setCoinsSum(-deliverCoin);//练习房兑换奖励
+//            charge.setChargeDate(TimeUtil.getTime());
+//            charge.setType("expense");
+//            charge.setChargeMethod("邮费扣除" + deliverCoin);
+//            charge.setChargeDate(TimeUtil.getTime());
+//            chargeDao.updateMemberCount(charge);
+//            chargeDao.insertChargeHistory(charge);
+//        }
         Integer result = dollOrderGoodsDao.insertSelective(dollOrderGoods);
         if (result != null && result == 1) {
             Integer integer = dollOrderGoodsDao.selectOrderGoodsIdByDollitemids(dollitemids);

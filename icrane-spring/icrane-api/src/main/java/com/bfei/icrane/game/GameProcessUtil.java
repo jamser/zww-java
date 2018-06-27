@@ -304,17 +304,17 @@ public class GameProcessUtil {
         String baseNumKey = RedisKeyGenerator.getMachineBaseNum(dollId);
         Integer baseNum = 10;
         baseNum = getRedisValue(baseNumKey, baseNum);
-        String p1Key = RedisKeyGenerator.getMachineP1(dollId);
-        Integer p1 = 15;
-        p1 = getRedisValue(p1Key, p1);
+//        String p1Key = RedisKeyGenerator.getMachineP1(dollId);
+//        Integer p1 = 15;
+//        p1 = getRedisValue(p1Key, p1);
 
-        String chargeKey = RedisKeyGenerator.getMachineCharge(dollId);
+//        String chargeKey = RedisKeyGenerator.getMachineCharge(dollId);
         Integer chargeSum = 0;
-        chargeSum = getRedisValue(chargeKey, chargeSum);//当前房主充值金额
+//        chargeSum = getRedisValue(chargeKey, chargeSum);//当前房主充值金额
 
-        String memberNewKey = RedisKeyGenerator.getMemberNew(dollId);
-        Integer memberNew = 0;
-        memberNew = getRedisValue(memberNewKey, memberNew);//当前房主充值金额
+//        String memberNewKey = RedisKeyGenerator.getMemberNew(dollId);
+//        Integer memberNew = 0;
+//        memberNew = getRedisValue(memberNewKey, memberNew);//当前房主充值金额
 
         //下抓次数计数
         Integer clawNum = 0;
@@ -324,7 +324,7 @@ public class GameProcessUtil {
         String strongClawNumKey = RedisKeyGenerator.getMemberStrongClawNum(userId);
         if (redisUtil.existsKey(clawNumKey)) {
             clawNum = Integer.parseInt(redisUtil.getString(clawNumKey));
-        } else {//1小时
+        } else {//1天
             redisUtil.setString(clawNumKey, "0", USER_STRONG);
         }
 
@@ -333,48 +333,45 @@ public class GameProcessUtil {
         } else {
             redisUtil.setString(strongClawNumKey, "0");
         }
-        //新用户抓去次数
-        Integer newMemberCatchNum = 0;
-        newMemberCatchNum = getRedisValue(RedisKeyGenerator.getNewMemberCatchNum(userId), newMemberCatchNum);
 
         String clawPro = redisUtil.getString(RedisKeyGenerator.getMachineHost(dollId));
         //新用户  未充值  只出现一次强抓
-        logger.info("【contrClaw方法】参数 chargeSum={},memberNew={},userId={},message={},memberNewKey={},strongClawNumKey={},newMemberCatchNum={}", chargeSum, memberNew, userId, message, memberNewKey, strongClawNumKey, newMemberCatchNum);
-        if (chargeSum == 0 && memberNew == 1 && strongClawNum == 0 && newMemberCatchNum <= 2 && redisUtil.existsKey(RedisKeyGenerator.getMemberToyNum(userId))) {//新用户 存在抓中保证
-//            Integer machineType = Integer.valueOf(redisUtil.getString(RedisKeyGenerator.getMachineType(dollId)));
-//            if (machineType == 2 || machineType == 3) {
-//                logger.info("新用户化妆房或数码房第一次弱抓machineType={}", machineType);
+//        logger.info("【contrClaw方法】参数 chargeSum={},memberNew={},userId={},message={},memberNewKey={},strongClawNumKey={},newMemberCatchNum={}", chargeSum, memberNew, userId, message, memberNewKey, strongClawNumKey, newMemberCatchNum);
+//        if (chargeSum == 0 && memberNew == 1 && strongClawNum == 0 && newMemberCatchNum <= 2 && redisUtil.existsKey(RedisKeyGenerator.getMemberToyNum(userId))) {//新用户 存在抓中保证
+////            Integer machineType = Integer.valueOf(redisUtil.getString(RedisKeyGenerator.getMachineType(dollId)));
+////            if (machineType == 2 || machineType == 3) {
+////                logger.info("新用户化妆房或数码房第一次弱抓machineType={}", machineType);
+////                return "weakClaw";
+////            }
+//            //默认首次弱抓
+//            if (newMemberCatchNum == 0) {
 //                return "weakClaw";
 //            }
-            //默认首次弱抓
-            if (newMemberCatchNum == 0) {
-                return "weakClaw";
-            }
-            Random random = new Random();
-            int i = random.nextInt(2);
-            if (i == 0 && newMemberCatchNum < 2) {
-                return "weakClaw";
-            }
-
-
-            strongClawNum = Integer.parseInt(redisUtil.getString(strongClawNumKey)) + 1;
-            redisUtil.setString(strongClawNumKey, String.valueOf(strongClawNum));
-            logger.info("新用户 存在保证抓中,强抓xxxxxxxclawPro" + clawPro + ", strong:" + clawNum + ",message:strongClaw" + message + ",strongClawNum=" + strongClawNum);
-            //logger.info("只出现一次强抓xxxxxxxclawPro"+clawPro+", strong:"+clawNum+",message:strongClaw"+message+",strongClawNum="+strongClawNum+",本次随机数="+p1Num);
-            return "strongClaw";
-                /*} else {
-                    logger.info("只出现一次强抓xxxxxxxclawPro"+clawPro+", strong:"+clawNum+",message:strongClaw"+message+",strongClawNum="+strongClawNum+",本次随机数="+p1Num);
-	        		return "weakClaw";
-	        	}*/
-        } else {
-            logger.info("已经抓中娃娃后,未充值只出现弱抓");
-        }
+//            Random random = new Random();
+//            int i = random.nextInt(2);
+//            if (i == 0 && newMemberCatchNum < 2) {
+//                return "weakClaw";
+//            }
+//
+//
+//            strongClawNum = Integer.parseInt(redisUtil.getString(strongClawNumKey)) + 1;
+//            redisUtil.setString(strongClawNumKey, String.valueOf(strongClawNum));
+//            logger.info("新用户 存在保证抓中,强抓xxxxxxxclawPro" + clawPro + ", strong:" + clawNum + ",message:strongClaw" + message + ",strongClawNum=" + strongClawNum);
+//            //logger.info("只出现一次强抓xxxxxxxclawPro"+clawPro+", strong:"+clawNum+",message:strongClaw"+message+",strongClawNum="+strongClawNum+",本次随机数="+p1Num);
+//            return "strongClaw";
+//                /*} else {
+//                    logger.info("只出现一次强抓xxxxxxxclawPro"+clawPro+", strong:"+clawNum+",message:strongClaw"+message+",strongClawNum="+strongClawNum+",本次随机数="+p1Num);
+//	        		return "weakClaw";
+//	        	}*/
+//        } else {
+//            logger.info("已经抓中娃娃后,未充值只出现弱抓");
+//        }
           /*  else if (chargeSum==0 && strongClawNum>0) {
              logger.info("只出现一次强抓xxxxxxxclawPro"+clawPro+", strong:"+clawNum+",message:weakClaw"+message+",strongClawNum="+strongClawNum);
 	        	message = "weakClaw";
 	        } */
         logger.info("【contrClaw方法】参数 chargeSum={},clawPro={}, baseNum={},clawNumKey={},clawNum={},strongClawNumKey={}", chargeSum, clawPro, baseNum, clawNumKey, clawNum, strongClawNumKey);
-        if (chargeSum > 0) {//充钱用户
+//        if (chargeSum > 0) {//充钱用户
             Integer range = Integer.parseInt(clawPro);
             if (clawNum <= 0) {//产生随机数
                 Random r1 = new Random();
@@ -396,11 +393,8 @@ public class GameProcessUtil {
                 redisUtil.setString(strongClawNumKey, String.valueOf(strongClawNum), USER_STRONG);
             } else {//容错处理
                 message = "weakClaw";
-                //clawNum = 0;
-                //redisUtil.setString(clawNumKey, String.valueOf(clawNum) ,USER_STRONG);
             }
-            // logger.info("基数baseNum="+baseNum+"随机概率range:"+range+"随机生成clawPro:"+clawPro+",随机生成strong:"+clawNum+",message:"+message);
-        }
+//        }
         return message;
     }
 
