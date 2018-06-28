@@ -380,10 +380,11 @@ public class GameProcessUtil {
                 redisUtil.setString(clawNumKey, String.valueOf(clawNum), USER_STRONG);
             }
 
-            if (redisUtil.existsKey(clawNumKey)) {//clawNum - 1 局之后 出现强抓
+            if (redisUtil.existsKey(clawNumKey)) {//clawNum ==0 局之后 出现强抓
                 clawNum = Integer.parseInt(redisUtil.getString(clawNumKey)) - 1;
                 logger.info("计数值 userId={},dollId={},clawNum={}", userId, dollId, clawNum);
-                if (clawNum == 1 || range == 0) {
+                if (clawNum == 0 || range == 0) {
+                    logger.info("出现强抓userId={},dollId={},clawNum={}", userId, dollId, clawNum);
                     message = "strongClaw";
                 } else {
                     message = "weakClaw";
