@@ -286,7 +286,7 @@ public class WxPayController {
             if (member == null) {
                 //新用户先注册
                 if (StringUtils.isEmpty(IMEI) || "IMEI".equals(IMEI) || riskManagementService.selectIMEICount(IMEI) < 3) {
-                    member = loginService.wxRegistered(openId, channel, phoneModel, accessToken, lastLoginFrom, unionId);
+                    member = loginService.wxRegistered(openId, channel, phoneModel, accessToken, lastLoginFrom, unionId,null);
                 } else {
                     return IcraneResult.build(Enviroment.RETURN_FAILE, "407", "该设备超过注册上限");
                 }
@@ -305,7 +305,7 @@ public class WxPayController {
             if (register != 1) {
                 return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.ERROR_CODE, Enviroment.RISK_CONTROL_ABNORMAL);
             }
-            return loginService.wxLogin(member, lastLoginFrom, channel, phoneModel,null,null);
+            return loginService.wxLogin(member, lastLoginFrom, channel, phoneModel);
         } catch (IOException e) {
             e.printStackTrace();
             logger.info(e.getMessage());

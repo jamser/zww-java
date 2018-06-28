@@ -305,18 +305,6 @@
             <if test="phoneModel != null">
                 phone_model = #{phoneModel,jdbcType=VARCHAR},
             </if>
-            <if test="agentSuperId != null">
-                agent_super_id = #{agentSuperId,jdbcType=INTEGER},
-            </if>
-            <if test="agentOneId != null">
-                agent_one_id = #{agentOneId,jdbcType=INTEGER},
-            </if>
-            <if test="agentTwoId != null">
-                agent_two_id = #{agentTwoId,jdbcType=INTEGER},
-            </if>
-            <if test="agentThreeId != null">
-                agent_three_id = #{agentThreeId,jdbcType=INTEGER},
-            </if>
         </set>
         WHERE
         id = #{id}
@@ -649,6 +637,18 @@
             <if test="phoneModel != null">
                 phone_model,
             </if>
+            <if test="agentSuperId != null">
+                agent_super_id,
+            </if>
+            <if test="agentOneId != null">
+                agent_one_id,
+            </if>
+            <if test="agentTwoId != null">
+                agent_two_id,
+            </if>
+            <if test="agentThreeId != null">
+                agent_three_id,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">
@@ -710,6 +710,18 @@
             </if>
             <if test="phoneModel != null">
                 #{phoneModel,jdbcType=VARCHAR},
+            </if>
+            <if test="agentSuperId != null">
+                #{agentSuperId,jdbcType=INTEGER},
+            </if>
+            <if test="agentOneId != null">
+                #{agentOneId,jdbcType=INTEGER},
+            </if>
+            <if test="agentTwoId != null">
+                #{agentTwoId,jdbcType=INTEGER},
+            </if>
+            <if test="agentThreeId != null">
+                #{agentThreeId,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>

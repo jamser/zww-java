@@ -23,12 +23,12 @@ public interface LoginService {
      *
      * @return
      */
-    IcraneResult wxLogin(Member member, String lastLoginFrom, String channel, String phoneModel,String agentId,Integer type);
+    IcraneResult wxLogin(Member member, String lastLoginFrom, String channel, String phoneModel);
 
     /**
      * 微信新用户注册
      */
-    Member wxRegistered(String openId, String channel, String phoneModel, String accessToken, String lastLoginFrom, String unionId) throws UnsupportedEncodingException, NoSuchAlgorithmException, IOException;
+    Member wxRegistered(String openId, String channel, String phoneModel, String accessToken, String lastLoginFrom, String unionId,String agentId) throws UnsupportedEncodingException, NoSuchAlgorithmException, IOException;
 
     /**
      * 短信验证码快速登录
