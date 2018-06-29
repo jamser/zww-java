@@ -4,6 +4,7 @@ import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.bfei.icrane.api.service.CatchHistoryService;
 import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.service.OemService;
@@ -43,6 +44,8 @@ public class DollController {
     SystemPrefService systemPrefService;
     @Autowired
     private OemService oemService;
+    @Autowired
+    private CatchHistoryService catchHistoryService;
 
     //level的失效时间
     public static Long expiresTime = 0L;
@@ -541,21 +544,18 @@ public class DollController {
 
                 return resultMap;
             }
-            List<Doll> dollHisTory = dollService.selectDollHistory(memberId);
+            List<CatchHistory> dollHisTory = catchHistoryService.getCatchHistoryLists(memberId.longValue());
             if (dollHisTory != null) {
                 List<Map<String, Object>> dh = new ArrayList<>();
-                for (Doll doll : dollHisTory) {
+                for (CatchHistory catchHistory : dollHisTory) {
                     Map<String, Object> map = new HashMap<>();
-                    map.put("historyId", doll.getHistoryId());
-                    map.put("name", doll.getName());
-                    map.put("catchDate", doll.getCatchDate());
-                    map.put("catchStatus", doll.getCatchStatus());
-                    map.put("tbimgContextPath", doll.getTbimgContextPath());
-                    map.put("tbimgFileName", doll.getTbimgFileName());
-                    map.put("tbimgRealPath", doll.getTbimgRealPath());
-                    map.put("videoUrl", doll.getVideoUrl());
-                    map.put("gameNum", doll.getGameNum());
-                    map.put("checkState", doll.checkStateString());
+                    map.put("historyId", catchHistory.getId());
+                    map.put("name", catchHistory.getDollName());
+                    map.put("catchDate", catchHistory.getCatchDate());
+                    map.put("catchStatus", catchHistory.getCatchStatus());
+                    map.put("tbimgRealPath", catchHistory.getDollUrl());
+                    map.put("gameNum", catchHistory.getGameNum());
+                    map.put("checkState", catchHistory.getCatchStatus());
                     dh.add(map);
                 }
                 resultMap.put("resultData", dh);

@@ -10,6 +10,8 @@ import com.bfei.icrane.core.dao.CatchHistoryDao;
 import com.bfei.icrane.core.models.CatchHistory;
 import com.bfei.icrane.core.models.vo.GameHistoryDetail;
 
+import java.util.List;
+
 /**
  * @author lgq Version: 1.0 Date: 2017年9月22日date Description: 用户Service接口实现类.
  *         Copyright (c) 2017 伴飞网络. All rights reserved.
@@ -51,5 +53,10 @@ public class CatchHistoryServiceImpl implements CatchHistoryService {
     @Override
     public String getRecenGameNum(Integer memberId, Integer dollId) {
         return catchHistoryDao.getRecenGameNum(memberId, dollId);
+    }
+
+    @Override
+    public List<CatchHistory> getCatchHistoryLists(Long memberId) {
+        return catchHistoryDao.getCatchHistoryLists(memberId);
     }
 }

@@ -120,6 +120,18 @@
         LIMIT 1;
     </select>
 
+    <select id="getCatchHistoryLists" resultType="java.lang.Long"  resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        t_doll_catch_history
+        WHERE
+        member_id = #{memberId}
+        ORDER BY
+        id DESC
+        LIMIT 100;
+    </select>
+
     <insert id="insertCatchHistory" parameterType="CatchHistory">
         insert into t_doll_catch_history
         <trim prefix="(" suffix=")" suffixOverrides=",">

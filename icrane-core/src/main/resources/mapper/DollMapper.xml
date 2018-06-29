@@ -198,52 +198,56 @@
         ) r ORDER BY r.id
     </select>
 
-    <select id="getH5DollTopicList" resultMap="BaseResultMap"  parameterType="java.lang.Integer">
+    <select id="getH5DollTopicList" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         SELECT
-            a.id,
-            a. NAME,
-            a.description,
-            a.machine_type,
-            a.quantity,
-            a.price,
-            a.machine_status,
-            a.machine_serial_num,
-            a.machine_ip,
-            a.machine_url,
-            a.tbimg_context_path,
-            a.tbimg_file_name,
-            a.tbimg_real_path,
-            a.created_date,
-            a.created_by,
-            a.modified_date,
-            a.modified_by,
-            dh.rtmpUrlH5,
-            a.rtmp_push_url,
-            a.watching_number,
-            a.mns_topic_name,
-            a.redeem_coins,
-            a.timeout,
-            a.machine_code,
-            a.doll_ID
+        a.id,
+        a. NAME,
+        a.description,
+        a.machine_type,
+        a.quantity,
+        a.price,
+        a.machine_status,
+        a.machine_serial_num,
+        a.machine_ip,
+        a.machine_url,
+        a.tbimg_context_path,
+        a.tbimg_file_name,
+        a.tbimg_real_path,
+        a.created_date,
+        a.created_by,
+        a.modified_date,
+        a.modified_by,
+        dh.rtmpUrlH5,
+        a.rtmp_push_url,
+        a.watching_number,
+        a.mns_topic_name,
+        a.redeem_coins,
+        a.timeout,
+        a.machine_code,
+        a.doll_ID
         FROM
-            t_doll a
+        t_doll a
         INNER JOIN doll_h5 dh ON a.id = dh.id
         WHERE
-            (
-                machine_status = '空闲中'
-                OR machine_status = '游戏中'
-            )
-            AND  a.machine_type=#{type,jdbcType=INTEGER}
-            AND a.channel
+        (
+        machine_status = '空闲中'
+        OR machine_status = '游戏中'
+        )
+        <if test="type == 0">
+            AND a.machine_type IN (0,1)
+        </if>
+        <if test="type != 0">
+            AND a.machine_type =#{type,jdbcType=INTEGER}
+        </if>
+        AND a.channel
         <foreach collection="channels" item="channel" open="in (" close=")" separator=",">
             #{channel}
         </foreach>
         AND a.machine_url in (SELECT machine_name from machine_status where machine_state='ONLINE' AND rtmp_state='开启')
         AND delete_status = 1
         ORDER BY
-             machine_status desc;
+        machine_status desc,machine_type desc
     </select>
-
 
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -628,16 +632,16 @@
 	</select>
     <select id="getTopicInfo" resultType="com.bfei.icrane.core.models.TopicInfo">
         SELECT
-            *
+        *
         FROM
-            topic_info
+        topic_info
         <if test="version == 2">
-        WHERE
+            WHERE
             topicName NOT LIKE '%练%'
-        AND topicName NOT LIKE '%占%'
+            AND topicName NOT LIKE '%占%'
         </if>
         ORDER BY
-            orderBy;
+        orderBy;
     </select>
     <select id="selectTypeById" resultType="java.lang.Integer">
         SELECT
