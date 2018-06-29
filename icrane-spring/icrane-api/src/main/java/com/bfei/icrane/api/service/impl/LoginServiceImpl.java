@@ -533,20 +533,20 @@ public class LoginServiceImpl implements LoginService {
                     }
                     member = memberService.selectById(member.getId());
                 }
+                //老用户直接登录
+                //登录前记录IMEI和IP]
+                if (IMEI != null && IMEI.length() > 40) {
+                    return new ResultMap(Enviroment.ERROR_CODE, Enviroment.IMEI_TO_LONG);
+                }
+                //风控信息
+                int register = riskManagementService.register(member.getId(), IMEI, HttpClientUtil.getIpAdrress(request));
+                if (register != 1) {
+                    return new ResultMap(Enviroment.ERROR_CODE, Enviroment.RISK_CONTROL_ABNORMAL);
+                }
+                IcraneResult icraneResult = loginService.wxLogin(member, lastLoginFrom, channel, phoneModel);
+                return new ResultMap(icraneResult.getMessage(), icraneResult.getResultData());
             }
 
-            //老用户直接登录
-            //登录前记录IMEI和IP]
-            if (IMEI != null && IMEI.length() > 40) {
-                return new ResultMap(Enviroment.ERROR_CODE, Enviroment.IMEI_TO_LONG);
-            }
-            //风控信息
-            int register = riskManagementService.register(member.getId(), IMEI, HttpClientUtil.getIpAdrress(request));
-            if (register != 1) {
-                return new ResultMap(Enviroment.ERROR_CODE, Enviroment.RISK_CONTROL_ABNORMAL);
-            }
-            IcraneResult icraneResult = loginService.wxLogin(member, lastLoginFrom, channel, phoneModel);
-            return new ResultMap(icraneResult.getMessage(), icraneResult.getResultData());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (IOException e) {

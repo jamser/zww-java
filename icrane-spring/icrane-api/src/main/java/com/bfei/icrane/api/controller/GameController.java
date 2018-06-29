@@ -213,23 +213,23 @@ public class GameController {
                     if (stsTokenUrl != null) {
                         gameNumMap.put("stsTokenUrl", stsTokenUrl + "?userId=" + memberId + "&token=" + token);
                     }
-                    Integer machineType = dollService.selectTypeById(dollId);
-                    switch (machineType) {
-                        case 0:
-                        case 1:
-                        case 2:
-                            break;
-                        case 3:
-                            if (gotDoll == 1) {
-                                RedisUtil redisUtil = new RedisUtil();
-                                //分享标记
-                                redisUtil.setString(RedisKeyGenerator.getShareKey(memberId, gameNum), "1", 24 * 60 * 60 * 30);
-                                gameNumMap.putAll(gameService.getShareUrl(dollId, memberId, version));
-                            }
-                            break;
-                        default:
-                            break;
-                    }
+//                    Integer machineType = dollService.selectTypeById(dollId);
+//                    switch (machineType) {
+//                        case 0:
+//                        case 1:
+//                        case 2:
+//                            break;
+//                        case 3:
+//                            if (gotDoll == 1) {
+//                                RedisUtil redisUtil = new RedisUtil();
+//                                //分享标记
+//                                redisUtil.setString(RedisKeyGenerator.getShareKey(memberId, gameNum), "1", 24 * 60 * 60 * 30);
+//                                gameNumMap.putAll(gameService.getShareUrl(dollId, memberId, version));
+//                            }
+//                            break;
+//                        default:
+//                            break;
+//                    }
                     return IcraneResult.ok(gameNumMap);
                 case GAME_END_FAIL:
                 default:
@@ -401,47 +401,47 @@ public class GameController {
      * @param gameNum  游戏编号
      * @return
      */
-    @RequestMapping(value = "/share", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap share(Integer memberId, String token, String gameNum) {
-        try {
-            logger.info("分享得币参数memberId=" + memberId + ",token" + token + ",gameNum" + gameNum);
-            //验证参数
-            if (memberId == null || StringUtils.isEmpty(token) || StringUtils.isEmpty(gameNum)) {
-                logger.info("分享得币接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
-                return new ResultMap(Enviroment.FAILE_CODE, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }
-            //访问间隔限制
-            RedisUtil redisUtil = new RedisUtil();
-            if (redisUtil.getString("share" + memberId) != null) {
-                logger.info("分享得币失败=" + Enviroment.PLEASE_SLOW_DOWN);
-                return new ResultMap(Enviroment.FAILE_CODE, Enviroment.PLEASE_SLOW_DOWN);
-            }
-            redisUtil.setString("share" + memberId, "", 20);
-            //验证token
-            Integer iMemberId = Integer.valueOf(memberId);
-            if (!validateTokenService.validataToken(token, iMemberId)) {
-                logger.info("分享得币接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
-            Integer result = gameService.chackShare(memberId, gameNum);
-            switch (result) {
-                case 1:
-                    logger.info("分享得币成功=" + Enviroment.YOU_ALREADY_SHARED);
-                    Map<String, Object> share = gameService.Share(memberId);
-                    return new ResultMap("分享成功", share);
-                case 2:
-                    logger.info("分享得币失败=" + Enviroment.YOU_ALREADY_SHARED);
-                    return new ResultMap(Enviroment.FAILE_CODE, Enviroment.YOU_ALREADY_SHARED);
-                default:
-                    logger.info("分享得币失败=" + Enviroment.ERROR);
-                    return new ResultMap(Enviroment.FAILE_CODE, Enviroment.ERROR);
-            }
-        } catch (Exception e) {
-            logger.error("分享得币出错", e);
-            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.SHARE_EXCEPTION);
-        }
-    }
+//    @RequestMapping(value = "/share", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap share(Integer memberId, String token, String gameNum) {
+//        try {
+//            logger.info("分享得币参数memberId=" + memberId + ",token" + token + ",gameNum" + gameNum);
+//            //验证参数
+//            if (memberId == null || StringUtils.isEmpty(token) || StringUtils.isEmpty(gameNum)) {
+//                logger.info("分享得币接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//                return new ResultMap(Enviroment.FAILE_CODE, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//            }
+//            //访问间隔限制
+//            RedisUtil redisUtil = new RedisUtil();
+//            if (redisUtil.getString("share" + memberId) != null) {
+//                logger.info("分享得币失败=" + Enviroment.PLEASE_SLOW_DOWN);
+//                return new ResultMap(Enviroment.FAILE_CODE, Enviroment.PLEASE_SLOW_DOWN);
+//            }
+//            redisUtil.setString("share" + memberId, "", 20);
+//            //验证token
+//            Integer iMemberId = Integer.valueOf(memberId);
+//            if (!validateTokenService.validataToken(token, iMemberId)) {
+//                logger.info("分享得币接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
+//            Integer result = gameService.chackShare(memberId, gameNum);
+//            switch (result) {
+//                case 1:
+//                    logger.info("分享得币成功=" + Enviroment.YOU_ALREADY_SHARED);
+//                    Map<String, Object> share = gameService.Share(memberId);
+//                    return new ResultMap("分享成功", share);
+//                case 2:
+//                    logger.info("分享得币失败=" + Enviroment.YOU_ALREADY_SHARED);
+//                    return new ResultMap(Enviroment.FAILE_CODE, Enviroment.YOU_ALREADY_SHARED);
+//                default:
+//                    logger.info("分享得币失败=" + Enviroment.ERROR);
+//                    return new ResultMap(Enviroment.FAILE_CODE, Enviroment.ERROR);
+//            }
+//        } catch (Exception e) {
+//            logger.error("分享得币出错", e);
+//            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.SHARE_EXCEPTION);
+//        }
+//    }
 
 }
 
