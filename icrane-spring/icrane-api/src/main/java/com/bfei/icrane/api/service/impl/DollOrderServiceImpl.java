@@ -141,9 +141,6 @@ public class DollOrderServiceImpl implements DollOrderService {
         DollOrder dollOrder = new DollOrder();
         DollOrderItem dollOrderItem = new DollOrderItem();
         String orderNum = StringUtils.getOrderNumber();
-        while (dollOrderDao.selectByOrderNum(orderNum) != null) {
-            orderNum = StringUtils.getOrderNumber();
-        }
         if (memberAddr != null) {
             dollOrder.setMemberAddress(memberAddr);
         }
@@ -271,10 +268,7 @@ public class DollOrderServiceImpl implements DollOrderService {
         DollOrder dollOrderids = dollOrderDao.selectByOrderIds(orderIds);
         //发货订单申请
         DollOrderGoods dollOrderGoods = new DollOrderGoods();
-        String orderNum = StringUtils.getNumber("goods_");
-        while (dollOrderGoodsDao.selectByOrderNum(orderNum) != null) {
-            orderNum = StringUtils.getOrderNumber();
-        }
+        String orderNum = StringUtils.getOrderNumber();
         dollOrderGoods.setOrderNumber(orderNum);//申请发货订单生成
         dollOrderGoods.setOrderDate(TimeUtil.getTime());
         dollOrderGoods.setMemberId(memberId);

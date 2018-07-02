@@ -159,9 +159,7 @@ public class MemberComplaintServiceImpl implements MemberComplaintService {
                 Doll doll = dollDao.selectByPrimaryKey(memberComplaintAll.getDollId());
                 DollOrderItem dollOrderItem = new DollOrderItem();
                 String orderNum = StringUtils.getOrderNumber();
-                while (dollOrderDao.selectByOrderNum(orderNum) != null) {
-                    orderNum = StringUtils.getOrderNumber();
-                }
+
                 if (memberAddr != null) {
                     dollOrder.setMemberAddress(memberAddr);
                 }

@@ -113,8 +113,6 @@ public class StringUtils {
     }
 
 
-
-
     /**
      * 手机登录token
      *
@@ -185,12 +183,12 @@ public class StringUtils {
 
     public static String getOrderNumber() {
         Date date = new Date();
-        DateFormat format = new SimpleDateFormat("yyMMdd");
+        DateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
         String time = format.format(date);
 
         StringBuilder str = new StringBuilder();// 定义变长字符串
         Random random = new Random();// 随机生成数字，并添加到字符串
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 5; i++) {
             str.append(random.nextInt(10));
         }
         // 将字符串转换为数字并输出
