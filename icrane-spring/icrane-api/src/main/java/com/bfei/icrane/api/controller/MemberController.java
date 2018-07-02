@@ -1,16 +1,10 @@
 package com.bfei.icrane.api.controller;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
+import com.bfei.icrane.api.service.MemberService;
 import com.bfei.icrane.common.util.*;
-import com.sun.org.apache.regexp.internal.RE;
+import com.bfei.icrane.core.models.Member;
+import com.bfei.icrane.core.service.ValidateTokenService;
+import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
 import org.apache.commons.collections4.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +13,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.bfei.icrane.api.service.MemberService;
-import com.bfei.icrane.core.models.Member;
-import com.bfei.icrane.core.service.ValidateTokenService;
-import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * Author: mwan Version: 1.1 Date: 2017/09/28 Description: 用户信息编辑管理控制层.

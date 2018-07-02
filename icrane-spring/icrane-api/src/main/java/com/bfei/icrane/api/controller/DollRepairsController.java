@@ -2,13 +2,8 @@ package com.bfei.icrane.api.controller;
 
 import com.bfei.icrane.common.util.Enviroment;
 import com.bfei.icrane.common.util.ResultMap;
-import com.bfei.icrane.core.models.Banner;
-import com.bfei.icrane.core.models.Doll;
-import com.bfei.icrane.core.models.RepairsProblem;
 import com.bfei.icrane.core.service.RepairsProblemService;
 import com.bfei.icrane.core.service.ValidateTokenService;
-import com.sun.org.apache.regexp.internal.RE;
-import org.apache.commons.collections4.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
-import java.util.Map;
 
 /**
  * 报修接口

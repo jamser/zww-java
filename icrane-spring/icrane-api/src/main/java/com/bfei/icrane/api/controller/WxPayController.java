@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
@@ -54,7 +55,8 @@ public class WxPayController {
     private VipService vipService;
     @Autowired
     private OemService oemService;
-
+    @Autowired
+    private AgentService agentService;
 
 
     private RedisUtil redisUtil = new RedisUtil();
@@ -254,7 +256,7 @@ public class WxPayController {
                 if (state != null) {
                     return IcraneResult.build(Enviroment.RETURN_SUCCESS, Enviroment.RETURN_SUCCESS_REAPEAT, Enviroment.CODE_REPEAT);
                 }
-                String result = WXUtil.getOauthInfo(code, head,null);
+                String result = WXUtil.getOauthInfo(code, head, null);
                 if (result != null) {
                     redisUtil.setString(code, result, 60);
                     object = JSONObject.fromObject(result);
@@ -286,7 +288,7 @@ public class WxPayController {
             if (member == null) {
                 //新用户先注册
                 if (StringUtils.isEmpty(IMEI) || "IMEI".equals(IMEI) || riskManagementService.selectIMEICount(IMEI) < 3) {
-                    member = loginService.wxRegistered(openId, channel, phoneModel, accessToken, lastLoginFrom, unionId,null);
+                    member = loginService.wxRegistered(openId, channel, phoneModel, accessToken, lastLoginFrom, unionId, null);
                 } else {
                     return IcraneResult.build(Enviroment.RETURN_FAILE, "407", "该设备超过注册上限");
                 }
@@ -382,7 +384,29 @@ public class WxPayController {
      */
     @RequestMapping(value = "/onMenuShareTimeline", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap onMenuShareTimeline(String url) {
+    public ResultMap onMenuShareTimeline(Integer memberId, Integer agentId, String url) {
+        logger.info("分享接口memberId={},agentId={}",memberId,agentId);
+        Oem oem = null;
+
+        if (!StringUtils.isEmpty(memberId)) {
+            Member member = memberService.selectById(memberId);
+            oem = oemService.selectByCode(member.getRegisterChannel());
+        }
+
+        if (!StringUtils.isEmpty(agentId)) {
+            Agent agent = agentService.selectByPrimaryKey(agentId);
+            if (!ObjectUtils.isEmpty(agent)) {
+                if (agent.getIsOem()) {
+                    oem = oemService.selectOemById(agent.getId());
+                } else if (agent.getLevel() != 0) {
+                    oem = oemService.selectOemById(agent.getAgentId());
+                }
+            }
+        }
+        if (null == oem) {
+            oem = oemService.selectByCode("lanaokj");
+        }
+
         String currTime = TenpayUtil.getCurrTime();
         //随机字符串
         String noncestr = currTime.substring(8, currTime.length()) + TenpayUtil.buildRandom(4);
@@ -399,7 +423,7 @@ public class WxPayController {
         RequestHandler reqHandler = new RequestHandler(null, null);
         String sign = reqHandler.createSha1Sign(packageParams);
         packageParams.put("sign", sign);
-        packageParams.put("appId", WxConfig.GZHAPPID);
+        packageParams.put("appId", oem.getAppid());
         return new ResultMap("", packageParams);
     }
 

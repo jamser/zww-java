@@ -128,19 +128,14 @@ public class GameController {
      */
     @RequestMapping(value = "/claw", method = RequestMethod.POST)
     @ResponseBody
-    public IcraneResult consumeGame(Integer memberId, Integer dollId, String token, String state) throws Exception {
+    public IcraneResult consumeGame(@RequestParam Integer memberId, @RequestParam Integer dollId, @RequestParam String token, String state) throws Exception {
         // logger.info("客户端接收到claw的消息后，立即调用此接口,扣费操作，生成消费记录参数memberId=" + memberId + "," + "dollId=" + dollId + "," + "token=" + token);
         try {
             //验证token有效性
-            if (StringUtils.isEmpty(token) || !validateTokenService.validataToken(token, memberId)) {
+            if (!validateTokenService.validataToken(token, memberId)) {
                 return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_UNAUTHORIZED_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
             }
-//            Integer userId = gameService.takeToken2Member(token);
-//            if (userId > 0) {//兼容memberId 传错了 userId
-//                memberId = userId;
-//            }
             String gameNum = gameService.takeGameNum(memberId, dollId);
-            //logger.info("--------下抓接口claw   gameNum:"+gameNum);
             if (gameNum == null || "".equals(gameNum)) {
                 return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, "游戏开始异常");//游戏开始异常 不扣费
             }
