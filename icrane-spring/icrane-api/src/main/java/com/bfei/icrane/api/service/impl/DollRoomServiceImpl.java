@@ -267,22 +267,29 @@ public class DollRoomServiceImpl implements DollRoomService {
             account.setCoins(-doll.getPrice());
             if ("1".equals(state)) {//异常结束
                 account.setCoins(0);
+            } else {
+                accountService.updateMemberCoin(account);
             }
 
             //accountService.updateById(account);
-            accountService.updateMemberCoin(account);
             chargeRecord.setChargeDate(TimeUtil.getTime());
-            chargeRecord.setChargeMethod("普通房间(" + doll.getName() + ")消费");
-            if (doll.getMachineType() == 1) {
-                chargeRecord.setChargeMethod("练习房间(" + doll.getName() + ")消费");
+            switch (doll.getMachineType()) {
+                case 0:
+                    chargeRecord.setChargeMethod("普通房间(" + doll.getName() + ")消费");
+                    break;
+                case 1:
+                    chargeRecord.setChargeMethod("练习房间(" + doll.getName() + ")消费");
+                    break;
+                case 2:
+                    chargeRecord.setChargeMethod("化妆房间(" + doll.getName() + ")消费");
+                    break;
+                case 3:
+                    chargeRecord.setChargeMethod("数码房间(" + doll.getName() + ")消费");
+                    break;
+                default:
+                    chargeRecord.setChargeMethod("无效房间(" + doll.getName() + ")消费");
+                    break;
             }
-            if (doll.getMachineType() == 2) {
-                chargeRecord.setChargeMethod("化妆房间(" + doll.getName() + ")消费");
-            }
-            if (doll.getMachineType() == 3) {
-                chargeRecord.setChargeMethod("数码房间(" + doll.getName() + ")消费");
-            }
-
             chargeRecord.setCoins(currCoins);
             chargeRecord.setCoinsSum(-doll.getPrice());
             if ("1".equals(state)) {//异常结束
@@ -341,7 +348,7 @@ public class DollRoomServiceImpl implements DollRoomService {
             Integer hostMemberId = Integer.parseInt(redisUtil.getString(dollHostKey));
             //如果房主是自己
             //表示可以玩
-            if (hostMemberId == memberId) {
+            if (memberId.equals( hostMemberId )) {
                 //redisUtil.setString(RedisKeyGenerator.getRoomHostKey(dollId), String.valueOf(memberId));
                 return 0;
             }
@@ -436,7 +443,7 @@ public class DollRoomServiceImpl implements DollRoomService {
     public void endPlayByCatchCount(Integer memberId, Integer dollId) {
         //  判断五分钟内是否三次抓取成功
         Doll dollR = dollDao.selectByPrimaryKey(dollId);
-        if (dollR.getMachineType().equals(1)) {
+        if (!dollR.getMachineType().equals(2)) {
             return;
         }
         List<CatchHistory> catchHistories = catchHistoryDao.selectByDollId(dollId);

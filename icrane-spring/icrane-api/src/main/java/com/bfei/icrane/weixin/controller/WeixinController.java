@@ -24,8 +24,7 @@ public class WeixinController {
     @Autowired
     private OemService oemService;
 
-    private String host="http://h5.lanao.fun";
-
+    private String host = "http://h5.lanao.fun";
 
 
     @RequestMapping("/h5login")
@@ -33,7 +32,7 @@ public class WeixinController {
     public void web(HttpServletRequest request, HttpServletResponse response, String code, String state, String
             phoneModel) throws Exception {
         try {
-            if(null == state){
+            if (null == state) {
                 return;
             }
             int endIndex = state.indexOf("-");
@@ -58,21 +57,22 @@ public class WeixinController {
                 phoneModel = "未知";
             }
 
-            MemberInfo member = (MemberInfo) loginService.weChatLogin(request, code, memberId, "wxWeb", "IMEI", phoneModel, chnnerl, agentId).getResultData();
-            if (null == member) {
+            Object resultData = loginService.weChatLogin(request, code, memberId, "wxWeb", "IMEI", phoneModel, chnnerl, agentId).getResultData();
+            if (null == resultData) {
                 return;
             }
+            MemberInfo member = (MemberInfo) resultData;
             Oem oem = oemService.selectByCode(chnnerl);
             if (null != oem) {
                 host = oem.getUrl();
             }
-            String url = host+"/"+chnnerl+"/wxLogin.html?memberId=" + member.getMember().getId() + "&token=" + member.getToken();
+            String url = host + "/" + chnnerl + "/wxLogin.html?memberId=" + member.getMember().getId() + "&token=" + member.getToken();
             if (StringUtils.isNotEmpty(index)) {
                 url += "&index=" + index;
             }
             response.sendRedirect(url);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 

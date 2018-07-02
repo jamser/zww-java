@@ -203,6 +203,8 @@ public class PaySerciceImpl implements PayService {
     }*/
 
 
+
+
     /**
      * 微信充值回调接口
      *
@@ -212,7 +214,7 @@ public class PaySerciceImpl implements PayService {
     @Transactional
     public String wxNotify(HttpServletRequest request) {
         try {
-            logger.info("微信充值回调...");
+
             SortedMap<String, String> mapXml = null;
             try {
                 mapXml = MessageUtil.dom4jXMLParse(request);
@@ -223,7 +225,7 @@ public class PaySerciceImpl implements PayService {
             //创建支付应答对象
             RequestHandler reqHandler = new RequestHandler(null, null);
             if (reqHandler.isWechatSign(mapXml)) {
-                //logger.info("签名校验成功");
+                logger.info("微信充值回调...",mapXml);
                 if (mapXml.get("result_code").equalsIgnoreCase("SUCCESS")
                         && mapXml.get("return_code").equalsIgnoreCase("SUCCESS")) {
                     // 处理业务，更新用户余额或金币
@@ -280,7 +282,7 @@ public class PaySerciceImpl implements PayService {
             logger.info("签名校验失敗");
             return null;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getLocalizedMessage());
             return null;
         }
     }
