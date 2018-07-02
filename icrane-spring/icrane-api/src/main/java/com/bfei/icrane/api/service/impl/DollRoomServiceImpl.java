@@ -147,7 +147,7 @@ public class DollRoomServiceImpl implements DollRoomService {
             redisUtil.setString(RedisKeyGenerator.getMachineP3(dollId), p3);
             redisUtil.setString(RedisKeyGenerator.getMachineBaseNum(dollId), baseNum);
             Integer chargeSum = machineDao.findMemberCharge(memberId);
-            chargeSum = chargeSum==null? 0 : chargeSum;
+            chargeSum = chargeSum == null ? 0 : chargeSum;
 //            redisUtil.setString(RedisKeyGenerator.getMachineCharge(dollId),String.valueOf(chargeSum));
 //            //标记房间类型
 //            Doll doll1 = dollDao.selectByPrimaryKey(dollId);
@@ -166,7 +166,7 @@ public class DollRoomServiceImpl implements DollRoomService {
                 redisUtil.setString(RedisKeyGenerator.getMachineHost(dollId), p2);
             } else if (chargeSum > probabi) {
                 redisUtil.setString(RedisKeyGenerator.getMachineHost(dollId), p3);
-            } 
+            }
             return true;
         }
         return false;
@@ -249,7 +249,7 @@ public class DollRoomServiceImpl implements DollRoomService {
         // Integer num = Integer.parseInt(redisUtil.getString(RedisKeyGenerator.getMemberClaw(member.getId())));
         //扣费计数
         Integer num = GameProcessUtil.getInstance().addCountGameLock(member.getId(), doll.getId(), GameProcessEnum.GAME_CONSUME);
-         logger.info("consumePlay 参数doll:{},member:{},已执行次数:{}", doll.getId(), member.getId(),num);
+        logger.info("consumePlay 参数doll:{},member:{},已执行次数:{}", doll.getId(), member.getId(), num);
         if (num == 1) {//扣费一次
             //扣费操作
             Account baseAccount = member.getAccount();
@@ -265,7 +265,7 @@ public class DollRoomServiceImpl implements DollRoomService {
             //扣费操作
             //account.setCoins(currCoins - doll.getPrice());
             account.setCoins(-doll.getPrice());
-            if("1".equals(state)) {//异常结束
+            if ("1".equals(state)) {//异常结束
                 account.setCoins(0);
             }
 
@@ -285,7 +285,7 @@ public class DollRoomServiceImpl implements DollRoomService {
 
             chargeRecord.setCoins(currCoins);
             chargeRecord.setCoinsSum(-doll.getPrice());
-            if("1".equals(state)) {//异常结束
+            if ("1".equals(state)) {//异常结束
                 chargeRecord.setCoinsSum(0);
                 chargeRecord.setChargeMethod("异常币已返回");
             }
@@ -294,8 +294,8 @@ public class DollRoomServiceImpl implements DollRoomService {
             chargeRecord.setType("expense");
             // chargeDao.insertChargeHistory(chargeRecord);
 
-            Integer recordNum = GameProcessUtil.getInstance().addCountGameLock(member.getId(),doll.getId(), GameProcessEnum.GAME_CHARGE_HISTORY);
-            logger.info("recordNum:"+recordNum+"正常结束生成消费计数");
+            Integer recordNum = GameProcessUtil.getInstance().addCountGameLock(member.getId(), doll.getId(), GameProcessEnum.GAME_CHARGE_HISTORY);
+            logger.info("recordNum:" + recordNum + "正常结束生成消费计数");
             if (recordNum == 1) {//记录一次
                 chargeDao.insertChargeHistory(chargeRecord);
             }
@@ -357,7 +357,7 @@ public class DollRoomServiceImpl implements DollRoomService {
     @Transactional
     public boolean endRound(Integer dollId, Integer memberId, Integer catchFlag, String state) {
         //String gameNum = StringUtils.getCatchHistoryNum().replace("-", "").substring(0, 20);
-    	String gameNum = GameProcessUtil.getInstance().getGameNum(memberId, dollId);
+        String gameNum = GameProcessUtil.getInstance().getGameNum(memberId, dollId);
         return endRound(dollId, memberId, catchFlag, gameNum, state);
     }
 
@@ -386,7 +386,7 @@ public class DollRoomServiceImpl implements DollRoomService {
                 catchHistory.setCatchStatus("抓取失败");
             }
             if ("1".equals(state)) {
-            	catchHistory.setCatchStatus("游戏异常,币已返回");
+                catchHistory.setCatchStatus("游戏异常,币已返回");
             }
             catchHistory.setDollId(dollId);
             catchHistory.setMemberId(memberId);
@@ -435,10 +435,14 @@ public class DollRoomServiceImpl implements DollRoomService {
     @Transactional
     public void endPlayByCatchCount(Integer memberId, Integer dollId) {
         //  判断五分钟内是否三次抓取成功
+        Doll dollR = dollDao.selectByPrimaryKey(dollId);
+        if (dollR.getMachineType().equals(1)) {
+            return;
+        }
         List<CatchHistory> catchHistories = catchHistoryDao.selectByDollId(dollId);
         Doll doll = new Doll();
         doll.setId(dollId);
-        if(catchHistories.size()>=3){
+        if (catchHistories.size() >= 3) {
             doll.setMachineStatus("维修中");
             dollDao.updateClean(doll);
             redisUtil.delKey(RedisKeyGenerator.getRoomHostKey(dollId));
@@ -450,7 +454,7 @@ public class DollRoomServiceImpl implements DollRoomService {
             } else {
                 redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(dollId), "空闲中");
             }
-            logger.info("dollId={}房间频繁抓中，将房间设为维修中",dollId);
+            logger.info("dollId={}房间频繁抓中，将房间设为维修中", dollId);
         }
     }
 

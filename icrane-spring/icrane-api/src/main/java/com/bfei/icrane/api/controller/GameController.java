@@ -11,10 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.bfei.icrane.api.facade.ServiceFacade;
 import com.bfei.icrane.api.service.DollMonitorService;
@@ -47,8 +44,6 @@ public class GameController {
     @Autowired
     private DollMonitorService dollMonitorService;
     @Autowired
-    private DollService dollService;
-    @Autowired
     private ServiceFacade serviceFacade;
     @Autowired
     private GameService gameService;
@@ -58,17 +53,17 @@ public class GameController {
     //开始本轮游戏建立socket前调用的接口
     @RequestMapping(value = "/start", method = RequestMethod.POST)
     @ResponseBody
-    public IcraneResult startGame(Integer memberId, Integer dollId, String token) throws Exception {
+    public IcraneResult startGame(@RequestParam Integer memberId, @RequestParam Integer dollId, @RequestParam String token) throws Exception {
         logger.info("开始本轮游戏建立socket前调用的接口参数memberId=" + memberId + "," + "dollId=" + dollId + "," + "token=" + token);
         try {
             //验证token有效性
-            if (token == null || "".equals(token) || !validateTokenService.validataToken(token, memberId)) {
-                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_UNAUTHORIZED_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            if (!validateTokenService.validataToken(token, memberId)) {
+                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
             }
-            Integer userId = gameService.takeToken2Member(token);
-            if (userId > 0) {//兼容memberId 传错了 userId
-                memberId = userId;
-            }
+//            Integer userId = gameService.takeToken2Member(token);
+//            if (userId > 0) {//兼容memberId 传错了 userId
+//                memberId = userId;
+//            }
             GameStatusEnum result = gameService.startPlay(dollId, memberId);
             switch (result) {
                 case GAME_PRICE_NOT_ENOUGH:
