@@ -258,7 +258,7 @@ public class PaySerciceImpl implements PayService {
                     charge.setChargeDate(TimeUtil.getTime());
                     charge.setChargeMethod("微信充值-" + order.getChargeName());
                     Integer result = chargeService.insertChargeHistory(charge);
-                    chargeService.inviteChargeFirst(memberId);//检测邀请 首充赠送
+//                    chargeService.inviteChargeFirst(memberId);//检测邀请 首充赠送
 
 
                     //微信充值记录
@@ -275,6 +275,7 @@ public class PaySerciceImpl implements PayService {
                         logger.info("充值记录结果:insertResult=" + insert);
                     }
                     if (result == 1) {
+                        logger.info("异步返回 SUCCESS");
                         return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
                     }
                 }
