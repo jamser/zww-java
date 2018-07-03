@@ -5,8 +5,6 @@ import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.form.BankInfoForm;
 import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.BankInfo;
-import com.bfei.icrane.core.models.Oem;
-import com.bfei.icrane.core.service.OemService;
 import com.bfei.icrane.core.service.ValidateTokenService;
 import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
 import org.slf4j.Logger;
@@ -41,8 +39,6 @@ public class AgentBankController {
     private ValidateTokenService validateTokenService;
     @Autowired
     private AgentService agentService;
-    @Autowired
-    private OemService oemService;
 
     RedisUtil redisUtil = new RedisUtil();
 
