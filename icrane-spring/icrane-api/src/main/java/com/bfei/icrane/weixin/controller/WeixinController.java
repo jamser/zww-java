@@ -66,7 +66,7 @@ public class WeixinController {
             if (null != oem) {
                 host = oem.getUrl();
             }
-            String url = host + "/" + chnnerl + "/wxLogin.html?memberId=" + member.getMember().getId() + "&token=" + member.getToken();
+            String url = host + "/" + "lanaokj" + "/wxLogin.html?memberId=" + member.getMember().getId() + "&token=" + member.getToken();
             if (StringUtils.isNotEmpty(index)) {
                 url += "&index=" + index;
             }

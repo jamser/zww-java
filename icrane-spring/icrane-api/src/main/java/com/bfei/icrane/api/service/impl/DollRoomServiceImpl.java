@@ -249,7 +249,7 @@ public class DollRoomServiceImpl implements DollRoomService {
         // Integer num = Integer.parseInt(redisUtil.getString(RedisKeyGenerator.getMemberClaw(member.getId())));
         //扣费计数
         Integer num = GameProcessUtil.getInstance().addCountGameLock(member.getId(), doll.getId(), GameProcessEnum.GAME_CONSUME);
-        logger.info("consumePlay 参数doll:{},member:{},已执行次数:{}", doll.getId(), member.getId(), num);
+        logger.info("consumePlay 参数doll={},member={},num={},state={}", doll.getId(), member.getId(), num,state);
         if (num == 1) {//扣费一次
             //扣费操作
             Account baseAccount = member.getAccount();
