@@ -201,6 +201,7 @@ public class WxPayController {
                     }
                     String finalsign = reqHandler.createSign(finalpackage);
                     WxPay wxPay = new WxPay();
+                    wxPay.setAppId(oem.getAppid());
                     wxPay.setPrepayId(prepay_id);
                     wxPay.setMwebUrl((String) map.get("mweb_url"));
                     wxPay.setTimeStamp(timestamp);

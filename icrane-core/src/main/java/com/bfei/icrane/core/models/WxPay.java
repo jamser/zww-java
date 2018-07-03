@@ -12,6 +12,7 @@ import java.io.Serializable;
 public class WxPay implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private String appId;
     private String timeStamp;
     private String nonceStr;
     private String prepayId;
