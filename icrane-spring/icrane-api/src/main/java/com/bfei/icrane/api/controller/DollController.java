@@ -722,7 +722,7 @@ public class DollController {
                 return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
             }
             Member member = memberService.selectById(memberId);
-            Oem oem = oemService.selectByCode(member.getLoginChannel());
+            Oem oem = oemService.selectByCode(member.getRegisterChannel());
             if (oem == null) {
                 oem = oemService.selectByCode("lanaokj");
             }
