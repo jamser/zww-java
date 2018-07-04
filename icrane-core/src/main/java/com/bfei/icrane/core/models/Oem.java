@@ -30,12 +30,14 @@ public class Oem {
 
     private String smsName;
 
+    private String icon;
+
     private Integer status;
+
+    private Integer isDollMerge;
 
     private Date createTime;
 
     private Date updateTime;
-
-    private Integer isDollMerge;
 
 }
