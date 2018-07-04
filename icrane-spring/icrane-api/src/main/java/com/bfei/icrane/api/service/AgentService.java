@@ -5,6 +5,7 @@ import com.bfei.icrane.core.form.AgentForm;
 import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.AgentToken;
 import com.bfei.icrane.core.models.BankInfo;
+import com.bfei.icrane.core.models.Oem;
 
 import java.util.List;
 

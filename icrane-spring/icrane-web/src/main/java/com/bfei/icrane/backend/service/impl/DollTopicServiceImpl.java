@@ -1,19 +1,14 @@
 package com.bfei.icrane.backend.service.impl;
 
 import com.bfei.icrane.backend.service.DollTopicService;
-import com.bfei.icrane.backend.service.MemberWhiteService;
 import com.bfei.icrane.common.util.PageBean;
 import com.bfei.icrane.core.dao.DollDao;
 import com.bfei.icrane.core.dao.DollTopicDao;
-import com.bfei.icrane.core.dao.MemberWhiteDao;
 import com.bfei.icrane.core.models.Doll;
 import com.bfei.icrane.core.models.DollTopic;
-import com.bfei.icrane.core.models.MemberWhite;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 import java.util.List;
 
 @Service("DollTopicService")

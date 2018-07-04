@@ -2,7 +2,7 @@ package com.bfei.icrane.backend.service.impl;
 
 import com.bfei.icrane.backend.service.MemberWhiteService;
 import com.bfei.icrane.common.util.PageBean;
-import com.bfei.icrane.core.dao.*;
+import com.bfei.icrane.core.dao.MemberWhiteDao;
 import com.bfei.icrane.core.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -98,7 +98,6 @@ public class ShareController {
 
     /**
      * 代理分享
-     *
      * @param agentId
      * @param token
      * @param version
@@ -107,8 +106,8 @@ public class ShareController {
      */
     @RequestMapping(value = "/AgentImgUrl", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap AgentImgUrl(@RequestParam Integer agentId,
-                                 @RequestParam String token, Integer version, String index) {
+    public ResultMap AgentImgUrl(@RequestParam(required = true) Integer agentId,
+                                 @RequestParam(required = true) String token, Integer version, String index) {
 
         Map<String, String> shareUrl = gameService.getAgentImgUrl(agentId, version, index);
         ResultMap resultMap = new ResultMap("right token");

@@ -1,6 +1,6 @@
 package com.bfei.icrane.core.dao;
 
-import com.bfei.icrane.core.models.*;
+import com.bfei.icrane.core.models.MemberWhite;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
