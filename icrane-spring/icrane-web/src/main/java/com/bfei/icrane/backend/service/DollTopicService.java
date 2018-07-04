@@ -2,7 +2,6 @@ package com.bfei.icrane.backend.service;
 
 import com.bfei.icrane.common.util.PageBean;
 import com.bfei.icrane.core.models.DollTopic;
-import com.bfei.icrane.core.models.MemberWhite;
 
 import javax.servlet.http.HttpServletRequest;
 

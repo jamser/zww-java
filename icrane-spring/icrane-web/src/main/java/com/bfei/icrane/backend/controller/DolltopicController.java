@@ -54,7 +54,7 @@ public class DolltopicController {
     //添加
     @RequestMapping(value = "/dollTopicAdd", method = RequestMethod.POST)
     @ResponseBody
-    public String memberWhiteInsert(DollTopic dollTopic) throws Exception {
+    public String dollTopicAdd(DollTopic dollTopic) throws Exception {
         logger.info("新增主题传入参数：{}", dollTopic.toString());
         try {
             int result = dollTopicService.insertSelective(dollTopic);

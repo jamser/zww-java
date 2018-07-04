@@ -49,7 +49,7 @@ public class DollAddressController {
 	//添加
 	@RequestMapping(value="/dollAddressAdd",method=RequestMethod.POST)
 	@ResponseBody
-	public String memberWhiteInsert(DollAddress dollAddress)throws Exception{
+	public String dollAddressAdd(DollAddress dollAddress)throws Exception{
 		logger.info("新增机器地址传入参数：{}",dollAddress.toString());
 		try {
 			int result = dollAddressService.insertSelective(dollAddress);
