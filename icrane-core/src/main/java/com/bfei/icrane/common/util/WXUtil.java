@@ -2,6 +2,7 @@ package com.bfei.icrane.common.util;
 
 import com.bfei.icrane.common.wx.utils.WxConfig;
 import com.bfei.icrane.core.models.Oem;
+import com.bfei.icrane.core.models.vo.AccessTokenVO;
 import net.sf.json.JSONObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -63,20 +65,14 @@ public class WXUtil {
     //获得网络授权
     public static final String GET_NET_CODE_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE#wechat_redirect";
     //accexxToken
-    public static String accessToken;
+    public static Map<String, AccessTokenVO> accessTokenMap=new HashMap<>();
     //小程序accexxToken
     public static String miniappsaccessToken;
-    //accessToken的失效时间
-    public static Long expiresTime = 0L;
     //小程序accessToken的失效时间
     public static Long miniappsexpiresTime = 0L;
-    //获得jssdk需要的ticket
-    public static String ticket;
-    //ticket的失效时间
-    public static Long expiresTime_1 = 0L;
 
 
-    public static HttpResponse getOauth2(String code, String head,Oem oem) {
+    public static HttpResponse getOauth2(String code, String head, Oem oem) {
         String wxUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + oem.getAppid() + "&secret=" + oem.getAppsecret() + "&code=" + code + "&grant_type=authorization_code";
         //logger.info("微信登录请求微信服务器:url={}", wxUrl);
         if (StringUtils.isNotEmpty(head)) {
@@ -106,11 +102,11 @@ public class WXUtil {
      *
      * @return
      */
-    public static String getOauthInfo(String code, String head,Oem oem) {
+    public static String getOauthInfo(String code, String head, Oem oem) {
         //根据code请求用户openid unionid
         HttpResponse response = null;
         try {
-            response = getOauth2(code, head,oem);
+            response = getOauth2(code, head, oem);
             //响应参数
             int statusCode = response.getStatusLine().getStatusCode();
             logger.info("请求微信服务器响应结果(200表示成功):{}", statusCode);
@@ -189,61 +185,93 @@ public class WXUtil {
      *
      * @return
      */
-    public static String getAccessToken() {
-        String result = null;
+    public static String getAccessToken(Oem oem) {
         try {
             //如果accessToken为null或者accessToken已经失效就去重新获取(提前10秒)
-            if (System.currentTimeMillis() >= expiresTime) {
-                //发送http请求
-                result = HttpUtil.get(GET_ACCESSTOKEN_URL.replace("APPID", APPID).replace("APPSECRET", SECRET));
+            AccessTokenVO accessTokenVO = accessTokenMap.get(oem.getCode());
+
+            if (null == accessTokenVO || System.currentTimeMillis() >= accessTokenVO.getExpires_in_access()) {
+                accessTokenVO = new AccessTokenVO();
+                String result = HttpUtil.get(GET_ACCESSTOKEN_URL.replace("APPID", oem.getAppid()).replace("APPSECRET", oem.getAppsecret()));
                 //转成json对象
                 JSONObject json = JSONObject.fromObject(result);
                 if (!json.has("access_token")) {
                     logger.info("获取accessToken异常" + json.toString());
-                    return json.toString();
+                    return null;
                 }
-                accessToken = json.getString("access_token");
                 Integer expires_in = json.getInt("expires_in");
                 //失效时间=当前时间(毫秒)+7200
-                expiresTime = System.currentTimeMillis() + ((expires_in - 60) * 1000);
+                accessTokenVO.setAccess_token(json.getString("access_token"));
+                accessTokenVO.setExpires_in_access(System.currentTimeMillis() + ((expires_in - 60) * 1000));
+
+                accessTokenMap.put(oem.getCode(), accessTokenVO);
             }
-            return accessToken;
+
+            return accessTokenVO.getAccess_token();
         } catch (Exception e) {
             e.printStackTrace();
-            return result;
+            return null;
+        }
+    }
+
+    public static String getJSApiTicket(Oem oem) {
+        try {
+            AccessTokenVO accessTokenVO = accessTokenMap.get(oem.getCode());
+
+            if (null == accessTokenVO || System.currentTimeMillis() >= accessTokenVO.getExpires_in_ticket()) {
+                accessTokenVO = new AccessTokenVO();
+
+                String accessToken = getAccessToken(oem);
+                if (StringUtils.isEmpty(accessToken)) {
+                    return null;
+                }
+                String result = HttpUtil.get(GET_TICKET_URL.replace("ACCESS_TOKEN", accessToken));
+                //转成json对象
+                JSONObject json = JSONObject.fromObject(result);
+                if (!json.has("ticket")) {
+                    return null;
+                }
+                Integer expires_in = json.getInt("expires_in");
+                //失效时间=当前时间(毫秒)+7200
+
+                accessTokenVO.setTicket(json.getString("ticket"));
+                accessTokenVO.setExpires_in_ticket(System.currentTimeMillis() + ((expires_in - 60) * 1000));
+
+                accessTokenMap.put(oem.getCode(), accessTokenVO);
+            }
+            return accessTokenVO.getTicket();
+        } catch (Exception e) {
+            return null;
         }
     }
 
     /**
      * 获取短连接
+     *
      * @param longurl
      * @return
      */
-    public static String short_url(String longurl) {
+    public static String short_url(String longurl, Oem oem) {
         String url_short = "https://api.weixin.qq.com/cgi-bin/shorturl?access_token=";
         JSONObject resp = new JSONObject();
         try {
             resp.put("action", "long2short");
             resp.put("long_url", longurl);
-            String url_shorts = url_short + JssdkConstant.accessToken;
+            String accessToken = getAccessToken(oem);
+            if (StringUtils.isEmpty(accessToken)) {
+                return longurl;
+            }
+            String url_shorts = url_short + accessToken;
             String msg = doPost(resp.toString(), url_shorts, "POST");
             JSONObject resp4 = JSONObject.fromObject(msg);
-            String short_url = "";
             if (resp4.getInt("errcode") == 0) {
-                short_url = resp4.getString("short_url");
-            } else {
-                JssdkConstant.accessToken = getAccessToken();
-                String url_short1 = url_short + JssdkConstant.accessToken;
-                msg = doPost(resp.toString(), url_short1, "POST");
-                resp = JSONObject.fromObject(msg);
-                short_url = resp.getString("short_url");
+                logger.info("获取短连接" + resp);
+                return resp4.getString("short_url");
             }
-            logger.info("获取短连接" + resp);
-            return short_url;
         } catch (Exception e) {
             e.printStackTrace();
-            return "";
         }
+        return longurl;
     }
 
     /**
@@ -276,27 +304,8 @@ public class WXUtil {
         }
     }
 
-    public static String getJSApiTicket() {
-        String result = null;
-        try {
-            if (System.currentTimeMillis() >= expiresTime_1) {
-                //发送http请求
-                result = HttpUtil.get(GET_TICKET_URL.replace("ACCESS_TOKEN", getAccessToken()));
-                //转成json对象
-                JSONObject json = JSONObject.fromObject(result);
-                if (!json.has("ticket")) {
-                    return json.toString();
-                }
-                ticket = json.getString("ticket");
-                Integer expires_in = json.getInt("expires_in");
-                //失效时间=当前时间(毫秒)+7200
-                expiresTime_1 = System.currentTimeMillis() + ((expires_in - 60) * 1000);
-            }
-            return ticket;
-        } catch (Exception e) {
-            return result;
-        }
-    }
+
+
 
     /**
      * 向指定 URL 发送POST方法的请求
@@ -352,12 +361,12 @@ public class WXUtil {
         return result;
     }
 
-    public static String doPost(String pa,String url,String method) throws Exception {
-        String parameterData =pa;
+    public static String doPost(String pa, String url, String method) throws Exception {
+        String parameterData = pa;
 
         URL localURL = new URL(url);
         URLConnection connection = localURL.openConnection();
-        HttpURLConnection httpURLConnection = (HttpURLConnection)connection;
+        HttpURLConnection httpURLConnection = (HttpURLConnection) connection;
 
         httpURLConnection.setDoOutput(true);
         httpURLConnection.setRequestMethod(method);
@@ -375,12 +384,12 @@ public class WXUtil {
 
         try {
             outputStream = httpURLConnection.getOutputStream();
-            outputStreamWriter = new OutputStreamWriter(outputStream,"utf-8");
+            outputStreamWriter = new OutputStreamWriter(outputStream, "utf-8");
 
             outputStreamWriter.write(parameterData.toString());
             outputStreamWriter.flush();
             inputStream = httpURLConnection.getInputStream();
-            inputStreamReader = new InputStreamReader(inputStream,"utf-8");
+            inputStreamReader = new InputStreamReader(inputStream, "utf-8");
             reader = new BufferedReader(inputStreamReader);
             while ((tempLine = reader.readLine()) != null) {
                 resultBuffer.append(tempLine);

@@ -2,12 +2,15 @@ package com.bfei.icrane.api.controller;
 
 import com.bfei.icrane.api.service.AgentService;
 import com.bfei.icrane.api.service.AgentWithdrawService;
+import com.bfei.icrane.api.service.MemberService;
 import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.form.AgentChangePwdForm;
 import com.bfei.icrane.core.form.AgentForm;
 import com.bfei.icrane.core.form.AgentLoginForm;
 import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.AgentToken;
+import com.bfei.icrane.core.models.Member;
+import com.bfei.icrane.core.models.Oem;
 import com.bfei.icrane.core.pojos.AgentPojo;
 import com.bfei.icrane.core.service.*;
 import org.slf4j.Logger;
@@ -15,10 +18,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by moying on 2018/6/1.
@@ -48,6 +54,12 @@ public class AgentController {
     @Autowired
     private AgentWithdrawService agentWithdrawService;
 
+    @Autowired
+    private OemService oemService;
+
+    @Autowired
+    private MemberService memberService;
+
 
     private RedisUtil redisUtil = new RedisUtil();
 
@@ -59,6 +71,7 @@ public class AgentController {
             return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, bindingResult.getFieldError().getDefaultMessage());
         }
         Agent agent = agentService.selectByUserName(agentLoginForm.getUsername());
+
         if (null == agent) {
             return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.USERNAME_ERROR);
         } else {
@@ -69,6 +82,16 @@ public class AgentController {
                     if (null == token) {
                         return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.AGENT_LOGIN_ERROR);
                     } else {
+                        Oem oem = null;
+                        if (agent.getIsOem()) {
+                            oem = oemService.selectOemById(agent.getId());
+                        } else if (agent.getLevel() != 0) {
+                            oem = oemService.selectOemById(agent.getAgentId());
+                        }
+                        if (null == oem) {
+                            oem = oemService.selectByCode("lanaokj");
+                        }
+                        token.setHost(oem.getUrl());
                         return new ResultMap(Enviroment.RETURN_SUCCESS_CODE, token);
                     }
                 }
@@ -78,6 +101,21 @@ public class AgentController {
             return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.PASSWORD_ERROR);
         }
     }
+
+    @RequestMapping(value = "/loginOut", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap loginOut(@RequestParam Integer memberId, @RequestParam Integer agentId,String token) {
+
+        Member member = memberService.selectById(memberId);
+        if (ObjectUtils.isEmpty(member)) {
+            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, "用户不存在");
+        }
+        Oem oem = oemService.selectByCode(member.getRegisterChannel());
+        Map<String, String> map = new HashMap<>();
+        map.put("host", oem.getUrl());
+        return new ResultMap(Enviroment.RETURN_SUCCESS_CODE, map);
+    }
+
 
     /**
      * 添加代理商

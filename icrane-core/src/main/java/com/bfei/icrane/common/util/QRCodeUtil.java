@@ -227,27 +227,27 @@ public class QRCodeUtil {
         return null;
     }
 
-    public static String getQrUrl(Member member, String note, String index,Oem oem) {
-        //先查询redis
-        RedisUtil redisUtil = new RedisUtil();
-        String QRCodeUrl = redisUtil.getString(RedisKeyGenerator.getQRCodeKey(member.getMemberID()) + shareIMGversion);
-        //如果redis中有就从redis中查询
-        if (StringUtils.isNotEmpty(QRCodeUrl)) {
-            return QRCodeUrl;
-        }
-        try {
-            File logoFile = new File("/home/font/logo.png");
-            String lanaokj = getshareUrl(member.getMemberID(), member.getRegisterChannel(), index,oem);
-            lanaokj =  WXUtil.short_url(lanaokj);
-            QRCodeUrl = myDrawLogoQRCode("member", String.valueOf(member.getId()), null,lanaokj , note);
-            //缓存地址到redis
-            redisUtil.setString(RedisKeyGenerator.getQRCodeKey(member.getMemberID() + member.getRegisterChannel()) + shareIMGversion, QRCodeUrl, 2147483647);
-            return QRCodeUrl;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return QRCodeUrl;
-    }
+//    public static String getQrUrl(Member member, String note, Integer index,Oem oem) {
+//        //先查询redis
+//        RedisUtil redisUtil = new RedisUtil();
+//        String QRCodeUrl = redisUtil.getString(RedisKeyGenerator.getQRCodeKey(member.getMemberID()) + shareIMGversion);
+//        //如果redis中有就从redis中查询
+//        if (StringUtils.isNotEmpty(QRCodeUrl)) {
+//            return QRCodeUrl;
+//        }
+//        try {
+//            File logoFile = new File("/home/font/logo.png");
+//            String lanaokj = getshareUrl(member.getMemberID(), member.getRegisterChannel(), index,oem);
+//            lanaokj =  WXUtil.short_url(lanaokj);
+//            QRCodeUrl = myDrawLogoQRCode("member", String.valueOf(member.getId()), logoFile,lanaokj , note);
+//            //缓存地址到redis
+//            redisUtil.setString(RedisKeyGenerator.getQRCodeKey(member.getMemberID() + member.getRegisterChannel()) + shareIMGversion, QRCodeUrl, 2147483647);
+//            return QRCodeUrl;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return QRCodeUrl;
+//    }
 
     public static String getAgentUrl(Agent agent, String note, String index,Oem oem) {
         //先查询redis
@@ -258,12 +258,12 @@ public class QRCodeUtil {
             return QRCodeUrl;
         }
         try {
-//            File logoFile = new File("/home/font/logo.png");
+            File logoFile = new File("/home/font/logo.png");
             String lanaokj = getshareUrl("agent" + agent.getId(), "lanaokj", index,oem);
-           // logger.info("生成长链接前："+lanaokj);
-            lanaokj =  WXUtil.short_url(lanaokj);
-           // logger.info("长链接后："+lanaokj);
-            QRCodeUrl = myDrawLogoQRCode("agent", String.valueOf(agent.getId()), null, lanaokj, note);
+            // logger.info("生成长链接前："+lanaokj);
+            lanaokj =  WXUtil.short_url(lanaokj,oem);
+            // logger.info("长链接后："+lanaokj);
+            QRCodeUrl = myDrawLogoQRCode("agent", String.valueOf(agent.getId()), logoFile, lanaokj, note);
             //缓存地址到redis
             redisUtil.setString(RedisKeyGenerator.getAgentCodeKey(agent.getId().toString() + shareIMGversion), QRCodeUrl, 2147483647);
             return QRCodeUrl;

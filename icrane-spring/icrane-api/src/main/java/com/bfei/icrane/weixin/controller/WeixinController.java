@@ -62,7 +62,7 @@ public class WeixinController {
                 return;
             }
             MemberInfo member = (MemberInfo) resultData;
-            Oem oem = oemService.selectByCode(chnnerl);
+            Oem oem = oemService.selectByCode(member.getMember().getRegisterChannel());
             if (null != oem) {
                 host = oem.getUrl();
             }

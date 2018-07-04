@@ -21,4 +21,5 @@ public interface OemMapper {
     Oem selectByCode(@Param("code") String code);
 
     List<Oem> selectAllOem();
+
 }

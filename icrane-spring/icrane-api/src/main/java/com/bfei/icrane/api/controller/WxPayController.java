@@ -363,20 +363,20 @@ public class WxPayController {
         return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, "accessToken无效");
     }
 
-    /**
-     * 调用微信JS接口的临时票据
-     *
-     * @return jsapiTicket
-     */
-    @RequestMapping(value = "/jsapiTicket", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap jsapiTicket() {
-        WXUtil wxUtil = new WXUtil();
-        String jsApiTicket = wxUtil.getJSApiTicket();
-        ResultMap resultMap = new ResultMap("操作成功");
-        resultMap.setResultData(jsApiTicket);
-        return resultMap;
-    }
+//    /**
+//     * 调用微信JS接口的临时票据
+//     *
+//     * @return jsapiTicket
+//     */
+//    @RequestMapping(value = "/jsapiTicket", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap jsapiTicket() {
+//        WXUtil wxUtil = new WXUtil();
+//        String jsApiTicket = wxUtil.getJSApiTicket();
+//        ResultMap resultMap = new ResultMap("操作成功");
+//        resultMap.setResultData(jsApiTicket);
+//        return resultMap;
+//    }
 
     /**
      * 分享接口
@@ -386,7 +386,6 @@ public class WxPayController {
     @RequestMapping(value = "/onMenuShareTimeline", method = RequestMethod.POST)
     @ResponseBody
     public ResultMap onMenuShareTimeline(Integer memberId, Integer agentId, String url) {
-        logger.info("分享接口memberId={},agentId={}",memberId,agentId);
         Oem oem = null;
 
         if (!StringUtils.isEmpty(memberId)) {
@@ -413,18 +412,20 @@ public class WxPayController {
         String noncestr = currTime.substring(8, currTime.length()) + TenpayUtil.buildRandom(4);
         //有效的jsapi_ticket
         WXUtil wxUtil = new WXUtil();
-        String jsapi_ticket = wxUtil.getJSApiTicket();
+        String jsapi_ticket = wxUtil.getJSApiTicket(oem);
         //timestamp（时间戳）
         String timestamp = Sha1Util.getTimeStamp();
         SortedMap<String, String> packageParams = new TreeMap<>();
         packageParams.put("noncestr", noncestr);
         packageParams.put("jsapi_ticket", jsapi_ticket);
         packageParams.put("timestamp", timestamp);
-        packageParams.put("url", url);
+        packageParams.put("url", oem.getUrl());
         RequestHandler reqHandler = new RequestHandler(null, null);
         String sign = reqHandler.createSha1Sign(packageParams);
         packageParams.put("sign", sign);
         packageParams.put("appId", oem.getAppid());
+        packageParams.put("host", oem.getUrl());
+        packageParams.put("icon", oem.getIcon());
         return new ResultMap("", packageParams);
     }
 
