@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.bfei.icrane.api.service.*;
 import com.bfei.icrane.common.util.*;
+import com.bfei.icrane.common.util.StringUtils;
 import com.bfei.icrane.common.wx.utils.*;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.service.*;
@@ -406,7 +407,11 @@ public class WxPayController {
         if (null == oem) {
             oem = oemService.selectByCode("lanaokj");
         }
-
+        if(url.contains(oem.getUrl())){
+            url=null;
+        }else {
+            url = oem.getUrl()+org.apache.commons.lang3.StringUtils.substringAfter(url, "fun");
+        }
         String currTime = TenpayUtil.getCurrTime();
         //随机字符串
         String noncestr = currTime.substring(8, currTime.length()) + TenpayUtil.buildRandom(4);
@@ -419,7 +424,7 @@ public class WxPayController {
         packageParams.put("noncestr", noncestr);
         packageParams.put("jsapi_ticket", jsapi_ticket);
         packageParams.put("timestamp", timestamp);
-        packageParams.put("url", oem.getUrl());
+        packageParams.put("url", url);
         RequestHandler reqHandler = new RequestHandler(null, null);
         String sign = reqHandler.createSha1Sign(packageParams);
         packageParams.put("sign", sign);
