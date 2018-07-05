@@ -274,6 +274,7 @@ public class GameProcessUtil {
         if (redisUtil.existsKey(key)) {
             catchDoll = Integer.parseInt(redisUtil.getString(key));
         }
+        logger.info("结束本轮游戏保持===gameNum={},key={},catchDoll={}",gameNum,key,catchDoll);
         return catchDoll;
     }
 
