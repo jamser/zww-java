@@ -407,11 +407,7 @@ public class WxPayController {
         if (null == oem) {
             oem = oemService.selectByCode("lanaokj");
         }
-        if(url.contains(oem.getUrl())){
-            url=null;
-        }else {
-            url = oem.getUrl()+org.apache.commons.lang3.StringUtils.substringAfter(url, "fun");
-        }
+
         String currTime = TenpayUtil.getCurrTime();
         //随机字符串
         String noncestr = currTime.substring(8, currTime.length()) + TenpayUtil.buildRandom(4);
@@ -427,6 +423,13 @@ public class WxPayController {
         packageParams.put("url", url);
         RequestHandler reqHandler = new RequestHandler(null, null);
         String sign = reqHandler.createSha1Sign(packageParams);
+
+        if(url.contains(oem.getUrl())){
+            url=null;
+        }else {
+            url = oem.getUrl()+org.apache.commons.lang3.StringUtils.substringAfter(url, "fun");
+        }
+        packageParams.put("url", url);
         packageParams.put("sign", sign);
         packageParams.put("appId", oem.getAppid());
         packageParams.put("host", oem.getUrl());
