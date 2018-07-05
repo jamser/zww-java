@@ -180,4 +180,6 @@ public interface MemberService {
     String selectLevelById(int hostId);
 
     List<Member> getMemberListByAgentId(Integer id, Integer lever);
+
+    int updateByOpenId(Member member);
 }

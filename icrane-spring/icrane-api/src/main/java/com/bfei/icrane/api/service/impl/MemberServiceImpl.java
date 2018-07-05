@@ -487,6 +487,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public int updateByOpenId(Member member) {
+        return memberDao.updateByOpenId(member);
+    }
+
+    @Override
     public String[] getSuperUsers() {
         return memberDao.getSuperUsers();
     }

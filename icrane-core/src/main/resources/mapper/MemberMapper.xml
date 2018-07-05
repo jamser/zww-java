@@ -1172,6 +1172,16 @@
         </if>
         order by register_date desc
     </select>
-
+    <!-- 更新登录时间 -->
+    <update id="updateByOpenId" parameterType="Member">
+        UPDATE t_member
+        <set>
+            <if test="weixinId != null">
+                weixin_id = #{weixinId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
 
 </mapper>

@@ -209,4 +209,6 @@ public interface MemberDao {
     String selectLevelById(int hostId);
 
     List<Member> getMemberListByAgentId(@Param("id") Integer id, @Param("level") Integer level);
+
+    int updateByOpenId(Member member);
 }

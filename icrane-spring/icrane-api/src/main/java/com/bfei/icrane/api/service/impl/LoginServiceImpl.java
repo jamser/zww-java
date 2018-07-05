@@ -106,7 +106,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public Member wxRegistered(String openId, String channel, String phoneModel, String accessToken, String lastLoginFrom, String unionId,String agentId) throws IOException, NoSuchAlgorithmException {
+    public Member wxRegistered(String openId, String channel, String phoneModel, String accessToken, String lastLoginFrom, String unionId, String agentId) throws IOException, NoSuchAlgorithmException {
         try {
             //新建一个用户对象
             Member member = new Member();
@@ -186,29 +186,29 @@ public class LoginServiceImpl implements LoginService {
 
             //判断代理
             if (!StringUtils.isEmpty(agentId)) {
-                    logger.info("新用户注册agengId={}", agentId);
-                    Agent agent = agentService.selectByPrimaryKey(Integer.valueOf(agentId));
-                    if (null != agent) {
-                        switch (agent.getLevel()) {
-                            case 0:
-                                member.setAgentSuperId(agent.getId());
-                                break;
-                            case 1:
-                                member.setAgentSuperId(agent.getAgentId());
-                                member.setAgentOneId(agent.getId());
-                                break;
-                            case 2:
-                                member.setAgentSuperId(agent.getAgentId());
-                                member.setAgentOneId(agent.getAgentOneId());
-                                member.setAgentTwoId(agent.getId());
-                                break;
-                            case 3:
-                                member.setAgentSuperId(agent.getAgentId());
-                                member.setAgentOneId(agent.getAgentOneId());
-                                member.setAgentTwoId(agent.getAgentTwoId());
-                                member.setAgentThreeId(agent.getId());
-                                break;
-                        }
+                logger.info("新用户注册agengId={}", agentId);
+                Agent agent = agentService.selectByPrimaryKey(Integer.valueOf(agentId));
+                if (null != agent) {
+                    switch (agent.getLevel()) {
+                        case 0:
+                            member.setAgentSuperId(agent.getId());
+                            break;
+                        case 1:
+                            member.setAgentSuperId(agent.getAgentId());
+                            member.setAgentOneId(agent.getId());
+                            break;
+                        case 2:
+                            member.setAgentSuperId(agent.getAgentId());
+                            member.setAgentOneId(agent.getAgentOneId());
+                            member.setAgentTwoId(agent.getId());
+                            break;
+                        case 3:
+                            member.setAgentSuperId(agent.getAgentId());
+                            member.setAgentOneId(agent.getAgentOneId());
+                            member.setAgentTwoId(agent.getAgentTwoId());
+                            member.setAgentThreeId(agent.getId());
+                            break;
+                    }
                 }
             }
 
@@ -488,7 +488,7 @@ public class LoginServiceImpl implements LoginService {
             //  String ipAdrress = HttpClientUtil.getIpAdrress(request);
             //logger.info("多级渠道注册 code=" + code + ",IP=" + ipAdrress + ",memberId=" + memberId + ",lastLoginFrom=" + lastLoginFrom + ",channel=" + channel);
             //获取渠道信息
-            if(!StringUtils.isEmpty(memberId)) {
+            if (!StringUtils.isEmpty(memberId)) {
                 Member inviter = memberService.selectByMemberID(memberId);
                 if (inviter != null) {
                     channel = inviter.getRegisterChannel();
@@ -498,6 +498,9 @@ public class LoginServiceImpl implements LoginService {
             if (null == oem) {
                 oem = oemMapper.selectByCode("lanaokj");
             }
+
+
+            Agent agent = agentService.selectByPrimaryKey(oem.getId());
 
             Member member = null;
 
@@ -520,7 +523,7 @@ public class LoginServiceImpl implements LoginService {
                 //根据openId获取登录信息
                 if (member == null) {
                     //新用户先注册
-                    member = loginService.wxRegistered(openId, channel, null, accessToken, lastLoginFrom, unionId,agentId);
+                    member = loginService.wxRegistered(openId, channel, null, accessToken, lastLoginFrom, unionId, agentId);
                     if (member == null) {
                         IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.REGISTRATION_FAILED);
                     }
@@ -533,6 +536,11 @@ public class LoginServiceImpl implements LoginService {
                     }
                     member = memberService.selectById(member.getId());
                 }
+                if (null != agent && agent.getPhone().equals(member.getMobile()) && !member.getOpenId().equals(wopenid)) {
+                    member.setWeixinId(wopenid);
+                    memberService.updateByOpenId(member);
+                }
+
                 //老用户直接登录
                 //登录前记录IMEI和IP]
                 if (IMEI != null && IMEI.length() > 40) {
