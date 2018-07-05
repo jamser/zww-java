@@ -65,7 +65,7 @@ public class WXUtil {
     //获得网络授权
     public static final String GET_NET_CODE_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE#wechat_redirect";
     //accexxToken
-    public static Map<String, AccessTokenVO> accessTokenMap=new HashMap<>();
+    public static Map<String, AccessTokenVO> accessTokenMap = new HashMap<>();
     //小程序accexxToken
     public static String miniappsaccessToken;
     //小程序accessToken的失效时间
@@ -219,12 +219,11 @@ public class WXUtil {
             AccessTokenVO accessTokenVO = accessTokenMap.get(oem.getCode());
 
             if (null == accessTokenVO || System.currentTimeMillis() >= accessTokenVO.getExpires_in_ticket()) {
-                accessTokenVO = new AccessTokenVO();
-
                 String accessToken = getAccessToken(oem);
                 if (StringUtils.isEmpty(accessToken)) {
                     return null;
                 }
+
                 String result = HttpUtil.get(GET_TICKET_URL.replace("ACCESS_TOKEN", accessToken));
                 //转成json对象
                 JSONObject json = JSONObject.fromObject(result);
@@ -233,7 +232,7 @@ public class WXUtil {
                 }
                 Integer expires_in = json.getInt("expires_in");
                 //失效时间=当前时间(毫秒)+7200
-
+                accessTokenVO = accessTokenMap.get(oem.getCode());
                 accessTokenVO.setTicket(json.getString("ticket"));
                 accessTokenVO.setExpires_in_ticket(System.currentTimeMillis() + ((expires_in - 60) * 1000));
 
@@ -303,8 +302,6 @@ public class WXUtil {
             return result;
         }
     }
-
-
 
 
     /**
