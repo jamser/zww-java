@@ -71,7 +71,7 @@ public class MemberController {
                 String suffix = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
                 // 修改后完整的文件名称
                 String fileKey = StringUtils.getRandomUUID();
-                String NewFileKey = "member/" + memberStr + "/" +fileKey + "." + suffix;
+                String NewFileKey = "member/" + memberStr + "/" + fileKey + "." + suffix;
 
                 byte[] bytes = file.getBytes();
                 InputStream fileInputStream = new ByteArrayInputStream(bytes);
@@ -240,18 +240,15 @@ public class MemberController {
      */
     @RequestMapping(value = "/sendLinkMobileSMS", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap sendLinkMobileSMS(String mobile, String token) throws Exception {
-        logger.info("发送绑定手机验证码短信接口参数mobile=" + mobile + "token" + token);
+    public ResultMap sendLinkMobileSMS(@RequestParam String mobile, @RequestParam String token, @RequestParam Integer memberId) throws Exception {
+        logger.info("发送绑定手机验证码短信接口参数mobile=" + mobile + "token=" + token + "memberId=" + memberId);
         try {
-            if (mobile == null || "".equals(mobile) || token == null || "".equals(token)) {
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }
-            //验证token
-            if (!validateTokenService.validataToken(token)) {
+//            验证token
+            if (!validateTokenService.validataToken(token, memberId)) {
                 logger.info("发送绑定手机验证码短信接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
                 return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
             }
-            return memberService.sendLinkMobileSMS(mobile, token);
+            return memberService.sendLinkMobileSMS(mobile, memberId);
         } catch (Exception e) {
             logger.debug("发送绑定手机验证码短信异常" + e.getMessage());
             e.printStackTrace();

@@ -252,7 +252,7 @@ public class MemberServiceImpl implements MemberService {
 
     public Member selectById(Integer Id) {
         // TODO Auto-generated method stub
-       // logger.info("selectById 参数Id:{}", Id);
+        // logger.info("selectById 参数Id:{}", Id);
         return memberDao.selectById(Id);
     }
 
@@ -275,7 +275,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member selectByOpenId(String openId) {
-       // logger.info("selectByOpenId 参数openId:{}", openId);
+        // logger.info("selectByOpenId 参数openId:{}", openId);
         try {
             return memberDao.selectByOpenId(openId);
         } catch (Exception e) {
@@ -286,13 +286,13 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     public int updateToken(MemberToken mt) {
-       // logger.info("updateToken 参数mt:{}", mt);
+        // logger.info("updateToken 参数mt:{}", mt);
         return memberDao.updateToken(mt);
     }
 
     @Transactional
     public Integer updateMember(Member mb, MemberToken mt) {
-       // logger.info("updateMember mt:{}", mt);
+        // logger.info("updateMember mt:{}", mt);
         try {
             if (memberDao.selectToken(mt) == null) {
                 memberDao.insertToken(mt);
@@ -309,19 +309,19 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public int insertToken(MemberToken mt) {
-       // logger.info("insertToken 参数mt:{}", mt);
+        // logger.info("insertToken 参数mt:{}", mt);
         return memberDao.insertToken(mt);
     }
 
     @Override
     public Member getUserInfo(Integer memberId) {
-       // logger.info("getUserInfo 参数memberId:{}", memberId);
+        // logger.info("getUserInfo 参数memberId:{}", memberId);
         return memberDao.getUserInfoById(memberId);
     }
 
     @Override
     public SystemPref getSystemPref(String code) {
-       // logger.info("getSystemPref 参数code:{}", code);
+        // logger.info("getSystemPref 参数code:{}", code);
         return systemPrefDao.selectByPrimaryKey(code);
     }
 
@@ -372,15 +372,14 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public ResultMap sendLinkMobileSMS(String mobile, String token) {
+    public ResultMap sendLinkMobileSMS(String mobile, Integer memberId) {
         try {
 
             //被绑手机没注册过
             Member member = selectByMobile(mobile);
             if (member == null) {
 
-                MemberToken memberToken = validateTokenDao.selectByToken(token);
-                Member user=selectById(memberToken.getMemberId());
+                Member user = selectById(memberId);
                 Oem oem = oemMapper.selectByCode(user.getRegisterChannel());
 
                 PropFileManager propFileMgr = new PropFileManager("interface.properties");

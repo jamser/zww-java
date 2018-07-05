@@ -151,7 +151,7 @@ public interface MemberService {
      * @param token
      * @return
      */
-    ResultMap sendLinkMobileSMS(String mobile, String token);
+    ResultMap sendLinkMobileSMS(String mobile, Integer memberId);
 
     String selectOpenIdByUnionId(String unionId);
 
