@@ -46,7 +46,7 @@ import com.bfei.icrane.game.task.HeartbeatDetectTask;
  */
 @ServerEndpoint("/webSocket/{memberId}/{dollId}/{key}/{device}/{queue}/{token}")
 public class WebSocketController {
-	public static final boolean printer = false;
+    public static final boolean printer = false;
     private static final Logger logger = LoggerFactory.getLogger(WebSocketController.class);
     // 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static final AtomicInteger onlineCount = new AtomicInteger(0);
@@ -59,23 +59,23 @@ public class WebSocketController {
     public static final Map<Integer, RoomSession> roomSessionMap;
 
     private AliyunService aliyunService = AliyunServiceImpl.getInstance();
-    
+
     private LocalMachineService localMachineService = LocalMachineServiceImpl.getInstance();
 
     //public static ScheduledExecutorService cachedPool = Executors.newScheduledThreadPool(80);
     //ThreadPoolExecutor.DiscardPolicy() 抛弃当前的任务
-   // public static ExecutorService cachedPool = new ThreadPoolExecutor(3, 3000,10L, TimeUnit.SECONDS,new LinkedBlockingQueue<Runnable>(),new ThreadPoolExecutor.DiscardPolicy());
-    public static ExecutorService cachedPool =new ThreadPoolExecutor(5, 3000, 10L, TimeUnit.SECONDS,new SynchronousQueue<Runnable>());
+    // public static ExecutorService cachedPool = new ThreadPoolExecutor(3, 3000,10L, TimeUnit.SECONDS,new LinkedBlockingQueue<Runnable>(),new ThreadPoolExecutor.DiscardPolicy());
+    public static ExecutorService cachedPool = new ThreadPoolExecutor(5, 3000, 10L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
     //  public static ExecutorService popPool = Executors.newFixedThreadPool(50);
-    
-	//private Date heartbeatDetectTime;//心跳检测时间
-	//private boolean heartbeatFlag;//心跳检测标记
+
+    //private Date heartbeatDetectTime;//心跳检测时间
+    //private boolean heartbeatFlag;//心跳检测标记
     private HeartbeatDetectTask heartTask;
     //private Thread popMsgThread;// 接收消息的线程
 
     public volatile boolean popMsgFlag = false;
     private Date checkMsgDate = null;
-    
+
     private boolean newMachineType = false;//
 
     static {
@@ -101,7 +101,7 @@ public class WebSocketController {
                        @PathParam(value = "token") String token) throws Exception {
 
         try {
-            logger.info("进来了onOpen。。。。。。。。。。。。。。。。" );
+            logger.info("进来了onOpen。。。。。。。。。。。。。。。。");
             this.dollId = Integer.parseInt(dollId);
             this.userId = Integer.parseInt(memberId);
             //如果已经有人在玩则关闭session
@@ -109,17 +109,17 @@ public class WebSocketController {
             if (localMachineService.standMachine(memberId, this.dollId)) {
                 session.close();
                 return;
-            } 
+            }
             if (webSocketMap.containsKey(this.dollId)) {
                 //RoomSession roomSession = roomSessionMap.get(dollId);
                 //logger.info("娃娃机" + dollId + "已有人连接");
                 session.close();
             } else {
-              //  logger.info("将玩家" + memberId + "在房间" + dollId + "的session添加到全局map中");
-              //  logger.info("afterConnection接口参数memberId=" + memberId + "," + "dollId=" + dollId + "," + "key=" + key + "," + "device=" + device + "," + "queue=" + queue + "," + "token=" + token);
+                //  logger.info("将玩家" + memberId + "在房间" + dollId + "的session添加到全局map中");
+                //  logger.info("afterConnection接口参数memberId=" + memberId + "," + "dollId=" + dollId + "," + "key=" + key + "," + "device=" + device + "," + "queue=" + queue + "," + "token=" + token);
                 //验证token有效性
                 //logger.info("调用玩家" + memberId + "的token验证接口");
-                String httpResponse = localMachineService.validateToken(token,memberId);
+                String httpResponse = localMachineService.validateToken(token, memberId);
                 if (httpResponse.equals("false")) {
                     logger.info("Token验证失败！");
                     try {
@@ -129,17 +129,17 @@ public class WebSocketController {
                     }
                 }
                 newMachineType = false;
-                if (device.indexOf("a")>0) {
-                	newMachineType = true;
-                } 
+                if (device.indexOf("a") > 0) {
+                    newMachineType = true;
+                }
                 //有效token
                 localMachineService.onOpen(memberId, this.dollId);
-               // redisUtil.setString(roomHostKey, memberId, 60 * 5);
-               // redisUtil.setString(RedisKeyGenerator.getGameResult(this.dollId), "0", 60 * 5);//游戏结果
+                // redisUtil.setString(roomHostKey, memberId, 60 * 5);
+                // redisUtil.setString(RedisKeyGenerator.getGameResult(this.dollId), "0", 60 * 5);//游戏结果
                 webSocketMap.put(this.dollId, session);
                 webSocketControllerMap.put(this.dollId, this);
                 RoomSession roomSession = new RoomSession();
-               // roomSession.setHeartbeatDetectTime(new Date());
+                // roomSession.setHeartbeatDetectTime(new Date());
                 roomSession.setToken(token);
                 String nickname = "玩家" + memberId;
                 String housename = "娃娃机" + dollId;
@@ -159,7 +159,7 @@ public class WebSocketController {
                 roomSession.setEndGameUrl(endGameUrl);
                 roomSession.setExitDollRoomUrl(exitDollRoomUrl);
                 roomSession.setConsumeUrl(LocalMachineServiceImpl.propFileMgr.getProperty("webapi.consumeGame"));
-                heartTask = new HeartbeatDetectTask(dollId,memberId,token,endGameUrl,exitDollRoomUrl);
+                heartTask = new HeartbeatDetectTask(dollId, memberId, token, endGameUrl, exitDollRoomUrl);
                 heartTask.setHeartbeatDetectTime(TimeUtil.getTime());
                 roomSessionMap.put(this.dollId, roomSession);
                 //开启接受消息的线程
@@ -172,15 +172,15 @@ public class WebSocketController {
                 //popMsgThread.start();
                 //开启物联网检测
                 cachedPool.submit(heartTask);
-              //  cachedPool.scheduleAtFixedRate(heartTask,0,1,TimeUnit.SECONDS);
+                //  cachedPool.scheduleAtFixedRate(heartTask,0,1,TimeUnit.SECONDS);
                 if (!newMachineType) {
-                	Runnable rb = new Runnable() {
-                		@Override
-                		public void run() {
-                    		ReceivingMessage(roomSession.getIotStatusQueue());
-                    	}
-                	};
-                	cachedPool.execute(rb);
+                    Runnable rb = new Runnable() {
+                        @Override
+                        public void run() {
+                            ReceivingMessage(roomSession.getIotStatusQueue());
+                        }
+                    };
+                    cachedPool.execute(rb);
                 }
             }
         } catch (Exception e) {
@@ -190,15 +190,15 @@ public class WebSocketController {
 
     public void ReceivingMessage(String queueName) {
         try {
-            logger.info("进来了ReceivingMessage。。。。。。。。。。。。。。。。" );
-        	RoomSession roomSession = roomSessionMap.get(this.dollId);
+            logger.info("进来了ReceivingMessage。。。。。。。。。。。。。。。。");
+            RoomSession roomSession = roomSessionMap.get(this.dollId);
             Message message = null;
             String messageRawBody = "";
             //logger.info("队列名称:"+queueName+":popMsgFlag:"+popMsgFlag);
             while (popMsgFlag) {
-            	if (printer) {
-            		logger.info("开始从阿里云物联网套件接受到消息popMsgFlag:"+popMsgFlag);
-            	}
+                if (printer) {
+                    logger.info("开始从阿里云物联网套件接受到消息popMsgFlag:" + popMsgFlag);
+                }
                 message = (Message) aliyunService.getMessageMnsQueue(queueName);
                 Date enqueueTime = message.getEnqueueTime();
                 messageRawBody = message.getMessageBodyAsRawString();
@@ -207,20 +207,21 @@ public class WebSocketController {
                 //logger.info("转发消息时间基准为：" + TimeUtil.formate(checkMsgDate));
                 //logger.info("时间差值为：" + (enqueueTime.getTime() - checkMsgDate.getTime()));
                 //if (checkMsgDate == null || enqueueTime.after(checkMsgDate)) {
- 
+
                 //if (checkMsgDate == null || (enqueueTime.getTime() - checkMsgDate.getTime()>=-1000000)) {
-                	if(messageRawBody!=null && !"".equals(messageRawBody)) {
-                		//收到ready产生游戏编号
-                		//过滤游戏重复指令
-                		/*if(messageRawBody.indexOf("gotToy")>0) {
-                        	localMachineService.onDollCatch(roomSession.getMemberId(),"1");
+                if (messageRawBody != null && !"".equals(messageRawBody)) {
+                    //收到ready产生游戏编号
+                    //过滤游戏重复指令
+                        /*if(messageRawBody.indexOf("gotToy")>0) {
+                            localMachineService.onDollCatch(roomSession.getMemberId(),"1");
                         }*/
-                		if(localMachineService.onReceived(messageRawBody ,userId ,dollId)) {
-                			sendMessage(messageRawBody, dollId, popMsgFlag);
-                		};
-                	}
-               // } else {
-               //     logger.info("消息时间过早，不转发至手机端。");
+                    if (localMachineService.onReceived(messageRawBody, userId, dollId)) {
+                        sendMessage(messageRawBody, dollId, popMsgFlag);
+                    }
+                    ;
+                }
+                // } else {
+                //     logger.info("消息时间过早，不转发至手机端。");
                 //}
             }
             //return;
@@ -230,18 +231,18 @@ public class WebSocketController {
     }
 
     //向所有客户端发送消息
-    public synchronized void sendMessage(String info, Integer dollId,boolean popSend) {
+    public synchronized void sendMessage(String info, Integer dollId, boolean popSend) {
         try {
 //            logger.info("进来了sendMessage前。。。。。。。。。。。。。。。。" + info);
 //				for (Map.Entry<Integer, WebSocketController> entry : webSocketMap.entrySet()) {
 //					entry.getValue().session.getBasicRemote().sendText(info);
 //					logger.info("向手机端" + entry.getKey() + "转发消息:"+info);
 //				}
-            if (webSocketMap.get(dollId) != null && webSocketMap.get(dollId).isOpen() && webSocketMap.get(dollId).getBasicRemote()!=null && popSend && info!=null) {
+            if (webSocketMap.get(dollId) != null && webSocketMap.get(dollId).isOpen() && webSocketMap.get(dollId).getBasicRemote() != null && popSend && info != null) {
  /*           	String[] infos = info.split("}");
-            	final String sText = infos[0] + "}";*/
-              logger.info("进来了sendMessage后。。。。。。。。。。。。。。。。" + info);
-            	webSocketMap.get(dollId).getBasicRemote().sendText(info);
+                final String sText = infos[0] + "}";*/
+                logger.info("进来了sendMessage后。。。。。。。。。。。。。。。。" + info);
+                webSocketMap.get(dollId).getBasicRemote().sendText(info);
                 //logger.info("向在娃娃机" + dollId + "手机端" + roomSessionMap.get(dollId).getMemberId() + "转发消息:" + info);
             } else {
                 logger.info("会话已断开，不向在娃娃机" + dollId + "的玩家" + roomSessionMap.get(dollId).getMemberId() + "转发消息:" + info);
@@ -266,52 +267,52 @@ public class WebSocketController {
         //sendMessageToUser(msg.getTo(), new TextMessage(new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create().toJson(msg)));
         // 调用阿里物联网套件接口
         if (printer) {
-        	logger.info("从手机端接收到消息：" + message);
-    	}
+            logger.info("从手机端接收到消息：" + message);
+        }
         String IotMessage = "";
         //heartbeatDetectTime = TimeUtil.getTime();
         checkMsgDate = new Date();//投币后设置时间戳基准
         //heartTask.setHeartbeatDetectTime(new Date());
         //投币命令重置心跳
-		heartTask.setHeartbeatDetectTime(TimeUtil.getTime());
+        heartTask.setHeartbeatDetectTime(TimeUtil.getTime());
         try {
-        	IotMessage = localMachineService.onMessage(newMachineType, message, roomSession.getMemberId(), dollId, roomSession.getDevice());
+            IotMessage = localMachineService.onMessage(newMachineType, message, roomSession.getMemberId(), dollId, roomSession.getDevice());
 //            logger.info("IotMessage：" + IotMessage);
-        	if ("维修中".equals(IotMessage)) {
-        		webSocketMap.get(dollId).close();//清除状态
-        		webSocketMap.remove(dollId);
-        		webSocketControllerMap.remove(dollId);
-        		this.popMsgFlag = false;
-        		return;
-        	}
-        	if ("coin".equals(message) && !newMachineType) {
-        		//投币命令重置心跳
-        		heartTask.setHeartbeatDetectTime(TimeUtil.getTime());
-        		   pubMessageIot(roomSession.getProductKey(), roomSession.getIotControlTopic(), IotMessage);
-                   IotMessage = "{\"control\":\"right\"}";
-                   pubMessageIot(roomSession.getProductKey(), roomSession.getIotControlTopic(), IotMessage);
-                   IotMessage = "{\"control\":\"stop\"}";
-                   pubMessageIot(roomSession.getProductKey(), roomSession.getIotControlTopic(), IotMessage);
-                   IotMessage = "";
-        	}
+            if ("维修中".equals(IotMessage)) {
+                webSocketMap.get(dollId).close();//清除状态
+                webSocketMap.remove(dollId);
+                webSocketControllerMap.remove(dollId);
+                this.popMsgFlag = false;
+                return;
+            }
+            if ("coin".equals(message) && !newMachineType) {
+                //投币命令重置心跳
+                heartTask.setHeartbeatDetectTime(TimeUtil.getTime());
+                pubMessageIot(roomSession.getProductKey(), roomSession.getIotControlTopic(), IotMessage);
+                IotMessage = "{\"control\":\"right\"}";
+                pubMessageIot(roomSession.getProductKey(), roomSession.getIotControlTopic(), IotMessage);
+                IotMessage = "{\"control\":\"stop\"}";
+                pubMessageIot(roomSession.getProductKey(), roomSession.getIotControlTopic(), IotMessage);
+                IotMessage = "";
+            }
             if ("".equals(IotMessage)) {
-            	return;
+                return;
             }
             pubMessageIot(roomSession.getProductKey(), roomSession.getIotControlTopic(), IotMessage);
         } catch (ServerException e) {
             logger.error("从手机端接收消息过程中出错!", e);
         }
     }
-    
-    private void pubMessageIot(String productKey,String iotControlTopic,String message) throws ServerException, ClientException {
-    		logger.info("==========测试===================productKey：{}，iotControlTopic：{}", productKey, iotControlTopic);
-    		 PubResponse response = (PubResponse) aliyunService.pubMessageIot(productKey, iotControlTopic, message);
-         	if (response.getSuccess()) {
-             //logger.info("向阿里云物联网套件发送消息成功：" + message);
-         	} else {
-             logger.info("向阿里云物联网套件发送消息失败：" + message);
-         	}
-    	
+
+    private void pubMessageIot(String productKey, String iotControlTopic, String message) throws ServerException, ClientException {
+        logger.info("==========测试===================productKey：{}，iotControlTopic：{}", productKey, iotControlTopic);
+        PubResponse response = (PubResponse) aliyunService.pubMessageIot(productKey, iotControlTopic, message);
+        if (response.getSuccess()) {
+            //logger.info("向阿里云物联网套件发送消息成功：" + message);
+        } else {
+            logger.info("向阿里云物联网套件发送消息失败：" + message);
+        }
+
     }
 
     /*
@@ -319,19 +320,19 @@ public class WebSocketController {
      */
     @OnClose
     public void onClose() {
-        logger.info("进来了onClose。。。。。。。。。。。。。。。。" );
+        logger.info("进来了onClose。。。。。。。。。。。。。。。。");
         RoomSession roomSession = roomSessionMap.get(this.dollId);
         String tokenStr = roomSession.getToken();
         Integer userId = roomSession.getMemberId();
         try {
-        	onlineCount.decrementAndGet();
+            onlineCount.decrementAndGet();
             //终止接收消息的线程
             //popMsgFlag = false;
             //roomSession.close();
             //roomSession.setPopMsgFlag(false);
             //logger.info("已停止玩家"+roomSession.getMemberId()+"的接受消息线程");
           /* if (redisUtil.existsKey(RedisKeyGenerator.getMemberClaw(roomSession.getMemberId()))) {
-				Integer num = 0 ;
+                Integer num = 0 ;
 				num = Integer.parseInt(redisUtil.getString(RedisKeyGenerator.getMemberClaw(roomSession.getMemberId())));
 				if (num==0) {
 					roomSession.consumeGame();
@@ -339,52 +340,63 @@ public class WebSocketController {
 			}*/
             //调用结束游戏接口
             //logger.info("在娃娃机" + roomSession.getDollId() + "的用户" + roomSession.getMemberId() + "已断开连接，开始调用结束游戏接口！");
-           // roomSession.endGameMsg();
+            // roomSession.endGameMsg();
             //logger.info("在娃娃机" + roomSession.getDollId() + "的用户" + roomSession.getMemberId() + "已断开连接，已调用结束游戏接口！");
             //终止心跳检测的线程
-            	heartTask.setHeartbeatFlag(false);
-           // logger.info("已停止玩家" + roomSession.getMemberId() + "的心跳检测线程");
-        	if (roomSessionMap.containsKey(dollId) && !newMachineType) {
-               // logger.info("将玩家" + roomSession.getMemberId() + "在房间" + dollId + "的session从全局map中移除");
-               
-        		//补下抓
-       		 if(localMachineService.leaveClaw(this.userId,this.dollId)) {
-                 String IotMessage = "{\"control\":\"claw\"}";
-                 PubResponse response = (PubResponse) aliyunService.pubMessageIot(roomSession.getProductKey(), roomSession.getIotControlTopic(), IotMessage);
-                 if (response.getSuccess()) {
-                    // logger.info("向阿里云物联网套件发送消息成功：claw");
-                	//扣费
-                 } else {
-                    // logger.info("向阿里云物联网套件发送消息失败：claw");
-                 }
-                 localMachineService.addClaw(userId,dollId);
-                 //logger.info("将玩家" + roomSession.getMemberId() + "在房间" + roomSession.getDollId() + "的session从全局map中移除");
-                 String message = String.format("[%s,%s]", roomSession.getNickname(), "结束控制" + roomSession.getHousename());
-                 logger.info(message);
-       		 }
-       		 	localMachineService.consumeGame(tokenStr, userId, dollId);
-       			localMachineService.historyGame(tokenStr, userId, dollId);
-         	 //结束游戏及时发送下抓
-         		localMachineService.onClose(tokenStr, userId, dollId);
-         		popMsgFlag = false;
+            heartTask.setHeartbeatFlag(false);
+            // logger.info("已停止玩家" + roomSession.getMemberId() + "的心跳检测线程");
+            if (roomSessionMap.containsKey(dollId) && !newMachineType) {
+                // logger.info("将玩家" + roomSession.getMemberId() + "在房间" + dollId + "的session从全局map中移除");
+
+                //补下抓
+                if (localMachineService.leaveClaw(this.userId, this.dollId)) {
+                    String IotMessage = "{\"control\":\"claw\"}";
+                    PubResponse response = (PubResponse) aliyunService.pubMessageIot(roomSession.getProductKey(), roomSession.getIotControlTopic(), IotMessage);
+                    if (response.getSuccess()) {
+                        // logger.info("向阿里云物联网套件发送消息成功：claw");
+                        //扣费
+                    } else {
+                        // logger.info("向阿里云物联网套件发送消息失败：claw");
+                    }
+                    localMachineService.addClaw(userId, dollId);
+                    //logger.info("将玩家" + roomSession.getMemberId() + "在房间" + roomSession.getDollId() + "的session从全局map中移除");
+                    String message = String.format("[%s,%s]", roomSession.getNickname(), "结束控制" + roomSession.getHousename());
+                    logger.info(message);
+                }
+                logger.info("roomSessionMap.containsKey(dollId) && !newMachineType");
+                localMachineService.consumeGame(tokenStr, userId, dollId);
+                localMachineService.historyGame(tokenStr, userId, dollId, 1);
+                //结束游戏及时发送下抓
+                localMachineService.onClose(tokenStr, userId, dollId);
+                popMsgFlag = false;
                 roomSessionMap.remove(dollId);
             }
-        	
-        	if (newMachineType && MachineServiceImpl.machineSocketMap.containsKey(this.dollId)) {
-        		//补下抓
-        		 if(localMachineService.leaveClaw(this.userId,this.dollId)) {
-        			 MachineServiceImpl.sendMsg(roomSession.getDevice()+"|control|weakClaw", this.dollId,roomSession.getMemberId());
-        			 localMachineService.addClaw(this.userId,dollId);
-        		 };
-        		//补扣费 补游戏记录
-               	localMachineService.consumeGame(tokenStr, userId, dollId);
-               	localMachineService.historyGame(tokenStr, userId, dollId);
-               	localMachineService.onClose(tokenStr, userId, dollId);
-               	popMsgFlag = false;
-        		//MachineServiceImpl.machineSocketMap.get(this.dollId).close();
-            	MachineServiceImpl.machineSocketMap.remove(this.dollId);
-        	}
-        	
+
+            if (newMachineType && MachineServiceImpl.machineSocketMap.containsKey(this.dollId)) {
+                //补下抓
+                if (localMachineService.leaveClaw(this.userId, this.dollId)) {
+                    MachineServiceImpl.sendMsg(roomSession.getDevice() + "|control|weakClaw", this.dollId, roomSession.getMemberId());
+                    localMachineService.addClaw(this.userId, dollId);
+                }
+                ;
+                int state = 0;
+                // 判断是否补扣费
+                if (localMachineService.leaveConsume(this.userId, this.dollId)) {
+                    state = 1;
+                    //补扣费
+                    localMachineService.consumeGame(tokenStr, userId, dollId);
+                }
+                ;
+
+                //补游戏记录
+                logger.info("补游戏记录state={}", state);
+                localMachineService.historyGame(tokenStr, userId, dollId, state);
+                localMachineService.onClose(tokenStr, userId, dollId);
+                popMsgFlag = false;
+                //MachineServiceImpl.machineSocketMap.get(this.dollId).close();
+                MachineServiceImpl.machineSocketMap.remove(this.dollId);
+            }
+
             if (webSocketMap.containsKey(dollId)) {
                 webSocketMap.remove(dollId);
                 webSocketControllerMap.remove(dollId);
@@ -392,14 +404,14 @@ public class WebSocketController {
         } catch (Exception e) {
             logger.error("关闭连接后处理过程中出现异常", e);
             if (webSocketMap.containsKey(dollId)) {
-            	 try {
-					webSocketMap.get(dollId).close();
-					webSocketMap.remove(dollId);
-					webSocketControllerMap.remove(dollId);
-				} catch (IOException e1) {
-					 logger.error("关闭连接后处理过程中出现异常", e);
-				}
-                
+                try {
+                    webSocketMap.get(dollId).close();
+                    webSocketMap.remove(dollId);
+                    webSocketControllerMap.remove(dollId);
+                } catch (IOException e1) {
+                    logger.error("关闭连接后处理过程中出现异常", e);
+                }
+
             }
         }
     }
@@ -407,15 +419,24 @@ public class WebSocketController {
     @OnError
     public void onError(Session session, Throwable error) {
         try {
-          //  logger.info("进来了onError。。。。。。。。。。。。。。。。" );
-           //redisUtil.delKey(RedisKeyGenerator.getRoomHostKey(this.dollId));
-        	RoomSession roomSession = roomSessionMap.get(this.dollId);
-        	if (roomSession!=null) {
-            String tokenStr = roomSession.getToken();
-            Integer userId = roomSession.getMemberId();
-            localMachineService.consumeGame(tokenStr, userId, dollId);
-           	localMachineService.historyGame(tokenStr, userId, dollId);
-        	}
+            //redisUtil.delKey(RedisKeyGenerator.getRoomHostKey(this.dollId));
+            RoomSession roomSession = roomSessionMap.get(this.dollId);
+            if (roomSession != null) {
+                logger.info("onError...........");
+                String tokenStr = roomSession.getToken();
+                Integer userId = roomSession.getMemberId();
+                int state = 0;
+                // 判断是否补扣费
+                if (localMachineService.leaveConsume(this.userId, this.dollId)) {
+                    state = 1;
+                    //补扣费
+                    localMachineService.consumeGame(tokenStr, userId, dollId);
+                }
+
+                //补游戏记录
+                logger.info("补游戏记录state={}", state);
+                localMachineService.historyGame(tokenStr, userId, dollId, state);
+            }
             logger.error("session处理过程中出现异常");
         } catch (Exception e) {
             //heartbeatFlag = false;

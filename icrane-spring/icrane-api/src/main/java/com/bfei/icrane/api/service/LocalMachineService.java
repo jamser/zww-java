@@ -14,7 +14,7 @@ public interface LocalMachineService {
 	 
 	 void consumeGame(String token,Integer userId,Integer dollId) throws ClientProtocolException;
 	 
-	 void historyGame(String token,Integer userId,Integer dollId) throws ClientProtocolException;
+	 void historyGame(String token,Integer userId,Integer dollId,Integer state) throws ClientProtocolException;
 	 
 	 void onClose(String token,Integer userId,Integer dollId) throws ClientProtocolException;
 	 //是否补发下抓
