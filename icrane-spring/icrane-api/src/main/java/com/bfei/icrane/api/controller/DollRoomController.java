@@ -1,10 +1,13 @@
 package com.bfei.icrane.api.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import com.bfei.icrane.common.util.*;
+import com.bfei.icrane.api.service.DollRoomService;
+import com.bfei.icrane.api.service.GameService;
+import com.bfei.icrane.api.service.MemberService;
+import com.bfei.icrane.common.util.Enviroment;
+import com.bfei.icrane.common.util.ResultMap;
+import com.bfei.icrane.core.models.Member;
+import com.bfei.icrane.core.pojos.CatchDollPojo;
+import com.bfei.icrane.core.service.ValidateTokenService;
 import org.apache.commons.collections4.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,15 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import com.bfei.icrane.api.service.DollRoomService;
-import com.bfei.icrane.api.service.GameService;
-import com.bfei.icrane.api.service.MemberService;
-import com.bfei.icrane.core.models.Doll;
-import com.bfei.icrane.core.models.Member;
-import com.bfei.icrane.core.pojos.CatchDollPojo;
-import com.bfei.icrane.core.pojos.DollImgPojo;
-import com.bfei.icrane.core.service.DollService;
-import com.bfei.icrane.core.service.ValidateTokenService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/dollRoom")
@@ -32,8 +29,6 @@ public class DollRoomController {
     private DollRoomService dollRoomService;
     @Autowired
     private ValidateTokenService validateTokenService;
-    @Autowired
-    private DollService dollService;
     @Autowired
     private MemberService memberService;
     @Autowired
@@ -84,16 +79,16 @@ public class DollRoomController {
         Map<String, Object> resultMap = new HashedMap<>();
         try {
             // 验证token有效性
-            if (StringUtils.isEmpty(token) || !validateTokenService.validataToken(token, memberId)) {
+            if (!validateTokenService.validataToken(token, memberId)) {
                 resultMap.put("success", Enviroment.RETURN_FAILE);
                 resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
                 resultMap.put("message", Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
                 return resultMap;
             }
-            Integer userId = gameService.takeToken2Member(token);
-            if (userId > 0) {//兼容memberId 传错了 userId
-                memberId = userId;
-            }
+//            Integer userId = gameService.takeToken2Member(token);
+//            if (userId > 0) {//兼容memberId 传错了 userId
+//                memberId = userId;
+//            }
 //            logger.info("判断 元素是否是集合 key的成员入参getRoomKey:{},memberId:{}" + RedisKeyGenerator.getRoomKey(dollId), String.valueOf(memberId));
             //用户进入房间
             gameService.enterDoll(dollId, memberId);
@@ -132,10 +127,10 @@ public class DollRoomController {
                 return resultMap;
             }
             // DollRoom dollRoom = dollRoomService.getDollId(memberId);
-            Integer userId = gameService.takeToken2Member(token);
-            if (userId > 0) {//兼容memberId 传错了 userId
-                memberId = userId;
-            }
+//            Integer userId = gameService.takeToken2Member(token);
+//            if (userId > 0) {//兼容memberId 传错了 userId
+//                memberId = userId;
+//            }
             gameService.exitDoll(memberId);
             /*	清除玩家游戏状态  代码提取方法
              * int dollId;
@@ -204,8 +199,7 @@ public class DollRoomController {
      */
     @RequestMapping(value = "/getDollRoom", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> getDollRoom(Integer dollId, Integer count, String token) throws Exception {
-       // logger.info("获取房间信息接口参数：dollId:{},token:{},count:{}", dollId, token, count);
+    public Map<String, Object> getDollRoom(@RequestParam Integer dollId, @RequestParam Integer count, @RequestParam String token) throws Exception {
         Map<String, Object> resultMap = new HashedMap<String, Object>();
         // DollRoom dollRoom = new DollRoom();
         // int offset = 0;
@@ -215,8 +209,7 @@ public class DollRoomController {
         }
         try {
             // 验证token有效性
-            if (StringUtils.isEmpty(token) || !validateTokenService.validataToken(token)) {
-                logger.info("判断token有效性：{}", token);
+            if (!validateTokenService.validataToken(token)) {
                 resultMap.put("success", Enviroment.RETURN_FAILE);
                 resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
                 resultMap.put("message", Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
@@ -224,7 +217,6 @@ public class DollRoomController {
                 return resultMap;
             }
             Long dollRoomCount = gameService.onLineCount(dollId);
-            //logger.info("获取在线人数服务器返回：{}", dollRoomCount);
             if (dollRoomCount != 0) {
                 List<String> memberHeadIdList = gameService.takeRoomMembers(dollId, count);
                 List<Member> memberHeadList = new ArrayList<>();
@@ -232,39 +224,36 @@ public class DollRoomController {
                     Member memberHead = memberService.selectById(Integer.parseInt(memberHeadId));
                     memberHeadList.add(memberHead);
                 }
-                //logger.info("获取count个用户头像memberHeadList：{}");
-                List<DollImgPojo> dollImgList = dollRoomService.getDollImg(dollId);
+//                List<DollImgPojo> dollImgList = dollRoomService.getDollImg(dollId);
 
                 Member playMember = null;
-                //logger.info("获取在玩用户入参dollId：{}", dollId);
-                //String playMemberId = redisUtil.getString(RedisKeyGenerator.getRoomHostKey(dollId));
                 String playMemberId = gameService.takeRoomHostMember(dollId);
                 //logger.info("获取在玩用户playMemberId：{}", playMemberId);
                 if (playMemberId != null) {
                     playMember = memberService.selectById(Integer.parseInt(playMemberId));
                     //logger.info("在玩用户playMember：{}", playMember);
                 }
-                Doll doll = dollService.selectByPrimaryKey(dollId);
-                List<CatchDollPojo> catchDolls = dollRoomService.getCatchDoll(dollId);
+//                Doll doll = dollService.selectByPrimaryKey(dollId);
+//                List<CatchDollPojo> catchDolls = dollRoomService.getCatchDoll(dollId);
                 //logger.info("抓取记录catchDolls：{}", catchDolls);
 
                 resultMap.put("dollRoomCount", dollRoomCount);
-                resultMap.put("catchDollList", catchDolls);
-                resultMap.put("dollImgList", dollImgList);
+//                resultMap.put("catchDollList", catchDolls);
+//                resultMap.put("dollImgList", dollImgList);
                 resultMap.put("playMemberMap", playMember);
-                resultMap.put("doll", doll);
+//                resultMap.put("doll", doll);
                 resultMap.put("memberHeadList", memberHeadList);
                 resultMap.put("success", Enviroment.RETURN_SUCCESS);
                 resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
                 resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
-                RedisUtil redisUtil = new RedisUtil();
-                resultMap.put("dollLike", redisUtil.sIsMember(RedisKeyGenerator.getLikeDollKey(Integer.valueOf(redisUtil.getString(token))), doll.getDollID()));
+//                RedisUtil redisUtil = new RedisUtil();
+//                resultMap.put("dollLike", redisUtil.sIsMember(RedisKeyGenerator.getLikeDollKey(Integer.valueOf(redisUtil.getString(token))), doll.getDollID()));
             } else {
                 resultMap.put("success", Enviroment.RETURN_FAILE);
                 resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
                 resultMap.put("message", Enviroment.RETURN_FAILE_MESSAGE);
             }
-           // logger.info("获取房间信息resultMap=success");
+            // logger.info("获取房间信息resultMap=success");
             return resultMap;
         } catch (Exception e) {
             logger.error("获取房间信息出错", e);

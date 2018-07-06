@@ -1,27 +1,25 @@
 package com.bfei.icrane.api.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.bfei.icrane.api.facade.ServiceFacade;
+import com.bfei.icrane.api.service.DollMonitorService;
 import com.bfei.icrane.api.service.DollRoomService;
+import com.bfei.icrane.api.service.GameService;
+import com.bfei.icrane.api.service.MemberService;
 import com.bfei.icrane.common.util.*;
+import com.bfei.icrane.core.models.Member;
+import com.bfei.icrane.core.pojos.MemberInfoPojo;
+import com.bfei.icrane.core.service.ValidateTokenService;
+import com.bfei.icrane.game.GameStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import com.bfei.icrane.api.facade.ServiceFacade;
-import com.bfei.icrane.api.service.DollMonitorService;
-import com.bfei.icrane.api.service.GameService;
-import com.bfei.icrane.api.service.MemberService;
-import com.bfei.icrane.core.models.Member;
-import com.bfei.icrane.core.pojos.MemberInfoPojo;
-import com.bfei.icrane.core.service.DollService;
-import com.bfei.icrane.core.service.ValidateTokenService;
-import com.bfei.icrane.game.GameStatusEnum;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Author: mwan
@@ -178,12 +176,12 @@ public class GameController {
     //客户端收到”idle”或者”gotToy”消息后，立即调用此接口
     @RequestMapping(value = "/endRound", method = RequestMethod.POST)
     @ResponseBody
-    public IcraneResult endRound(Integer memberId, Integer dollId, Integer gotDoll, String token, String state, Integer version) throws Exception {
+    public IcraneResult endRound(@RequestParam Integer memberId, @RequestParam Integer dollId, Integer gotDoll, @RequestParam String token, String state, Integer version) throws Exception {
         //logger.info("结束本轮游戏endRound token="+token);
         logger.info("结束本轮游戏保持socket连接并调用的接口memberId=" + memberId + "," + "dollId=" + dollId + "," + "gotDoll" + gotDoll + "," + "token=" + token + ",state=" + state);
         try {
             //验证token有效性
-            if (memberId == null || StringUtils.isEmpty(token) || !validateTokenService.validataToken(token, memberId)) {
+            if (!validateTokenService.validataToken(token, memberId)) {
                 return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_UNAUTHORIZED_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
             }
             /*Integer userId = gameService.takeToken2Member(token);
@@ -248,10 +246,10 @@ public class GameController {
                     !validateTokenService.validataToken(token, memberId)) {
                 return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_UNAUTHORIZED_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
             }
-            Integer userId = gameService.takeToken2Member(token);
-            if (userId > 0) {//兼容memberId 传错了 userId
-                memberId = userId;
-            }
+//            Integer userId = gameService.takeToken2Member(token);
+//            if (userId > 0) {//兼容memberId 传错了 userId
+//                memberId = userId;
+//            }
             GameStatusEnum result = gameService.end(dollId, memberId);
             switch (result) {
                 case GAME_END:

@@ -18,19 +18,9 @@ public class AgentPojo {
 
     private String username;
 
-    private String phone;
-
     private String nickName;
 
     private Integer level;
-
-    private Integer agentId;
-
-    private Integer agentOneId;
-
-    private Integer agentTwoId;
-
-    private BigDecimal fee;
 
     private Long balance;
 

@@ -548,7 +548,7 @@ public class DollController {
                 return resultMap;
             }
             List<CatchHistory> dollHisTory = catchHistoryService.getCatchHistoryLists(memberId.longValue());
-            if (dollHisTory != null) {
+            if (null != dollHisTory) {
                 List<Map<String, Object>> dh = new ArrayList<>();
                 for (CatchHistory catchHistory : dollHisTory) {
                     Map<String, Object> map = new HashMap<>();
@@ -565,12 +565,11 @@ public class DollController {
                 resultMap.put("success", Enviroment.RETURN_SUCCESS);
                 resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
                 resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
-            } else if (dollHisTory == null) {
+            } else {
                 resultMap.put("success", Enviroment.RETURN_FAILE);
                 resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
                 resultMap.put("message", Enviroment.RETURN_FAILE_MESSAGE);
             }
-//            logger.info("获取抓取记录成功");
             return resultMap;
         } catch (Exception e) {
             logger.error("获取我的娃娃出错", e);
@@ -581,22 +580,20 @@ public class DollController {
     //从缓存中获取娃娃机状态和人数
     @RequestMapping(value = "/getDollStatus", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> getDollStatus(@RequestParam("dollIds") Integer[] dollIds, String token, HttpServletRequest request) throws Exception {
+    public Map<String, Object> getDollStatus(@RequestParam("dollIds") Integer[] dollIds, @RequestParam String token) throws Exception {
         logger.debug("从缓存中获取娃娃机状态和人数：{},token:{}", dollIds, token);
         Map<String, Object> resultMap = new HashedMap<String, Object>();
 
         try {
             //验证token有效性
-            /*if (token == null || "".equals(token) || !validateTokenService.validataToken(token)) {
+            if (!validateTokenService.validataToken(token)) {
                 resultMap.put("success", Enviroment.RETURN_FAILE);
                 resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
                 resultMap.put("message", Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-
                 return resultMap;
-            }*/
+            }
 
-            logger.debug("获取娃娃机状态和在线人数接口参数是：{}", dollIds.toString());
-            if (dollIds == null || dollIds.length == 0) {
+            if (dollIds.length == 0) {
                 resultMap.put("success", Enviroment.RETURN_FAILE);
                 resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
                 resultMap.put("message", "传入娃娃机id参数不对");
@@ -608,9 +605,6 @@ public class DollController {
                 int hostId;
                 String hostInfoKey;
                 Doll doll;
-                String head = request.getHeader("head");
-                //logger.info("getDollList********请求head="+head);
-                SystemPref syspref = systemPrefService.selectByPrimaryKey("IOS_STATE");
                 for (int i = 0; i < dollIds.length; i++) {
                     dollId = dollIds[i];
                     RoomStatusPojo roomStatus = new RoomStatusPojo();
@@ -666,9 +660,7 @@ public class DollController {
                             }
                         }
                     }
-                    if ("0".equals(syspref.getValue()) && head == null) {//IOS状态开关
-                        roomStatus.setStatus("维修中");
-                    }
+
                     resultData.add(roomStatus);
                     if (StringUtils.isEmpty(resultData.get(0).getHostInfo()) && "游戏中".equals(resultData.get(0).getStatus()) && !StringUtils.isEmpty(dollId)) {
                         redisUtil.delKey(RedisKeyGenerator.getRoomStatusKey(dollId));
@@ -684,8 +676,6 @@ public class DollController {
                 resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
                 resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
             }
-
-            logger.debug("获取娃娃机状态和在线人数resultMap=" + resultMap);
             return resultMap;
         } catch (Exception e) {
             logger.error("获取娃娃机状态和在线人数出错", e);
