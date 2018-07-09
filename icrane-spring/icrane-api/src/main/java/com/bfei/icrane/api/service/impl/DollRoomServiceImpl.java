@@ -253,6 +253,9 @@ public class DollRoomServiceImpl implements DollRoomService {
         if (num == 1) {//扣费一次
             //扣费操作
             Account baseAccount = member.getAccount();
+            if(doll.getPrice()>baseAccount.getCoins()){
+                return false;
+            }
             Account account = new Account();
             account.setId(baseAccount.getId());
             member.setModifiedDate(TimeUtil.getTime());
@@ -265,6 +268,7 @@ public class DollRoomServiceImpl implements DollRoomService {
             //扣费操作
             //account.setCoins(currCoins - doll.getPrice());
             account.setCoins(-doll.getPrice());
+
             if ("1".equals(state)) {//异常结束
                 account.setCoins(0);
             } else {
