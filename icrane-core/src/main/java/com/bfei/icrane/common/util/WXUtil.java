@@ -273,6 +273,35 @@ public class WXUtil {
         return longurl;
     }
 
+
+    public static String qrcode(String ecode, Oem oem) {
+        String url_ticket = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=";
+        JSONObject resp = new JSONObject();
+        JSONObject resp2 = new JSONObject();
+        JSONObject resp3 = new JSONObject();
+        resp3.put("scene_str", ecode);
+        resp2.put("scene", resp3);
+        resp.put("action_info", resp2);
+        resp.put("action_name", "QR_LIMIT_STR_SCENE");
+        try {
+            String accessToken = getAccessToken(oem);
+            if (StringUtils.isEmpty(accessToken)) {
+                return null;
+            }
+            String url_tickets = url_ticket + accessToken;
+            String msg = doPost(resp.toString(), url_tickets, "POST");
+            JSONObject  resp4 = JSONObject.fromObject(msg);
+           // System.out.println(resp4.toString());
+            if (resp4.containsKey("url")) {
+                return resp4.getString("url");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
     /**
      * 获取AccessToken
      *
