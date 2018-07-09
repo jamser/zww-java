@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -303,6 +304,34 @@ public class WXUtil {
 
 
     /**
+     * 获取用户信息
+     *
+     * @return
+     */
+    public static JSONObject getUserInfo(String openid, Oem oem) {
+        String info = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
+        try {
+            String accessToken = getAccessToken(oem);
+            if (StringUtils.isEmpty(accessToken)) {
+                return null;
+            }
+            info = info.replace("ACCESS_TOKEN",accessToken).replace("OPENID",openid);
+            String msg = doPost("", info, "GET");
+            JSONObject  resp4 = JSONObject.fromObject(msg);
+            if (!resp4.containsKey("errcode")) {
+                resp4.put("access_token",accessToken);
+                return resp4;
+            }else{
+                logger.info("获取获取用户信息异常:" + resp4.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    /**
      * 获取AccessToken
      *
      * @return
@@ -331,7 +360,6 @@ public class WXUtil {
             return result;
         }
     }
-
 
     /**
      * 向指定 URL 发送POST方法的请求

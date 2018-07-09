@@ -1,5 +1,7 @@
 package com.bfei.icrane.common.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -18,6 +20,8 @@ import com.google.gson.reflect.TypeToken;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import sun.misc.BASE64Encoder;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Author: mwan Version: 1.1 Date: 2017/09/16 Description: Methods used to
@@ -242,6 +246,27 @@ public class StringUtils {
             dest = m.replaceAll("");
         }
         return dest;
+    }
+
+
+    /**
+     * 获取请求数据
+     * @作者 bruce
+     * @创建时间 2017年5月10日
+     * @param request
+     * @return
+     * @throws IOException
+     */
+    public static String getRequestData(HttpServletRequest request) throws IOException{
+        StringBuffer sbJson = new StringBuffer();
+        String jsonStr=null;
+        String line = null;
+        BufferedReader reader = request.getReader();
+        while((line = reader.readLine()) != null) {
+            sbJson.append(line);
+        }
+        jsonStr=sbJson.toString();
+        return jsonStr;
     }
 
 }
