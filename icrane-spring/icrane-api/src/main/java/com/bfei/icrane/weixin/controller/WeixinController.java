@@ -28,9 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 @Controller
@@ -248,11 +246,25 @@ public class WeixinController {
                     if (StringUtils.isNotEmpty(key)) {
                         insertMember(key, fromUserName,request);//扫描带参数二维码事件处理
                     }
-               /*     Image image = new Image();
-                    image.setMediaId();
-                    ImageMessage imageMessage = new ImageMessage();
-                    imageMessage.setImage();*/
-                    break;
+                    List<Article> articleList = new ArrayList<Article>();
+                    Article article = new Article();
+                    article.setPicUrl("http://mmbiz.qpic.cn/mmbiz_jpg/pm2dXw6QpVbnK8kEicnwxTdj2iaOPoY5PtuLTQgCLghhJNBibzicMEA39Y7DUwR0tRlJD51cYPzSoBmTHciaOGw8KQw/0?wx_fmt=jpeg");
+                    article.setDescription("bruce");
+                    article.setTitle("网搜抓娃娃操作流程");
+                    article.setUrl("http://mmbiz.qpic.cn/mmbiz_jpg/pm2dXw6QpVbnK8kEicnwxTdj2iaOPoY5PtohoYsuu4skeG2rAKE6AIgXr4n8yDWmIN5y17r2Q3hCZckaq7yYASnw/0?wx_fmt=jpeg");
+                    NewsMessage newsMessage = new NewsMessage();
+                    newsMessage.setToUserName(fromUserName);
+                    newsMessage.setFromUserName(toUserName);
+                    newsMessage.setCreateTime(new Date().getTime());
+                    newsMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_NEWS);
+                    newsMessage.setFuncFlag(0);
+                    articleList.add(article);
+                    // 设置图文消息个数
+                    newsMessage.setArticleCount(articleList.size());
+                    // 设置图文消息包含的图文集合
+                    newsMessage.setArticles(articleList);
+                    // 将图文消息对象转换成xml字符串
+                    return MessageUtil.newsMessageToXml(newsMessage);
                 case subscribe://新关注
                     //事件KEY值，qrscene_为前缀，后面为二维码的参数值
                     if (StringUtils.isNotEmpty(eventKey)) {
@@ -263,15 +275,16 @@ public class WeixinController {
                     } else {//普通关注事件
                         return "success";
                     }
-                    //回复文本消息
-            /*        Map<String, String> map = new HashMap<String, String>();
-                    map.put("ToUserName", fromUserName);
-                    map.put("FromUserName", toUserName);
-                    map.put("CreateTime", new Date().getTime() + "");
-                    map.put("MsgType", "text");
-                    map.put("Content", "");
-                    String respMessage = XmlUtil.mapToXml(map);
-                    return respMessage;*/
+                    Image image = new Image();
+                    image.setMediaId("PNI789FlvjpUMDO4QGnspbEpY8RVu3xs3P4ng6Np_2A");
+                    ImageMessage imageMessage = new ImageMessage();
+                    imageMessage.setImage(image);
+                    imageMessage.setCreateTime(new Date().getTime());
+                    imageMessage.setFromUserName(toUserName);
+                    imageMessage.setToUserName(fromUserName);
+                    imageMessage.setFuncFlag(0);
+                    imageMessage.setMsgType(MessageUtil.REQ_MESSAGE_TYPE_IMAGE);
+                    return  MessageUtil.imageMessageToXml(imageMessage);
                 case unsubscribe:
                     // TODO 取消订阅后用户再收不到公众号发送的消息，因此不需要回复消息
                     break;
@@ -343,6 +356,13 @@ public class WeixinController {
             loginService.wxLogin(member, "wxWeb", channel, null);
         }
 
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "ppppp",method= RequestMethod.GET)
+    protected Object batchget_material(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+             JSONObject jsonObject =  WXUtil.batchget_material(oemMapper.selectByCode(request.getParameter("lanaokj")));
+             return jsonObject.toString();
     }
 }
 

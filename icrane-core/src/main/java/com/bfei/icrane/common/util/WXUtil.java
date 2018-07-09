@@ -6,21 +6,15 @@ import com.bfei.icrane.core.models.vo.AccessTokenVO;
 import net.sf.json.JSONObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Created by SUN on 2017/12/27.
@@ -148,6 +142,25 @@ public class WXUtil {
         return response;
     }
 
+    public static JSONObject batchget_material(Oem oem) {
+        String getUserInfoUri = "https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=";
+        JSONObject json =new JSONObject();
+        json.put("type","image");
+        json.put("offset","0");
+        json.put("count","10");
+        try {
+            String accessToken = getAccessToken(oem);
+            if (StringUtils.isEmpty(accessToken)) {
+                return null;
+            }
+            String url_shorts = getUserInfoUri + accessToken;
+            String msg = doPost(json.toString(), url_shorts, "POST");
+            return JSONObject.fromObject(msg);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     /***
      * 模拟get请求
      * @param url
