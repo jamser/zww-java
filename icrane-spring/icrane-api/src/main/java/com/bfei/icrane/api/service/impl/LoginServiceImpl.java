@@ -563,6 +563,42 @@ public class LoginServiceImpl implements LoginService {
         return null;
     }
 
+    @Override
+    public ResultMap weChatLoginFrom(HttpServletRequest request, String code,String channel,String lastLoginFrom,String phoneModel) {
+        Oem oem = oemMapper.selectByCode(channel);
+        Agent agent = agentService.selectByPrimaryKey(oem.getId());
+
+        Member member = null;
+
+        String result = WXUtil.getOauthInfo(code, "老子是H5", oem);
+        JSONObject object = JSONObject.fromObject(result);
+        if (object.has("access_token")) {
+            String accessToken = object.getString("access_token");
+            String unionId = object.getString("unionid");
+            String wopenid = object.getString("openid");
+
+            //unionId登录兼容问题
+            String openId = memberService.selectOpenIdByUnionId(unionId);
+            if (StringUtils.isEmpty(openId)) {
+                openId = wopenid;
+            }
+            member = memberService.selectByOpenId(openId);
+            if (null != agent && agent.getPhone().equals(member.getMobile()) && !member.getOpenId().equals(wopenid)) {
+                member.setWeixinId(wopenid);
+                memberService.updateByOpenId(member);
+            }
+
+            //风控信息
+            int register = riskManagementService.register(member.getId(), "IMEI", HttpClientUtil.getIpAdrress(request));
+            if (register != 1) {
+                return new ResultMap(Enviroment.ERROR_CODE, Enviroment.RISK_CONTROL_ABNORMAL);
+            }
+            IcraneResult icraneResult = loginService.wxLogin(member, lastLoginFrom, channel, phoneModel);
+            return new ResultMap(icraneResult.getMessage(), icraneResult.getResultData());
+        }
+        return null;
+    }
+
     /**
      * 生成不重复的MemberId
      *
