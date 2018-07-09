@@ -326,6 +326,7 @@ public class WeixinController {
         return "success";
     }
     public void insertMember(String state, String wopenid,HttpServletRequest request)throws  Exception{
+        logger.info("state={},wopenid={}",state,wopenid);
         int endIndex = state.indexOf("-");
         String agentId = "";
 
@@ -340,6 +341,7 @@ public class WeixinController {
         if (endIndex > -1) {
             channel = channel.substring(0, endIndex);
         }
+        logger.info("[insertMember]方法state={},wopenid={},agentId={},channel={}",state,wopenid,agentId,channel);
         Oem oem = oemMapper.selectByCode(channel);
         if (null == oem) {
             oem = oemMapper.selectByCode("lanaokj");
@@ -359,12 +361,14 @@ public class WeixinController {
             }
             Member  member = memberService.selectByOpenId(openId);
             if (member == null) {
+                logger.info("微信事件注册新用户");
                 //新用户先注册
                 member = loginService.wxRegistered(openId, channel, null, accessToken, "wxWeb", unionId, agentId);
                 if (member == null) {
                     IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.REGISTRATION_FAILED);
                 }
             }
+            logger.info("用户信息: member={}",member);
         }
 
     }
