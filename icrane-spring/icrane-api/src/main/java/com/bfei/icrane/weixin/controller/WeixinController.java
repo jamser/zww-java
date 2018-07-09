@@ -104,6 +104,27 @@ public class WeixinController {
         }
     }
 
+    @RequestMapping("/WeChatLogin")
+    @ResponseBody
+    public void weChatLogin(HttpServletRequest request, HttpServletResponse response, String code, String state, String
+            phoneModel) throws Exception {
+        try {
+
+            Object resultData = loginService.weChatLoginFrom(request, code, "wxWeb", state, phoneModel).getResultData();
+            if (null == resultData) {
+                return;
+            }
+            MemberInfo member = (MemberInfo) resultData;
+            Oem oem = oemService.selectByCode(member.getMember().getRegisterChannel());
+            if (null != oem) {
+                host = oem.getUrl();
+            }
+            String url = host + "/" + "lanaokj" + "/wxLogin.html?memberId=" + member.getMember().getId() + "&token=" + member.getToken();
+            response.sendRedirect(url);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
 
     @RequestMapping(value = "weixincoreservlet",method= RequestMethod.GET)
@@ -323,7 +344,6 @@ public class WeixinController {
         if (null == oem) {
             oem = oemMapper.selectByCode("lanaokj");
         }
-        Agent agent = agentService.selectByPrimaryKey(oem.getId());
         JSONObject json = WXUtil.getUserInfo(wopenid,oem);
         if(!StringUtils.isEmpty(json)){
             String accessToken = json.getString("access_token");
@@ -345,15 +365,6 @@ public class WeixinController {
                     IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.REGISTRATION_FAILED);
                 }
             }
-            if (null != agent && agent.getPhone().equals(member.getMobile()) && !member.getOpenId().equals(wopenid)) {
-                member.setWeixinId(wopenid);
-                memberService.updateByOpenId(member);
-            }
-            int register = riskManagementService.register(member.getId(), "IMEI", HttpClientUtil.getIpAdrress(request));
-            if (register != 1) {
-                return;
-            }
-            loginService.wxLogin(member, "wxWeb", channel, null);
         }
 
     }
