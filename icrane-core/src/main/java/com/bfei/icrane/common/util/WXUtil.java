@@ -3,6 +3,7 @@ package com.bfei.icrane.common.util;
 import com.bfei.icrane.common.wx.utils.WxConfig;
 import com.bfei.icrane.core.models.Oem;
 import com.bfei.icrane.core.models.vo.AccessTokenVO;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -143,11 +144,14 @@ public class WXUtil {
     }
 
     public static JSONObject batchget_material(Oem oem) {
-        String getUserInfoUri = "https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=";
+       // String getUserInfoUri = "https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=";
+        String getUserInfoUri = "https://api.weixin.qq.com/cgi-bin/material/del_material?access_token=";
+
         JSONObject json =new JSONObject();
-        json.put("type","image");
+     /*   json.put("type","image");
         json.put("offset","0");
-        json.put("count","10");
+        json.put("count","10");*/
+        json.put("media_id","PNI789FlvjpUMDO4QGnspZa4hM3YrhWj_27fN4ZfzlQ");
         try {
             String accessToken = getAccessToken(oem);
             if (StringUtils.isEmpty(accessToken)) {
@@ -309,6 +313,41 @@ public class WXUtil {
             if (resp4.containsKey("url")) {
                 return resp4.getString("url");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public static Integer createMenu(Oem oem){
+        try {
+            String accessToken = getAccessToken(oem);
+            if (StringUtils.isEmpty(accessToken)) {
+                return null;
+            }
+            String URL = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + accessToken;
+            JSONObject json=new JSONObject();
+            JSONObject json1=new JSONObject();
+            JSONArray jar1 = new JSONArray();
+            //菜单栏一：
+            json1.put("name", "首页");
+            json1.put("type", "view");
+            json1.put("key", "ceshi");
+            json1.put("url", "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+oem.getAppid()
+                    +"&redirect_uri=http%3A%2F%2Flanao.nat300.top/icrane/api/WeChatLogin&response_type=code&scope=snsapi_userinfo&state="+oem.getCode()+"#wechat_redirect");
+            jar1.add(0, json1);
+            //菜单栏二：
+            json1=new JSONObject();
+            json1.put("name", "代理商中心");
+            json1.put("type", "view");
+            json1.put("key", "ceshi");
+            json1.put("url", oem.getUrl() + "/lanaokj/login.html");
+            jar1.add(1, json1);
+            json.put("button", jar1);
+            String msg = doPost(json.toString(),URL,"POST");
+            JSONObject  resp4 = JSONObject.fromObject(msg);
+            return resp4.getInt("errcode");
         } catch (Exception e) {
             e.printStackTrace();
         }
