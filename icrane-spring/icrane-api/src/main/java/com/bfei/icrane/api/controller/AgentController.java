@@ -4,6 +4,7 @@ import com.bfei.icrane.api.service.AgentService;
 import com.bfei.icrane.api.service.AgentWithdrawService;
 import com.bfei.icrane.api.service.MemberService;
 import com.bfei.icrane.common.util.*;
+import com.bfei.icrane.core.form.AgentChangePasswordForm;
 import com.bfei.icrane.core.form.AgentChangePwdForm;
 import com.bfei.icrane.core.form.AgentForm;
 import com.bfei.icrane.core.form.AgentLoginForm;
@@ -104,7 +105,7 @@ public class AgentController {
 
     @RequestMapping(value = "/loginOut", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap loginOut(@RequestParam Integer memberId, @RequestParam Integer agentId,String token) {
+    public ResultMap loginOut(@RequestParam Integer memberId, @RequestParam Integer agentId, String token) {
 
         Member member = memberService.selectById(memberId);
         if (ObjectUtils.isEmpty(member)) {
@@ -284,7 +285,7 @@ public class AgentController {
      * @param changePwdForm
      * @return
      */
-    @RequestMapping(value = "/agentChangePwd", method = RequestMethod.POST)
+    @RequestMapping(value = "/agentForgetPwd", method = RequestMethod.POST)
     @ResponseBody
     public ResultMap agentChangePwd(@Valid AgentChangePwdForm changePwdForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -321,6 +322,47 @@ public class AgentController {
         }
         return new ResultMap(Enviroment.ERROR_CODE, Enviroment.AGENT_PHONE_ERROR);
     }
+
+
+    /**
+     * 修改密码
+     *
+     * @param changePwdForm
+     * @return
+     */
+    @RequestMapping(value = "/agentChangePassword", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap agentChangePassword(@Valid AgentChangePasswordForm changePwdForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            logger.error("{【修改密码】参数不正确, changePwdForm={}", changePwdForm);
+            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, bindingResult.getFieldError().getDefaultMessage());
+        }
+//        验证token
+        if (!validateTokenService.validataAgentToken(changePwdForm.getToken(), changePwdForm.getAgentId())) {
+            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+        }
+        logger.info("【agentChangePassword】修改密码 AgentChangePasswordForm={}", changePwdForm);
+
+        //验证密码
+        if (!changePwdForm.getNewPassword().equals(changePwdForm.getConfirmPassword())) {
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.AGENT_PASSWORD_ERROR);
+        }
+        Agent agent = agentService.selectByPrimaryKey(changePwdForm.getAgentId());
+        //验证密码
+        if (!MD5Utils.md5(changePwdForm.getOldPassword(), agent.getSalt()).equals(agent.getPassword())) {
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, "密码错误");
+        }
+        agent.setPassword(MD5Utils.md5(changePwdForm.getNewPassword(), agent.getSalt()));
+
+        int i = agentService.updateByPrimaryKeySelective(agent);
+        if (i == 1) {
+            logger.info("【代理修改密码成功】agent={}", agent);
+            return new ResultMap("修改成功");
+        }
+        return new ResultMap(Enviroment.ERROR_CODE, Enviroment.AGENT_PHONE_ERROR);
+    }
+
 
     /**
      * 获取代理商邀请人数

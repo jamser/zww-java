@@ -565,6 +565,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public ResultMap weChatLoginFrom(HttpServletRequest request, String code,String channel,String lastLoginFrom,String phoneModel) {
+        logger.info("方法[weChatLoginFrom]参数：code={},channel={},lastLoginFrom={},phoneModel={}",code,channel,lastLoginFrom,phoneModel);
         Oem oem = oemMapper.selectByCode(channel);
         Agent agent = agentService.selectByPrimaryKey(oem.getId());
 
@@ -573,6 +574,7 @@ public class LoginServiceImpl implements LoginService {
         String result = WXUtil.getOauthInfo(code, "老子是H5", oem);
         JSONObject object = JSONObject.fromObject(result);
         if (object.has("access_token")) {
+            logger.info("JSONObject={}",object.toString());
             String accessToken = object.getString("access_token");
             String unionId = object.getString("unionid");
             String wopenid = object.getString("openid");
