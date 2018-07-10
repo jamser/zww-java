@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
  * Created by moying on 2018/6/5.
  */
 @Data
-public class AgentChangePwdForm {
+public class AgentChangeForgetForm {
 
     @NotEmpty
     @Pattern(regexp = "^[0-9a-zA-Z]{6,16}$", message = "密码只能6～16位英文字符或者数字")

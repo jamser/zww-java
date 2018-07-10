@@ -263,4 +263,9 @@ public class AgentServiceImpl implements AgentService {
     public BankInfo selectByBankId(Integer id) {
         return bankInfoMapper.selectByPrimaryKey(id);
     }
+
+    @Override
+    public List<Agent> selectByPhoneLists(String phone) {
+        return agentMapper.selectByPhoneLists(phone);
+    }
 }

@@ -51,4 +51,6 @@ public interface AgentService {
     ResultMap getInviteLists(Integer agentId);
 
     BankInfo selectByBankId(Integer id);
+
+    List<Agent> selectByPhoneLists(String phone);
 }

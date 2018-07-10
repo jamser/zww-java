@@ -2,6 +2,8 @@ package com.bfei.icrane.core.dao;
 
 import com.bfei.icrane.core.models.Agent;
 
+import java.util.List;
+
 public interface AgentMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -20,4 +22,7 @@ public interface AgentMapper {
     Agent selectByUserName(String username);
 
     Agent selectByPhone(String phone);
+
+    List<Agent> selectByPhoneLists(String phone);
+
 }

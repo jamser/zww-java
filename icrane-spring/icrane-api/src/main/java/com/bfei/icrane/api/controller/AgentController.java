@@ -4,10 +4,7 @@ import com.bfei.icrane.api.service.AgentService;
 import com.bfei.icrane.api.service.AgentWithdrawService;
 import com.bfei.icrane.api.service.MemberService;
 import com.bfei.icrane.common.util.*;
-import com.bfei.icrane.core.form.AgentChangePasswordForm;
-import com.bfei.icrane.core.form.AgentChangePwdForm;
-import com.bfei.icrane.core.form.AgentForm;
-import com.bfei.icrane.core.form.AgentLoginForm;
+import com.bfei.icrane.core.form.*;
 import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.AgentToken;
 import com.bfei.icrane.core.models.Member;
@@ -24,7 +21,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -271,23 +270,23 @@ public class AgentController {
     @ResponseBody
     public ResultMap agentChangePwd(@RequestParam String phone) {
 
-        Agent agent = agentService.selectByPhone(phone);
-        if (null == agent) {
+        List<Agent> agentList = agentService.selectByPhoneLists(phone);
+        if (ObjectUtils.isEmpty(agentList)) {
             return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.AGENT_PHONE_NOT_EXIT);
         }
-        return agentService.sendPhoneCode(phone, "忘记密码", agent);
+        return agentService.sendPhoneCode(phone, "忘记密码", agentList.get(0));
     }
 
 
     /**
-     * 忘记密码
+     * 忘记密码-预先
      *
      * @param changePwdForm
      * @return
      */
     @RequestMapping(value = "/agentForgetPwd", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap agentChangePwd(@Valid AgentChangePwdForm changePwdForm, BindingResult bindingResult) {
+    public ResultMap agentChangePwd(@Valid AgentChangeForgetForm changePwdForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             logger.error("{【忘记密码】参数不正确, changePwdForm={}", changePwdForm);
             return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, bindingResult.getFieldError().getDefaultMessage());
@@ -301,26 +300,58 @@ public class AgentController {
         if (!changePwdForm.getSmsCode().equals(trueCode)) {
             return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.SMSCODE_IS_FALSE);
         }
-        logger.info("【agentChangePwd】修改密码 参数AgentChangePwdForm={}", changePwdForm);
-        Agent agent = agentService.selectByPhone(changePwdForm.getPhone());
-
-        if (null == agent) {
+        logger.info("【agentChangePwd】忘记密码 参数AgentChangePwdForm={}", changePwdForm);
+        List<Agent> agentList = agentService.selectByPhoneLists(changePwdForm.getPhone());
+        if (ObjectUtils.isEmpty(agentList)) {
             return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.AGENT_NOT_EXIT);
         }
-
-        //验证密码
+        //判断密码是否一致
         if (!changePwdForm.getPassword().equals(changePwdForm.getConfirmPassword())) {
             return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.AGENT_PASSWORD_ERROR);
         }
+        if (agentList.size() == 1) {
+            agentList.get(0).setPassword(MD5Utils.md5(changePwdForm.getPassword(), agentList.get(0).getSalt()));
+            int i = agentService.updateByPrimaryKeySelective(agentList.get(0));
+            if (i == 1) {
+                logger.info("【代理修改密码成功】agent={}", agentList.get(0));
+                return new ResultMap("修改成功");
+            }
+        }
+        List<AgentPojo> agentPojoList = new ArrayList<>();
+        for (int i = 0; i < agentList.size(); i++) {
+            AgentPojo agentPojo = new AgentPojo();
+            BeanUtils.copyProperties(agentList.get(i), agentPojo);
+            agentPojoList.add(agentPojo);
+        }
+        return new ResultMap("操作成功", agentPojoList);
+    }
 
+    /**
+     * 忘记密码-确认
+     *
+     * @return //
+     */
+    @RequestMapping(value = "/agentForgetPwdConfirm", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap agentChangePwdConfirm(@Valid AgentChangeForgetConfirmForm changePwdForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, bindingResult.getFieldError().getDefaultMessage());
+        }
+        Agent agent = agentService.selectByPrimaryKey(changePwdForm.getAgentId());
+        if (StringUtils.isEmpty(agent)) {
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.AGENT_LOGIN_FAILE);
+        }
+        //判断密码是否一致
+        if (!changePwdForm.getPassword().equals(changePwdForm.getConfirmPassword())) {
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.AGENT_PASSWORD_ERROR);
+        }
         agent.setPassword(MD5Utils.md5(changePwdForm.getPassword(), agent.getSalt()));
-
         int i = agentService.updateByPrimaryKeySelective(agent);
         if (i == 1) {
             logger.info("【代理修改密码成功】agent={}", agent);
             return new ResultMap("修改成功");
         }
-        return new ResultMap(Enviroment.ERROR_CODE, Enviroment.AGENT_PHONE_ERROR);
+        return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
     }
 
 
@@ -332,7 +363,8 @@ public class AgentController {
      */
     @RequestMapping(value = "/agentChangePassword", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap agentChangePassword(@Valid AgentChangePasswordForm changePwdForm, BindingResult bindingResult) {
+    public ResultMap agentChangePassword(@Valid AgentChangePasswordForm changePwdForm, BindingResult
+            bindingResult) {
         if (bindingResult.hasErrors()) {
             logger.error("{【修改密码】参数不正确, changePwdForm={}", changePwdForm);
             return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, bindingResult.getFieldError().getDefaultMessage());
