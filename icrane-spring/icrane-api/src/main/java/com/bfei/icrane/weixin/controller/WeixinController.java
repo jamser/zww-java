@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -43,14 +44,6 @@ public class WeixinController {
 
     @Autowired
     private MemberService memberService;
-
-    @Autowired
-    private AgentService agentService;
-
-    @Autowired
-    private OemMapper oemMapper;
-    @Autowired
-    private RiskManagementService riskManagementService;
 
     private String host = "http://h5.lanao.fun";
 
@@ -109,8 +102,8 @@ public class WeixinController {
     public void weChatLogin(HttpServletRequest request, HttpServletResponse response, String code, String state, String
             phoneModel) throws Exception {
         try {
-
-            Object resultData = loginService.weChatLoginFrom(request, code, "wxWeb", state, phoneModel).getResultData();
+            logger.info("[weChatLogin]code={},state={},phoneModel={}", code, state, phoneModel);
+            Object resultData = loginService.weChatLoginFrom(request, code, state, "wxWeb", phoneModel).getResultData();
             if (null == resultData) {
                 return;
             }
@@ -127,7 +120,7 @@ public class WeixinController {
     }
 
 
-    @RequestMapping(value = "weixincoreservlet",method= RequestMethod.GET)
+    @RequestMapping(value = "weixincoreservlet", method = RequestMethod.GET)
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html; charset=utf-8");
         // 微信加密签名
@@ -139,26 +132,25 @@ public class WeixinController {
         // 随机字符串
         String echostr = request.getParameter("echostr");
         PrintWriter out = response.getWriter();
-        if(signature != null &&
+        if (signature != null &&
                 timestamp != null &&
                 nonce != null &&
-                echostr != null){
+                echostr != null) {
             // 通过检验signature对请求进行校验，若校验成功则原样返回echostr，表示接入成功，否则接入失败
             if (SignUtil.checkSignature(signature, timestamp, nonce)) {
                 out.print(echostr);
-            }else{
+            } else {
                 out.print("微信URL请求验证出错.");
             }
-        }else{
+        } else {
             out.print("不是合法的微信URL请求验证.");
         }
         out.close();
     }
 
 
-
     @ResponseBody
-    @RequestMapping(value = "weixincoreservlet",method=RequestMethod.POST,produces="text/html; charset=UTF-8")
+    @RequestMapping(value = "weixincoreservlet", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
     public Object weixin(HttpServletRequest request) {
         Map<String, String> reqMap;
         String xmlStr = null;
@@ -205,7 +197,7 @@ public class WeixinController {
 
         switch (msgType) {
             case event:
-                return event(reqMap,request);
+                return event(reqMap, request);
             case image:
                 TextMessage testMessage = new TextMessage();
                 testMessage.setToUserName(fromUserName);
@@ -237,12 +229,13 @@ public class WeixinController {
 
     /**
      * 事件处理
-     * @作者 bruce
-     * @创建时间 2018年9月22日
+     *
      * @param reqMap
      * @return
+     * @作者 bruce
+     * @创建时间 2018年9月22日
      */
-    public String event(Map<String,String> reqMap,HttpServletRequest request){
+    public String event(Map<String, String> reqMap, HttpServletRequest request) {
         EventEnum eventEnum;
         try {
             eventEnum = EventEnum.valueOf(reqMap.get("Event"));
@@ -265,7 +258,7 @@ public class WeixinController {
                 case SCAN://用户已经关注了
                     key = eventKey;//事件KEY值，是一个32位无符号整数，即创建二维码时的二维码scene_id
                     if (StringUtils.isNotEmpty(key)) {
-                        insertMember(key, fromUserName,request);//扫描带参数二维码事件处理
+                        insertMember(key, fromUserName, request);//扫描带参数二维码事件处理
                     }
                     break;
                 case subscribe://新关注
@@ -273,7 +266,7 @@ public class WeixinController {
                     if (StringUtils.isNotEmpty(eventKey)) {
                         key = eventKey.substring(8);
                         if (StringUtils.isNotEmpty(key)) {
-                            insertMember(key, fromUserName,request);//扫描带参数二维码事件处理
+                            insertMember(key, fromUserName, request);//扫描带参数二维码事件处理
                         }
                     } else {//普通关注事件
                     }
@@ -315,8 +308,10 @@ public class WeixinController {
 
         return "success";
     }
-    public void insertMember(String state, String wopenid,HttpServletRequest request)throws  Exception{
-        logger.info("state={},wopenid={}",state,wopenid);
+
+    @Transactional
+    public void insertMember(String state, String wopenid, HttpServletRequest request) throws Exception {
+        logger.info("state={},wopenid={}", state, wopenid);
         int endIndex = state.indexOf("-");
         String agentId = "";
 
@@ -331,14 +326,13 @@ public class WeixinController {
         if (endIndex > -1) {
             channel = channel.substring(0, endIndex);
         }
-        logger.info("[insertMember]方法state={},wopenid={},agentId={},channel={}",state,wopenid,agentId,channel);
-        Oem oem = oemMapper.selectByCode(channel);
+        logger.info("[insertMember]方法state={},wopenid={},agentId={},channel={}", state, wopenid, agentId, channel);
+        Oem oem = oemService.selectByCode(channel);
         if (null == oem) {
-            oem = oemMapper.selectByCode("lanaokj");
+            oem = oemService.selectByCode("lanaokj");
         }
-        JSONObject json = WXUtil.getUserInfo(wopenid,oem);
-        if(!StringUtils.isEmpty(json)){
-            String accessToken = json.getString("access_token");
+        JSONObject json = WXUtil.getUserInfo(wopenid, oem);
+        if (!StringUtils.isEmpty(json)) {
             String unionId = json.getString("unionid");
             //检查add表如果没有就存入
             if (StringUtils.isEmpty(memberService.selectGzhopenIdByUnionId(unionId))) {
@@ -349,24 +343,24 @@ public class WeixinController {
             if (StringUtils.isEmpty(openId)) {
                 openId = wopenid;
             }
-            Member  member = memberService.selectByOpenId(openId);
+            Member member = memberService.selectByOpenId(openId);
             if (member == null) {
                 logger.info("微信事件注册新用户");
                 //新用户先注册
-                member = loginService.wxRegistered(openId, channel, null, accessToken, "wxWeb", unionId, agentId);
+                member = loginService.weChatRegistered(openId, channel, null, "wxWeb", unionId, agentId, json);
                 if (member == null) {
                     IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.REGISTRATION_FAILED);
                 }
             }
-            logger.info("用户信息: member={}",member);
+            logger.info("用户信息: member={}", member);
         }
 
     }
 
     @ResponseBody
-    @RequestMapping(value = "createMenu",method= RequestMethod.GET)
+    @RequestMapping(value = "createMenu", method = RequestMethod.GET)
     protected Object createMenu(HttpServletRequest request) throws ServletException, IOException {
-        return WXUtil.createMenu(oemMapper.selectByCode(request.getParameter("code")));
+        return WXUtil.createMenu(oemService.selectByCode(request.getParameter("code")));
     }
 }
 

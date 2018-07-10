@@ -3,6 +3,7 @@ package com.bfei.icrane.api.service.impl;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -128,24 +129,6 @@ public class LoginServiceImpl implements LoginService {
             member.setMemberID(getMemberCode());
             //设置密码
             member.setPassword(StringUtils.EncoderByMd5(new Random().nextInt(999999) + ""));
-            //设置环信
-            /*RegisterUsers users = new RegisterUsers();
-            User user = new User().username(member.getMemberID()).password(member.getPassword());
-            users.add(user);
-            EasemobIMUsersController easemobIMU = new EasemobIMUsersController();
-            Object oResult = easemobIMU.createNewIMUserSingle(users);
-            JSONObject json = JSONObject.fromObject(oResult);
-            logger.info("登录环信返回的结果:{}", json);
-            try {
-                if (json != null) {
-                    JSONArray jsonArray = (JSONArray) json.get("entities");
-                    JSONObject getJson = jsonArray.getJSONObject(0);
-                    String uuid = getJson.getString("uuid");
-                    member.setEasemobUuid(uuid);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }*/
             // 获得用户微信信息
             HttpResponse response = WXUtil.getSns(accessToken, openId);
 
@@ -564,8 +547,8 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public ResultMap weChatLoginFrom(HttpServletRequest request, String code,String channel,String lastLoginFrom,String phoneModel) {
-        logger.info("方法[weChatLoginFrom]参数：code={},channel={},lastLoginFrom={},phoneModel={}",code,channel,lastLoginFrom,phoneModel);
+    public ResultMap weChatLoginFrom(HttpServletRequest request, String code, String channel, String lastLoginFrom, String phoneModel) {
+        logger.info("方法[weChatLoginFrom]参数：code={},channel={},lastLoginFrom={},phoneModel={}", code, channel, lastLoginFrom, phoneModel);
         Oem oem = oemMapper.selectByCode(channel);
         Agent agent = agentService.selectByPrimaryKey(oem.getId());
 
@@ -574,7 +557,7 @@ public class LoginServiceImpl implements LoginService {
         String result = WXUtil.getOauthInfo(code, "老子是H5", oem);
         JSONObject object = JSONObject.fromObject(result);
         if (object.has("access_token")) {
-            logger.info("JSONObject={}",object.toString());
+            logger.info("JSONObject={}", object.toString());
             String accessToken = object.getString("access_token");
             String unionId = object.getString("unionid");
             String wopenid = object.getString("openid");
@@ -597,6 +580,133 @@ public class LoginServiceImpl implements LoginService {
             }
             IcraneResult icraneResult = loginService.wxLogin(member, lastLoginFrom, channel, phoneModel);
             return new ResultMap(icraneResult.getMessage(), icraneResult.getResultData());
+        }
+        return null;
+    }
+
+    @Override
+    public Member weChatRegistered(String openId, String channel, String phoneModel, String lastLoginFrom, String unionId, String agentId, JSONObject object) throws UnsupportedEncodingException, NoSuchAlgorithmException, IOException {
+        try {
+            //新建一个用户对象
+            Member member = new Member();
+            //新建一个用户参数对象
+            PrefSet prefSet = new PrefSet();
+            prefSet.setMusicFlg(1);
+            prefSet.setSoundFlg(1);
+            member.setPrefset(prefSet);
+            //设置用户openId
+            member.setWeixinId(openId);
+            member.setLastLoginDate(TimeUtil.getTime());
+            member.setRegisterDate(TimeUtil.getTime());
+            member.setOnlineFlg(true);
+            //设置渠道
+            member.setRegisterChannel(channel);
+            //设置手机
+            member.setPhoneModel(phoneModel);
+            //设置MemberID
+            member.setMemberID(getMemberCode());
+            //设置密码
+            member.setPassword(StringUtils.EncoderByMd5(new Random().nextInt(999999) + ""));
+            // 获得用户微信信息
+
+
+            String nikeName = object.getString("nickname");
+            String gender = object.getString("sex");
+            String headimgurl = object.getString("headimgurl");
+            member.setName(nikeName);
+            member.setIconRealPath(headimgurl);
+            if (gender.equals("1")) {
+                member.setGender("m");
+            } else if (gender.equals("2")) {
+                member.setGender("f");
+            } else {
+                member.setGender("n");
+            }
+            //设置初始娃娃币
+            //member.setCoins(0);
+            member.setModifiedBy(member.getId());
+            member.setModifiedDate(TimeUtil.getTime());
+            member.setCatchNumber(0);
+            member.setActiveFlg(true);
+            member.setInviteFlg(false);
+            member.setFirstCharge(0);
+            member.setFirstLogin(0);
+            member.setLastLoginFrom(lastLoginFrom);
+            member.setRegisterFrom(lastLoginFrom);
+
+            //判断代理
+            if (!StringUtils.isEmpty(agentId)) {
+                logger.info("新用户注册agengId={}", agentId);
+                Agent agent = agentService.selectByPrimaryKey(Integer.valueOf(agentId));
+                if (null != agent) {
+                    switch (agent.getLevel()) {
+                        case 0:
+                            member.setAgentSuperId(agent.getId());
+                            break;
+                        case 1:
+                            member.setAgentSuperId(agent.getAgentId());
+                            member.setAgentOneId(agent.getId());
+                            break;
+                        case 2:
+                            member.setAgentSuperId(agent.getAgentId());
+                            member.setAgentOneId(agent.getAgentOneId());
+                            member.setAgentTwoId(agent.getId());
+                            break;
+                        case 3:
+                            member.setAgentSuperId(agent.getAgentId());
+                            member.setAgentOneId(agent.getAgentOneId());
+                            member.setAgentTwoId(agent.getAgentTwoId());
+                            member.setAgentThreeId(agent.getId());
+                            break;
+                    }
+                }
+            }
+
+
+            //储存用户信息
+            int result = memberDao.insertMemberBywx(member);
+            //新用户抓中娃娃 保证标示
+            redisUtil.setString(RedisKeyGenerator.getMemberToyNum(member.getId()), "0");
+            //储存渠道信息
+            int result2 = memberDao.insertChannel(member.getId(), channel, null, null);
+            //储存微信信息
+            //memberDao.insertUnionId(member.getId(), openId, unionId);
+            logger.info("插入新用户结果Result{}:{}", result, result > 0 ? "success" : "fail");
+            //注册初始化娃娃币
+            int id = 0;
+            id = memberService.insertMemberBywx(member);
+            logger.info("微信新用户登录结果:{}", id > 0 ? "success" : "fail");
+            if (id == 0) {
+                return null;
+
+            }
+            String token = StringUtils.getWxToken();
+
+            MemberToken mtoken = new MemberToken();
+            mtoken.setToken(token);
+            mtoken.setMemberId(member.getId());
+            int insertToken = memberService.insertToken(mtoken);
+            if (insertToken == 0) {
+                return null;
+            }
+            //redis 缓存设置
+            redisUtil.setString(token, String.valueOf(member.getId()), 3600 * 24);
+            //首次签到显示用
+            SystemPref systemPref = systemPrefService.selectByPrimaryKey("NEW_BONUS");
+            member.setCoins(Integer.parseInt(systemPref.getValue()));
+            //关联unionId信息
+            memberService.insertUnionId(member.getId(), openId, unionId);
+            return member;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (UnsupportedOperationException e) {
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }

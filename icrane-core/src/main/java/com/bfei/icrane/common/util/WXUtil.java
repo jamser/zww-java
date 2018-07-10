@@ -12,6 +12,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.net.*;
 import java.util.HashMap;
@@ -144,14 +145,14 @@ public class WXUtil {
     }
 
     public static JSONObject batchget_material(Oem oem) {
-       // String getUserInfoUri = "https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=";
+        // String getUserInfoUri = "https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=";
         String getUserInfoUri = "https://api.weixin.qq.com/cgi-bin/material/del_material?access_token=";
 
-        JSONObject json =new JSONObject();
+        JSONObject json = new JSONObject();
      /*   json.put("type","image");
         json.put("offset","0");
         json.put("count","10");*/
-        json.put("media_id","PNI789FlvjpUMDO4QGnspZa4hM3YrhWj_27fN4ZfzlQ");
+        json.put("media_id", "PNI789FlvjpUMDO4QGnspZa4hM3YrhWj_27fN4ZfzlQ");
         try {
             String accessToken = getAccessToken(oem);
             if (StringUtils.isEmpty(accessToken)) {
@@ -165,6 +166,7 @@ public class WXUtil {
         }
         return null;
     }
+
     /***
      * 模拟get请求
      * @param url
@@ -236,7 +238,7 @@ public class WXUtil {
         try {
             AccessTokenVO accessTokenVO = accessTokenMap.get(oem.getCode());
 
-            if (null == accessTokenVO || System.currentTimeMillis() >= accessTokenVO.getExpires_in_ticket()) {
+            if (null == accessTokenVO || null == accessTokenVO.getTicket() || System.currentTimeMillis() >= accessTokenVO.getExpires_in_ticket()) {
                 String accessToken = getAccessToken(oem);
                 if (StringUtils.isEmpty(accessToken)) {
                     return null;
@@ -308,8 +310,8 @@ public class WXUtil {
             }
             String url_tickets = url_ticket + accessToken;
             String msg = doPost(resp.toString(), url_tickets, "POST");
-            JSONObject  resp4 = JSONObject.fromObject(msg);
-           // System.out.println(resp4.toString());
+            JSONObject resp4 = JSONObject.fromObject(msg);
+            // System.out.println(resp4.toString());
             if (resp4.containsKey("url")) {
                 return resp4.getString("url");
             }
@@ -320,33 +322,33 @@ public class WXUtil {
     }
 
 
-    public static Integer createMenu(Oem oem){
+    public static Integer createMenu(Oem oem) {
         try {
             String accessToken = getAccessToken(oem);
             if (StringUtils.isEmpty(accessToken)) {
                 return null;
             }
             String URL = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + accessToken;
-            JSONObject json=new JSONObject();
-            JSONObject json1=new JSONObject();
+            JSONObject json = new JSONObject();
+            JSONObject json1 = new JSONObject();
             JSONArray jar1 = new JSONArray();
             //菜单栏一：
             json1.put("name", "首页");
             json1.put("type", "view");
             json1.put("key", "ceshi");
-            json1.put("url", "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+oem.getAppid()
-                    +"&redirect_uri=http%3A%2F%2Flanao.nat300.top/icrane/api/WeChatLogin&response_type=code&scope=snsapi_userinfo&state="+oem.getCode()+"#wechat_redirect");
+            json1.put("url", "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + oem.getAppid()
+                    + "&redirect_uri=http%3A%2F%2Flanao.nat300.top/icrane/api/WeChatLogin&response_type=code&scope=snsapi_userinfo&state=" + oem.getCode() + "#wechat_redirect");
             jar1.add(0, json1);
             //菜单栏二：
-            json1=new JSONObject();
+            json1 = new JSONObject();
             json1.put("name", "代理商中心");
             json1.put("type", "view");
             json1.put("key", "ceshi");
             json1.put("url", oem.getUrl() + "/lanaokj/login.html");
             jar1.add(1, json1);
             json.put("button", jar1);
-            String msg = doPost(json.toString(),URL,"POST");
-            JSONObject  resp4 = JSONObject.fromObject(msg);
+            String msg = doPost(json.toString(), URL, "POST");
+            JSONObject resp4 = JSONObject.fromObject(msg);
             return resp4.getInt("errcode");
         } catch (Exception e) {
             e.printStackTrace();
@@ -367,13 +369,13 @@ public class WXUtil {
             if (StringUtils.isEmpty(accessToken)) {
                 return null;
             }
-            info = info.replace("ACCESS_TOKEN",accessToken).replace("OPENID",openid);
+            info = info.replace("ACCESS_TOKEN", accessToken).replace("OPENID", openid);
             String msg = doPost("", info, "GET");
-            JSONObject  resp4 = JSONObject.fromObject(msg);
+            JSONObject resp4 = JSONObject.fromObject(msg);
             if (!resp4.containsKey("errcode")) {
-                resp4.put("access_token",accessToken);
+                resp4.put("access_token", accessToken);
                 return resp4;
-            }else{
+            } else {
                 logger.info("获取获取用户信息异常:" + resp4.toString());
             }
         } catch (Exception e) {

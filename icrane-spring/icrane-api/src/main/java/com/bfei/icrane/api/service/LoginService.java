@@ -7,6 +7,7 @@ package com.bfei.icrane.api.service;
 import com.bfei.icrane.common.util.IcraneResult;
 import com.bfei.icrane.common.util.ResultMap;
 import com.bfei.icrane.core.models.Member;
+import net.sf.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -64,5 +65,10 @@ public interface LoginService {
 
 
     ResultMap weChatLoginFrom(HttpServletRequest request, String code,String channel,String lastLoginFrom,String phoneModel);
+
+    /**
+     * 微信新用户注册
+     */
+    Member weChatRegistered(String openId, String channel, String phoneModel, String lastLoginFrom, String unionId, String agentId,JSONObject json) throws Exception;
 
 }
