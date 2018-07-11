@@ -332,7 +332,7 @@ public class WeixinController {
             oem = oemService.selectByCode("lanaokj");
         }
         JSONObject json = WXUtil.getUserInfo(wopenid, oem);
-        if (!StringUtils.isEmpty(json)) {
+        if (!StringUtils.isEmpty(json) && json.containsKey("unionid")) {
             String unionId = json.getString("unionid");
             //检查add表如果没有就存入
             if (StringUtils.isEmpty(memberService.selectGzhopenIdByUnionId(unionId))) {
@@ -353,6 +353,8 @@ public class WeixinController {
                 }
             }
             logger.info("用户信息: member={}", member);
+        } else {
+            logger.error("获取用户微信信息出错={}", json);
         }
 
     }

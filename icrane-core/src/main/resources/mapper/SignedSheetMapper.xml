@@ -67,7 +67,7 @@
 				#{memberName,jdbcType=VARCHAR},
 			</if>
 			<if test="signedDate != null">
-				'3018-04-02 22:30:54',
+				#{signedDate,jdbcType=TIMESTAMP},
 			</if>
 			<if test="createTime != null">
 				#{createTime,jdbcType=TIMESTAMP},
