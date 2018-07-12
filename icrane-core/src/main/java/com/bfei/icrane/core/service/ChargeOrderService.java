@@ -30,7 +30,7 @@ public interface ChargeOrderService {
      * @param orderNo
      * @return
      */
-    ChargeOrder orderSuccess(String orderNo,Double fee);
+    ChargeOrder orderSuccess(String orderNo, Double fee);
 
     /**
      * 订单失效
@@ -73,4 +73,6 @@ public interface ChargeOrderService {
     int selectmemberIdByOrder_no(String out_trade_no);
 
     Integer insertChargeHistory(Charge charge);
+
+    ChargeOrder selectByOrderNo(String orderNo);
 }

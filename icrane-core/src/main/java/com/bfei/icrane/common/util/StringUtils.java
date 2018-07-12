@@ -248,24 +248,33 @@ public class StringUtils {
         return dest;
     }
 
+    public static boolean success(String str) {
+        if (isNotEmpty(str)) {
+            if ("SUCCESS".equalsIgnoreCase(str)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * 获取请求数据
-     * @作者 bruce
-     * @创建时间 2017年5月10日
+     *
      * @param request
      * @return
      * @throws IOException
+     * @作者 bruce
+     * @创建时间 2017年5月10日
      */
-    public static String getRequestData(HttpServletRequest request) throws IOException{
+    public static String getRequestData(HttpServletRequest request) throws IOException {
         StringBuffer sbJson = new StringBuffer();
-        String jsonStr=null;
+        String jsonStr = null;
         String line = null;
         BufferedReader reader = request.getReader();
-        while((line = reader.readLine()) != null) {
+        while ((line = reader.readLine()) != null) {
             sbJson.append(line);
         }
-        jsonStr=sbJson.toString();
+        jsonStr = sbJson.toString();
         return jsonStr;
     }
 

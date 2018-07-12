@@ -593,4 +593,9 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
         }
         return null;
     }
+
+    @Override
+    public ChargeOrder selectByOrderNo(String orderNo) {
+        return chargeOrderDao.selectByOrderNo(orderNo);
+    }
 }

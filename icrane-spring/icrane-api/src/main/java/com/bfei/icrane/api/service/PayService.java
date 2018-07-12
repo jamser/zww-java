@@ -15,4 +15,6 @@ public interface PayService {
 */
 
     String aliNotify(HttpServletRequest request);
+
+    ResultMap queryOrder(String outTradeNo);
 }

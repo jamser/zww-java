@@ -15,6 +15,7 @@ import com.bfei.icrane.common.util.StringUtils;
 import com.bfei.icrane.common.wx.utils.*;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.service.*;
+import com.github.binarywang.wxpay.service.WxPayService;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -424,10 +425,10 @@ public class WxPayController {
         RequestHandler reqHandler = new RequestHandler(null, null);
         String sign = reqHandler.createSha1Sign(packageParams);
 
-        if(url.contains(oem.getUrl())){
-            url=null;
-        }else {
-            url = oem.getUrl()+org.apache.commons.lang3.StringUtils.substringAfter(url, "fun");
+        if (url.contains(oem.getUrl())) {
+            url = null;
+        } else {
+            url = oem.getUrl() + org.apache.commons.lang3.StringUtils.substringAfter(url, "fun");
         }
         packageParams.put("url", url);
         packageParams.put("sign", sign);
@@ -439,14 +440,13 @@ public class WxPayController {
 
 
     /**
-     * 多级渠道注册
+     *支付查询
      *
      * @return jsapiTicket
      */
-    /*@RequestMapping(value = "/weChatOfficialAccountsLogin", method = RequestMethod.POST)
+    @RequestMapping(value = "/queryOrder", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap onMenuShareTimeline(HttpServletRequest request, String code, String memberId, String lastLoginFrom, String IMEI, String phoneModel, String channel, String head) {
-
-        return loginService.weChatLogin(request, code, "", memberId, lastLoginFrom, IMEI, phoneModel, channel);
-    }*/
+    public ResultMap queryOrder(@RequestParam String outTradeNo) {
+        return payService.queryOrder(outTradeNo);
+    }
 }

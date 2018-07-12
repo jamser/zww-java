@@ -7,7 +7,9 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradeAppPayModel;
 import com.alipay.api.request.AlipayTradeAppPayRequest;
 import com.alipay.api.response.AlipayTradeAppPayResponse;
+import com.bfei.icrane.api.controller.WxPayController;
 import com.bfei.icrane.api.service.ChargeService;
+import com.bfei.icrane.api.service.MemberService;
 import com.bfei.icrane.api.service.PayService;
 import com.bfei.icrane.api.service.WxpayRecordService;
 import com.bfei.icrane.common.util.*;
@@ -15,6 +17,13 @@ import com.bfei.icrane.common.wx.utils.*;
 import com.bfei.icrane.core.dao.ChargeDao;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.service.ChargeOrderService;
+import com.bfei.icrane.core.service.OemService;
+import com.github.binarywang.wxpay.bean.result.WxPayBillResult;
+import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryResult;
+import com.github.binarywang.wxpay.config.WxPayConfig;
+import com.github.binarywang.wxpay.exception.WxPayException;
+import com.github.binarywang.wxpay.service.WxPayService;
+import com.thoughtworks.xstream.XStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +50,10 @@ public class PaySerciceImpl implements PayService {
     private ChargeService chargeService;
     @Autowired
     private WxpayRecordService wxpayRecordService;
+    @Autowired
+    private MemberService memberService;
+    @Autowired
+    private OemService oemService;
 
     /*@Override
     public ResultMap wxpay(HttpServletRequest request, int memberId, int chargeruleid) {
@@ -391,5 +404,36 @@ public class PaySerciceImpl implements PayService {
         }
         logger.info("支付宝授权回调接口返回的异常:error message");
         return "error message";
+    }
+
+    @Autowired
+    private WxPayService wxPayService;
+    @Override
+    public ResultMap queryOrder(String outTradeNo) {
+        ChargeOrder chargeOrder = chargeOrderService.selectByOrderNo(outTradeNo);
+        Member member = memberService.selectById(chargeOrder.getMemberId());
+        Oem oem = oemService.selectByCode(member.getRegisterChannel());
+        WxPayConfig wxPayConfig=new WxPayConfig();
+        wxPayConfig.setAppId(oem.getAppid());
+        wxPayConfig.setMchId(oem.getPartner());
+        wxPayConfig.setMchKey(oem.getPartnerKey());
+        wxPayService.setConfig(wxPayConfig);
+        XStream xStream=new XStream();
+        XStream.setupDefaultSecurity(xStream);
+        xStream.allowTypes(new Class[]{WxPayController.class});
+        WxpayRecord wxpayRecord = wxpayRecordService.selectByOutTradeNo(outTradeNo);
+        try {
+//            WxPayBillResult all = wxPayService.downloadBill("20180710", "ALL", null, null);
+            WxPayOrderQueryResult result = wxPayService.queryOrder(wxpayRecord.getWxOrderNo(),null);
+            if (StringUtils.success(result.getResultCode())&&StringUtils.success(result.getReturnCode())) {
+                if (StringUtils.success(result.getTradeState())) {
+                    return new ResultMap(result.getTradeState());
+                }
+            }
+
+        } catch (WxPayException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
