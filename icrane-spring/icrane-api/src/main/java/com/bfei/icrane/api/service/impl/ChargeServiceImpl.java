@@ -362,22 +362,22 @@ public class ChargeServiceImpl implements ChargeService {
         invicteCharge.setType(Enviroment.TYPE_INCOME);
         //邀请奖励
         SystemPref INVITE_BONUS = systemPrefDao.selectByPrimaryKey(Enviroment.CODE_INVITE_BONUS);
-        //邀请人上限
-        SystemPref INVITE_BONUS_COUNT = systemPrefDao.selectByPrimaryKey(Enviroment.CODE_INVITE_BONUS_COUNT);
+//        //邀请人上限
+//        SystemPref INVITE_BONUS_COUNT = systemPrefDao.selectByPrimaryKey(Enviroment.CODE_INVITE_BONUS_COUNT);
 
         invicteCharge.setInviteCoinsSum(Integer.valueOf(INVITE_BONUS.getValue()));//邀请人获取赠送币数量
         invicteCharge.setChargeMethod("由邀请好友获取,邀请好友id" + memberService.selectById(invicteCharge.getMemberId()).getMemberID());
 
-        if (INVITE_BONUS_COUNT.getType() == 1) {
-            Integer inviteLimit = INVITE_BONUS_COUNT == null ? 0 : Integer.parseInt(INVITE_BONUS_COUNT.getValue());
-            //查询邀请次数
-            Integer inviteNum = chargeDao.getChargeByInviteCode(inviteCode);
-            if (inviteNum >= inviteLimit && inviteLimit > 0) {
-                //邀请人获取赠送币数量
-                invicteCharge.setInviteCoinsSum(0);
-                invicteCharge.setChargeMethod("邀请好友奖励达到上限,邀请好友id" + memberService.selectById(invicteCharge.getMemberId()).getMemberID());
-            }
-        }
+//        if (INVITE_BONUS_COUNT.getType() == 1) {
+//            Integer inviteLimit = INVITE_BONUS_COUNT == null ? 0 : Integer.parseInt(INVITE_BONUS_COUNT.getValue());
+//            //查询邀请次数
+//            Integer inviteNum = chargeDao.getChargeByInviteCode(inviteCode);
+//            if (inviteNum >= inviteLimit && inviteLimit > 0) {
+//                //邀请人获取赠送币数量
+//                invicteCharge.setInviteCoinsSum(0);
+//                invicteCharge.setChargeMethod("邀请好友奖励达到上限,邀请好友id" + memberService.selectById(invicteCharge.getMemberId()).getMemberID());
+//            }
+//        }
         invicteCharge.setCoinsSum(Integer.valueOf(INVITE_BONUS.getValue()));//邀请获取娃娃币
 
 
