@@ -433,9 +433,11 @@ public class WebSocketController {
                     localMachineService.consumeGame(tokenStr, userId, dollId);
                 }
 
+
                 //补游戏记录
                 logger.info("补游戏记录state={}", state);
                 localMachineService.historyGame(tokenStr, userId, dollId, state);
+                localMachineService.exitDollRoom(tokenStr,userId);
             }
             logger.error("session处理过程中出现异常");
         } catch (Exception e) {

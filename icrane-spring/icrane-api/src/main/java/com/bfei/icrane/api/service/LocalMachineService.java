@@ -13,6 +13,8 @@ public interface LocalMachineService {
 	 String onMessage(boolean newMachineType,String message, Integer userId,Integer dollId,String device);
 	 
 	 void consumeGame(String token,Integer userId,Integer dollId) throws ClientProtocolException;
+
+	void exitDollRoom(String token,Integer userId) throws ClientProtocolException;
 	 
 	 void historyGame(String token,Integer userId,Integer dollId,Integer state) throws ClientProtocolException;
 	 

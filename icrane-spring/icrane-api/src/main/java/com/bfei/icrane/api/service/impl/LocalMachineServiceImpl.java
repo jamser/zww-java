@@ -66,6 +66,16 @@ public class LocalMachineServiceImpl implements LocalMachineService {
     }
 
     @Override
+    public void exitDollRoom(String token, Integer userId) throws ClientProtocolException {
+        String consumeUrl = propFileMgr.getProperty("webapi.exitDollRoom");
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("memberId", String.valueOf(userId)));
+        params.add(new BasicNameValuePair("token", token));
+        HttpClientUtil.getInstance().executeByPOST(consumeUrl, params);
+        logger.info("未正常->清除房间状态");
+    }
+
+    @Override
     public void historyGame(String token, Integer userId, Integer dollId,Integer state) throws ClientProtocolException {
         if (this.leaveHistory(userId, dollId)) {
             String endRoundUrl = propFileMgr.getProperty("webapi.endRound");
