@@ -60,4 +60,6 @@ public interface DollOrderService {
     List<DollOrder> selectOutTimeDolls();
 
     ResultMap beforeSendDoll(Integer memberId, Long[] orderIds);
+
+    ResultMap getDollOrderBySecond();
 }

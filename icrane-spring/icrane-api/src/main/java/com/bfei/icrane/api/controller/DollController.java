@@ -5,6 +5,7 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 
 import com.bfei.icrane.api.service.CatchHistoryService;
+import com.bfei.icrane.api.service.DollOrderService;
 import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.service.OemService;
@@ -46,6 +47,9 @@ public class DollController {
     private OemService oemService;
     @Autowired
     private CatchHistoryService catchHistoryService;
+    @Autowired
+    private DollOrderService dollOrderService;
+
 
     //level的失效时间
     public static Long expiresTime = 0L;
@@ -719,6 +723,21 @@ public class DollController {
             List<OemBanner> list = oemService.selectByOemId(oem.getId());
             //logger.info("获取娃娃机列表resultMap=" + Enviroment.RETURN_SUCCESS_MESSAGE);
             return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, list);
+        } catch (Exception e) {
+            //logger.error("获取H5娃娃机列表出错", e);
+            e.printStackTrace();
+            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
+        }
+    }
+
+    @RequestMapping(value = "/getCatchSuccessLists", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap getCatchSuccessLists(@RequestParam String token, @RequestParam Integer memberId) {
+        try {
+//            if (!validateTokenService.validataToken(token, memberId)) {
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
+            return dollOrderService.getDollOrderBySecond();
         } catch (Exception e) {
             //logger.error("获取H5娃娃机列表出错", e);
             e.printStackTrace();

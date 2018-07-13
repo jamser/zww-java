@@ -7,6 +7,7 @@ import com.bfei.icrane.api.service.MemberService;
 import com.bfei.icrane.common.util.Enviroment;
 import com.bfei.icrane.common.util.ResultMap;
 import com.bfei.icrane.core.models.*;
+import com.bfei.icrane.core.models.vo.CatchVO;
 import com.bfei.icrane.core.service.VipService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -295,7 +296,7 @@ public class DollOrderServiceImpl implements DollOrderService {
 //                //新用户包邮
 //                //|| dollOrderGoodsDao.selectByMemberId(memberId).size() < 1
 //                ) {
-            dollOrderGoods.setDeliverCoins(0);
+        dollOrderGoods.setDeliverCoins(0);
 //        } else {
 //            SystemPref deliverCoins = systemPrefDao.selectByPrimaryKey("DELIVERY_COINS");
 //            Integer deliverCoin = deliverCoins == null ? 0 : Integer.valueOf(deliverCoins.getValue());
@@ -420,10 +421,19 @@ public class DollOrderServiceImpl implements DollOrderService {
             map.put("details", vip.getName() + freeQt + "个以上包邮");
         } else {
             map.put("deliverCoins", deliverCoin);
-            map.put("details", "两个起包邮（注意：发货一个需扣"+ deliverCoin +"金币");
+            map.put("details", "两个起包邮（注意：发货一个需扣" + deliverCoin + "金币");
         }
         return new ResultMap("操作成功", map);
     }
 
-
+    @Override
+    public ResultMap getDollOrderBySecond() {
+        CatchVO catchVO = dollOrderItemDao.selectByOrderStatusAndSecond();
+        if (null == catchVO) {
+            return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE);
+        }
+        Member member = memberDao.selectById(catchVO.getMemberId());
+        catchVO.setUserName(member.getName());
+        return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, catchVO);
+    }
 }

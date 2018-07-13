@@ -28,6 +28,13 @@
             <result property="tbimgRealPath" jdbcType="VARCHAR" column="tbimg_real_path"/>
         </association>
     </resultMap>
+
+
+    <resultMap id="CatchResult" type="com.bfei.icrane.core.models.vo.CatchVO">
+        <result column="doll_name" jdbcType="VARCHAR" property="dollName"/>
+        <result column="order_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="order_by" jdbcType="INTEGER" property="memberId"/>
+    </resultMap>
     <sql id="Base_Column_List">
 		id, order_id, doll_id, created_date,doll_code
 	</sql>
@@ -106,6 +113,16 @@
         ORDER BY
         order_date DESC;
     </select>
+
+
+    <select id="selectByOrderStatusAndSecond" resultMap="CatchResult">
+        SELECT a.doll_name , b.order_date,b.order_by
+        FROM
+        t_doll_order_item a
+        INNER JOIN t_doll_order b ON a.order_id = b.id WHERE
+         b.order_date >=DATE_SUB(NOW(),INTERVAL 20 SECOND) ORDER BY b.order_date DESC LIMIT 1
+    </select>
+
 
     <select id="selectByOrderItem" parameterType="com.bfei.icrane.core.models.DollOrderItem"
             resultMap="BaseResultMap">

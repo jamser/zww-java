@@ -2,6 +2,7 @@ package com.bfei.icrane.core.dao;
 
 import java.util.List;
 
+import com.bfei.icrane.core.models.vo.CatchVO;
 import org.apache.ibatis.annotations.Param;
 
 import com.bfei.icrane.core.models.DollOrder;
@@ -36,4 +37,6 @@ public interface DollOrderItemDao {
     int updateOrderId(DollOrderItem item);
 
     List<DollOrderItem> getOrderItemByOrderId(Long id);
+
+    CatchVO selectByOrderStatusAndSecond();
 }
