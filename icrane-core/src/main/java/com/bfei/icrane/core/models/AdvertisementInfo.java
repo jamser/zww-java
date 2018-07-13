@@ -24,4 +24,6 @@ public class AdvertisementInfo {
 
     private Date updateDate;
 
+    private String wordColor;
+
 }

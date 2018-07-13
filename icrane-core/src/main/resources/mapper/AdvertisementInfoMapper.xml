@@ -11,9 +11,10 @@
         <result column="y_axis" property="yAxis" jdbcType="DOUBLE"/>
         <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
         <result column="update_date" property="updateDate" jdbcType="TIMESTAMP"/>
+        <result column="word_color" property="wordColor" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, title, content, img_url, down_count, x_axis, y_axis, create_date, update_date
+    id, title, content, img_url, down_count, x_axis, y_axis, create_date, update_date, word_color
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
