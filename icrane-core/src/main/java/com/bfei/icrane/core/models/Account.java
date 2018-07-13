@@ -27,6 +27,8 @@ public class Account implements Serializable {
     private Integer id;                         //用户id
     private Integer coins;                      //hi币
     private Integer superTicket;                //强爪券
+    private Integer sign;                //强爪券
+    private Date signDate;
     private long bitState;                      //账户状态值
     private Date weeksCardState = new Date(0);  //最近周卡领取时间
     private Date monthCardState = new Date(0);  //最近月卡领取时间

@@ -18,12 +18,19 @@ public interface AccountDao {
     //void updateById(Account account);
     //更新 成长值
     void updateMemberGrowthValue(Account account);
+
     //更新 币
     void updateMemberCoin(Account account);
+
+    //更新 币和签到时间
+    void updateMemberCoinAndSignDAte(Account account);
+
     //更新 钻
     void updateMemberSuperTicket(Account account);
+
     //更新 周卡
     void updateMemberSeeksCardState(Account account);
+
     //更新 月卡
     void updateMemberMonthCardState(Account account);
 

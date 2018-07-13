@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -528,5 +530,23 @@ public class WXUtil {
         }
 
         return resultBuffer.toString();
+    }
+
+    /**
+     * 判断是否为节假日
+     *
+     * @param date 日期
+     * @return 工作日对应结果为 0, 休息日对应结果为 1, 节假日对应的结果为 2
+     */
+    public static Integer isHostory(Date date) {
+        try {
+            SimpleDateFormat sim = new SimpleDateFormat("yyyyMMdd");
+            String url = "http://tool.bitefu.net/jiari/?d=" + sim.format(date);
+            String json = WXUtil.doPost("", url, "GET");
+            return Integer.parseInt(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

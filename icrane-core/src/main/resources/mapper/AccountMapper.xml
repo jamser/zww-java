@@ -4,6 +4,8 @@
     <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.Account">
         <id column="id" property="id"/>
         <result column="coins" property="coins"/>
+        <result column="sign" property="sign"/>
+        <result column="sign_date" property="signDate"/>
         <result column="superTicket" property="superTicket"/>
         <result column="bitState" property="bitState"/>
         <result column="weeksCardState" property="weeksCardState"/>
@@ -13,8 +15,8 @@
                      select="com.bfei.icrane.core.dao.VipDao.selectVipByGrowthValue" column="growth_value">
         </association>
     </resultMap>
-    <sql id="Base_Column_List" >
-        id,coins,superTicket,bitState,weeksCardState,monthCardState,growth_value
+    <sql id="Base_Column_List">
+        id,coins,superTicket,bitState,weeksCardState,monthCardState,growth_value,sign,sign_date
     </sql>
 
     <insert id="insert">
@@ -37,6 +39,17 @@
         UPDATE account
         SET
         coins = coins + #{coins}
+        WHERE
+        id = #{id}
+    </update>
+
+
+    <!-- 更新总币数和签到时间 -->
+    <update id="updateMemberCoinAndSignDAte">
+        UPDATE account
+        SET
+        coins = coins + #{coins},
+        sign_date=NOW()
         WHERE
         id = #{id}
     </update>
@@ -93,11 +106,11 @@
     </update>
     <select id="selectById" resultMap="BaseResultMap">
         SELECT
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         FROM
-            account
+        account
         WHERE
-            id = #{id}
+        id = #{id}
     </select>
     <select id="selectId" resultType="java.lang.Integer">
         SELECT
@@ -109,11 +122,11 @@
     </select>
     <select id="selectPayingUser" resultMap="BaseResultMap">
         SELECT
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         FROM
-            account
+        account
         WHERE
-            growth_value > 0
+        growth_value > 0
     </select>
 </mapper>
 

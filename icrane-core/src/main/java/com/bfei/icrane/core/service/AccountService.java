@@ -63,4 +63,6 @@ public interface AccountService {
     List<Account> selectPayingUser();
 
     boolean whetherTheDowngrade(Integer memberId);
+
+    void updateMemberCoinAndSignDAte(Account account);
 }

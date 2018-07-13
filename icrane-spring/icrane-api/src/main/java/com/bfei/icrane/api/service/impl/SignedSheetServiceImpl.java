@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bfei.icrane.common.util.*;
+import com.bfei.icrane.core.pojos.TurnAnglePojo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +17,6 @@ import org.springframework.stereotype.Service;
 import com.bfei.icrane.api.service.ChargeService;
 import com.bfei.icrane.api.service.MemberService;
 import com.bfei.icrane.api.service.SignedSheetService;
-import com.bfei.icrane.common.util.BitStatesUtils;
-import com.bfei.icrane.common.util.Enviroment;
-import com.bfei.icrane.common.util.ResultMap;
-import com.bfei.icrane.common.util.TimeUtil;
 import com.bfei.icrane.core.dao.ChargeDao;
 import com.bfei.icrane.core.dao.MemberChargeComboDao;
 import com.bfei.icrane.core.dao.MemberDao;
@@ -31,6 +29,7 @@ import com.bfei.icrane.core.models.MemberChargeCombo;
 import com.bfei.icrane.core.models.SignedSheet;
 import com.bfei.icrane.core.models.SystemPref;
 import com.bfei.icrane.core.service.AccountService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 签到的实现类
@@ -56,6 +55,7 @@ public class SignedSheetServiceImpl implements SignedSheetService {
     private MemberService memberService;
     @Autowired
     private AccountService accountService;
+
 
     @Override
     public void insert(SignedSheet signedSheet) {
@@ -324,5 +324,60 @@ public class SignedSheetServiceImpl implements SignedSheetService {
             logger.info("已签到,重复签到用户" + memberId + member.getName());
             return resultMap;
         }
+    }
+
+    @Override
+    public ResultMap isOpen(String memberId) {
+        if (judgeOpen(memberId)) {
+            return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE);
+        }
+        return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, "不能开启");
+    }
+
+    @Override
+    @Transactional
+    public ResultMap getTurnProbability(String memberId) {
+        if (judgeOpen(memberId)) {
+            TurnAnglePojo turnRandom = RandomUtil.getTurnRandom();
+
+            //修改金额
+            Account account = new Account();
+            Account select = accountService.select(Integer.valueOf(memberId));
+            account.setId(select.getId());
+            Integer currCoins = select.getCoins();
+            account.setCoins(turnRandom.getCoins());
+            account.setSignDate(TimeUtil.getTime());
+            accountService.updateMemberCoinAndSignDAte(account);
+
+            //生成消费记录
+            Charge chargeRecord = new Charge();
+            chargeRecord.setChargeDate(TimeUtil.getTime());
+            chargeRecord.setCoins(currCoins);
+            chargeRecord.setCoinsSum(turnRandom.getCoins());//转盘奖励
+            chargeRecord.setInviteCoinsSum(turnRandom.getCoins());
+            chargeRecord.setChargeMethod("转盘奖励");
+            chargeRecord.setInviteMemberId(Integer.valueOf(memberId));
+            chargeRecord.setType(Enviroment.TYPE_INCOME);
+            chargeDao.insertInviteChargeHistory(chargeRecord);
+            return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, turnRandom);
+        }
+        return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_FAILE_MESSAGE);
+    }
+
+
+    private boolean judgeOpen(String memberId) {
+        Account account = accountService.select(Integer.valueOf(memberId));
+        Calendar checkdateCalendar = Calendar.getInstance();
+        checkdateCalendar.setTime(account.getSignDate());
+        //获取今天凌晨时间
+        Calendar today = Calendar.getInstance();
+        today.set(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DATE), 0, 0, 0);
+        //获取昨天凌晨时间
+        Calendar yesterday = Calendar.getInstance();
+        yesterday.set(yesterday.get(Calendar.YEAR), yesterday.get(Calendar.MONTH), yesterday.get(Calendar.DATE) - 1, 0, 0, 0);
+        if (checkdateCalendar.before(today)) {
+            return true;
+        }
+        return false;
     }
 }

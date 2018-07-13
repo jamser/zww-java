@@ -59,4 +59,22 @@ public interface SignedSheetService {
      * @return
      */
     ResultMap hassign(String memberId, String head);
+
+    /**
+     * 是否开启
+     *
+     * @param memberId
+     * @return
+     */
+    ResultMap isOpen(String memberId);
+
+    /**
+     * 获取转盘概率
+     *
+     * @param memberId
+     * @return
+     */
+    ResultMap getTurnProbability(String memberId);
+
+
 }

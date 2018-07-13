@@ -176,4 +176,9 @@ public class AccountServiceImpl implements AccountService {
         return true;
     }
 
+    @Override
+    public void updateMemberCoinAndSignDAte(Account account) {
+        accountDao.updateMemberCoinAndSignDAte(account);
+    }
+
 }

@@ -45,29 +45,29 @@ public class SignedSheetController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/popover", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap popover(@RequestParam(value = "memberId") String memberId) throws Exception {
-        try {
-            logger.info("(旧)签到参数memberId=" + memberId);
-            //验证参数
-            if (StringUtils.isEmpty(memberId)) {
-                logger.info("(旧)签到接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }
-            //访问间隔限制
-            RedisUtil redisUtil = new RedisUtil();
-            if (redisUtil.getString("popover" + memberId) != null) {
-                logger.info("(旧)签到接口签到失败=" + Enviroment.PLEASE_SLOW_DOWN);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.PLEASE_SLOW_DOWN);
-            }
-            redisUtil.setString("popover" + memberId, "", 20);
-            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, "签到失败,请下载新版本APP");
-        } catch (Exception e) {
-            logger.info("(旧)签到接口参数异常=" + e.getMessage());
-            e.printStackTrace();
-            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.SIGN_IN_ABNORMAL);
-        }
+//    @RequestMapping(value = "/popover", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap popover(@RequestParam(value = "memberId") String memberId) throws Exception {
+//        try {
+//            logger.info("(旧)签到参数memberId=" + memberId);
+//            //验证参数
+//            if (StringUtils.isEmpty(memberId)) {
+//                logger.info("(旧)签到接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//            }
+//            //访问间隔限制
+//            RedisUtil redisUtil = new RedisUtil();
+//            if (redisUtil.getString("popover" + memberId) != null) {
+//                logger.info("(旧)签到接口签到失败=" + Enviroment.PLEASE_SLOW_DOWN);
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.PLEASE_SLOW_DOWN);
+//            }
+//            redisUtil.setString("popover" + memberId, "", 20);
+//            return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, "签到失败,请下载新版本APP");
+//        } catch (Exception e) {
+//            logger.info("(旧)签到接口参数异常=" + e.getMessage());
+//            e.printStackTrace();
+//            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.SIGN_IN_ABNORMAL);
+//        }
         /*logger.info("签到接口参数memberId=" + memberId);
         Map<String, Object> resultMap = new HashedMap<String, Object>();
         resultMap.put("message", "签到失败,请下载新版本");
@@ -109,7 +109,7 @@ public class SignedSheetController {
             resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
             return resultMap;
         }*/
-    }
+//    }
 
     /**
      * 检测是否签到
@@ -118,48 +118,48 @@ public class SignedSheetController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/haspopover", method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, Object> haspopover(@RequestParam(value = "memberId") String memberId, HttpServletRequest request) throws Exception {
-        logger.info("关于我们接口参数memberId=" + memberId);
-        Map<String, Object> resultMap = new HashedMap<String, Object>();
-        try {
-            SignedSheet existSigned = signedSheetService.selectOneByMemberID(memberId);
-            Date currDate = new Date();
-            //判断最近的签到是否为当前系统时间
-            if (existSigned != null && TimeUtil.isSameDate(existSigned.getSignedDate(), new Date())) {
-                logger.info("已签到,重复签到用户" + existSigned.getMemberId() + existSigned.getMemberName());
-                resultMap.put("message", "签到失败,不能重复签到");
-                resultMap.put("resultData", 0);
-                logger.info("已签到过resultMap=" + resultMap);
-                return resultMap;
-            }
-            String head = request.getHeader("head");//android 有head值
-            logger.info("getDollList********请求head=" + head);
-            //IOS功能开关
-            SystemPref syspref = systemPrefService.selectByPrimaryKey("IOS_STATE");
-            if ("0".equals(syspref.getValue()) && head == null) {
-                logger.info("IOS显示已签到,关闭签到" + existSigned.getMemberId() + existSigned.getMemberName());
-                resultMap.put("message", "签到失败,不能重复签到");
-                resultMap.put("resultData", 0);
-                logger.info("已签到过resultMap=" + resultMap);
-                return resultMap;
-            }
-            signedSheetService.giveCoins(memberId);
-            resultMap.put("resultData", 2);
-            resultMap.put("message", "未签到");
-            resultMap.put("success", Enviroment.RETURN_SUCCESS);
-            resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
-            return resultMap;
-        } catch (Exception e) {
-            logger.error("获取关于我们出错", e);
-            resultMap.put("resultData", 0);
-            resultMap.put("message", "签到异常");
-            resultMap.put("success", Enviroment.RETURN_SUCCESS);
-            resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
-            return resultMap;
-        }
-    }
+//    @RequestMapping(value = "/haspopover", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Map<String, Object> haspopover(@RequestParam(value = "memberId") String memberId, HttpServletRequest request) throws Exception {
+//        logger.info("关于我们接口参数memberId=" + memberId);
+//        Map<String, Object> resultMap = new HashedMap<String, Object>();
+//        try {
+//            SignedSheet existSigned = signedSheetService.selectOneByMemberID(memberId);
+//            Date currDate = new Date();
+//            //判断最近的签到是否为当前系统时间
+//            if (existSigned != null && TimeUtil.isSameDate(existSigned.getSignedDate(), new Date())) {
+//                logger.info("已签到,重复签到用户" + existSigned.getMemberId() + existSigned.getMemberName());
+//                resultMap.put("message", "签到失败,不能重复签到");
+//                resultMap.put("resultData", 0);
+//                logger.info("已签到过resultMap=" + resultMap);
+//                return resultMap;
+//            }
+//            String head = request.getHeader("head");//android 有head值
+//            logger.info("getDollList********请求head=" + head);
+//            //IOS功能开关
+//            SystemPref syspref = systemPrefService.selectByPrimaryKey("IOS_STATE");
+//            if ("0".equals(syspref.getValue()) && head == null) {
+//                logger.info("IOS显示已签到,关闭签到" + existSigned.getMemberId() + existSigned.getMemberName());
+//                resultMap.put("message", "签到失败,不能重复签到");
+//                resultMap.put("resultData", 0);
+//                logger.info("已签到过resultMap=" + resultMap);
+//                return resultMap;
+//            }
+//            signedSheetService.giveCoins(memberId);
+//            resultMap.put("resultData", 2);
+//            resultMap.put("message", "未签到");
+//            resultMap.put("success", Enviroment.RETURN_SUCCESS);
+//            resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
+//            return resultMap;
+//        } catch (Exception e) {
+//            logger.error("获取关于我们出错", e);
+//            resultMap.put("resultData", 0);
+//            resultMap.put("message", "签到异常");
+//            resultMap.put("success", Enviroment.RETURN_SUCCESS);
+//            resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
+//            return resultMap;
+//        }
+//    }
 
     /**
      * 连续签到接口
@@ -168,35 +168,35 @@ public class SignedSheetController {
      * @param token    用户Token
      * @return
      */
-    @RequestMapping(value = "/sign", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap sign(String memberId, String token) {
-        try {
-            logger.info("连续签到参数memberId=" + memberId + "token" + token);
-            //验证参数
-            if (StringUtils.isEmpty(memberId) || StringUtils.isEmpty(token)) {
-                logger.info("连续签到接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }
-            //访问间隔限制
-            RedisUtil redisUtil = new RedisUtil();
-            if (redisUtil.getString("sign" + memberId) != null) {
-                logger.info("连续签到失败=" + Enviroment.PLEASE_SLOW_DOWN);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.PLEASE_SLOW_DOWN);
-            }
-            redisUtil.setString("sign" + memberId, "", Enviroment.ACCESS_CONTROL_TIME);
-            //验证token
-            if (!validateTokenService.validataToken(token, Integer.valueOf(memberId))) {
-                logger.info("连续签到接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
-            return signedSheetService.sign(memberId);
-        } catch (Exception e) {
-            logger.info("连续签到接口参数异常=" + e.getMessage());
-            e.printStackTrace();
-            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.SIGN_IN_ABNORMAL);
-        }
-    }
+//    @RequestMapping(value = "/sign", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap sign(String memberId, String token) {
+//        try {
+//            logger.info("连续签到参数memberId=" + memberId + "token" + token);
+//            //验证参数
+//            if (StringUtils.isEmpty(memberId) || StringUtils.isEmpty(token)) {
+//                logger.info("连续签到接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//            }
+//            //访问间隔限制
+//            RedisUtil redisUtil = new RedisUtil();
+//            if (redisUtil.getString("sign" + memberId) != null) {
+//                logger.info("连续签到失败=" + Enviroment.PLEASE_SLOW_DOWN);
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.PLEASE_SLOW_DOWN);
+//            }
+//            redisUtil.setString("sign" + memberId, "", Enviroment.ACCESS_CONTROL_TIME);
+//            //验证token
+//            if (!validateTokenService.validataToken(token, Integer.valueOf(memberId))) {
+//                logger.info("连续签到接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
+//            return signedSheetService.sign(memberId);
+//        } catch (Exception e) {
+//            logger.info("连续签到接口参数异常=" + e.getMessage());
+//            e.printStackTrace();
+//            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.SIGN_IN_ABNORMAL);
+//        }
+//    }
 
     /**
      * 连续签到检测接口
@@ -205,24 +205,54 @@ public class SignedSheetController {
      * @param token    用户Token
      * @return
      */
-    @RequestMapping(value = "/hassign", method = RequestMethod.POST)
+//    @RequestMapping(value = "/hassign", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap hassign(String memberId, String token, String head) {
+//        try {
+//            logger.info("连续签到状态检测参数memberId=" + memberId + "token" + token);
+//            //验证参数
+//            if (memberId == null || token == null || "".equals(token) || "".equals(memberId)) {
+//                logger.info("连续签到状态检测接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//            }
+//            //验证token
+//            if (!validateTokenService.validataToken(token, Integer.valueOf(memberId))) {
+//                logger.info("连续签到状态检测接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
+//            return signedSheetService.hassign(memberId, head);
+//        } catch (Exception e) {
+//            logger.error("获取连续签到状态出错", e);
+//            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.GETS_SIGN_STATUS_EXCEPTION);
+//        }
+//    }
+    @RequestMapping(value = "/isOpen", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap hassign(String memberId, String token, String head) {
+    public ResultMap isOpen(@RequestParam String memberId, @RequestParam String token) {
         try {
-            logger.info("连续签到状态检测参数memberId=" + memberId + "token" + token);
-            //验证参数
-            if (memberId == null || token == null || "".equals(token) || "".equals(memberId)) {
-                logger.info("连续签到状态检测接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }
             //验证token
             if (!validateTokenService.validataToken(token, Integer.valueOf(memberId))) {
-                logger.info("连续签到状态检测接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
                 return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
             }
-            return signedSheetService.hassign(memberId, head);
+            return signedSheetService.isOpen(memberId);
         } catch (Exception e) {
-            logger.error("获取连续签到状态出错", e);
+            logger.error("获取转盘开启失败", e);
+            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.GETS_SIGN_STATUS_EXCEPTION);
+        }
+    }
+
+
+    @RequestMapping(value = "/getTurnAngle", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap getTurnAngle(@RequestParam String memberId, @RequestParam String token) {
+        try {
+            //验证token
+            if (!validateTokenService.validataToken(token, Integer.valueOf(memberId))) {
+                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            }
+            return signedSheetService.getTurnProbability(memberId);
+        } catch (Exception e) {
+            logger.error("获取转盘角度失败", e);
             return new ResultMap(Enviroment.ERROR_CODE, Enviroment.GETS_SIGN_STATUS_EXCEPTION);
         }
     }
