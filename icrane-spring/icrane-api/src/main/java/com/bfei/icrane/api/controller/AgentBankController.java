@@ -178,6 +178,7 @@ public class AgentBankController {
         BeanUtils.copyProperties(bankInfoForm, bankInfo);
         bankInfo.setCreateTime(new Date());
         bankInfo.setUpdateTime(new Date());
+        bankInfo.setStatus(1);
         int i = agentService.insertBankInfo(bankInfo);
         if (i == 0) {
             return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, "添加银行卡失败！写入失败");
