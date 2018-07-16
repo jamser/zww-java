@@ -334,6 +334,9 @@
         <if test="prepaidAmt != null">
             ,growth_value = growth_value + #{prepaidAmt}
         </if>
+        <if test="prepaidAmt != null">
+            ,growth_value_month = growth_value_month + #{prepaidAmt}
+        </if>
         WHERE
         id = #{memberId}
     </update>

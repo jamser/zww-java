@@ -84,35 +84,10 @@ public class TaskJob {
     //@Scheduled(cron = "0 0/30 * * * ?")
     public void job3() {
         //清除过期房间信息
-        //logger.info("每月一号用户会员等级降级--------");
+        logger.info("每月一号用户成长值清0¬--------");
         List<Account> payingUsers = accountService.selectPayingUser();
         for (Account payingUser : payingUsers) {
-            //logger.info("会员" + payingUser.getId() + "等级降级--------");
-            //当前积分
-            BigDecimal baseGrowthValue = payingUser.getGrowthValue();
-            //当前等级
-            Vip vip = vipService.selectVipByMemberId(payingUser.getId());
-            int baseLevel = vip.getLevel();
-            Vip lowervip = vipService.selectVipByLevel(baseLevel > 0 ? baseLevel - 1 : 0);
-            //查询过期积分
-            BigDecimal leastAllowed = lowervip.getLeastAllowed();
-            BigDecimal lowerGrowthValue = baseGrowthValue.subtract(leastAllowed);
-            //生成记录
-            Charge charge = new Charge();
-            charge.setMemberId(payingUser.getId());
-            charge.setChargeDate(TimeUtil.getTime());
-            charge.setType("expense");
-            charge.setChargeMethod("成长值过期 -" + lowerGrowthValue);
-            charge.setGrowthValue(baseGrowthValue);
-            charge.setGrowthValueSum(leastAllowed);
-
-
-
-
-            chargeService.insertGrowthValueHistory(charge);
-            //过期积分
-            payingUser.setGrowthValue(leastAllowed);
-            accountService.updateMemberGrowthValue(payingUser);
+            accountService.updateMemberGrowthValueMonth(payingUser);
         }
     }
 
@@ -165,7 +140,7 @@ public class TaskJob {
                     logger.info("【订单任务】代理商 == {},转入余额 {}", agent.getId(), agent.getBalance());
                 }
                 if (agentCharge.getAgentTwoIncome() > 0) {
-                    Agent   agent = new Agent();
+                    Agent agent = new Agent();
                     agent.setId(agentCharge.getAgentTwoId());
                     agent.setBalance(agentCharge.getAgentTwoIncome());
                     agentService.updateAgentBalance(agent);

@@ -1,29 +1,30 @@
 package com.bfei.icrane.api.service.impl;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.bfei.icrane.common.util.*;
+import com.bfei.icrane.api.service.ChargeService;
+import com.bfei.icrane.api.service.DollOrderService;
+import com.bfei.icrane.api.service.MemberService;
+import com.bfei.icrane.common.util.Enviroment;
+import com.bfei.icrane.common.util.ResultMap;
+import com.bfei.icrane.common.util.StringUtils;
+import com.bfei.icrane.common.util.TimeUtil;
+import com.bfei.icrane.core.dao.ChargeDao;
+import com.bfei.icrane.core.dao.MemberDao;
+import com.bfei.icrane.core.dao.RechargeRuleMapper;
+import com.bfei.icrane.core.dao.SystemPrefDao;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.service.AccountService;
+import com.bfei.icrane.core.service.DollService;
 import com.bfei.icrane.core.service.RiskManagementService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
-import com.bfei.icrane.api.service.ChargeService;
-import com.bfei.icrane.api.service.DollOrderService;
-import com.bfei.icrane.api.service.MemberService;
-import com.bfei.icrane.core.dao.ChargeDao;
-import com.bfei.icrane.core.dao.MemberDao;
-import com.bfei.icrane.core.dao.SystemPrefDao;
-import com.bfei.icrane.core.service.DollService;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * @author lgq Version: 1.0 Date: 2017年9月22日date Description: 用户Service接口实现类.
@@ -57,6 +58,9 @@ public class ChargeServiceImpl implements ChargeService {
     @Autowired
     private RiskManagementService riskManagementService;
 
+    @Autowired
+    private RechargeRuleMapper rechargeRuleMapper;
+
 
     @Override
     public Charge getChargeRules(Double chargePrice) {
@@ -68,6 +72,7 @@ public class ChargeServiceImpl implements ChargeService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public Integer insertChargeHistory(Charge charge) {
         try {
             // charge.setCoinsSum(charge.getCoinsSum()+charge.getCoins());
@@ -80,6 +85,7 @@ public class ChargeServiceImpl implements ChargeService {
             chargeDao.updateMemberCount(charge);
             Account account = accountService.select(charge.getMemberId());
 
+
             Integer result;
             if (charge.getSuperTicketSum() == null) {
                 charge.setSuperTicketSum(0);
@@ -89,6 +95,7 @@ public class ChargeServiceImpl implements ChargeService {
             }
             if (charge.getSuperTicketSum() <= 0 && charge.getCoinsSum() > 0) {//普通金币礼包记录
                 result = chargeDao.insertChargeHistory(charge);
+                insertGrowthHistory(charge, account);
                 if (charge.getPrepaidAmt() != null && charge.getPrepaidAmt() > 0) {
                     charge.setType("income");
                     charge.setGrowthValue(account.getGrowthValue());
@@ -102,6 +109,7 @@ public class ChargeServiceImpl implements ChargeService {
                 charge.setCoins(charge.getSuperTicket());
                 charge.setType("s" + charge.getType());
                 result = chargeDao.insertChargeHistory(charge);
+//                insertGrowthHistory(charge, account);
                 if (charge.getPrepaidAmt() != null && charge.getPrepaidAmt() > 0) {
                     charge.setType("income");
                     charge.setGrowthValue(account.getGrowthValue());
@@ -112,6 +120,7 @@ public class ChargeServiceImpl implements ChargeService {
             }
             if (charge.getSuperTicketSum() > 0 && charge.getCoinsSum() > 0) {//混合礼包记录
                 chargeDao.insertChargeHistory(charge);
+//                insertGrowthHistory(charge, account);
                 charge.setCoinsSum(charge.getSuperTicketSum());
                 charge.setCoins(charge.getSuperTicket());
                 charge.setType("s" + charge.getType());
@@ -126,6 +135,53 @@ public class ChargeServiceImpl implements ChargeService {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    //累计充值
+    private void insertGrowthHistory(Charge charge, Account account) {
+        RechargeRule rechargeRule = getRechargeCoin(account);
+        if (!ObjectUtils.isEmpty(rechargeRule)) {
+
+            logger.info("用户id={},当月累计充值={}", charge.getMemberId(), account.getGrowthValueMonth());
+            //生成消费记录
+            Charge chargeRecord = new Charge();
+            chargeRecord.setMemberId(charge.getMemberId());
+            chargeRecord.setCoins(charge.getCoins() + charge.getCoinsSum());
+            chargeRecord.setCoinsSum(rechargeRule.getCoin());
+            chargeRecord.setPrepaidAmt(charge.getPrepaidAmt());
+            chargeRecord.setType("income");
+            chargeRecord.setChargeDate(TimeUtil.getTime());
+            chargeRecord.setChargeMethod("充值累积奖励");
+            chargeDao.insertChargeHistory(chargeRecord);
+            //加币操作
+            Account baseAccount = new Account();
+            baseAccount.setId(account.getId());
+            baseAccount.setCoins(rechargeRule.getCoin());
+            baseAccount.setGrowthValueMonthLevel(rechargeRule.getPrice().intValue());
+            accountService.updateMemberCoin(baseAccount);//hi币
+        }
+    }
+
+    private RechargeRule getRechargeCoin(Account account) {
+
+        List<RechargeRule> rechargeRules = rechargeRuleMapper.selectByAll();
+        for (int i = 1; i <= rechargeRules.size(); i++) {
+            BigDecimal growthValueMonth = account.getGrowthValueMonth();
+            if ((i == rechargeRules.size() && growthValueMonth.intValue() >= rechargeRules.get(i - 1).getPrice().intValue()) ||
+                    (growthValueMonth.intValue() >= rechargeRules.get(i - 1).getPrice().intValue() &&
+                            growthValueMonth.intValue() < rechargeRules.get(i).getPrice().intValue())) {
+                logger.info("account=={}", account.toString());
+                logger.info("rechargeRules=={}", rechargeRules.get(i - 1));
+                int i1 = new BigDecimal(account.getGrowthValueMonthLevel()).compareTo(rechargeRules.get(i - 1).getPrice());
+
+                if (i1 == 0) {
+                    return null;
+                }
+                return rechargeRules.get(i - 1);
+
+            }
         }
         return null;
     }

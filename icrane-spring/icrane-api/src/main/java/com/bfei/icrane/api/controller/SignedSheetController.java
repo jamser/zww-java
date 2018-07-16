@@ -230,6 +230,9 @@ public class SignedSheetController {
     @ResponseBody
     public ResultMap isOpen(@RequestParam String memberId, @RequestParam String token) {
         try {
+            if (StringUtils.isEmpty(memberId)) {
+                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+            }
             //验证token
             if (!validateTokenService.validataToken(token, Integer.valueOf(memberId))) {
                 return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * 周卡月卡领取控制器
  */
 @Controller
-@RequestMapping(value = "/ChargeCombo")
+//@RequestMapping(value = "/ChargeCombo")
 @CrossOrigin
 public class MemberChargeComboController {
     private static final Logger logger = LoggerFactory.getLogger(MemberChargeComboController.class);

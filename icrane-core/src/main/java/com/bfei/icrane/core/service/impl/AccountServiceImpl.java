@@ -181,4 +181,9 @@ public class AccountServiceImpl implements AccountService {
         accountDao.updateMemberCoinAndSignDAte(account);
     }
 
+    @Override
+    public void updateMemberGrowthValueMonth(Account account) {
+        accountDao.updateMemberGrowthValueMonth(account);
+    }
+
 }

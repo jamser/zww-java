@@ -40,4 +40,7 @@ public interface AccountDao {
 
     List<Account> selectPayingUser();
 
+    //更新每月成长
+    void updateMemberGrowthValueMonth(Account account);
+
 }

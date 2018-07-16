@@ -65,4 +65,6 @@ public interface AccountService {
     boolean whetherTheDowngrade(Integer memberId);
 
     void updateMemberCoinAndSignDAte(Account account);
+
+    void updateMemberGrowthValueMonth(Account account);
 }
