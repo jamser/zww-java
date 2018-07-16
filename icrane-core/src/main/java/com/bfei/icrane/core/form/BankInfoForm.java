@@ -32,7 +32,7 @@ public class BankInfoForm {
     @NotEmpty(message = "发行区域不能为空")
     private String cardArea;
 
-//    @NotEmpty(message = "银行联行号不能为空")
+    //    @NotEmpty(message = "银行联行号不能为空")
     private String cardBankNo;
 
     @NotEmpty(message = "卡号不能为空")
@@ -48,18 +48,6 @@ public class BankInfoForm {
     @NotEmpty(message = "银行预留手机号不能为空")
     @Pattern(regexp = "^1[34578]\\d{9}", message = "手机号格式不规范")
     private String phone;
-
-    @NotEmpty(message = "身份证正面不能为空")
-    private String idCardPicturePos;
-
-    @NotEmpty(message = "身份证反面不能为空")
-    private String idCardPictureRev;
-
-    @NotEmpty(message = "手持身份证不能为空")
-    private String idCardPicture;
-
-    @NotEmpty(message = "银行卡正面不能为空")
-    private String bankPicturePos;
 
     @NotEmpty(message = "验证码不能为空")
     private String smsCode;
