@@ -1,5 +1,6 @@
 package com.bfei.icrane.api.service.impl;
 
+import com.bfei.icrane.api.controller.PushWebsocketContoller;
 import com.bfei.icrane.api.service.DollOrderService;
 import com.bfei.icrane.common.util.Enviroment;
 import com.bfei.icrane.common.util.ResultMap;
@@ -9,6 +10,7 @@ import com.bfei.icrane.core.dao.*;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.models.vo.CatchVO;
 import com.bfei.icrane.core.service.VipService;
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,14 +160,14 @@ public class DollOrderServiceImpl implements DollOrderService {
         //} else {
         //	doll.setQuantity(0);
         //}
-//        Member member = memberDao.selectById(memberId);
-//        CatchVO catchVO = new CatchVO();
-//        catchVO.setUserName(member.getName());
-//        catchVO.setDollName(doll.getName());
-//        catchVO.setMemberId(memberId);
-//        Gson gson=new Gson();
-//        String s = gson.toJson(catchVO);
-//        PushWebsocketContoller.sendInfo(s);
+        Member member = memberDao.selectById(memberId);
+        CatchVO catchVO = new CatchVO();
+        catchVO.setUserName(member.getName());
+        catchVO.setDollName(doll.getName());
+        catchVO.setMemberId(memberId);
+        Gson gson = new Gson();
+        String s = gson.toJson(catchVO);
+        PushWebsocketContoller.sendInfo(s);
         return dollDao.updateByPrimaryKeySelective(doll);
     }
 
