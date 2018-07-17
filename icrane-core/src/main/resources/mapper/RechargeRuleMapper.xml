@@ -17,10 +17,10 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
 
-    <select id="selectByAll" resultMap="BaseResultMap">
+    <select id="selectByAll" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
-        from recharge_rule
+        from recharge_rule WHERE `type` = #{type}
         ORDER BY sort
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">

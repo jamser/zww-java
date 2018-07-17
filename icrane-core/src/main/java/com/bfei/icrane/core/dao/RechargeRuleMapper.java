@@ -1,6 +1,7 @@
 package com.bfei.icrane.core.dao;
 
 import com.bfei.icrane.core.models.RechargeRule;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,5 +18,5 @@ public interface RechargeRuleMapper {
 
     int updateByPrimaryKey(RechargeRule record);
 
-    List<RechargeRule> selectByAll();
+    List<RechargeRule> selectByAll(@Param("type") Integer type);
 }

@@ -8,5 +8,5 @@ import java.util.List;
  * Created by moying on 2018/7/16.
  */
 public interface RechargeRuleService {
-    List<RechargeRule> selectByAll();
+    List<RechargeRule> selectByAll(Integer type);
 }

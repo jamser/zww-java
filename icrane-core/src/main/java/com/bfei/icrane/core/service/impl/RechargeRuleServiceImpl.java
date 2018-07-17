@@ -16,7 +16,7 @@ public class RechargeRuleServiceImpl implements RechargeRuleService {
     private RechargeRuleMapper rechargeRuleMapper;
 
     @Override
-    public List<RechargeRule> selectByAll() {
-        return rechargeRuleMapper.selectByAll();
+    public List<RechargeRule> selectByAll(Integer type) {
+        return rechargeRuleMapper.selectByAll(type);
     }
 }

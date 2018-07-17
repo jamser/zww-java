@@ -3,6 +3,7 @@ package com.bfei.icrane.api.service.impl;
 import java.math.BigDecimal;
 import java.util.*;
 
+import com.bfei.icrane.common.util.Enviroment;
 import com.bfei.icrane.common.util.ResultMap;
 import com.bfei.icrane.common.util.StringUtils;
 import com.bfei.icrane.core.dao.RechargeRuleMapper;
@@ -111,7 +112,7 @@ public class ChargeRulesServiceImpl implements ChargeRulesService {
 
         RechargeRulePojp rechargeRulePojp = new RechargeRulePojp();
         Account account = accountService.selectById(memberId);
-        List<RechargeRule> rechargeRules = rechargeRuleMapper.selectByAll();
+        List<RechargeRule> rechargeRules = rechargeRuleMapper.selectByAll(Enviroment.RECHARGE_TYPE);
         rechargeRulePojp.setRechargePrice(account.getGrowthValueMonth().multiply(new BigDecimal(100)).intValue());
 
         for (int i = 0; i < rechargeRules.size(); i++) {

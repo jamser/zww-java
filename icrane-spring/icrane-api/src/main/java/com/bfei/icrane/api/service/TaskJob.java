@@ -78,7 +78,7 @@ public class TaskJob {
     }
 
     /**
-     * 用户会员等级降级
+     * 用户会员充值清零
      */
     @Scheduled(cron = "0 0 0 1 * ?")
     //@Scheduled(cron = "0 0/30 * * * ?")

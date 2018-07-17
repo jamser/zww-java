@@ -66,7 +66,6 @@ public class ChargeRulesController {
                 getChargeRules.remove(0);
             }
             if (getChargeRules != null) {
-                logger.info("获取用户消息resultMap=" + resultMap);
                 return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, getChargeRules);
             } else {
                 logger.info("获取用户消息出错," + Enviroment.RETURN_FAILE_MESSAGE);
@@ -127,12 +126,12 @@ public class ChargeRulesController {
     }
 
 
-        @RequestMapping(value = "/getProgressParams", method = RequestMethod.POST)
+    @RequestMapping(value = "/getProgressParams", method = RequestMethod.POST)
     @ResponseBody
     public ResultMap getPayDetail(@RequestParam Integer memberId, @RequestParam String token) throws Exception {
-//        if (!validateTokenService.validataToken(token, memberId)) {
-//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-//        }
+        if (!validateTokenService.validataToken(token, memberId)) {
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+        }
         return chargeRulesService.getRechargeRuleByPro(memberId);
     }
 }

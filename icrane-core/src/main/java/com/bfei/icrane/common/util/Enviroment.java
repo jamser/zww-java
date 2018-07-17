@@ -228,5 +228,11 @@ public class Enviroment {
     public static final String AGENT_PHONE_NOT_EXIT = "手机号不存在，请到代理后台修改";
     public static final String ADD_AGENT_ERROER_MESSAGE = "该代理没有添加代理权限";
 
+    /**
+     * 充值和抓取参数
+     */
+    public static final int RECHARGE_TYPE = 1;
+    public static final int CATCH_TYPE = 2;
+
 
 }

@@ -166,7 +166,7 @@ public class ChargeServiceImpl implements ChargeService {
 
     private RechargeRule getRechargeCoin(Account account) {
 
-        List<RechargeRule> rechargeRules = rechargeRuleMapper.selectByAll();
+        List<RechargeRule> rechargeRules = rechargeRuleMapper.selectByAll(Enviroment.RECHARGE_TYPE);
         for (int i = 1; i <= rechargeRules.size(); i++) {
             BigDecimal growthValueMonth = account.getGrowthValueMonth();
             if ((i == rechargeRules.size() && growthValueMonth.intValue() >= rechargeRules.get(i - 1).getPrice().intValue()) ||
