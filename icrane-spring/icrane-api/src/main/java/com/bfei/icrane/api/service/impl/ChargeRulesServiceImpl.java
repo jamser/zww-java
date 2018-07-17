@@ -3,8 +3,13 @@ package com.bfei.icrane.api.service.impl;
 import java.math.BigDecimal;
 import java.util.*;
 
+import com.bfei.icrane.common.util.ResultMap;
+import com.bfei.icrane.common.util.StringUtils;
+import com.bfei.icrane.core.dao.RechargeRuleMapper;
 import com.bfei.icrane.core.models.Account;
+import com.bfei.icrane.core.models.RechargeRule;
 import com.bfei.icrane.core.models.Vip;
+import com.bfei.icrane.core.pojos.RechargeRulePojp;
 import com.bfei.icrane.core.service.AccountService;
 import com.bfei.icrane.core.service.VipService;
 import org.slf4j.Logger;
@@ -30,6 +35,8 @@ public class ChargeRulesServiceImpl implements ChargeRulesService {
     private AccountService accountService;
     @Autowired
     private VipService vipService;
+    @Autowired
+    private RechargeRuleMapper rechargeRuleMapper;
 
     @Override
     public List<ChargeRules> getChargeRules() {
@@ -99,5 +106,30 @@ public class ChargeRulesServiceImpl implements ChargeRulesService {
         return map;
     }
 
+    @Override
+    public ResultMap getRechargeRuleByPro(Integer memberId) {
 
+        RechargeRulePojp rechargeRulePojp = new RechargeRulePojp();
+        Account account = accountService.selectById(memberId);
+        List<RechargeRule> rechargeRules = rechargeRuleMapper.selectByAll();
+        rechargeRulePojp.setRechargePrice(account.getGrowthValueMonth().multiply(new BigDecimal(100)).intValue());
+
+        for (int i = 0; i < rechargeRules.size(); i++) {
+            if (rechargeRules.get(i).getPrice().compareTo(new BigDecimal(account.getGrowthValueMonthLevel())) == 0) {
+                if (i == rechargeRules.size() - 1) {
+                    rechargeRulePojp.setRechargeLevel(rechargeRules.get(i).getPrice().multiply(new BigDecimal(100)).intValue());
+                    rechargeRulePojp.setRechargeLevelCoin(rechargeRules.get(i).getCoin());
+                } else {
+                    rechargeRulePojp.setRechargeLevel(rechargeRules.get(i + 1).getPrice().multiply(new BigDecimal(100)).intValue());
+                    rechargeRulePojp.setRechargeLevelCoin(rechargeRules.get(i + 1).getCoin());
+                }
+            }
+        }
+        if (StringUtils.isEmpty(rechargeRulePojp.getRechargeLevel())) {
+            rechargeRulePojp.setRechargeLevel(rechargeRules.get(0).getPrice().multiply(new BigDecimal(100)).intValue());
+            rechargeRulePojp.setRechargeLevelCoin(rechargeRules.get(0).getCoin());
+        }
+        rechargeRulePojp.setRechargeLevelMax(rechargeRules.get(rechargeRules.size() - 1).getPrice().multiply(new BigDecimal(100)).intValue());
+        return new ResultMap("操作成功", rechargeRulePojp);
+    }
 }

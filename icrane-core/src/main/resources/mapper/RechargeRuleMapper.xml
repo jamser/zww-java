@@ -6,11 +6,9 @@
         <result column="price" property="price" jdbcType="DECIMAL"/>
         <result column="coin" property="coin" jdbcType="INTEGER"/>
         <result column="sort" property="sort" jdbcType="INTEGER"/>
-        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
-        <result column="update_date" property="updateDate" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, price, coin, sort, create_date, update_date
+    id, price, coin, sort
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select

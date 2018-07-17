@@ -8,14 +8,12 @@ import com.bfei.icrane.common.util.RedisUtil;
 import com.bfei.icrane.common.util.ResultMap;
 import com.bfei.icrane.common.util.StringUtils;
 import org.apache.commons.collections4.map.HashedMap;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.bfei.icrane.api.service.ChargeRulesService;
 import com.bfei.icrane.api.service.PrefSetService;
@@ -23,6 +21,7 @@ import com.bfei.icrane.common.util.Enviroment;
 import com.bfei.icrane.core.models.ChargeRules;
 import com.bfei.icrane.core.models.SystemPref;
 import com.bfei.icrane.core.service.ValidateTokenService;
+
 /**
  * 充值规则
  */
@@ -128,4 +127,12 @@ public class ChargeRulesController {
     }
 
 
+        @RequestMapping(value = "/getProgressParams", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap getPayDetail(@RequestParam Integer memberId, @RequestParam String token) throws Exception {
+//        if (!validateTokenService.validataToken(token, memberId)) {
+//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//        }
+        return chargeRulesService.getRechargeRuleByPro(memberId);
+    }
 }

@@ -18,8 +18,4 @@ public class RechargeRule {
     private Integer coin;
 
     private Integer sort;
-
-    private Date createDate;
-
-    private Date updateDFate;
 }
