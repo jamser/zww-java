@@ -1,29 +1,5 @@
 package com.bfei.icrane.api.controller;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
-import javax.websocket.server.PathParam;
-import javax.websocket.server.ServerEndpoint;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aliyun.mns.model.Message;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.exceptions.ServerException;
@@ -36,6 +12,18 @@ import com.bfei.icrane.core.service.AliyunService;
 import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
 import com.bfei.icrane.game.RoomSession;
 import com.bfei.icrane.game.task.HeartbeatDetectTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.websocket.*;
+import javax.websocket.server.PathParam;
+import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author mwan
@@ -286,7 +274,7 @@ public class WebSocketController {
                 return;
             }
             if ("coin".equals(message) && !newMachineType) {
-                //投币命令重置心跳
+                //投币命令重置心跳uun
                 heartTask.setHeartbeatDetectTime(TimeUtil.getTime());
                 pubMessageIot(roomSession.getProductKey(), roomSession.getIotControlTopic(), IotMessage);
                 IotMessage = "{\"control\":\"right\"}";

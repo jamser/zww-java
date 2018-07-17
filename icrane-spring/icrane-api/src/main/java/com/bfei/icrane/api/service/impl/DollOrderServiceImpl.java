@@ -1,11 +1,11 @@
 package com.bfei.icrane.api.service.impl;
 
-import java.util.*;
-import java.util.Map.Entry;
-
-import com.bfei.icrane.api.service.MemberService;
+import com.bfei.icrane.api.service.DollOrderService;
 import com.bfei.icrane.common.util.Enviroment;
 import com.bfei.icrane.common.util.ResultMap;
+import com.bfei.icrane.common.util.StringUtils;
+import com.bfei.icrane.common.util.TimeUtil;
+import com.bfei.icrane.core.dao.*;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.models.vo.CatchVO;
 import com.bfei.icrane.core.service.VipService;
@@ -15,17 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bfei.icrane.api.service.DollOrderService;
-import com.bfei.icrane.common.util.StringUtils;
-import com.bfei.icrane.common.util.TimeUtil;
-import com.bfei.icrane.core.dao.ChargeDao;
-import com.bfei.icrane.core.dao.DollDao;
-import com.bfei.icrane.core.dao.DollOrderDao;
-import com.bfei.icrane.core.dao.DollOrderGoodsDao;
-import com.bfei.icrane.core.dao.DollOrderItemDao;
-import com.bfei.icrane.core.dao.MemberAddrDao;
-import com.bfei.icrane.core.dao.MemberDao;
-import com.bfei.icrane.core.dao.SystemPrefDao;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Author: mwan Version: 1.1 Date: 2017/09/27 Description: 娃娃发货或寄存订单业务接口实现.
@@ -153,30 +144,6 @@ public class DollOrderServiceImpl implements DollOrderService {
         dollOrder.setOrderDate(TimeUtil.getTime());
         dollOrder.setOrderBy(memberId);
         dollOrder.setStatus("寄存中");
-        String machineType = String.valueOf(doll.getMachineType());
-//        if ("1".equals(machineType) || "3".equals(machineType)) {//练习房 直接兑换
-//            dollOrder.setStatus("已兑换");
-//            //SystemPref practiceRoom = systemPrefDao.selectByPrimaryKey("PRACTICE_ROOM_BONUS");
-//            //String procticeCoins = practiceRoom==null?"0":practiceRoom.getValue();
-//            //dollOrder.setDeliverCoins(Integer.parseInt(procticeCoins));
-//            dollOrder.setDeliverCoins(doll.getRedeemCoins());
-//            Charge charge = new Charge();
-//            Member member = memberDao.selectById(memberId);
-//            charge.setMemberId(memberId);
-//            charge.setCoins(member.getAccount().getCoins());
-//            //charge.setCoinsSum(doll.getRedeemCoins() + member.getCoins());
-//            charge.setCoinsSum(doll.getRedeemCoins());//练习房兑换奖励
-//            charge.setChargeDate(TimeUtil.getTime());
-//            charge.setType("income");
-//            charge.setDollId(doll.getId());
-//            charge.setChargeMethod("由<练习房抓中娃娃赠送币," + doll.getDollID() + ">兑换获取");
-//            if ("3".equals(machineType)) {
-//                charge.setChargeMethod("由<占卜房抓中娃娃赠送币," + doll.getDollID() + ">兑换获取");
-//            }
-//            charge.setChargeDate(TimeUtil.getTime());
-//            chargeDao.updateMemberCount(charge);
-//            chargeDao.insertChargeHistory(charge);
-//        }
         dollOrder.setStockValidDate(TimeUtil.plusDay(validDate));
         dollOrderDao.insertOrder(dollOrder);
 
@@ -191,6 +158,14 @@ public class DollOrderServiceImpl implements DollOrderService {
         //} else {
         //	doll.setQuantity(0);
         //}
+//        Member member = memberDao.selectById(memberId);
+//        CatchVO catchVO = new CatchVO();
+//        catchVO.setUserName(member.getName());
+//        catchVO.setDollName(doll.getName());
+//        catchVO.setMemberId(memberId);
+//        Gson gson=new Gson();
+//        String s = gson.toJson(catchVO);
+//        PushWebsocketContoller.sendInfo(s);
         return dollDao.updateByPrimaryKeySelective(doll);
     }
 

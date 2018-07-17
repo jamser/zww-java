@@ -734,9 +734,9 @@ public class DollController {
     @ResponseBody
     public ResultMap getCatchSuccessLists(@RequestParam String token, @RequestParam Integer memberId) {
         try {
-//            if (!validateTokenService.validataToken(token, memberId)) {
-//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-//            }
+            if (!validateTokenService.validataToken(token, memberId)) {
+                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            }
             return dollOrderService.getDollOrderBySecond();
         } catch (Exception e) {
             //logger.error("获取H5娃娃机列表出错", e);

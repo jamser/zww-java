@@ -120,7 +120,7 @@
         FROM
         t_doll_order_item a
         INNER JOIN t_doll_order b ON a.order_id = b.id WHERE
-         b.order_date >=DATE_SUB(NOW(),INTERVAL 6 SECOND) ORDER BY b.order_date DESC LIMIT 1
+         b.order_date >=DATE_SUB(NOW(),INTERVAL 4 SECOND) ORDER BY b.order_date DESC LIMIT 1
     </select>
 
 
