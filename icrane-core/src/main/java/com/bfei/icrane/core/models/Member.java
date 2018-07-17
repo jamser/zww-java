@@ -40,6 +40,7 @@ public class Member implements Serializable {
     private String gender;
     //private Integer coins;//金币数
     private Integer catchNumber;
+    private Integer catchNumLevel;
     private Timestamp registerDate;
     private Timestamp modifiedDate;
     private int modifiedBy;
@@ -80,11 +81,6 @@ public class Member implements Serializable {
     private Agent agentThree;
 
 
-
-
-
-
-
     private Account account = new Account();//账户信息
 
     //兼容老版本的机器
@@ -102,7 +98,7 @@ public class Member implements Serializable {
             //判断数据库是否已经迁移过来了
             if (id != 0 && accountService.selectId(id) == null) {
                 account = accountService.createAccount(id);
-            }else{
+            } else {
                 account = accountService.select(id);
             }
         }

@@ -109,7 +109,7 @@ public class ChargeServiceImpl implements ChargeService {
                 charge.setCoins(charge.getSuperTicket());
                 charge.setType("s" + charge.getType());
                 result = chargeDao.insertChargeHistory(charge);
-//                insertGrowthHistory(charge, account);
+                insertGrowthHistory(charge, account);
                 if (charge.getPrepaidAmt() != null && charge.getPrepaidAmt() > 0) {
                     charge.setType("income");
                     charge.setGrowthValue(account.getGrowthValue());
@@ -120,7 +120,7 @@ public class ChargeServiceImpl implements ChargeService {
             }
             if (charge.getSuperTicketSum() > 0 && charge.getCoinsSum() > 0) {//混合礼包记录
                 chargeDao.insertChargeHistory(charge);
-//                insertGrowthHistory(charge, account);
+                insertGrowthHistory(charge, account);
                 charge.setCoinsSum(charge.getSuperTicketSum());
                 charge.setCoins(charge.getSuperTicket());
                 charge.setType("s" + charge.getType());
@@ -172,10 +172,7 @@ public class ChargeServiceImpl implements ChargeService {
             if ((i == rechargeRules.size() && growthValueMonth.intValue() >= rechargeRules.get(i - 1).getPrice().intValue()) ||
                     (growthValueMonth.intValue() >= rechargeRules.get(i - 1).getPrice().intValue() &&
                             growthValueMonth.intValue() < rechargeRules.get(i).getPrice().intValue())) {
-                logger.info("account=={}", account.toString());
-                logger.info("rechargeRules=={}", rechargeRules.get(i - 1));
                 int i1 = new BigDecimal(account.getGrowthValueMonthLevel()).compareTo(rechargeRules.get(i - 1).getPrice());
-
                 if (i1 == 0) {
                     return null;
                 }

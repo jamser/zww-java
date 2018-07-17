@@ -4,12 +4,14 @@ import com.bfei.icrane.core.dao.RechargeRuleMapper;
 import com.bfei.icrane.core.models.RechargeRule;
 import com.bfei.icrane.core.service.RechargeRuleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by moying on 2018/7/16.
  */
+@Service
 public class RechargeRuleServiceImpl implements RechargeRuleService {
 
     @Autowired

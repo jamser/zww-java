@@ -1,13 +1,16 @@
 package com.bfei.icrane.api.service.impl;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.bfei.icrane.common.util.*;
+import com.bfei.icrane.core.dao.*;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.service.AccountService;
+import com.bfei.icrane.core.service.RechargeRuleService;
 import com.bfei.icrane.game.GameProcessEnum;
 import com.bfei.icrane.game.GameProcessUtil;
 
@@ -18,14 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bfei.icrane.api.service.DollRoomService;
-import com.bfei.icrane.core.dao.CatchHistoryDao;
-import com.bfei.icrane.core.dao.ChargeDao;
-import com.bfei.icrane.core.dao.DollDao;
-import com.bfei.icrane.core.dao.DollRoomDao;
-import com.bfei.icrane.core.dao.MachineProbabilityDao;
-import com.bfei.icrane.core.dao.MemberDao;
 import com.bfei.icrane.core.pojos.CatchDollPojo;
 import com.bfei.icrane.core.pojos.DollImgPojo;
+import org.springframework.util.ObjectUtils;
 
 /**
  * @author lgq Version: 1.0 Date: 2017年9月23日date Description: 用户Service接口实现类.
@@ -48,6 +46,8 @@ public class DollRoomServiceImpl implements DollRoomService {
     private CatchHistoryDao catchHistoryDao;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private RechargeRuleMapper rechargeRuleMapper;
 
     RedisUtil redisUtil = new RedisUtil();
 
@@ -249,11 +249,11 @@ public class DollRoomServiceImpl implements DollRoomService {
         // Integer num = Integer.parseInt(redisUtil.getString(RedisKeyGenerator.getMemberClaw(member.getId())));
         //扣费计数
         Integer num = GameProcessUtil.getInstance().addCountGameLock(member.getId(), doll.getId(), GameProcessEnum.GAME_CONSUME);
-        logger.info("consumePlay 参数doll={},member={},num={},state={}", doll.getId(), member.getId(), num,state);
+        logger.info("consumePlay 参数doll={},member={},num={},state={}", doll.getId(), member.getId(), num, state);
         if (num == 1) {//扣费一次
             //扣费操作
             Account baseAccount = member.getAccount();
-            if(doll.getPrice()>baseAccount.getCoins()){
+            if (doll.getPrice() > baseAccount.getCoins()) {
                 return false;
             }
             Account account = new Account();
@@ -352,7 +352,7 @@ public class DollRoomServiceImpl implements DollRoomService {
             Integer hostMemberId = Integer.parseInt(redisUtil.getString(dollHostKey));
             //如果房主是自己
             //表示可以玩
-            if (memberId.equals( hostMemberId )) {
+            if (memberId.equals(hostMemberId)) {
                 //redisUtil.setString(RedisKeyGenerator.getRoomHostKey(dollId), String.valueOf(memberId));
                 return 0;
             }
@@ -413,6 +413,9 @@ public class DollRoomServiceImpl implements DollRoomService {
             Member member = memberDao.selectById(memberId);
             member.setCatchNumber(member.getCatchNumber() + 1);
             memberDao.updateByPrimaryKeySelective(member);
+
+            //生成抓取次数奖励
+//            insertByCatchLevel(member);
         }
 
         String machineStatus = machine.getMachineStatus();
@@ -421,6 +424,47 @@ public class DollRoomServiceImpl implements DollRoomService {
         }
         return true;
     }
+
+    private void insertByCatchLevel(Member member) {
+        RechargeRule rechargeRule = getRechargeCoin(member);
+        if (!ObjectUtils.isEmpty(rechargeRule)) {
+            //生成消费记录
+            Charge chargeRecord = new Charge();
+            chargeRecord.setMemberId(member.getId());
+            chargeRecord.setCoins(member.getCoins());
+            chargeRecord.setCoinsSum(rechargeRule.getCoin());
+            chargeRecord.setType("income");
+            chargeRecord.setChargeDate(TimeUtil.getTime());
+            chargeRecord.setChargeMethod("抓取次数累积奖励");
+            chargeDao.insertChargeHistory(chargeRecord);
+            //加币操作
+            Account baseAccount = new Account();
+            baseAccount.setId(member.getAccount().getId());
+            baseAccount.setCoins(rechargeRule.getCoin());
+            accountService.updateMemberCoin(baseAccount);//hi币
+        }
+    }
+
+    public RechargeRule getRechargeCoin(Member member) {
+
+        List<RechargeRule> rechargeRules = rechargeRuleMapper.selectByAll(Enviroment.CATCH_TYPE);
+        for (int i = 1; i <= rechargeRules.size(); i++) {
+            Integer catchNumber = member.getCatchNumber();
+            if ((i == rechargeRules.size() && catchNumber >= rechargeRules.get(i - 1).getPrice().intValue()) ||
+                    catchNumber >= rechargeRules.get(i - 1).getPrice().intValue() &&
+                            catchNumber < rechargeRules.get(i).getPrice().intValue()) {
+
+                int i1 = member.getCatchNumLevel().compareTo(rechargeRules.get(i - 1).getPrice().intValue());
+                if (i1 == 0) {
+                    return null;
+                }
+                return rechargeRules.get(i - 1);
+
+            }
+        }
+        return null;
+    }
+
 
     /**
      * 获取房间娃娃详情

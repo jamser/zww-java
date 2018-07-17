@@ -15,6 +15,7 @@
         <result column="gender" jdbcType="VARCHAR" property="gender"/>
         <result column="birthday" jdbcType="DATE" property="birthday"/>
         <result column="catch_number" jdbcType="VARCHAR" property="catchNumber"/>
+        <result column="catch_num_level" jdbcType="INTEGER" property="catchNumLevel"/>
         <result column="register_date" jdbcType="TIMESTAMP" property="registerDate"/>
         <result column="modified_date" jdbcType="TIMESTAMP" property="modifiedDate"/>
         <result column="modified_by" jdbcType="INTEGER" property="modifiedBy"/>
@@ -129,7 +130,7 @@
         id, password, memberID, mobile, weixin_id,open_id,union_id,active_flg,invite_flg
     </sql>
     <sql id="Member_Column_List">
-        id, password, memberID, name, mobile, weixin_id,gender,birthday,catch_number,register_date,modified_date,modified_by,last_login_date,last_logoff_date,online_flg,icon_context_path,icon_file_name,icon_real_path,easemob_uuid,
+        id, password, memberID, name, mobile, weixin_id,gender,birthday,catch_number,catch_num_level,register_date,modified_date,modified_by,last_login_date,last_logoff_date,online_flg,icon_context_path,icon_file_name,icon_real_path,easemob_uuid,
     active_flg,invite_flg,invite_flg_web,register_from,last_login_from,first_login,first_charge,register_channel,login_channel,phone_model,agent_super_id,agent_one_id,agent_two_id,agent_three_id
      </sql>
     <!-- 目的：为dao接口方法提供sql语句配置 -->
