@@ -120,10 +120,10 @@ public class AgentController {
     @RequestMapping(value = "/uploadPortrait", method = RequestMethod.POST)
     public ResultMap uploadPortrait(@RequestParam("file") MultipartFile file,
                                     @RequestParam("agentId") Integer agentId, @RequestParam("token") String token) throws Exception {
-//        if (!validateTokenService.validataAgentToken(token, agentId)) {
-//            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-//        }
+        if (!validateTokenService.validataAgentToken(token, agentId)) {
+            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+        }
 
         try {
             PropFileManager propFileMgr = new PropFileManager("interface.properties");
