@@ -445,4 +445,15 @@ public class DollRoomController {
         }
     }
 
+
+    @RequestMapping(value = "/getCatchProParams", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap getCatchProParams(@RequestParam Integer memberId, @RequestParam String token) throws Exception {
+        if (!validateTokenService.validataToken(token, memberId)) {
+            if (!validateTokenService.validataToken(token, memberId)) {
+                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            }
+        }
+        return dollRoomService.getCatchProParams(memberId);
+    }
 }

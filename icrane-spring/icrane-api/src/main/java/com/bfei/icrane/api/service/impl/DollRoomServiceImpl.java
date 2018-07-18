@@ -9,6 +9,7 @@ import java.util.Map;
 import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.dao.*;
 import com.bfei.icrane.core.models.*;
+import com.bfei.icrane.core.pojos.RechargeRulePojp;
 import com.bfei.icrane.core.service.AccountService;
 import com.bfei.icrane.core.service.RechargeRuleService;
 import com.bfei.icrane.game.GameProcessEnum;
@@ -511,6 +512,32 @@ public class DollRoomServiceImpl implements DollRoomService {
             }
             logger.info("dollId={}房间频繁抓中，将房间设为维修中", dollId);
         }
+    }
+
+    @Override
+    public ResultMap getCatchProParams(Integer memberId) {
+        RechargeRulePojp rechargeRulePojp = new RechargeRulePojp();
+        Member member = memberDao.selectById(memberId);
+        List<RechargeRule> rechargeRules = rechargeRuleMapper.selectByAll(Enviroment.RECHARGE_TYPE);
+        rechargeRulePojp.setRechargePrice(member.getCatchNumber());
+
+        for (int i = 0; i < rechargeRules.size(); i++) {
+            if (rechargeRules.get(i).getPrice().intValue() - (member.getCatchNumLevel()) == 0) {
+                if (i == rechargeRules.size() - 1) {
+                    rechargeRulePojp.setRechargeLevel(rechargeRules.get(i).getPrice().intValue());
+                    rechargeRulePojp.setRechargeLevelCoin(rechargeRules.get(i).getCoin());
+                } else {
+                    rechargeRulePojp.setRechargeLevel(rechargeRules.get(i + 1).getPrice().intValue());
+                    rechargeRulePojp.setRechargeLevelCoin(rechargeRules.get(i + 1).getCoin());
+                }
+            }
+        }
+        if (StringUtils.isEmpty(rechargeRulePojp.getRechargeLevel())) {
+            rechargeRulePojp.setRechargeLevel(rechargeRules.get(0).getPrice().intValue());
+            rechargeRulePojp.setRechargeLevelCoin(rechargeRules.get(0).getCoin());
+        }
+        rechargeRulePojp.setRechargeLevelMax(rechargeRules.get(rechargeRules.size() - 1).getPrice().intValue());
+        return new ResultMap("操作成功", rechargeRulePojp);
     }
 
     @Override

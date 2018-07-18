@@ -80,4 +80,6 @@ public interface DollRoomService {
     ResultMap selectDollParticularsById(Integer dollId);
 
     void endPlayByCatchCount(Integer memberId, Integer dollId);
+
+    ResultMap getCatchProParams(Integer memberId);
 }
