@@ -212,39 +212,39 @@ public class AgentServiceImpl implements AgentService {
         // 生成短信验证码
         String smsCode = StringUtils.getSmsCode();
 
-        Oem oem =null;
+        Oem oem = null;
         if (agent.getIsOem()) {
             oem = oemMapper.selectByPrimaryKey(agent.getId());
-        }  else if (agent.getLevel() != 0) {
+        } else if (agent.getLevel() != 0) {
             oem = oemMapper.selectByPrimaryKey(agent.getAgentId());
         }
-        if(null == oem){
+        if (null == oem) {
             oem = oemMapper.selectByCode("lanaokj");
         }
         // 获取配置文件
         // 发送短信
         try {
 
-                if (AliyunServiceImpl.getInstance().sendSMSForCode(mobile, oem.getSmsName(),
-                        oem.getSmsCode(), smsCode)) {
+            if (AliyunServiceImpl.getInstance().sendSMSForCode(mobile, oem.getSmsName(),
+                    oem.getSmsCode(), smsCode)) {
+                redisUtil.setString(RedisKeyGenerator.getCodeAentKey(mobile), smsCode, Enviroment.SMS_ENDTIME);
+                logger.info("发送" + message + "验证码成功=" + Enviroment.TEXT_MESSAGING_SUCCESS);
+                return new ResultMap(Enviroment.TEXT_MESSAGING_SUCCESS);
+            } else {
+                SmsSingleSender sender = new SmsSingleSender(Integer.valueOf(propFileMgr.getProperty("qcloudsms.AppID")), propFileMgr.getProperty("qcloudsms.AppKEY"));
+                ArrayList<String> params = new ArrayList<String>();
+                params.add(smsCode);
+                params.add("5");
+                SmsSingleSenderResult result = sender.sendWithParam(propFileMgr.getProperty("qcloudsms.nationCode"), mobile, Integer.valueOf(propFileMgr.getProperty("qcloudsms.templId")), params, "", "", "");
+                if ("OK".equals(result.errMsg)) {
                     redisUtil.setString(RedisKeyGenerator.getCodeAentKey(mobile), smsCode, Enviroment.SMS_ENDTIME);
                     logger.info("发送" + message + "验证码成功=" + Enviroment.TEXT_MESSAGING_SUCCESS);
                     return new ResultMap(Enviroment.TEXT_MESSAGING_SUCCESS);
                 } else {
-                    SmsSingleSender sender = new SmsSingleSender(Integer.valueOf(propFileMgr.getProperty("qcloudsms.AppID")), propFileMgr.getProperty("qcloudsms.AppKEY"));
-                    ArrayList<String> params = new ArrayList<String>();
-                    params.add(smsCode);
-                    params.add("5");
-                    SmsSingleSenderResult result = sender.sendWithParam(propFileMgr.getProperty("qcloudsms.nationCode"), mobile, Integer.valueOf(propFileMgr.getProperty("qcloudsms.templId")), params, "", "", "");
-                    if ("OK".equals(result.errMsg)) {
-                        redisUtil.setString(RedisKeyGenerator.getCodeAentKey(mobile), smsCode, Enviroment.SMS_ENDTIME);
-                        logger.info("发送" + message + "验证码成功=" + Enviroment.TEXT_MESSAGING_SUCCESS);
-                        return new ResultMap(Enviroment.TEXT_MESSAGING_SUCCESS);
-                    } else {
-                        logger.info("发送" + message + "验证码失败=" + Enviroment.TEXT_MESSAGING_FAILURE);
-                        return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.TEXT_MESSAGING_FAILURE);
-                    }
+                    logger.info("发送" + message + "验证码失败=" + Enviroment.TEXT_MESSAGING_FAILURE);
+                    return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.TEXT_MESSAGING_FAILURE);
                 }
+            }
         } catch (Exception e) {
             logger.error("发送" + message + "验证码", e);
             e.printStackTrace();
@@ -267,5 +267,15 @@ public class AgentServiceImpl implements AgentService {
     @Override
     public List<Agent> selectByPhoneLists(String phone) {
         return agentMapper.selectByPhoneLists(phone);
+    }
+
+    @Override
+    public void updateAgentProfile(Integer agentId, String imgUrl) {
+        Agent agent = agentMapper.selectByPrimaryKey(agentId);
+        SysUser sysUser = sysUserMapper.selectByAccount(agent.getUsername());
+        SysUser user = new SysUser();
+        user.setId(sysUser.getId());
+        user.setAvatar(imgUrl);
+        sysUserMapper.updateByPrimaryKeySelective(user);
     }
 }

@@ -53,4 +53,6 @@ public interface AgentService {
     BankInfo selectByBankId(Integer id);
 
     List<Agent> selectByPhoneLists(String phone);
+
+    void updateAgentProfile(Integer agentId,String imgUrl);
 }

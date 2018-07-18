@@ -11,6 +11,7 @@ import com.bfei.icrane.core.models.Member;
 import com.bfei.icrane.core.models.Oem;
 import com.bfei.icrane.core.pojos.AgentPojo;
 import com.bfei.icrane.core.service.*;
+import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -19,8 +20,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -114,6 +119,45 @@ public class AgentController {
         Map<String, String> map = new HashMap<>();
         map.put("host", oem.getUrl());
         return new ResultMap(Enviroment.RETURN_SUCCESS_CODE, map);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/uploadPortrait", method = RequestMethod.POST)
+    public ResultMap uploadPortrait(@RequestParam("file") MultipartFile file,
+                                    @RequestParam("agentId") Integer agentId, @RequestParam("token") String token) throws Exception {
+        if (!validateTokenService.validataAgentToken(token, agentId)) {
+            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+        }
+
+        try {
+            PropFileManager propFileMgr = new PropFileManager("interface.properties");
+            String ossBucketName = propFileMgr.getProperty("aliyun.ossBucketName");
+            if (!file.isEmpty()) {
+                String originalFileName = file.getOriginalFilename();
+                // 获取后缀
+                String suffix = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
+                // 修改后完整的文件名称
+                String fileKey = StringUtils.getRandomUUID();
+                String NewFileKey = "agent/Profile/" + fileKey + "." + suffix;
+
+                byte[] bytes = file.getBytes();
+                InputStream fileInputStream = new ByteArrayInputStream(bytes);
+                if (!AliyunServiceImpl.getInstance().putFileStreamToOSS(ossBucketName, NewFileKey, fileInputStream)) {
+                    return new ResultMap(Enviroment.RETURN_FAILE_CODE, "文件上传到阿里云OSS时失败");
+                }
+                String newFileUrl = AliyunServiceImpl.getInstance().generatePresignedUrl(ossBucketName, NewFileKey, 1000000).toString();
+                agentService.updateAgentProfile(agentId, newFileUrl);
+                Map<Object, Object> map = new HashMap<>();
+                map.put("fileUrl", newFileUrl);
+                return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, map);
+            } else {
+                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, "文件大小为空");
+            }
+        } catch (Exception e) {
+            logger.error("银行卡上传出错", e);
+            throw e;
+        }
     }
 
 
