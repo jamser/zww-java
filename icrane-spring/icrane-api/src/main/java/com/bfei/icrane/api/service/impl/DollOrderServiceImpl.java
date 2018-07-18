@@ -9,6 +9,8 @@ import com.bfei.icrane.common.util.TimeUtil;
 import com.bfei.icrane.core.dao.*;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.models.vo.CatchVO;
+import com.bfei.icrane.core.pojos.RankListPojo;
+import com.bfei.icrane.core.pojos.Rankpojo;
 import com.bfei.icrane.core.service.VipService;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
@@ -412,5 +414,64 @@ public class DollOrderServiceImpl implements DollOrderService {
         Member member = memberDao.selectById(catchVO.getMemberId());
         catchVO.setUserName(member.getName());
         return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, catchVO);
+    }
+
+    @Override
+    public ResultMap getCatchSuccessRanks(Integer type, Integer memberId) {
+        List<Rankpojo> rankpojoList = new ArrayList<>();
+        RankListPojo rankListPojo = new RankListPojo();
+        Rankpojo userPojo = null;
+        List<Rankpojo> rankVOS = new ArrayList<>();
+        switch (type) {
+            case 1:
+                rankVOS = dollOrderItemDao.selectByRankNow(null);
+                break;
+            case 2:
+                rankVOS = dollOrderItemDao.selectByRankWeek(null);
+                break;
+            case 3:
+                rankVOS = dollOrderItemDao.selectByRankAll(null);
+                break;
+            default:
+                rankVOS = dollOrderItemDao.selectByRankAll(null);
+                break;
+        }
+        for (int i = 0; i < rankVOS.size(); i++) {
+            if (rankVOS.get(i).getMemberId().equals(memberId)) {
+                userPojo = new Rankpojo();
+                userPojo.setId(i + 1);
+                userPojo.setIconRealPath(rankVOS.get(i).getIconRealPath());
+                userPojo.setMemberId(rankVOS.get(i).getMemberId());
+                userPojo.setNumber(rankVOS.get(i).getNumber());
+                userPojo.setSex(rankVOS.get(i).getSex());
+                userPojo.setUserName(rankVOS.get(i).getUserName());
+            }
+        }
+        //个人排名
+        if (StringUtils.isEmpty(userPojo)) {
+            Member member = memberDao.selectById(memberId);
+            userPojo = new Rankpojo();
+            List<Rankpojo> rankVOS1 = new ArrayList<>();
+            switch (type) {
+                case 1:
+                    rankVOS1 = dollOrderItemDao.selectByRankNow(memberId);
+                    break;
+                case 2:
+                    rankVOS1 = dollOrderItemDao.selectByRankWeek(memberId);
+                    break;
+                case 3:
+                    rankVOS1 = dollOrderItemDao.selectByRankAll(memberId);
+                    break;
+            }
+            userPojo.setIconRealPath(member.getIconRealPath());
+            userPojo.setMemberId(member.getId());
+            userPojo.setNumber(rankVOS1.get(0).getNumber());
+            userPojo.setSex(member.getGender());
+            userPojo.setUserName(member.getName());
+        }
+        rankListPojo.setRankpojo(userPojo);
+        rankListPojo.setRankpojos(rankVOS);
+
+        return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, rankListPojo);
     }
 }

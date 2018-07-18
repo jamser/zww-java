@@ -35,6 +35,14 @@
         <result column="order_date" jdbcType="TIMESTAMP" property="createDate"/>
         <result column="order_by" jdbcType="INTEGER" property="memberId"/>
     </resultMap>
+
+    <resultMap id="RankResult" type="com.bfei.icrane.core.pojos.Rankpojo">
+        <result column="number" jdbcType="INTEGER" property="number"/>
+        <result column="name" jdbcType="VARCHAR" property="userName"/>
+        <result column="order_by" jdbcType="INTEGER" property="memberId"/>
+        <result column="icon_real_path" jdbcType="INTEGER" property="iconRealPath"/>
+        <result column="gender" jdbcType="VARCHAR" property="sex"/>
+    </resultMap>
     <sql id="Base_Column_List">
 		id, order_id, doll_id, created_date,doll_code
 	</sql>
@@ -123,6 +131,47 @@
          b.order_date >=DATE_SUB(NOW(),INTERVAL 4 SECOND) ORDER BY b.order_date DESC LIMIT 1
     </select>
 
+    <select id="selectByRankNow" resultMap="RankResult">
+        SELECT COUNT(*) AS number,b.order_by ,t.name,t.gender,t.icon_real_path
+        FROM
+        t_doll_order_item a
+        INNER JOIN t_doll_order b ON a.order_id = b.id LEFT JOIN t_member t ON b.order_by=t.id
+        WHERE to_days(b.order_date) = to_days(now())
+        <if test="memberId != null">
+            AND b.order_by=#{memberId}
+        </if>
+        <if test="memberId == null">
+            GROUP BY order_by ORDER BY number DESC LIMIT 50
+        </if>
+    </select>
+
+    <select id="selectByRankWeek" resultMap="RankResult" parameterType="java.lang.Integer">
+        SELECT COUNT(*)AS number,b.order_by,t.name,t.gender,t.icon_real_path
+        FROM
+        t_doll_order_item a
+        INNER JOIN t_doll_order b ON a.order_id = b.id LEFT JOIN t_member t ON b.order_by=t.id WHERE
+        b.order_date BETWEEN subdate(curdate(),date_format(curdate(),'%w')-1)
+        AND subdate(curdate(),date_format(curdate(),'%w')-8)
+        <if test="memberId != null">
+            AND b.order_by=#{memberId}
+        </if>
+        <if test="memberId == null">
+            GROUP BY order_by ORDER BY number DESC LIMIT 50
+        </if>
+    </select>
+
+    <select id="selectByRankAll" resultMap="RankResult">
+        SELECT COUNT(*)AS number,b.order_by,t.name,t.gender,t.icon_real_path
+        FROM
+        t_doll_order_item a
+        INNER JOIN t_doll_order b ON a.order_id = b.id LEFT JOIN t_member t ON b.order_by=t.id
+        <if test="memberId != null">
+            WHERE b.order_by=#{memberId}
+        </if>
+        <if test="memberId == null">
+            GROUP BY order_by ORDER BY number DESC LIMIT 50
+        </if>
+    </select>
 
     <select id="selectByOrderItem" parameterType="com.bfei.icrane.core.models.DollOrderItem"
             resultMap="BaseResultMap">

@@ -739,7 +739,6 @@ public class DollController {
             }
             return dollOrderService.getDollOrderBySecond();
         } catch (Exception e) {
-            //logger.error("获取H5娃娃机列表出错", e);
             e.printStackTrace();
             return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
         }

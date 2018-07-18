@@ -3,6 +3,7 @@ package com.bfei.icrane.api.service;
 import java.util.List;
 
 import com.bfei.icrane.common.util.ResultMap;
+import com.bfei.icrane.core.models.Member;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bfei.icrane.core.models.DollOrder;
@@ -62,4 +63,6 @@ public interface DollOrderService {
     ResultMap beforeSendDoll(Integer memberId, Long[] orderIds);
 
     ResultMap getDollOrderBySecond();
+
+    ResultMap getCatchSuccessRanks(Integer type, Integer memberId);
 }

@@ -3,6 +3,7 @@ package com.bfei.icrane.core.dao;
 import java.util.List;
 
 import com.bfei.icrane.core.models.vo.CatchVO;
+import com.bfei.icrane.core.pojos.Rankpojo;
 import org.apache.ibatis.annotations.Param;
 
 import com.bfei.icrane.core.models.DollOrder;
@@ -39,4 +40,10 @@ public interface DollOrderItemDao {
     List<DollOrderItem> getOrderItemByOrderId(Long id);
 
     CatchVO selectByOrderStatusAndSecond();
+
+    List<Rankpojo> selectByRankNow(@Param("memberId") Integer memberId);
+
+    List<Rankpojo> selectByRankWeek(@Param("memberId") Integer memberId);
+
+    List<Rankpojo> selectByRankAll(@Param("memberId") Integer memberId);
 }
