@@ -182,4 +182,6 @@ public interface MemberService {
     List<Member> getMemberListByAgentId(Integer id, Integer lever);
 
     int updateByOpenId(Member member);
+
+    void insertMemberComment(Integer memberId,String comment);
 }

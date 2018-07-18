@@ -2,10 +2,7 @@ package com.bfei.icrane.api.service.impl;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.dao.*;
@@ -49,6 +46,8 @@ public class MemberServiceImpl implements MemberService {
     private ChargeDao chargeDao;
     @Autowired
     private OemMapper oemMapper;
+    @Autowired
+    private MemberCommentMapper memberCommentMapper;
 
     private RedisUtil redisUtil = new RedisUtil();
 
@@ -488,6 +487,19 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public int updateByOpenId(Member member) {
         return memberDao.updateByOpenId(member);
+    }
+
+    @Override
+    public void insertMemberComment(Integer memberId,String comment) {
+        Member member = memberDao.selectById(memberId);
+        MemberComment memberComment = new MemberComment();
+        memberComment.setComment(comment);
+        memberComment.setCreateDate(new Date());
+        memberComment.setUpdateDate(new Date());
+        memberComment.setMemberId(memberId);
+        memberComment.setUsername(member.getName());
+        memberCommentMapper.insertSelective(memberComment);
+
     }
 
     @Override

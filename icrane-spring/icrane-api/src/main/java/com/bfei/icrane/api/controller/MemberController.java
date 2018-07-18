@@ -2,9 +2,13 @@ package com.bfei.icrane.api.controller;
 
 import com.bfei.icrane.api.service.MemberService;
 import com.bfei.icrane.common.util.*;
+import com.bfei.icrane.core.form.CommentForm;
 import com.bfei.icrane.core.models.Member;
+import com.bfei.icrane.core.models.vo.CatchVO;
+import com.bfei.icrane.core.pojos.CommentPojo;
 import com.bfei.icrane.core.service.ValidateTokenService;
 import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
+import com.google.gson.Gson;
 import org.apache.commons.collections4.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -333,5 +338,24 @@ public class MemberController {
         } catch (Exception e) {
             throw e;
         }
+    }
+
+
+    /**
+     * 获得用户信息
+     */
+    @RequestMapping(value = "/comment", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap comment(@Valid CommentForm commentForm) throws Exception {
+        if (!validateTokenService.validataToken(commentForm.getToken(), commentForm.getMemberId())) {
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+        }
+        Member member = memberService.selectById(commentForm.getMemberId());
+        CommentPojo commentPojo = new CommentPojo();
+        commentPojo.setUserName(member.getName());
+        commentPojo.setUserName(member.getName());
+        Gson gson = new Gson();
+        CommnetWebsocketContoller.sendInfo(gson.toJson(commentPojo));
+        return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE);
     }
 }
