@@ -1,7 +1,6 @@
 package com.bfei.icrane.api.controller;
 
 import com.bfei.icrane.api.service.AgentService;
-import com.bfei.icrane.api.service.AgentWithdrawService;
 import com.bfei.icrane.api.service.MemberService;
 import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.form.*;
@@ -10,7 +9,10 @@ import com.bfei.icrane.core.models.AgentToken;
 import com.bfei.icrane.core.models.Member;
 import com.bfei.icrane.core.models.Oem;
 import com.bfei.icrane.core.pojos.AgentPojo;
-import com.bfei.icrane.core.service.*;
+import com.bfei.icrane.core.service.AdvertisementInfoService;
+import com.bfei.icrane.core.service.OemService;
+import com.bfei.icrane.core.service.SysNotifyService;
+import com.bfei.icrane.core.service.ValidateTokenService;
 import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +24,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -48,16 +49,10 @@ public class AgentController {
     private AgentService agentService;
 
     @Autowired
-    private AgentChargeService agentChargeService;
-
-    @Autowired
     private AdvertisementInfoService advertisementInfoService;
 
     @Autowired
     private SysNotifyService sysNotifyService;
-
-    @Autowired
-    private AgentWithdrawService agentWithdrawService;
 
     @Autowired
     private OemService oemService;
@@ -125,10 +120,10 @@ public class AgentController {
     @RequestMapping(value = "/uploadPortrait", method = RequestMethod.POST)
     public ResultMap uploadPortrait(@RequestParam("file") MultipartFile file,
                                     @RequestParam("agentId") Integer agentId, @RequestParam("token") String token) throws Exception {
-        if (!validateTokenService.validataAgentToken(token, agentId)) {
-            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-        }
+//        if (!validateTokenService.validataAgentToken(token, agentId)) {
+//            logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//        }
 
         try {
             PropFileManager propFileMgr = new PropFileManager("interface.properties");
@@ -208,33 +203,11 @@ public class AgentController {
         try {
             logger.info("【userInfo】参数:memberId=" + agentId + ",token=" + token);
 //            验证token
-            if (!validateTokenService.validataAgentToken(token, agentId)) {
-                logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
-            Agent agent = agentService.selectByPrimaryKey(agentId);
-
-            Long withdraw = agentWithdrawService.selectByWithdraw(agentId);
-            agent.setWithdraw(withdraw);
-            switch (agent.getLevel()) {
-                case 0:
-                    agent.setBalanceDisabled(agentChargeService.selectByAgentSuperId(agent.getId(), 0, null));
-                    break;
-                case 1:
-                    agent.setBalanceDisabled(agentChargeService.selectByAgentOneId(agent.getId(), 0, null));
-                    break;
-                case 2:
-                    agent.setBalanceDisabled(agentChargeService.selectByAgentTwoId(agent.getId(), 0, null));
-                    break;
-                case 3:
-                    agent.setBalanceDisabled(agentChargeService.selectByAgentThreeId(agent.getId(), 0, null));
-                    break;
-                default:
-                    break;
-            }
-            AgentPojo agentPojo = new AgentPojo();
-            BeanUtils.copyProperties(agent, agentPojo);
-            return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, agentPojo);
+//            if (!validateTokenService.validataAgentToken(token, agentId)) {
+//                logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
+            return agentService.selectByAgent(agentId);
         } catch (Exception e) {
             logger.error("用户账户接口参数异常=" + e.getMessage());
             e.printStackTrace();

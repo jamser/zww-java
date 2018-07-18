@@ -54,5 +54,7 @@ public interface AgentService {
 
     List<Agent> selectByPhoneLists(String phone);
 
-    void updateAgentProfile(Integer agentId,String imgUrl);
+    void updateAgentProfile(Integer agentId, String imgUrl);
+
+    ResultMap selectByAgent(Integer agentId);
 }

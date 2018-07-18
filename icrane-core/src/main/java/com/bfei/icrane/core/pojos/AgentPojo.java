@@ -20,6 +20,8 @@ public class AgentPojo {
 
     private String nickName;
 
+    private String iconRealPath;
+
     private Integer level;
 
     private Long balance;

@@ -2,10 +2,13 @@ package com.bfei.icrane.api.service.impl;
 
 import com.bfei.icrane.api.controller.AgentController;
 import com.bfei.icrane.api.service.AgentService;
+import com.bfei.icrane.api.service.AgentWithdrawService;
 import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.dao.*;
 import com.bfei.icrane.core.form.AgentForm;
 import com.bfei.icrane.core.models.*;
+import com.bfei.icrane.core.pojos.AgentPojo;
+import com.bfei.icrane.core.service.AgentChargeService;
 import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
 import com.github.qcloudsms.SmsSingleSender;
 import com.github.qcloudsms.SmsSingleSenderResult;
@@ -50,6 +53,12 @@ public class AgentServiceImpl implements AgentService {
 
     @Autowired
     private OemMapper oemMapper;
+
+    @Autowired
+    private AgentWithdrawService agentWithdrawService;
+
+    @Autowired
+    private AgentChargeService agentChargeService;
 
     private RedisUtil redisUtil = new RedisUtil();
 
@@ -277,5 +286,33 @@ public class AgentServiceImpl implements AgentService {
         user.setId(sysUser.getId());
         user.setAvatar(imgUrl);
         sysUserMapper.updateByPrimaryKeySelective(user);
+    }
+
+    @Override
+    public ResultMap selectByAgent(Integer agentId) {
+        Agent agent = agentMapper.selectByPrimaryKey(agentId);
+        SysUser sysUser = sysUserMapper.selectByAccount(agent.getUsername());
+        Long withdraw = agentWithdrawService.selectByWithdraw(agentId);
+        agent.setWithdraw(withdraw);
+        switch (agent.getLevel()) {
+            case 0:
+                agent.setBalanceDisabled(agentChargeService.selectByAgentSuperId(agent.getId(), 0, null));
+                break;
+            case 1:
+                agent.setBalanceDisabled(agentChargeService.selectByAgentOneId(agent.getId(), 0, null));
+                break;
+            case 2:
+                agent.setBalanceDisabled(agentChargeService.selectByAgentTwoId(agent.getId(), 0, null));
+                break;
+            case 3:
+                agent.setBalanceDisabled(agentChargeService.selectByAgentThreeId(agent.getId(), 0, null));
+                break;
+            default:
+                break;
+        }
+        AgentPojo agentPojo = new AgentPojo();
+        BeanUtils.copyProperties(agent, agentPojo);
+        agentPojo.setIconRealPath(sysUser.getAvatar());
+        return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, agentPojo);
     }
 }
