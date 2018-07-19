@@ -117,7 +117,12 @@
         LEFT JOIN doll_info dinfo ON dinfo.dollCode = a.doll_code
         WHERE
         b.order_by = #{memberId,jdbcType=INTEGER}
-        AND b. STATUS = #{orderStatus,jdbcType=VARCHAR}
+        <if test="orderStatus == '申请发货'">
+            AND b. STATUS in('申请发货','待发货')
+        </if>
+        <if test="orderStatus != '申请发货'">
+            AND b. STATUS = #{orderStatus,jdbcType=VARCHAR}
+        </if>
         ORDER BY
         order_date DESC;
     </select>

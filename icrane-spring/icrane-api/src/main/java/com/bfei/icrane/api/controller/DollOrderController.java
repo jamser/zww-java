@@ -201,7 +201,7 @@ public class DollOrderController {
             }
             return dollOrderService.beforeSendDoll(memberId, orderIds);
         } catch (Exception e) {
-            logger.error("发货出错,参数 memberId={},orderIds={},addrId={},token={},note={}",memberId,orderIds,token);
+            logger.error("发货出错,参数 memberId={},orderIds={},addrId={},token={},note={}", memberId, orderIds, token);
             throw e;
         }
 
@@ -220,7 +220,7 @@ public class DollOrderController {
      */
     @RequestMapping(value = "/sendDoll", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap sendDoll(@RequestParam Integer memberId,@RequestParam Long[] orderIds, @RequestParam Integer addrId, @RequestParam String token, String note) throws Exception {
+    public ResultMap sendDoll(@RequestParam Integer memberId, @RequestParam Long[] orderIds, @RequestParam Integer addrId, @RequestParam String token, String note) throws Exception {
         try {
             //验证参数
             if (memberId == null || StringUtils.isEmpty(token) || orderIds == null || orderIds.length < 1 || addrId == null || (note != null && note.length() > 255)) {
@@ -251,7 +251,7 @@ public class DollOrderController {
             }
             return dollOrderService.sendOrder(memberId, orderIds, addrId, note);
         } catch (Exception e) {
-            logger.error("发货出错,参数 memberId={},orderIds={},addrId={},token={},note={}",memberId,orderIds,addrId,token,note);
+            logger.error("发货出错,参数 memberId={},orderIds={},addrId={},token={},note={}", memberId, orderIds, addrId, token, note);
             throw e;
         }
 

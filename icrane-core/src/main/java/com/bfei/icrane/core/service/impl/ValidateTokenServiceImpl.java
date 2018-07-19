@@ -1,6 +1,7 @@
 package com.bfei.icrane.core.service.impl;
 
 
+import com.bfei.icrane.common.util.StringUtils;
 import com.bfei.icrane.core.dao.AgentMapper;
 import com.bfei.icrane.core.dao.AgentTokenMapper;
 import com.bfei.icrane.core.models.Agent;
@@ -47,6 +48,9 @@ public class ValidateTokenServiceImpl implements ValidateTokenService {
     }
 
     public boolean validataToken(String token, Integer memberId) {
+        if (StringUtils.isEmpty(token) || StringUtils.isEmpty(memberId)) {
+            return false;
+        }
         if (redisUtil.existsKey(token)) {
             String vMemberId = redisUtil.getString(token);
             if (vMemberId.equals(String.valueOf(memberId))) {

@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -418,6 +419,7 @@ public class DollOrderServiceImpl implements DollOrderService {
     }
 
     @Override
+    @Cacheable(value = "catchSuccess_", key = "#type")
     public ResultMap getCatchSuccessRanks(Integer type, Integer memberId) {
         RankListPojo rankListPojo = new RankListPojo();
         Rankpojo userPojo = null;
@@ -476,6 +478,7 @@ public class DollOrderServiceImpl implements DollOrderService {
     }
 
     @Override
+    @Cacheable(value = "getCatchSuccessRanksByMember_", key = "#memberId")
     public ResultMap getCatchSuccessRanksByMember(Integer memberId) {
         RankMemberPojo rankMemberPojo = new RankMemberPojo();
         Member member = memberDao.selectById(memberId);
