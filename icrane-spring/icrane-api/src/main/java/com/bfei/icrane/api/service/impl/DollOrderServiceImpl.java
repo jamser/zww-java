@@ -10,6 +10,7 @@ import com.bfei.icrane.core.dao.*;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.models.vo.CatchVO;
 import com.bfei.icrane.core.pojos.RankListPojo;
+import com.bfei.icrane.core.pojos.RankMemberPojo;
 import com.bfei.icrane.core.pojos.Rankpojo;
 import com.bfei.icrane.core.service.VipService;
 import com.google.gson.Gson;
@@ -473,5 +474,19 @@ public class DollOrderServiceImpl implements DollOrderService {
         rankListPojo.setRankpojos(rankVOS);
 
         return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, rankListPojo);
+    }
+
+    @Override
+    public ResultMap getCatchSuccessRanksByMember(Integer memberId) {
+        RankMemberPojo rankMemberPojo = new RankMemberPojo();
+        Member member = memberDao.selectById(memberId);
+        rankMemberPojo.setIconRealPath(member.getIconRealPath());
+        rankMemberPojo.setMemberId(member.getId());
+        rankMemberPojo.setSex(member.getGender());
+        rankMemberPojo.setUserName(member.getName());
+        rankMemberPojo.setRankToady(dollOrderItemDao.selectByRankNow(memberId).get(0).getNumber());
+        rankMemberPojo.setRankWeek(dollOrderItemDao.selectByRankWeek(memberId).get(0).getNumber());
+        rankMemberPojo.setRankAll(dollOrderItemDao.selectByRankAll(memberId).get(0).getNumber());
+        return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, rankMemberPojo);
     }
 }

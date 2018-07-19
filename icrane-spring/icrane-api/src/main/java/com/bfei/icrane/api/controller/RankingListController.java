@@ -47,6 +47,16 @@ public class RankingListController {
         return dollOrderService.getCatchSuccessRanks(type,memberId);
     }
 
+    @RequestMapping(value = "/catchSuccess/member", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap catchSuccessByMember(@RequestParam Integer memberId, @RequestParam String token,@RequestParam Integer userId) throws Exception {
+        //验证token有效性
+//        if (!validateTokenService.validataToken(token, memberId)) {
+//            logger.info("绑定手机接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//        }
+        return dollOrderService.getCatchSuccessRanksByMember(userId);
+    }
 
     // 充值
 //    @RequestMapping(value = "/get", method = RequestMethod.POST)

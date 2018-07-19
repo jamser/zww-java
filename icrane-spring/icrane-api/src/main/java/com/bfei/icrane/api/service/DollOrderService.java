@@ -64,5 +64,18 @@ public interface DollOrderService {
 
     ResultMap getDollOrderBySecond();
 
+    /**
+     * 获取抓中排行
+     * @param type
+     * @param memberId
+     * @return
+     */
     ResultMap getCatchSuccessRanks(Integer type, Integer memberId);
+
+    /**
+     * 获取个人抓中数据
+     * @param memberId
+     * @return
+     */
+    ResultMap getCatchSuccessRanksByMember(Integer memberId);
 }
