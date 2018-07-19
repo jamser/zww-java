@@ -419,7 +419,6 @@ public class DollOrderServiceImpl implements DollOrderService {
 
     @Override
     public ResultMap getCatchSuccessRanks(Integer type, Integer memberId) {
-        List<Rankpojo> rankpojoList = new ArrayList<>();
         RankListPojo rankListPojo = new RankListPojo();
         Rankpojo userPojo = null;
         List<Rankpojo> rankVOS = new ArrayList<>();
@@ -484,9 +483,27 @@ public class DollOrderServiceImpl implements DollOrderService {
         rankMemberPojo.setMemberId(member.getId());
         rankMemberPojo.setSex(member.getGender());
         rankMemberPojo.setUserName(member.getName());
-        rankMemberPojo.setRankToady(dollOrderItemDao.selectByRankNow(memberId).get(0).getNumber());
+
         rankMemberPojo.setRankWeek(dollOrderItemDao.selectByRankWeek(memberId).get(0).getNumber());
         rankMemberPojo.setRankAll(dollOrderItemDao.selectByRankAll(memberId).get(0).getNumber());
+        List<Rankpojo> rankNow = dollOrderItemDao.selectByRankNow(null);
+        List<Rankpojo> rankWeek = dollOrderItemDao.selectByRankWeek(null);
+        List<Rankpojo> rankAll = dollOrderItemDao.selectByRankAll(null);
+        for (int i=0;i<rankNow.size();i++) {
+            if (rankNow.get(i).getMemberId().equals(memberId)) {
+                rankMemberPojo.setRankToady(i+1);
+            }
+        }
+        for (int i=0;i<rankWeek.size();i++) {
+            if (rankWeek.get(i).getMemberId().equals(memberId)) {
+                rankMemberPojo.setRankWeek(i+1);
+            }
+        }
+        for (int i=0;i<rankAll.size();i++) {
+            if (rankAll.get(i).getMemberId().equals(memberId)) {
+                rankMemberPojo.setRankAll(i+1);
+            }
+        }
         return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, rankMemberPojo);
     }
 }

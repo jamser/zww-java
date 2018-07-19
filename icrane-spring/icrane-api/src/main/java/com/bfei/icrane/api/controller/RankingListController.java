@@ -1,7 +1,6 @@
 package com.bfei.icrane.api.controller;
 
 import com.bfei.icrane.api.service.DollOrderService;
-import com.bfei.icrane.api.service.MemberService;
 import com.bfei.icrane.common.util.Enviroment;
 import com.bfei.icrane.common.util.ResultMap;
 import com.bfei.icrane.core.service.ValidateTokenService;
@@ -40,10 +39,10 @@ public class RankingListController {
     @ResponseBody
     public ResultMap catchSuccess(@RequestParam Integer memberId, @RequestParam String token, @RequestParam Integer type) throws Exception {
         //验证token有效性
-//        if (!validateTokenService.validataToken(token, memberId)) {
-//            logger.info("绑定手机接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-//        }
+        if (!validateTokenService.validataToken(token, memberId)) {
+            logger.info("绑定手机接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+        }
         return dollOrderService.getCatchSuccessRanks(type,memberId);
     }
 
@@ -51,10 +50,10 @@ public class RankingListController {
     @ResponseBody
     public ResultMap catchSuccessByMember(@RequestParam Integer memberId, @RequestParam String token,@RequestParam Integer userId) throws Exception {
         //验证token有效性
-//        if (!validateTokenService.validataToken(token, memberId)) {
-//            logger.info("绑定手机接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-//        }
+        if (!validateTokenService.validataToken(token, memberId)) {
+            logger.info("绑定手机接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+        }
         return dollOrderService.getCatchSuccessRanksByMember(userId);
     }
 

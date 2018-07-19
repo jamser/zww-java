@@ -124,7 +124,7 @@ public class DollRoomServiceImpl implements DollRoomService {
         doll.setId(dollId);
         doll.setMachineStatus("游戏中");
         doll.setModifiedDate(TimeUtil.getTime());
-        doll.setModifiedBy(memberId);
+//        doll.setModifiedBy(memberId);
         if (dollDao.updateByPrimaryKeySelective(doll) > 0) {
             redisUtil.setString(RedisKeyGenerator.getRoomHostKey(dollId), String.valueOf(memberId), 60 * 5);
             //redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(dollId), "游戏中");
@@ -184,7 +184,7 @@ public class DollRoomServiceImpl implements DollRoomService {
         doll.setId(dollId);
         doll.setMachineStatus("游戏中");
         doll.setModifiedDate(TimeUtil.getTime());
-        doll.setModifiedBy(memberId);
+//        doll.setModifiedBy(memberId);
         if (dollDao.updateByPrimaryKeySelective(doll) > 0) {
 //			redisUtil.setString(RedisKeyGenerator.getRoomHostKey(dollId), String.valueOf(memberId));
             redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(dollId), "游戏中");
