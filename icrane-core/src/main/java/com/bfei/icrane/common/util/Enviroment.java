@@ -78,6 +78,7 @@ public class Enviroment {
      */
     public static final String ON_ONLINE = "该娃娃当前没有在线娃娃机";
     public static final String NO_LIANXIFANG = "当前没有在线练习房";
+    public static final int COMMENT_TIME = 8;
 
     /**
      * 游戏相关
