@@ -41,6 +41,8 @@ public interface DollOrderItemDao {
 
     CatchVO selectByOrderStatusAndSecond();
 
+    List<CatchVO> selectCatchSuccessByDollIdAndMemberId(@Param("dollId") Integer dollId, @Param("memberId") Integer memberId);
+
     List<Rankpojo> selectByRankNow(@Param("memberId") Integer memberId);
 
     List<Rankpojo> selectByRankWeek(@Param("memberId") Integer memberId);

@@ -199,6 +199,7 @@ public class Enviroment {
     public static final String ISONEIMEI_ONESELF = "相同设备无法邀请";
     public static final String INVALID_INVITATION_CODE = "无效邀请码";
     public static final String INVALID_SUCCESS_MESSAGE = "邀请成功";
+    public static final String DOLL_NOTIFY_PHONE = "DOLL_NOTIFY_PHONE";
 
     /**
      * 流水相关

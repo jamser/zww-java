@@ -23,6 +23,9 @@ public interface DollDao {
     //清除状态
     int updateClean(Doll record);
 
+    //更新房间数量
+    int updateQuantity(Doll record);
+
     int updateByPrimaryKeySelective(Doll record);
 
     int updateByPrimaryKey(Doll record);

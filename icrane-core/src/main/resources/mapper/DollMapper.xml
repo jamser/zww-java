@@ -449,6 +449,12 @@
         </set>
         where id = #{id,jdbcType=INTEGER} and machine_status!='未上线' AND machine_status!='维修中' AND machine_status!="已下架"
     </update>
+    <update id="updateQuantity" parameterType="Doll">
+        update t_doll
+        SET
+        quantity = quantity-1,
+        where id = #{id,jdbcType=INTEGER}
+    </update>
     <update id="updateByPrimaryKeySelective" parameterType="Doll">
         update t_doll
         <set>

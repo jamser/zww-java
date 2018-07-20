@@ -9,6 +9,7 @@ import java.util.Map;
 import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.dao.*;
 import com.bfei.icrane.core.models.*;
+import com.bfei.icrane.core.models.vo.CatchVO;
 import com.bfei.icrane.core.pojos.RechargeRulePojp;
 import com.bfei.icrane.core.service.AccountService;
 import com.bfei.icrane.core.service.RechargeRuleService;
@@ -49,6 +50,8 @@ public class DollRoomServiceImpl implements DollRoomService {
     private AccountService accountService;
     @Autowired
     private RechargeRuleMapper rechargeRuleMapper;
+    @Autowired
+    private DollOrderItemDao dollOrderItemDao;
 
     RedisUtil redisUtil = new RedisUtil();
 
@@ -492,26 +495,38 @@ public class DollRoomServiceImpl implements DollRoomService {
     public void endPlayByCatchCount(Integer memberId, Integer dollId) {
         //  判断五分钟内是否三次抓取成功
         Doll dollR = dollDao.selectByPrimaryKey(dollId);
-        if (!dollR.getMachineType().equals(2)) {
-            return;
+
+        if (dollR.getMachineType().equals(1)) {
+            List<CatchHistory> catchHistories = catchHistoryDao.selectByDollId(dollId);
+            if (catchHistories.size() >= 3) {
+                closeDoll("维修中", dollId);
+            }
         }
-        List<CatchHistory> catchHistories = catchHistoryDao.selectByDollId(dollId);
+//        else if (dollR.getMachineType().equals(1) || dollR.getMachineType().equals(3)) {
+//            List<CatchVO> catchVOS = dollOrderItemDao.selectCatchSuccessByDollIdAndMemberId(dollId, memberId);
+//            if (catchVOS.size() >= 5) {
+//                closeDoll("维修中", dollId);
+//            }
+//        }
+
+    }
+
+    private void closeDoll(String status, Integer dollId) {
         Doll doll = new Doll();
         doll.setId(dollId);
-        if (catchHistories.size() >= 3) {
-            doll.setMachineStatus("维修中");
-            dollDao.updateClean(doll);
-            redisUtil.delKey(RedisKeyGenerator.getRoomHostKey(dollId));
-            Doll machine = dollDao.selectByPrimaryKey(dollId);
-            String machineStatus = machine.getMachineStatus();
-            if ("维修中".equals(machineStatus) || "维护中".equals(machineStatus) ||
-                    "未上线".equals(machineStatus)) {
-                redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(dollId), "维修中");
-            } else {
-                redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(dollId), "空闲中");
-            }
-            logger.info("dollId={}房间频繁抓中，将房间设为维修中", dollId);
+        doll.setMachineStatus(status);
+        dollDao.updateClean(doll);
+        redisUtil.delKey(RedisKeyGenerator.getRoomHostKey(dollId));
+        Doll machine = dollDao.selectByPrimaryKey(dollId);
+        String machineStatus = machine.getMachineStatus();
+        if ("维修中".equals(machineStatus) || "维护中".equals(machineStatus) ||
+                "未上线".equals(machineStatus)) {
+            redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(dollId), "维修中");
+        } else {
+            redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(dollId), "空闲中");
         }
+        logger.info("dollId={}房间频繁抓中，将房间设为维修中", dollId);
+        return;
     }
 
     @Override

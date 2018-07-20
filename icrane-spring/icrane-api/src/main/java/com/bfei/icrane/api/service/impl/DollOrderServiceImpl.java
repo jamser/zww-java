@@ -1,11 +1,9 @@
 package com.bfei.icrane.api.service.impl;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.bfei.icrane.api.controller.PushWebsocketContoller;
 import com.bfei.icrane.api.service.DollOrderService;
-import com.bfei.icrane.common.util.Enviroment;
-import com.bfei.icrane.common.util.ResultMap;
-import com.bfei.icrane.common.util.StringUtils;
-import com.bfei.icrane.common.util.TimeUtil;
+import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.dao.*;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.models.vo.CatchVO;
@@ -13,6 +11,7 @@ import com.bfei.icrane.core.pojos.RankListPojo;
 import com.bfei.icrane.core.pojos.RankMemberPojo;
 import com.bfei.icrane.core.pojos.Rankpojo;
 import com.bfei.icrane.core.service.VipService;
+import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +47,7 @@ public class DollOrderServiceImpl implements DollOrderService {
     private MemberDao memberDao;
     @Autowired
     private VipService vipService;
-    @Autowired
-    private ChargeDao chargeDao;
+    RedisUtil redisUtil = new RedisUtil();
 
     @Override
     public List<DollOrder> selectListByOrderIds(Long[] orderIds) {
@@ -164,6 +162,16 @@ public class DollOrderServiceImpl implements DollOrderService {
         //} else {
         //	doll.setQuantity(0);
         //}
+        //更新房间数量
+//        Doll dollRecord = new Doll();
+//        dollRecord.setId(dollId);
+//        dollDao.updateQuantity(dollRecord);
+//        if (doll.getQuantity() <= 1) {
+//            sendSms(doll);
+//        }
+
+
+        //发送抓中通知
         Member member = memberDao.selectById(memberId);
         CatchVO catchVO = new CatchVO();
         catchVO.setUserName(member.getName());
@@ -173,6 +181,30 @@ public class DollOrderServiceImpl implements DollOrderService {
         String s = gson.toJson(catchVO);
         PushWebsocketContoller.sendInfo(s);
         return dollDao.updateByPrimaryKeySelective(doll);
+    }
+
+    private void sendSms(Doll doll) {
+        SystemPref systemPref = systemPrefDao.selectByPrimaryKey(Enviroment.DOLL_NOTIFY_PHONE);
+        try {
+            AliyunServiceImpl.getInstance().sendSMSForCode(systemPref.getValue(), "蓝澳科技", "SMS_139986683", doll.getMachineCode());
+            Doll dollNew = new Doll();
+            dollNew.setId(doll.getId());
+            dollNew.setMachineStatus("未上线");
+            dollDao.updateClean(doll);
+            redisUtil.delKey(RedisKeyGenerator.getRoomHostKey(doll.getId()));
+            Doll machine = dollDao.selectByPrimaryKey(doll.getId());
+            String machineStatus = machine.getMachineStatus();
+            if ("维修中".equals(machineStatus) || "维护中".equals(machineStatus) ||
+                    "未上线".equals(machineStatus)) {
+                redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(doll.getId()), "维修中");
+            } else {
+                redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(doll.getId()), "空闲中");
+            }
+            logger.info("dollId={}房间娃娃数量为0，将房间设为未上线", doll.getId());
+        } catch (ClientException e) {
+            e.printStackTrace();
+            logger.error("dollId={}将房间设为未上线失败，原因={}", doll.getId(), e.getMessage());
+        }
     }
 
     @Override
@@ -405,17 +437,6 @@ public class DollOrderServiceImpl implements DollOrderService {
             map.put("details", "两个起包邮（注意：发货一个需扣" + deliverCoin + "金币");
         }
         return new ResultMap("操作成功", map);
-    }
-
-    @Override
-    public ResultMap getDollOrderBySecond() {
-        CatchVO catchVO = dollOrderItemDao.selectByOrderStatusAndSecond();
-        if (null == catchVO) {
-            return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE);
-        }
-        Member member = memberDao.selectById(catchVO.getMemberId());
-        catchVO.setUserName(member.getName());
-        return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, catchVO);
     }
 
     @Override

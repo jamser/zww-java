@@ -32,6 +32,7 @@
 
     <resultMap id="CatchResult" type="com.bfei.icrane.core.models.vo.CatchVO">
         <result column="doll_name" jdbcType="VARCHAR" property="dollName"/>
+        <result column="doll_id" jdbcType="VARCHAR" property="dollId"/>
         <result column="order_date" jdbcType="TIMESTAMP" property="createDate"/>
         <result column="order_by" jdbcType="INTEGER" property="memberId"/>
     </resultMap>
@@ -109,7 +110,7 @@
         c.redeem_coins
         ) redeem_coins,
         a.doll_url AS
-         tbimg_real_path
+        tbimg_real_path
         FROM
         t_doll_order_item a
         INNER JOIN t_doll_order b ON a.order_id = b.id
@@ -134,6 +135,14 @@
         t_doll_order_item a
         INNER JOIN t_doll_order b ON a.order_id = b.id WHERE
          b.order_date >=DATE_SUB(NOW(),INTERVAL 4 SECOND) ORDER BY b.order_date DESC LIMIT 1
+    </select>
+
+    <select id="selectCatchSuccessByDollIdAndMemberId" parameterType="java.lang.Integer" resultMap="CatchResult">
+        SELECT a.doll_name,b.order_date,b.order_by,a.doll_id
+        FROM
+        t_doll_order_item a
+        INNER JOIN t_doll_order b ON a.order_id = b.id
+        WHERE b.order_by=#{memberId} AND a.doll_id=#{dollId} AND b.order_date >=DATE_SUB(NOW(),INTERVAL 5 MINUTE)
     </select>
 
     <select id="selectByRankNow" resultMap="RankResult">
