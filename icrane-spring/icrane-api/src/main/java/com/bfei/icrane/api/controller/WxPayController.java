@@ -14,8 +14,10 @@ import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.common.util.StringUtils;
 import com.bfei.icrane.common.wx.utils.*;
 import com.bfei.icrane.core.models.*;
+import com.bfei.icrane.core.pojos.AccessTokenPojo;
 import com.bfei.icrane.core.service.*;
 import com.github.binarywang.wxpay.service.WxPayService;
+import com.google.gson.Gson;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -242,89 +244,88 @@ public class WxPayController {
      * @param head          H5标记
      * @return 登录结果
      */
-    @RequestMapping(value = "/getAccessToken", method = RequestMethod.POST)
-    @ResponseBody
-    public IcraneResult getAccessToken(HttpServletRequest request, String code, String lastLoginFrom, String channel, String phoneModel, String head, String unionId, String openId, String accessToken, String IMEI) {
-        logger.info("微信登录code=" + code + ",lastLoginFrom=" + lastLoginFrom + ",channel=" + channel + ",phoneModel=" + phoneModel + ",head=" + head + ",unionId=" + unionId + ",openId=" + openId + ",accessToken" + accessToken + ",IMEI=" + IMEI);
-        //检测code
-        /*if (StringUtils.isEmpty(code)) {
-            logger.info("微信登录异常:code为空");
-            return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.CODE_IS_NULL);
-        }*/
-        try {
-            JSONObject object = null;
-            if (StringUtils.isEmpty(unionId) && StringUtils.isEmpty(openId) && StringUtils.isEmpty(accessToken) && StringUtils.isNotEmpty(code)) {
-                // 通过 code 获得 accessToken unionId
-                String state = redisUtil.getString(code);
-                if (state != null) {
-                    return IcraneResult.build(Enviroment.RETURN_SUCCESS, Enviroment.RETURN_SUCCESS_REAPEAT, Enviroment.CODE_REPEAT);
-                }
-                String result = WXUtil.getOauthInfo(code, head, null);
-                if (result != null) {
-                    redisUtil.setString(code, result, 60);
-                    object = JSONObject.fromObject(result);
-                    if ("老子是小程序".equals(head)) {
-                        accessToken = object.getString("session_key");
-                    } else {
-                        accessToken = object.getString("access_token");
-                    }
-                    redisUtil.setString("accessToken" + code, accessToken, 7200);
-                    unionId = object.getString("unionid");
-                    //unionId登录兼容问题
-                    openId = memberService.selectOpenIdByUnionId(unionId);
-                    if (StringUtils.isEmpty(openId)) {
-                        openId = object.getString("openid");
-                    }
-                }
-            } else if (StringUtils.isNotEmpty(unionId) && StringUtils.isNotEmpty(openId) && StringUtils.isNotEmpty(accessToken) && StringUtils.isEmpty(code)) {
-                String s = memberService.selectOpenIdByUnionId(unionId);
-                if (StringUtils.isNotEmpty(s)) {
-                    openId = s;
-                }
-            } else {
-                logger.info("微信登录异常:参数异常");
-                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, "参数异常");
-            }
-            //根据openId获取登录信息
-            Member member = memberService.selectByOpenId(openId);
-            logger.info("根据微信OpenId查询用户是否存在:{}", member);
-            if (member == null) {
-                //新用户先注册
-                if (StringUtils.isEmpty(IMEI) || "IMEI".equals(IMEI) || riskManagementService.selectIMEICount(IMEI) < 3) {
-                    member = loginService.wxRegistered(openId, channel, phoneModel, accessToken, lastLoginFrom, unionId, null);
-                } else {
-                    return IcraneResult.build(Enviroment.RETURN_FAILE, "407", "该设备超过注册上限");
-                }
-                if (member == null) {
-                    IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.REGISTRATION_FAILED);
-                }
-            } else if (member != null && StringUtils.isEmpty(memberService.selectOpenIdByUnionId(unionId))) {
-                memberService.insertUnionId(member.getId(), openId, unionId);
-            }
-            //老用户直接登录
-            //登录前记录IMEI和IP]
-            if (IMEI != null && IMEI.length() > 40) {
-                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.ERROR_CODE, Enviroment.IMEI_TO_LONG);
-            }
-            int register = riskManagementService.register(member.getId(), IMEI, HttpClientUtil.getIpAdrress(request));
-            if (register != 1) {
-                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.ERROR_CODE, Enviroment.RISK_CONTROL_ABNORMAL);
-            }
-            return loginService.wxLogin(member, lastLoginFrom, channel, phoneModel);
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.info(e.getMessage());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            logger.info(e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.info(e.getMessage());
-
-        }
-        return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.CODE_IS_NULL);
-    }
-
+//    @RequestMapping(value = "/getAccessToken", method = RequestMethod.POST)
+//    @ResponseBody
+//    public IcraneResult getAccessToken(HttpServletRequest request, String code, String lastLoginFrom, String channel, String phoneModel, String head, String unionId, String openId, String accessToken, String IMEI) {
+//        logger.info("微信登录code=" + code + ",lastLoginFrom=" + lastLoginFrom + ",channel=" + channel + ",phoneModel=" + phoneModel + ",head=" + head + ",unionId=" + unionId + ",openId=" + openId + ",accessToken" + accessToken + ",IMEI=" + IMEI);
+//        //检测code
+//        /*if (StringUtils.isEmpty(code)) {
+//            logger.info("微信登录异常:code为空");
+//            return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.CODE_IS_NULL);
+//        }*/
+//        try {
+//            JSONObject object = null;
+//            if (StringUtils.isEmpty(unionId) && StringUtils.isEmpty(openId) && StringUtils.isEmpty(accessToken) && StringUtils.isNotEmpty(code)) {
+//                // 通过 code 获得 accessToken unionId
+//                String state = redisUtil.getString(code);
+//                if (state != null) {
+//                    return IcraneResult.build(Enviroment.RETURN_SUCCESS, Enviroment.RETURN_SUCCESS_REAPEAT, Enviroment.CODE_REPEAT);
+//                }
+//                String result = WXUtil.getOauthInfo(code, head, null);
+//                if (result != null) {
+//                    redisUtil.setString(code, result, 60);
+//                    object = JSONObject.fromObject(result);
+//                    if ("老子是小程序".equals(head)) {
+//                        accessToken = object.getString("session_key");
+//                    } else {
+//                        accessToken = object.getString("access_token");
+//                    }
+//                    redisUtil.setString("accessToken" + code, accessToken, 7200);
+//                    unionId = object.getString("unionid");
+//                    //unionId登录兼容问题
+//                    openId = memberService.selectOpenIdByUnionId(unionId);
+//                    if (StringUtils.isEmpty(openId)) {
+//                        openId = object.getString("openid");
+//                    }
+//                }
+//            } else if (StringUtils.isNotEmpty(unionId) && StringUtils.isNotEmpty(openId) && StringUtils.isNotEmpty(accessToken) && StringUtils.isEmpty(code)) {
+//                String s = memberService.selectOpenIdByUnionId(unionId);
+//                if (StringUtils.isNotEmpty(s)) {
+//                    openId = s;
+//                }
+//            } else {
+//                logger.info("微信登录异常:参数异常");
+//                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, "参数异常");
+//            }
+//            //根据openId获取登录信息
+//            Member member = memberService.selectByOpenId(openId);
+//            logger.info("根据微信OpenId查询用户是否存在:{}", member);
+//            if (member == null) {
+//                //新用户先注册
+//                if (StringUtils.isEmpty(IMEI) || "IMEI".equals(IMEI) || riskManagementService.selectIMEICount(IMEI) < 3) {
+//                    member = loginService.wxRegistered(openId, channel, phoneModel, accessToken, lastLoginFrom, unionId, null);
+//                } else {
+//                    return IcraneResult.build(Enviroment.RETURN_FAILE, "407", "该设备超过注册上限");
+//                }
+//                if (member == null) {
+//                    IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.REGISTRATION_FAILED);
+//                }
+//            } else if (member != null && StringUtils.isEmpty(memberService.selectOpenIdByUnionId(unionId))) {
+//                memberService.insertUnionId(member.getId(), openId, unionId);
+//            }
+//            //老用户直接登录
+//            //登录前记录IMEI和IP]
+//            if (IMEI != null && IMEI.length() > 40) {
+//                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.ERROR_CODE, Enviroment.IMEI_TO_LONG);
+//            }
+//            int register = riskManagementService.register(member.getId(), IMEI, HttpClientUtil.getIpAdrress(request));
+//            if (register != 1) {
+//                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.ERROR_CODE, Enviroment.RISK_CONTROL_ABNORMAL);
+//            }
+//            return loginService.wxLogin(member, lastLoginFrom, channel, phoneModel);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            logger.info(e.getMessage());
+//        } catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//            logger.info(e.getMessage());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            logger.info(e.getMessage());
+//
+//        }
+//        return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.CODE_IS_NULL);
+//    }
     @RequestMapping(value = "/checkAccessToken", method = RequestMethod.POST)
     @ResponseBody
     public IcraneResult getAccessToken(String accessToken, String refreshToken, String openId) throws Exception {
@@ -440,7 +441,7 @@ public class WxPayController {
 
 
     /**
-     *支付查询
+     * 支付查询
      *
      * @return jsapiTicket
      */
@@ -449,4 +450,27 @@ public class WxPayController {
     public ResultMap queryOrder(@RequestParam String outTradeNo) {
         return payService.queryOrder(outTradeNo);
     }
+
+
+    /**
+     * 获取getAccessToken
+     *
+     * @return jsapiTicket
+     */
+    @RequestMapping(value = "/getAccessToken", method = RequestMethod.POST)
+    @ResponseBody
+    public String getAccessToken() {
+        List<Oem> oems = oemService.selectAllOem();
+        List<AccessTokenPojo> accessTokenPojos = new ArrayList<>();
+        for (Oem oem : oems) {
+            AccessTokenPojo accessTokenPojo = new AccessTokenPojo();
+            accessTokenPojo.setCode(oem.getCode());
+            accessTokenPojo.setAccessToken(WXUtil.getAccessToken(oem));
+            accessTokenPojos.add(accessTokenPojo);
+        }
+        Gson gson = new Gson();
+        return gson.toJson(accessTokenPojos);
+    }
+
+
 }
