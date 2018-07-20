@@ -419,7 +419,7 @@ public class DollOrderServiceImpl implements DollOrderService {
     }
 
     @Override
-    @Cacheable(value = "catchSuccess_", key = "#type")
+    @Cacheable(value = "catchSuccess_", key = "#type+''+#memberId")
     public ResultMap getCatchSuccessRanks(Integer type, Integer memberId) {
         RankListPojo rankListPojo = new RankListPojo();
         Rankpojo userPojo = null;
@@ -450,7 +450,9 @@ public class DollOrderServiceImpl implements DollOrderService {
             }
         }
         //个人排名
-        if (StringUtils.isEmpty(userPojo)) {
+        if (StringUtils.isEmpty(userPojo))
+
+        {
             Member member = memberDao.selectById(memberId);
             userPojo = new Rankpojo();
             List<Rankpojo> rankVOS1 = new ArrayList<>();
@@ -474,7 +476,10 @@ public class DollOrderServiceImpl implements DollOrderService {
         rankListPojo.setRankpojo(userPojo);
         rankListPojo.setRankpojos(rankVOS);
 
-        return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, rankListPojo);
+        return new
+
+                ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, rankListPojo);
+
     }
 
     @Override
@@ -492,19 +497,19 @@ public class DollOrderServiceImpl implements DollOrderService {
         List<Rankpojo> rankNow = dollOrderItemDao.selectByRankNow(null);
         List<Rankpojo> rankWeek = dollOrderItemDao.selectByRankWeek(null);
         List<Rankpojo> rankAll = dollOrderItemDao.selectByRankAll(null);
-        for (int i=0;i<rankNow.size();i++) {
+        for (int i = 0; i < rankNow.size(); i++) {
             if (rankNow.get(i).getMemberId().equals(memberId)) {
-                rankMemberPojo.setRankToady(i+1);
+                rankMemberPojo.setRankToady(i + 1);
             }
         }
-        for (int i=0;i<rankWeek.size();i++) {
+        for (int i = 0; i < rankWeek.size(); i++) {
             if (rankWeek.get(i).getMemberId().equals(memberId)) {
-                rankMemberPojo.setRankWeek(i+1);
+                rankMemberPojo.setRankWeek(i + 1);
             }
         }
-        for (int i=0;i<rankAll.size();i++) {
+        for (int i = 0; i < rankAll.size(); i++) {
             if (rankAll.get(i).getMemberId().equals(memberId)) {
-                rankMemberPojo.setRankAll(i+1);
+                rankMemberPojo.setRankAll(i + 1);
             }
         }
         return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, rankMemberPojo);
