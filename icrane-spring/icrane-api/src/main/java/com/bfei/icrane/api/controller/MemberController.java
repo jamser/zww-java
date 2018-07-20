@@ -350,14 +350,15 @@ public class MemberController {
             return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
         }
         RedisUtil redisUtil = new RedisUtil();
-        if (redisUtil.getString("comment_" + commentForm.getDoll()+"_"+commentForm.getMemberId()) != null) {
+        if (redisUtil.getString("comment_" + commentForm.getDoll() + "_" + commentForm.getMemberId()) != null) {
             return new ResultMap(Enviroment.FAILE_CODE, Enviroment.PLEASE_SLOW_DOWN);
         }
         redisUtil.setString("comment_" + commentForm.getDoll()+"_"+commentForm.getMemberId(), "", Enviroment.COMMENT_TIME);
 
         Member member = memberService.selectById(commentForm.getMemberId());
         CommentPojo commentPojo = new CommentPojo();
-        commentPojo.setUserName(member.getName());
+        commentPojo.setDollId(commentForm.getDoll());
+        commentPojo.setComment(commentForm.getComment());
         commentPojo.setUserName(member.getName());
         Gson gson = new Gson();
         CommnetWebsocketContoller.sendInfo(gson.toJson(commentPojo));

@@ -4,6 +4,8 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
+
 
 /**
  * Created by moying on 2018/7/18.
@@ -11,7 +13,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Data
 public class CommentForm {
 
-    @NotEmpty
+    @NotNull
     private Integer memberId;
 
     @NotEmpty
@@ -21,6 +23,6 @@ public class CommentForm {
     @Length(max = 10)
     private String comment;
 
-    @NotEmpty
+    @NotNull
     private Integer doll;
 }

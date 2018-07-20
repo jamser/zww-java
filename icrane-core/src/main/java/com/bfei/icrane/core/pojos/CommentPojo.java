@@ -7,6 +7,7 @@ import lombok.Data;
  */
 @Data
 public class CommentPojo {
+    private Integer dollId;
     private String userName;
     private String comment;
 }

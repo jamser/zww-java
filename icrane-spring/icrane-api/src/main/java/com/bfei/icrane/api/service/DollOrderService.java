@@ -62,8 +62,6 @@ public interface DollOrderService {
 
     ResultMap beforeSendDoll(Integer memberId, Long[] orderIds);
 
-    ResultMap getDollOrderBySecond();
-
     /**
      * 获取抓中排行
      * @param type

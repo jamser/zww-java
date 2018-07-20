@@ -502,6 +502,7 @@ public class DollRoomServiceImpl implements DollRoomService {
                 closeDoll("维修中", dollId);
             }
         }
+        //普通房间连续抓中
 //        else if (dollR.getMachineType().equals(1) || dollR.getMachineType().equals(3)) {
 //            List<CatchVO> catchVOS = dollOrderItemDao.selectCatchSuccessByDollIdAndMemberId(dollId, memberId);
 //            if (catchVOS.size() >= 5) {

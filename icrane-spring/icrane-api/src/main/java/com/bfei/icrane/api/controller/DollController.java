@@ -729,18 +729,4 @@ public class DollController {
             return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
         }
     }
-
-    @RequestMapping(value = "/getCatchSuccessLists", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap getCatchSuccessLists(@RequestParam String token, @RequestParam Integer memberId) {
-        try {
-            if (!validateTokenService.validataToken(token, memberId)) {
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
-            return dollOrderService.getDollOrderBySecond();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
-        }
-    }
 }

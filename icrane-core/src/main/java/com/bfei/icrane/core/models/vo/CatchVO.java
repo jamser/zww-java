@@ -9,6 +9,7 @@ import java.util.Date;
  */
 @Data
 public class CatchVO {
+    private Integer dollId;
     private String dollName;
     private Date createDate;
     private String userName;

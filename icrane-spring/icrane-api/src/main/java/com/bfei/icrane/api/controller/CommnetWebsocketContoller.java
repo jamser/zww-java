@@ -16,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 /**
  * Created by moying on 2018/7/17.
  */
-@ServerEndpoint("/webSocket/commentLists/{memberId}/{token}")
+@ServerEndpoint("/webSocket/commentLists/{memberId}/{token}/{dollId}")
 public class CommnetWebsocketContoller {
 
     private static final Logger log = LoggerFactory.getLogger(CommnetWebsocketContoller.class);
