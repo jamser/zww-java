@@ -1,24 +1,25 @@
 package com.bfei.icrane.api.service;
 
-import com.bfei.icrane.api.controller.AgentBankController;
 import com.bfei.icrane.common.util.Enviroment;
 import com.bfei.icrane.common.util.RedisKeyGenerator;
 import com.bfei.icrane.common.util.RedisUtil;
-import com.bfei.icrane.common.util.TimeUtil;
-import com.bfei.icrane.core.models.*;
+import com.bfei.icrane.core.models.Account;
+import com.bfei.icrane.core.models.Agent;
+import com.bfei.icrane.core.models.AgentCharge;
 import com.bfei.icrane.core.service.AccountService;
 import com.bfei.icrane.core.service.AgentChargeService;
 import com.bfei.icrane.core.service.DollService;
-import com.bfei.icrane.core.service.VipService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
+import java.net.InetAddress;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by SUN on 2018/3/5.
@@ -34,14 +35,7 @@ public class TaskJob {
     @Autowired
     private DollService dollService;
     @Autowired
-    private DollOrderService dollOrderService;
-    @Autowired
     private AccountService accountService;
-    @Autowired
-    private VipService vipService;
-    @Autowired
-    private ChargeService chargeService;
-
     @Autowired
     private AgentChargeService agentChargeService;
 
@@ -70,6 +64,9 @@ public class TaskJob {
      */
     @Scheduled(cron = "0 0 4 * * ?")
     public void job2() {
+        if (!isSystemIp()) {
+            return;
+        }
         //清除过期房间信息
         List<Integer> dollIds = dollService.selectDollId();
         for (Integer dollId : dollIds) {
@@ -78,11 +75,14 @@ public class TaskJob {
     }
 
     /**
-     * 用户会员充值清零
+     * 用户会员每月充值清零
      */
     @Scheduled(cron = "0 0 0 1 * ?")
     //@Scheduled(cron = "0 0/30 * * * ?")
     public void job3() {
+        if(!isSystemIp()){
+            return;
+        }
         //清除过期房间信息
         logger.info("每月一号用户成长值清0¬--------");
         List<Account> payingUsers = accountService.selectPayingUser();
@@ -95,6 +95,9 @@ public class TaskJob {
     @Scheduled(cron = "0 0 1 * * ?") //每天一点执行
 //    @Scheduled(cron = "0/5 * *  * * ? ")
     public void agentIncomeTrans() {
+        if(!isSystemIp()){
+            return;
+        }
         List<AgentCharge> chargeList = agentChargeService.selectByStatus(0);
         Integer time = Integer.valueOf(systemPrefService.selectByPrimaryKey(Enviroment.BALANCE_CHANGE_TIME).getValue());
         if (time == 0) {
@@ -159,6 +162,21 @@ public class TaskJob {
 
 
         }
+    }
+
+    private boolean isSystemIp() {
+        try {
+            InetAddress ia = InetAddress.getLocalHost();
+            String localname = ia.getHostName();
+            String localip = ia.getHostAddress();
+            logger.warn("本机名称是：" + localname);
+            logger.warn("本机的ip是 ：" + localip);
+            if (!"172.18.48.84".equals(localip)) {
+                return false;
+            }
+        } catch (Exception e) {
+        }
+        return true;
     }
 
     public boolean isWeekend(Date date) {
