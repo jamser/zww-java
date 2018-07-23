@@ -4,6 +4,7 @@ import com.aliyuncs.exceptions.ClientException;
 import com.bfei.icrane.api.controller.PushWebsocketContoller;
 import com.bfei.icrane.api.service.DollOrderService;
 import com.bfei.icrane.common.util.*;
+import com.bfei.icrane.common.wx.utils.TenpayUtil;
 import com.bfei.icrane.core.dao.*;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.models.vo.CatchVO;
@@ -450,7 +451,7 @@ public class DollOrderServiceImpl implements DollOrderService {
                 rankVOS = dollOrderItemDao.selectByRankNow(null);
                 break;
             case 2:
-                rankVOS = dollOrderItemDao.selectByRankWeek(null);
+                rankVOS = dollOrderItemDao.selectByRankWeek(null, TenpayUtil.getMondayDayStr(new Date()), TenpayUtil.getNowDate(new Date()));
                 break;
             case 3:
                 rankVOS = dollOrderItemDao.selectByRankAll(null);
@@ -482,7 +483,7 @@ public class DollOrderServiceImpl implements DollOrderService {
                     rankVOS1 = dollOrderItemDao.selectByRankNow(memberId);
                     break;
                 case 2:
-                    rankVOS1 = dollOrderItemDao.selectByRankWeek(memberId);
+                    rankVOS1 = dollOrderItemDao.selectByRankWeek(memberId, TenpayUtil.getMondayDayStr(new Date()), TenpayUtil.getNowDate(new Date()));
                     break;
                 case 3:
                     rankVOS1 = dollOrderItemDao.selectByRankAll(memberId);
@@ -513,10 +514,10 @@ public class DollOrderServiceImpl implements DollOrderService {
         rankMemberPojo.setSex(member.getGender());
         rankMemberPojo.setUserName(member.getName());
 
-        rankMemberPojo.setRankWeek(dollOrderItemDao.selectByRankWeek(memberId).get(0).getNumber());
+        rankMemberPojo.setRankWeek(dollOrderItemDao.selectByRankWeek(memberId, TenpayUtil.getMondayDayStr(new Date()), TenpayUtil.getNowDate(new Date())).get(0).getNumber());
         rankMemberPojo.setRankAll(dollOrderItemDao.selectByRankAll(memberId).get(0).getNumber());
         List<Rankpojo> rankNow = dollOrderItemDao.selectByRankNow(null);
-        List<Rankpojo> rankWeek = dollOrderItemDao.selectByRankWeek(null);
+        List<Rankpojo> rankWeek = dollOrderItemDao.selectByRankWeek(null, TenpayUtil.getMondayDayStr(new Date()), TenpayUtil.getNowDate(new Date()));
         List<Rankpojo> rankAll = dollOrderItemDao.selectByRankAll(null);
         for (int i = 0; i < rankNow.size(); i++) {
             if (rankNow.get(i).getMemberId().equals(memberId)) {

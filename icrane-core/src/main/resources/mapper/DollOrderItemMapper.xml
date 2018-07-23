@@ -159,13 +159,13 @@
         </if>
     </select>
 
-    <select id="selectByRankWeek" resultMap="RankResult" parameterType="java.lang.Integer">
+    <select id="selectByRankWeek" resultMap="RankResult">
         SELECT COUNT(*)AS number,b.order_by,t.name,t.gender,t.icon_real_path
         FROM
         t_doll_order_item a
         INNER JOIN t_doll_order b ON a.order_id = b.id LEFT JOIN t_member t ON b.order_by=t.id WHERE
-        b.order_date BETWEEN subdate(curdate(),date_format(curdate(),'%w')-1)
-        AND subdate(curdate(),date_format(curdate(),'%w')-8)
+        b.order_date BETWEEN #{Monday} AND #{Tomorrow}
+
         <if test="memberId != null">
             AND b.order_by=#{memberId}
         </if>

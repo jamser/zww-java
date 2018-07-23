@@ -45,7 +45,7 @@ public interface DollOrderItemDao {
 
     List<Rankpojo> selectByRankNow(@Param("memberId") Integer memberId);
 
-    List<Rankpojo> selectByRankWeek(@Param("memberId") Integer memberId);
+    List<Rankpojo> selectByRankWeek(@Param("memberId") Integer memberId, @Param("Monday") String Monday, @Param("Tomorrow") String Tomorrow);
 
     List<Rankpojo> selectByRankAll(@Param("memberId") Integer memberId);
 }
