@@ -164,12 +164,13 @@ public class DollOrderServiceImpl implements DollOrderService {
         //	doll.setQuantity(0);
         //}
         //更新房间数量
-//        Doll dollRecord = new Doll();
-//        dollRecord.setId(dollId);
-//        dollDao.updateQuantity(dollRecord);
-//        if (doll.getQuantity() <= 1) {
-//            sendSms(doll);
-//        }
+        Doll dollRecord = new Doll();
+        dollRecord.setId(doll.getId());
+        int i = dollDao.updateQuantity(dollRecord);
+        logger.info("更新房间数量=={}", i);
+        if (doll.getQuantity() <= 1) {
+            sendSms(doll);
+        }
 
 
         //发送抓中通知
@@ -181,17 +182,19 @@ public class DollOrderServiceImpl implements DollOrderService {
         Gson gson = new Gson();
         String s = gson.toJson(catchVO);
         PushWebsocketContoller.sendInfo(s);
+        doll.setQuantity(null);
+        doll.setMachineStatus(null);
         return dollDao.updateByPrimaryKeySelective(doll);
     }
 
-    private void sendSms(Doll doll) {
+    public void sendSms(Doll doll) {
         SystemPref systemPref = systemPrefDao.selectByPrimaryKey(Enviroment.DOLL_NOTIFY_PHONE);
         try {
             AliyunServiceImpl.getInstance().sendSMSForCode(systemPref.getValue(), "蓝澳科技", "SMS_139986683", doll.getMachineCode());
             Doll dollNew = new Doll();
             dollNew.setId(doll.getId());
             dollNew.setMachineStatus("未上线");
-            dollDao.updateClean(doll);
+            dollDao.updateClean(dollNew);
             redisUtil.delKey(RedisKeyGenerator.getRoomHostKey(doll.getId()));
             Doll machine = dollDao.selectByPrimaryKey(doll.getId());
             String machineStatus = machine.getMachineStatus();

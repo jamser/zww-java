@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.dao.*;
 import com.bfei.icrane.core.models.*;
@@ -13,6 +14,7 @@ import com.bfei.icrane.core.models.vo.CatchVO;
 import com.bfei.icrane.core.pojos.RechargeRulePojp;
 import com.bfei.icrane.core.service.AccountService;
 import com.bfei.icrane.core.service.RechargeRuleService;
+import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
 import com.bfei.icrane.game.GameProcessEnum;
 import com.bfei.icrane.game.GameProcessUtil;
 
@@ -52,6 +54,8 @@ public class DollRoomServiceImpl implements DollRoomService {
     private RechargeRuleMapper rechargeRuleMapper;
     @Autowired
     private DollOrderItemDao dollOrderItemDao;
+    @Autowired
+    private SystemPrefDao systemPrefDao;
 
     RedisUtil redisUtil = new RedisUtil();
 
@@ -496,38 +500,43 @@ public class DollRoomServiceImpl implements DollRoomService {
         //  判断五分钟内是否三次抓取成功
         Doll dollR = dollDao.selectByPrimaryKey(dollId);
 
-        if (dollR.getMachineType().equals(1)) {
+        if (dollR.getMachineType().equals(2)) {
             List<CatchHistory> catchHistories = catchHistoryDao.selectByDollId(dollId);
             if (catchHistories.size() >= 3) {
-                closeDoll("维修中", dollId);
+                closeDoll("维修中", dollR);
+            }
+        }//普通房间连续抓中
+        else if (dollR.getMachineType().equals(0) || dollR.getMachineType().equals(3)) {
+            List<CatchVO> catchVOS = dollOrderItemDao.selectCatchSuccessByDollIdAndMemberId(dollId, memberId);
+            if (catchVOS.size() >= 5) {
+                closeDoll("维修中", dollR);
             }
         }
-        //普通房间连续抓中
-//        else if (dollR.getMachineType().equals(1) || dollR.getMachineType().equals(3)) {
-//            List<CatchVO> catchVOS = dollOrderItemDao.selectCatchSuccessByDollIdAndMemberId(dollId, memberId);
-//            if (catchVOS.size() >= 5) {
-//                closeDoll("维修中", dollId);
-//            }
-//        }
 
     }
 
-    private void closeDoll(String status, Integer dollId) {
-        Doll doll = new Doll();
-        doll.setId(dollId);
-        doll.setMachineStatus(status);
-        dollDao.updateClean(doll);
-        redisUtil.delKey(RedisKeyGenerator.getRoomHostKey(dollId));
-        Doll machine = dollDao.selectByPrimaryKey(dollId);
-        String machineStatus = machine.getMachineStatus();
-        if ("维修中".equals(machineStatus) || "维护中".equals(machineStatus) ||
-                "未上线".equals(machineStatus)) {
-            redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(dollId), "维修中");
-        } else {
-            redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(dollId), "空闲中");
+    private void closeDoll(String status, Doll dollOld) {
+        SystemPref systemPref = systemPrefDao.selectByPrimaryKey(Enviroment.DOLL_NOTIFY_PHONE);
+        try {
+            AliyunServiceImpl.getInstance().sendSMSForCode(systemPref.getValue(), "蓝澳科技", "SMS_139986683", dollOld.getMachineCode());
+            Doll doll = new Doll();
+            doll.setId(dollOld.getId());
+            doll.setMachineStatus(status);
+            dollDao.updateClean(doll);
+            redisUtil.delKey(RedisKeyGenerator.getRoomHostKey(dollOld.getId()));
+            Doll machine = dollDao.selectByPrimaryKey(dollOld.getId());
+            String machineStatus = machine.getMachineStatus();
+            if ("维修中".equals(machineStatus) || "维护中".equals(machineStatus) ||
+                    "未上线".equals(machineStatus)) {
+                redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(dollOld.getId()), "维修中");
+            } else {
+                redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(dollOld.getId()), "空闲中");
+            }
+            logger.info("dollId={}房间频繁抓中，将房间设为维修中", dollOld.getId());
+            return;
+        } catch (ClientException e) {
+            e.printStackTrace();
         }
-        logger.info("dollId={}房间频繁抓中，将房间设为维修中", dollId);
-        return;
     }
 
     @Override
