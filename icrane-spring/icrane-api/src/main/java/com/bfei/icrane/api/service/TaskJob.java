@@ -80,7 +80,7 @@ public class TaskJob {
     @Scheduled(cron = "0 0 0 1 * ?")
     //@Scheduled(cron = "0 0/30 * * * ?")
     public void job3() {
-        if(!isSystemIp()){
+        if (!isSystemIp()) {
             return;
         }
         //清除过期房间信息
@@ -95,7 +95,7 @@ public class TaskJob {
     @Scheduled(cron = "0 0 1 * * ?") //每天一点执行
 //    @Scheduled(cron = "0/5 * *  * * ? ")
     public void agentIncomeTrans() {
-        if(!isSystemIp()){
+        if (!isSystemIp()) {
             return;
         }
         List<AgentCharge> chargeList = agentChargeService.selectByStatus(0);
@@ -171,7 +171,7 @@ public class TaskJob {
             String localip = ia.getHostAddress();
             logger.warn("本机名称是：" + localname);
             logger.warn("本机的ip是 ：" + localip);
-            if (!"172.18.48.84".equals(localip)) {
+            if (!"47.106.39.237".equals(localip)) {
                 return false;
             }
         } catch (Exception e) {
