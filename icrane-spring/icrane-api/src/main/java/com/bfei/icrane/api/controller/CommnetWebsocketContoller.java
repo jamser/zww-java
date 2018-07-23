@@ -1,8 +1,12 @@
 package com.bfei.icrane.api.controller;
 
+import com.bfei.icrane.api.service.MemberService;
 import com.bfei.icrane.common.util.Enviroment;
 import com.bfei.icrane.common.util.ResultMap;
+import com.bfei.icrane.core.models.Member;
+import com.bfei.icrane.core.pojos.CommentPojo;
 import com.bfei.icrane.core.service.ValidateTokenService;
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +20,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 /**
  * Created by moying on 2018/7/17.
  */
-@ServerEndpoint("/webSocket/commentLists/{memberId}/{token}/{dollId}")
+@ServerEndpoint("/webSocket/commentLists/{memberId}/{token}/{dollId}/{name}")
 public class CommnetWebsocketContoller {
 
     private static final Logger log = LoggerFactory.getLogger(CommnetWebsocketContoller.class);
@@ -28,20 +32,23 @@ public class CommnetWebsocketContoller {
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
 
-    @Autowired
-    private ValidateTokenService validateTokenService;
-
     /**
      * 连接建立成功调用的方法
      */
     @OnOpen
     public void onOpen(Session session, @PathParam(value = "memberId") Integer memberId,
-                       @PathParam(value = "dollId") String dollId, @PathParam(value = "token") String token) {
+                       @PathParam(value = "dollId") String dollId, @PathParam(value = "token") String token, @PathParam(value = "name") String name) {
         this.session = session;
         webSocketSet.add(this);
         addOnlineCount();
         try {
             sendMessage("评论连接成功");
+            CommentPojo commentPojo = new CommentPojo();
+            commentPojo.setDollId(Integer.valueOf(dollId));
+            commentPojo.setComment("进入房间");
+            commentPojo.setUserName(name);
+            Gson gson = new Gson();
+            sendInfo(gson.toJson(commentPojo));
         } catch (IOException e) {
             log.error("websocket IO异常");
         }
