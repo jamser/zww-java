@@ -611,6 +611,16 @@
 		from t_doll
 		where id=#{id,jdbcType=INTEGER}
 	</select>
+    <!-- 根据娃娃识别码查询娃娃机 -->
+    <select id="selectByDollID" parameterType="java.lang.String" resultType="Doll">
+        select
+        id, name, description, quantity, price, machine_status,machine_type,doll_ID,
+        machine_serial_num, machine_ip,
+        machine_url, tbimg_real_path,
+        rtmp_url_1,rtmp_url_2,rtmp_url_3,rtmp_push_url,mns_topic_name,redeem_coins,timeout,watching_number,machine_code,doll_address_id
+        from t_doll
+        where doll_ID=#{dollID,jdbcType=INTEGER}
+    </select>
     <select id="totalCount" resultType="java.lang.Integer">
         select
         count(1)

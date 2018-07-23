@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bfei.icrane.core.dao.TDollInfoMapper">
+    <resultMap id="BaseResultMap" type="com.bfei.icrane.core.models.TDollInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="dollName" property="dollname" jdbcType="VARCHAR"/>
+        <result column="dollTotal" property="dolltotal" jdbcType="INTEGER"/>
+        <result column="dollCode" property="dollcode" jdbcType="VARCHAR"/>
+        <result column="agency" property="agency" jdbcType="VARCHAR"/>
+        <result column="size" property="size" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="note" property="note" jdbcType="VARCHAR"/>
+        <result column="redeemCoins" property="redeemcoins" jdbcType="INTEGER"/>
+        <result column="dollCoins" property="dollcoins" jdbcType="BIGINT"/>
+        <result column="deliverCoins" property="delivercoins" jdbcType="BIGINT"/>
+        <result column="addTime" property="addtime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.bfei.icrane.core.models.TDollInfo" extends="BaseResultMap">
+        <result column="img_url" property="imgUrl" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, dollName, dollTotal, dollCode, agency, size, type, note, redeemCoins, dollCoins, 
+    deliverCoins, addTime
+  </sql>
+    <sql id="Blob_Column_List">
+    img_url
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from t_doll_info
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByollCode" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from t_doll_info
+        where dollCode=#{dollCode}
+    </select>
+
+
+    <update id="updateByDollCode" parameterType="com.bfei.icrane.core.models.TDollInfo">
+       UPDATE t_doll_info
+        SET dollTotal=dollTotal-1
+        where dollCode=#{dollCode}
+    </update>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_doll_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.bfei.icrane.core.models.TDollInfo">
+    insert into t_doll_info (id, dollName, dollTotal, 
+      dollCode, agency, size, 
+      type, note, redeemCoins, 
+      dollCoins, deliverCoins, addTime, 
+      img_url)
+    values (#{id,jdbcType=INTEGER}, #{dollname,jdbcType=VARCHAR}, #{dolltotal,jdbcType=INTEGER}, 
+      #{dollcode,jdbcType=VARCHAR}, #{agency,jdbcType=VARCHAR}, #{size,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, #{redeemcoins,jdbcType=INTEGER}, 
+      #{dollcoins,jdbcType=BIGINT}, #{delivercoins,jdbcType=BIGINT}, #{addtime,jdbcType=TIMESTAMP}, 
+      #{imgUrl,jdbcType=LONGVARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.TDollInfo">
+        insert into t_doll_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="dollname != null">
+                dollName,
+            </if>
+            <if test="dolltotal != null">
+                dollTotal,
+            </if>
+            <if test="dollcode != null">
+                dollCode,
+            </if>
+            <if test="agency != null">
+                agency,
+            </if>
+            <if test="size != null">
+                size,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="note != null">
+                note,
+            </if>
+            <if test="redeemcoins != null">
+                redeemCoins,
+            </if>
+            <if test="dollcoins != null">
+                dollCoins,
+            </if>
+            <if test="delivercoins != null">
+                deliverCoins,
+            </if>
+            <if test="addtime != null">
+                addTime,
+            </if>
+            <if test="imgUrl != null">
+                img_url,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="dollname != null">
+                #{dollname,jdbcType=VARCHAR},
+            </if>
+            <if test="dolltotal != null">
+                #{dolltotal,jdbcType=INTEGER},
+            </if>
+            <if test="dollcode != null">
+                #{dollcode,jdbcType=VARCHAR},
+            </if>
+            <if test="agency != null">
+                #{agency,jdbcType=VARCHAR},
+            </if>
+            <if test="size != null">
+                #{size,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="note != null">
+                #{note,jdbcType=VARCHAR},
+            </if>
+            <if test="redeemcoins != null">
+                #{redeemcoins,jdbcType=INTEGER},
+            </if>
+            <if test="dollcoins != null">
+                #{dollcoins,jdbcType=BIGINT},
+            </if>
+            <if test="delivercoins != null">
+                #{delivercoins,jdbcType=BIGINT},
+            </if>
+            <if test="addtime != null">
+                #{addtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="imgUrl != null">
+                #{imgUrl,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.bfei.icrane.core.models.TDollInfo">
+        update t_doll_info
+        <set>
+            <if test="dollname != null">
+                dollName = #{dollname,jdbcType=VARCHAR},
+            </if>
+            <if test="dolltotal != null">
+                dollTotal = #{dolltotal,jdbcType=INTEGER},
+            </if>
+            <if test="dollcode != null">
+                dollCode = #{dollcode,jdbcType=VARCHAR},
+            </if>
+            <if test="agency != null">
+                agency = #{agency,jdbcType=VARCHAR},
+            </if>
+            <if test="size != null">
+                size = #{size,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="note != null">
+                note = #{note,jdbcType=VARCHAR},
+            </if>
+            <if test="redeemcoins != null">
+                redeemCoins = #{redeemcoins,jdbcType=INTEGER},
+            </if>
+            <if test="dollcoins != null">
+                dollCoins = #{dollcoins,jdbcType=BIGINT},
+            </if>
+            <if test="delivercoins != null">
+                deliverCoins = #{delivercoins,jdbcType=BIGINT},
+            </if>
+            <if test="addtime != null">
+                addTime = #{addtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="imgUrl != null">
+                img_url = #{imgUrl,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bfei.icrane.core.models.TDollInfo">
+    update t_doll_info
+    set dollName = #{dollname,jdbcType=VARCHAR},
+      dollTotal = #{dolltotal,jdbcType=INTEGER},
+      dollCode = #{dollcode,jdbcType=VARCHAR},
+      agency = #{agency,jdbcType=VARCHAR},
+      size = #{size,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR},
+      redeemCoins = #{redeemcoins,jdbcType=INTEGER},
+      dollCoins = #{dollcoins,jdbcType=BIGINT},
+      deliverCoins = #{delivercoins,jdbcType=BIGINT},
+      addTime = #{addtime,jdbcType=TIMESTAMP},
+      img_url = #{imgUrl,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="com.bfei.icrane.core.models.TDollInfo">
+    update t_doll_info
+    set dollName = #{dollname,jdbcType=VARCHAR},
+      dollTotal = #{dolltotal,jdbcType=INTEGER},
+      dollCode = #{dollcode,jdbcType=VARCHAR},
+      agency = #{agency,jdbcType=VARCHAR},
+      size = #{size,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR},
+      redeemCoins = #{redeemcoins,jdbcType=INTEGER},
+      dollCoins = #{dollcoins,jdbcType=BIGINT},
+      deliverCoins = #{delivercoins,jdbcType=BIGINT},
+      addTime = #{addtime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -48,6 +48,8 @@ public class DollOrderServiceImpl implements DollOrderService {
     private MemberDao memberDao;
     @Autowired
     private VipService vipService;
+    @Autowired
+    private TDollInfoMapper tDollInfoMapper;
     RedisUtil redisUtil = new RedisUtil();
 
     @Override
@@ -163,15 +165,15 @@ public class DollOrderServiceImpl implements DollOrderService {
         //} else {
         //	doll.setQuantity(0);
         //}
-        //更新房间数量
-        Doll dollRecord = new Doll();
-        dollRecord.setId(doll.getId());
-        int i = dollDao.updateQuantity(dollRecord);
-        logger.info("更新房间数量=={}", i);
-        if (doll.getQuantity() <= 1) {
-            sendSms(doll);
-        }
 
+//        TDollInfo tDollInfo = tDollInfoMapper.selectByollCode(doll.getDollID());
+//        //更新房间娃娃数量
+//        TDollInfo dollInfo = new TDollInfo();
+//        dollInfo.setDollcode(doll.getDollID());
+//        tDollInfoMapper.updateByDollCode(dollInfo);
+//        if (tDollInfo.getDolltotal() <= 1) {
+//            sendSms(doll);
+//        }
 
         //发送抓中通知
         Member member = memberDao.selectById(memberId);
