@@ -3,6 +3,7 @@ package com.bfei.icrane.api.service;
 import com.bfei.icrane.common.util.Enviroment;
 import com.bfei.icrane.common.util.RedisKeyGenerator;
 import com.bfei.icrane.common.util.RedisUtil;
+import com.bfei.icrane.common.util.WXUtil;
 import com.bfei.icrane.core.models.Account;
 import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.AgentCharge;
@@ -103,23 +104,27 @@ public class TaskJob {
         if (time == 0) {
             return;
         }
+        Calendar calendar = Calendar.getInstance();
+
+        int count = time;
+
+        for (int j = 1; j <= count; j++) {
+            calendar.setTime(new Date());
+            calendar.add(Calendar.DAY_OF_MONTH, -j);
+            Date date = calendar.getTime();
+//            if(WXUtil.isHostory(date)==1||WXUtil.isHostory(date)==2){
+//                count++;
+//            }
+            if (isWeekend(date)) {
+                count++;
+            }
+        }
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_MONTH, -count);
+        Date oldDate = isThursday(calendar.getTime());
 
         for (int i = 0; i < chargeList.size(); i++) {
-            Calendar calendar = Calendar.getInstance();
             AgentCharge agentCharge = chargeList.get(i);
-            int count = time;
-
-            for (int j = 1; j <= count; j++) {
-                calendar.setTime(new Date());
-                calendar.add(Calendar.DAY_OF_MONTH, -j);
-                Date date = calendar.getTime();
-                if (isWeekend(date)) {
-                    count++;
-                }
-            }
-            calendar.setTime(new Date());
-            calendar.add(Calendar.DAY_OF_MONTH, -count);
-            Date oldDate = isThursday(calendar.getTime());
             logger.info("当前时间==={},订单时间=={},结算时间==={}",
                     new Date(), agentCharge.getCreateTime(), oldDate);
 
