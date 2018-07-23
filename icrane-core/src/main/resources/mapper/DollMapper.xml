@@ -233,10 +233,10 @@
         machine_status = '空闲中'
         OR machine_status = '游戏中'
         )
-        <if test="type == 0">
+        <if test="type == 0 or type == 1">
             AND a.machine_type IN (0,1)
         </if>
-        <if test="type != 0">
+        <if test="type ==2 || type==3">
             AND a.machine_type =#{type,jdbcType=INTEGER}
         </if>
         AND a.channel

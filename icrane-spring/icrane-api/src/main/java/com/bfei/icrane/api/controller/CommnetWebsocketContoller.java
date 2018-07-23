@@ -37,20 +37,11 @@ public class CommnetWebsocketContoller {
     @OnOpen
     public void onOpen(Session session, @PathParam(value = "memberId") Integer memberId,
                        @PathParam(value = "dollId") String dollId, @PathParam(value = "token") String token) {
-        if (!validateTokenService.validataToken(token, memberId)) {
-            log.info("Token验证失败！");
-            try {
-                session.close();
-                return;
-            } catch (IOException e1) {
-                log.error("Token验证关闭连接时出现异常", e1);
-            }
-        }
         this.session = session;
         webSocketSet.add(this);
         addOnlineCount();
         try {
-            sendMessage("连接成功");
+            sendMessage("评论连接成功");
         } catch (IOException e) {
             log.error("websocket IO异常");
         }
@@ -63,7 +54,7 @@ public class CommnetWebsocketContoller {
     public void onClose() {
         webSocketSet.remove(this);  //从set中删除
         subOnlineCount();           //在线数减1
-        log.info("有一连接关闭！当前在线人数为" + getOnlineCount());
+        log.info("评论有一连接关闭！当前在线人数为" + getOnlineCount());
     }
 
     /**
@@ -83,9 +74,9 @@ public class CommnetWebsocketContoller {
     @OnError
     public void onError(Session session, Throwable error) {
         try {
-            log.error("发生错误");
+            log.error("评论发生错误");
         } catch (Exception e) {
-            log.error("关闭连接后处理过程中出现异常", e);
+            log.error("评论关闭连接后处理过程中出现异常", e);
         }
     }
 
