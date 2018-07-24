@@ -63,30 +63,7 @@ public class GameController {
 //                memberId = userId;
 //            }
             GameStatusEnum result = gameService.startPlay(dollId, memberId);
-            switch (result) {
-                case GAME_PRICE_NOT_ENOUGH:
-                    logger.info("玩家" + memberId + "在娃娃机" + dollId + "的游戏不足，无法开始游戏");
-                    return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, "您的游戏币不足，请先充值！");
-                case GAME_PRICE_NOT_SuperTicket:
-                    logger.info("玩家" + memberId + "在娃娃机" + dollId + "的钻石不足，无法开始游戏");
-                    return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, "您的钻石不足，请先充值！");
-                case GAME_MAINTAINED:
-                    logger.info("机器维护中，无法开始游戏");
-                    return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, "机器抢救中，无法开始游戏");
-                case GAME_PLAYING:
-                    logger.info("玩家" + memberId + "在娃娃机" + dollId + "的房间有人已经开始游戏，无法开始游戏");
-                    return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, "当前还有玩家在操作，不能开始游戏！");
-                case GAME_START_SUCCESS:
-                    Map<String, String> socketMap = new HashMap<>();
-                    socketMap.put("socketUrl", serviceFacade.getSocketUrl(dollId));
-                    return IcraneResult.ok(socketMap);
-                case GAME_START_FAIL:
-                    logger.info("玩家" + memberId + "在娃娃机" + dollId + "的游戏开始失败");
-                    return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_FAILE_MESSAGE);
-                default:
-                    logger.info("玩家" + memberId + "在娃娃机" + dollId + "的游戏开始失败");
-                    return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_FAILE_MESSAGE);
-            }
+            return getResult(result, memberId, dollId);
 
 			/*if(!doll.getMachineStatus().equals("空闲中")) { //娃娃机状态不在空闲中
                 if(redisUtil.existsKey(RedisKeyGenerator.getRoomHostKey(dollId)) &&
@@ -114,6 +91,60 @@ public class GameController {
             throw e;
         }
     }
+
+    public IcraneResult getResult(GameStatusEnum result, Integer memberId, Integer dollId) {
+        switch (result) {
+            case GAME_PRICE_NOT_ENOUGH:
+                logger.info("玩家" + memberId + "在娃娃机" + dollId + "的游戏不足，无法开始游戏");
+                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, "您的游戏币不足，请先充值！");
+            case GAME_PRICE_NOT_SuperTicket:
+                logger.info("玩家" + memberId + "在娃娃机" + dollId + "的钻石不足，无法开始游戏");
+                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, "您的钻石不足，请先充值！");
+            case GAME_MAINTAINED:
+                logger.info("机器维护中，无法开始游戏");
+                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, "机器抢救中，无法开始游戏");
+            case GAME_PLAYING:
+                logger.info("玩家" + memberId + "在娃娃机" + dollId + "的房间有人已经开始游戏，无法开始游戏");
+                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, "当前还有玩家在操作，不能开始游戏！");
+            case GAME_START_SUCCESS:
+                Map<String, String> socketMap = new HashMap<>();
+                socketMap.put("socketUrl", serviceFacade.getSocketUrl(dollId));
+                return IcraneResult.ok(socketMap);
+            case GAME_START_FAIL:
+                logger.info("玩家" + memberId + "在娃娃机" + dollId + "的游戏开始失败");
+                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_FAILE_MESSAGE);
+            default:
+                logger.info("玩家" + memberId + "在娃娃机" + dollId + "的游戏开始失败");
+                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_FAILE_MESSAGE);
+        }
+    }
+
+    /**
+     * 再来一局
+     *
+     * @param memberId
+     * @param dollId
+     * @param token
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/again", method = RequestMethod.POST)
+    @ResponseBody
+    public IcraneResult againGame(@RequestParam Integer memberId, @RequestParam Integer dollId, @RequestParam String token) throws Exception {
+        logger.info("开始本轮游戏建立socket前调用的接口参数memberId=" + memberId + "," + "dollId=" + dollId + "," + "token=" + token);
+        try {
+            //验证token有效性
+            if (!validateTokenService.validataToken(token, memberId)) {
+                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            }
+            GameStatusEnum result = gameService.checkPlaying(dollId, memberId);
+            return getResult(result, memberId, dollId);
+        } catch (Exception e) {
+            logger.error("调用游戏再一次接口出错！", e);
+            throw e;
+        }
+    }
+
 
     /**
      * 娃娃机下抓接口
