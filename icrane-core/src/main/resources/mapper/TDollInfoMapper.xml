@@ -47,7 +47,7 @@
     <update id="updateByDollCode" parameterType="com.bfei.icrane.core.models.TDollInfo">
        UPDATE t_doll_info
         SET dollTotal=dollTotal-1
-        where dollCode=#{dollCode}
+        where dollCode=#{dollcode}
     </update>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from t_doll_info
