@@ -57,4 +57,6 @@ public interface AgentService {
     void updateAgentProfile(Integer agentId, String imgUrl);
 
     ResultMap selectByAgent(Integer agentId);
+
+    List<Agent> selectByAll();
 }

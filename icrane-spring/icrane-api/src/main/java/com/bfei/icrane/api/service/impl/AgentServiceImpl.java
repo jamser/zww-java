@@ -315,4 +315,9 @@ public class AgentServiceImpl implements AgentService {
         agentPojo.setIconRealPath(sysUser.getAvatar());
         return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, agentPojo);
     }
+
+    @Override
+    public List<Agent> selectByAll() {
+        return agentMapper.selectByAll();
+    }
 }

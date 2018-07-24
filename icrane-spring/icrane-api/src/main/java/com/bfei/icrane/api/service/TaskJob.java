@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
@@ -202,5 +203,32 @@ public class TaskJob {
             return cal.getTime();
         }
         return date;
+    }
+
+    /**
+     * 校正代理金额
+     */
+    public void verifyAgent() {
+        List<Agent> agentList = agentService.selectByAll();
+        Long sum = null;
+        for (int i = 0; i < agentList.size(); i++) {
+            try {
+                switch (agentList.get(i).getLevel()) {
+                    case 0:
+                        sum = agentChargeService.selectByAgentSuperId(agentList.get(i).getId(), 1, null);
+                        Agent agent = agentService.selectByPrimaryKey(agentList.get(i).getId());
+                        Assert.isTrue(agent.getBalance() - sum == 0, "总金额异常");
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                }
+            } catch (Exception e) {
+                logger.info("代理商金额异常！！ 余额={},已清算金额={},id={}", String.valueOf(sum), agentList.get(i).getBalance(), agentList.get(i).getId());
+            }
+        }
     }
 }

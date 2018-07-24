@@ -13,6 +13,8 @@ public interface AgentMapper {
 
     Agent selectByPrimaryKey(Integer id);
 
+    List<Agent> selectByAll();
+
     int updateByPrimaryKeySelective(Agent record);
 
     int updateByPrimaryKey(Agent record);

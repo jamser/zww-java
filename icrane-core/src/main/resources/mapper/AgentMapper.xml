@@ -31,6 +31,13 @@
         where id = #{id,jdbcType=INTEGER} AND status=1
     </select>
 
+    <select id="selectByAll" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_agent
+        where status=1
+    </select>
+
     <select id="selectByUserName" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>
