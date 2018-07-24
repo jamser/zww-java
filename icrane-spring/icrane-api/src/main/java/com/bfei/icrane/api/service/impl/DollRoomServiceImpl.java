@@ -495,7 +495,6 @@ public class DollRoomServiceImpl implements DollRoomService {
     }
 
     @Override
-    @Transactional
     public void endPlayByCatchCount(Integer memberId, Integer dollId) {
         //  判断五分钟内是否三次抓取成功
         Doll dollR = dollDao.selectByPrimaryKey(dollId);
@@ -507,14 +506,21 @@ public class DollRoomServiceImpl implements DollRoomService {
             }
         }//普通房间连续抓中
         else if (dollR.getMachineType().equals(0) || dollR.getMachineType().equals(3)) {
-            List<CatchVO> catchVOS = dollOrderItemDao.selectCatchSuccessByDollIdAndMemberId(dollId, memberId);
-            if (catchVOS.size() >= 5) {
+            List<CatchHistory> catchHistories = catchHistoryDao.selectByDollId(dollId);
+            int count = 0;
+            for (CatchHistory catchHistory : catchHistories) {
+                if ("抓取成功".equals(catchHistory.getCatchStatus())) {
+                    count++;
+                }
+            }
+            if (count >= 5) {
                 closeDoll("维修中", dollR);
             }
         }
 
     }
 
+    @Transactional
     private void closeDoll(String status, Doll dollOld) {
         SystemPref systemPref = systemPrefDao.selectByPrimaryKey(Enviroment.DOLL_NOTIFY_PHONE);
         try {

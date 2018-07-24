@@ -32,7 +32,7 @@ public interface CatchHistoryDao {
     List<CatchHistory> getCatchHistory(@Param("begin") Integer begin, @Param("pageSize") Integer pageSize, @Param("memberId") Integer memberId);
 
     Integer insertCatchHistory(CatchHistory catchHistory);
-    
+
     Integer updateCatchHistory(CatchHistory catchHistory);
 
     Integer updateVideoUrl(@Param("gameNum") String gameNum, @Param("videoUrl") String videoUrl, @Param("userId") Integer userId);
@@ -44,6 +44,8 @@ public interface CatchHistoryDao {
     String getRecenGameNum(@Param("memberId") Integer memberId, @Param("dollId") Integer dollId);
 
     List<CatchHistory> selectByDollId(@Param("dollId") Integer dollId);
+
+    List<CatchHistory> selectByDollIdLimit5(@Param("dollId") Integer dollId);
 
     List<CatchHistory> getCatchHistoryLists(@Param("memberId") Long memberId);
 }
