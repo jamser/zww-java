@@ -216,14 +216,23 @@ public class TaskJob {
                 switch (agentList.get(i).getLevel()) {
                     case 0:
                         sum = agentChargeService.selectByAgentSuperId(agentList.get(i).getId(), 1, null);
-                        Agent agent = agentService.selectByPrimaryKey(agentList.get(i).getId());
-                        Assert.isTrue(agent.getBalance() - sum == 0, "总金额异常");
+                        Agent agentSuper = agentService.selectByPrimaryKey(agentList.get(i).getId());
+                        Assert.isTrue(agentSuper.getBalance() - sum == 0, "总金额异常");
                         break;
                     case 1:
+                        sum = agentChargeService.selectByAgentOneId(agentList.get(i).getId(), 1, null);
+                        Agent agentOne = agentService.selectByPrimaryKey(agentList.get(i).getId());
+                        Assert.isTrue(agentOne.getBalance() - sum == 0, "总金额异常");
                         break;
                     case 2:
+                        sum = agentChargeService.selectByAgentTwoId(agentList.get(i).getId(), 1, null);
+                        Agent agentTwo = agentService.selectByPrimaryKey(agentList.get(i).getId());
+                        Assert.isTrue(agentTwo.getBalance() - sum == 0, "总金额异常");
                         break;
                     case 3:
+                        sum = agentChargeService.selectByAgentThreeId(agentList.get(i).getId(), 1, null);
+                        Agent agentThree = agentService.selectByPrimaryKey(agentList.get(i).getId());
+                        Assert.isTrue(agentThree.getBalance() - sum == 0, "总金额异常");
                         break;
                 }
             } catch (Exception e) {
