@@ -6,6 +6,7 @@ import com.bfei.icrane.core.models.Oem;
 import com.bfei.icrane.core.models.OemBanner;
 import com.bfei.icrane.core.service.OemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +52,7 @@ public class OemServiceImpl implements OemService {
     }
 
     @Override
+    @Cacheable(value = "H5BannerList", key = "#oemId")
     public List<OemBanner> selectByOemId(Integer oemId) {
         return oemBannerMapper.selectByOemId(oemId);
     }
