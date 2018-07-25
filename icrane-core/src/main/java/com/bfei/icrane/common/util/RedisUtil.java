@@ -33,6 +33,16 @@ public class RedisUtil {
         }
     }
 
+    public Long getTTl(String key) {
+        Jedis jedis = new Jedis(redisAddr, redisPort, redisTimeout);
+        jedis.auth(redisPwd);
+        Long ttl = jedis.ttl(key);
+        if (jedis != null) {
+            jedis.close();
+        }
+        return ttl;
+    }
+
     public String getString(String key) {
         Jedis jedis = new Jedis(redisAddr, redisPort, redisTimeout);
         jedis.auth(redisPwd);

@@ -162,7 +162,7 @@ public class DollServiceImpl implements DollService {
     }*/
 
     @Override
-    @Cacheable(value = "h5DollList", key = "#worker+''+#type+#channels")
+//    @Cacheable(value = "h5DollList", key = "#worker+''+#type+#channels")
     public List<Doll> getH5DollList(Integer type,boolean worker,List<String> channels) {
         List<Doll> dollTopicList = dollDao.getH5DollTopicList(type,channels);
         if (worker) {
