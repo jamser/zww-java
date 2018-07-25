@@ -161,7 +161,7 @@ public class DollOrderServiceImpl implements DollOrderService {
 
         //判断测试人员
         Account account = accountDao.selectById(memberId);
-        if (account.isTester() && !doll.getMachineType().equals(2)) {
+        if (account.getTester().equals(1) && !doll.getMachineType().equals(2)) {
 //        TDollInfo tDollInfo = tDollInfoMapper.selectByollCode(doll.getDollID());
 //        //更新房间娃娃数量
 //        TDollInfo dollInfo = new TDollInfo();

@@ -12,7 +12,7 @@
         <result column="growth_value" property="growthValue"/>
         <result column="growth_value_month" property="growthValueMonth"/>
         <result column="growth_value_month_level" property="growthValueMonthLevel"/>
-        <result column="tester" property="growthValueMonthLevel"/>
+        <result column="tester" property="tester"/>
         <association property="vip" javaType="com.bfei.icrane.core.models.Vip"
                      select="com.bfei.icrane.core.dao.VipDao.selectVipByGrowthValue" column="growth_value">
         </association>
