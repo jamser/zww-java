@@ -200,6 +200,7 @@ public class Enviroment {
     public static final String INVALID_INVITATION_CODE = "无效邀请码";
     public static final String INVALID_SUCCESS_MESSAGE = "邀请成功";
     public static final String DOLL_NOTIFY_PHONE = "DOLL_NOTIFY_PHONE";
+    public static final String STOCK_NOTIFY = "STOCK_NOTIFY";
 
     /**
      * 流水相关

@@ -35,6 +35,15 @@ public class Account implements Serializable {
     private BigDecimal growthValueMonth;      //会员每月成长值
     private Integer growthValueMonthLevel;      //会员每月充值级别
     private Vip vip;                            //会员
+    private int tester;
+
+    public boolean isTester() {
+        if (this.tester == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     public void addState(long state) {
         this.bitState = BitStatesUtils.addState(this.bitState, state);

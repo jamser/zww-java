@@ -49,6 +49,8 @@ public class DollOrderServiceImpl implements DollOrderService {
     @Autowired
     private VipService vipService;
     @Autowired
+    private AccountDao accountDao;
+    @Autowired
     private TDollInfoMapper tDollInfoMapper;
     RedisUtil redisUtil = new RedisUtil();
 
@@ -156,13 +158,10 @@ public class DollOrderServiceImpl implements DollOrderService {
         dollOrderItem.setQuantity(dollNum);
         dollOrderItem.setCreatedDate(TimeUtil.getTime());
         dollOrderItemDao.insert(dollOrderItem);
-        // 娃娃机的娃娃数量减1
-        //if (doll.getQuantity() > 0) {
-        //	doll.setQuantity(doll.getQuantity() - 1);
-        //} else {
-        //	doll.setQuantity(0);
-        //}
 
+        //判断测试人员
+        Account account = accountDao.selectById(memberId);
+        if (account.isTester() && !doll.getMachineType().equals(2)) {
 //        TDollInfo tDollInfo = tDollInfoMapper.selectByollCode(doll.getDollID());
 //        //更新房间娃娃数量
 //        TDollInfo dollInfo = new TDollInfo();
@@ -171,6 +170,7 @@ public class DollOrderServiceImpl implements DollOrderService {
 //        if (tDollInfo.getDolltotal() <= 1) {
 //            sendSms(doll);
 //        }
+        }
 
         //发送抓中通知
         Member member = memberDao.selectById(memberId);
