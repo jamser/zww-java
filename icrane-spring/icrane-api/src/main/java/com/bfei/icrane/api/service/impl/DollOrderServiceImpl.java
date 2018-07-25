@@ -129,14 +129,11 @@ public class DollOrderServiceImpl implements DollOrderService {
         logger.info("insertOrder 参数memberId:{},dollId:{},dollNum:{}", memberId, dollId, dollNum);
         //查询用户默认地址
         MemberAddr memberAddr = memberAddrDao.selectDefaultAddr(memberId);
-        logger.info("memberAddr:{}", memberAddr);
         //查询系统寄存箱默认
         SystemPref systemPref = systemPrefDao.selectByPrimaryKey("DOLL_STOCK_DAYS");
         SystemPref deliverCoins = systemPrefDao.selectByPrimaryKey("DELIVERY_COINS");
         Integer deliverCoin = Integer.valueOf(deliverCoins.getValue());
-        logger.info("systemPref:{}", systemPref);
         Integer validDate = Integer.valueOf(systemPref.getValue());
-        logger.info("validDate:{}", validDate);
         DollOrder dollOrder = new DollOrder();
         DollOrderItem dollOrderItem = new DollOrderItem();
         String orderNum = StringUtils.getOrderNumber();
@@ -190,9 +187,9 @@ public class DollOrderServiceImpl implements DollOrderService {
     }
 
     public void sendSms(Doll doll) {
-        SystemPref systemPref = systemPrefDao.selectByPrimaryKey(Enviroment.DOLL_NOTIFY_PHONE);
+        SystemPref systemPref = systemPrefDao.selectByPrimaryKey(Enviroment.STOCK_NOTIFY);
         try {
-            AliyunServiceImpl.getInstance().sendSMSForCode(systemPref.getValue(), "蓝澳科技", "SMS_139986683", doll.getMachineCode());
+            AliyunServiceImpl.getInstance().sendSMSForCode(systemPref.getValue(), "蓝澳科技", "SMS_140550044", doll.getName());
             Doll dollNew = new Doll();
             dollNew.setId(doll.getId());
             dollNew.setMachineStatus("未上线");
