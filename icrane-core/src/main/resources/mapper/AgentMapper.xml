@@ -28,35 +28,34 @@
         select
         <include refid="Base_Column_List"/>
         from t_agent
-        where id = #{id,jdbcType=INTEGER} AND status=1
+        where id = #{id,jdbcType=INTEGER}
     </select>
 
     <select id="selectByAll" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
         from t_agent
-        where status=1
     </select>
 
     <select id="selectByUserName" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>
         from t_agent
-        where username = #{username,jdbcType=VARCHAR} AND status=1
+        where username = #{username,jdbcType=VARCHAR}
     </select>
 
     <select id="selectByPhone" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>
         from t_agent
-        where phone = #{username,jdbcType=VARCHAR} AND status=1
+        where phone = #{username,jdbcType=VARCHAR}
     </select>
 
     <select id="selectByPhoneLists" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>
         from t_agent
-        where phone = #{username,jdbcType=VARCHAR} AND status=1
+        where phone = #{username,jdbcType=VARCHAR}
     </select>
 
 

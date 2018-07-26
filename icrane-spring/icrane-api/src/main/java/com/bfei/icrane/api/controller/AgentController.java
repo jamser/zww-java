@@ -75,7 +75,7 @@ public class AgentController {
         if (null == agent) {
             return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.USERNAME_ERROR);
         } else {
-            if (agent.getStatus() == 1 || agent.getStatus() == 3) {
+            if (agent.getStatus() == 1 || agent.getStatus() == 2) {
 
                 if (agent.getPassword().equals(MD5Utils.md5(agentLoginForm.getPassword(), agent.getSalt()))) {
                     AgentToken token = agentService.getAgentLogin(agent);
