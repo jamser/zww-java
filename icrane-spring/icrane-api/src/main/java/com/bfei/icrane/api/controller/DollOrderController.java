@@ -130,41 +130,41 @@ public class DollOrderController {
     }
 
     // 创建娃娃订单
-    @RequestMapping(value = "/createDollOrder", method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, Object> createDollOrder(Integer memberId, Integer dollId, Integer dollNum) throws Exception {
-        logger.info("【createDollOrder】参数 memberId={},dollId={},dollNum={}", memberId, dollId, dollNum);
-        Map<String, Object> resultMap = new HashedMap<String, Object>();
-
-        try {
-            //Integer num = 0;
-            //num = Integer.parseInt(redisUtil.getString(RedisKeyGenerator.getMemberSetter(memberId))) + 1;
-            //redisUtil.setString(RedisKeyGenerator.getMemberSetter(memberId), String.valueOf(num), 3600 * 2);
-            //优化订单 下单 计数控制   控制代码集中
-            Integer num = GameProcessUtil.getInstance().addCountGameLock(memberId, dollId, GameProcessEnum.GAME_SETTER);
-            //结算计数
-            Integer dollOrder = 0;
-            if (num <= 1) {//只结算一次
-                dollOrder = dollOrderService.insertOrder(memberId, dollId, dollNum);
-            } else {
-                dollOrder = 1;//不重复创建 寄存订单
-            }
-            if (dollOrder == 1) {
-                resultMap.put("success", Enviroment.RETURN_SUCCESS);
-                resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
-                resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
-            } else {
-                resultMap.put("success", Enviroment.RETURN_FAILE);
-                resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
-                resultMap.put("message", Enviroment.RETURN_FAILE_MESSAGE);
-            }
-            return resultMap;
-        } catch (Exception e) {
-            logger.error("创建娃娃订单出错", e);
-            throw e;
-        }
-
-    }
+//    @RequestMapping(value = "/createDollOrder", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Map<String, Object> createDollOrder(Integer memberId, Integer dollId, Integer dollNum) throws Exception {
+//        logger.info("【createDollOrder】参数 memberId={},dollId={},dollNum={}", memberId, dollId, dollNum);
+//        Map<String, Object> resultMap = new HashedMap<String, Object>();
+//
+//        try {
+//            //Integer num = 0;
+//            //num = Integer.parseInt(redisUtil.getString(RedisKeyGenerator.getMemberSetter(memberId))) + 1;
+//            //redisUtil.setString(RedisKeyGenerator.getMemberSetter(memberId), String.valueOf(num), 3600 * 2);
+//            //优化订单 下单 计数控制   控制代码集中
+//            Integer num = GameProcessUtil.getInstance().addCountGameLock(memberId, dollId, GameProcessEnum.GAME_SETTER);
+//            //结算计数
+//            Integer dollOrder = 0;
+//            if (num <= 1) {//只结算一次
+//                dollOrder = dollOrderService.insertOrder(memberId, dollId, dollNum);
+//            } else {
+//                dollOrder = 1;//不重复创建 寄存订单
+//            }
+//            if (dollOrder == 1) {
+//                resultMap.put("success", Enviroment.RETURN_SUCCESS);
+//                resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
+//                resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
+//            } else {
+//                resultMap.put("success", Enviroment.RETURN_FAILE);
+//                resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
+//                resultMap.put("message", Enviroment.RETURN_FAILE_MESSAGE);
+//            }
+//            return resultMap;
+//        } catch (Exception e) {
+//            logger.error("创建娃娃订单出错", e);
+//            throw e;
+//        }
+//
+//    }
 
     /**
      * 预发货

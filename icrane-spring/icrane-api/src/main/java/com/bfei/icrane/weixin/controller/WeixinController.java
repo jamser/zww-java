@@ -1,19 +1,13 @@
 package com.bfei.icrane.weixin.controller;
 
-import com.bfei.icrane.api.service.AgentService;
 import com.bfei.icrane.api.service.LoginService;
 import com.bfei.icrane.api.service.MemberService;
 import com.bfei.icrane.common.util.*;
-import com.bfei.icrane.core.dao.OemMapper;
-import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.Member;
 import com.bfei.icrane.core.models.MemberInfo;
-
 import com.bfei.icrane.core.models.Oem;
 import com.bfei.icrane.core.service.OemService;
-import com.bfei.icrane.core.service.RiskManagementService;
 import com.bfei.icrane.weixin.vo.*;
-import com.google.gson.JsonObject;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +23,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller

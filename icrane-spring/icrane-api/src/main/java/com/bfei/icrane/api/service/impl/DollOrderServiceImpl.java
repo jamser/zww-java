@@ -161,15 +161,20 @@ public class DollOrderServiceImpl implements DollOrderService {
 
         //判断测试人员
         Account account = accountDao.selectById(memberId);
-        if (account.getTester().equals(1) && !doll.getMachineType().equals(2)) {
-//        TDollInfo tDollInfo = tDollInfoMapper.selectByollCode(doll.getDollID());
+        if (account.getTester().equals(0) && (doll.getMachineType().equals(0) || doll.getMachineType().equals(3))) {
+            TDollInfo tDollInfo = tDollInfoMapper.selectByollCode(doll.getDollID());
+            if (StringUtils.isEmpty(tDollInfo)) {
+                logger.error("房间ID={}娃娃识别码不对应", doll.getId());
+            } else {
 //        //更新房间娃娃数量
-//        TDollInfo dollInfo = new TDollInfo();
-//        dollInfo.setDollcode(doll.getDollID());
-//        tDollInfoMapper.updateByDollCode(dollInfo);
-//        if (tDollInfo.getDolltotal() <= 1) {
-//            sendSms(doll);
-//        }
+                TDollInfo dollInfo = new TDollInfo();
+                dollInfo.setDollcode(doll.getDollID());
+                tDollInfoMapper.updateByDollCode(dollInfo);
+                if (tDollInfo.getDolltotal() <= 1) {
+                    sendSms(doll);
+                }
+                logger.info("房间={} 减库存",doll.getName());
+            }
         }
 
         //发送抓中通知

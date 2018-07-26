@@ -1,23 +1,19 @@
 package com.bfei.icrane.api.controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.math.BigDecimal;
-import java.net.URI;
-import java.security.NoSuchAlgorithmException;
-import java.util.*;
-import javax.servlet.http.HttpServletRequest;
-
-import com.bfei.icrane.api.service.*;
+import com.bfei.icrane.api.service.AgentService;
+import com.bfei.icrane.api.service.MemberService;
+import com.bfei.icrane.api.service.PayService;
 import com.bfei.icrane.common.util.*;
-import com.bfei.icrane.common.util.StringUtils;
 import com.bfei.icrane.common.wx.utils.*;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.pojos.AccessTokenPojo;
-import com.bfei.icrane.core.service.*;
-import com.github.binarywang.wxpay.service.WxPayService;
+import com.bfei.icrane.core.service.ChargeOrderService;
+import com.bfei.icrane.core.service.OemService;
+import com.bfei.icrane.core.service.ValidateTokenService;
+import com.bfei.icrane.core.service.VipService;
 import com.google.gson.Gson;
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -30,8 +26,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
-import net.sf.json.JSONException;
-import net.sf.json.JSONObject;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.net.URI;
+import java.util.*;
 
 /**
  * Author: perry Version: 1.0 Date: 2017/09/25 Description: 微信支付统一下单和回调.
@@ -46,24 +48,17 @@ public class WxPayController {
     @Autowired
     private ValidateTokenService validateTokenService;
     @Autowired
-    private LoginService loginService;
-    @Autowired
     private ChargeOrderService chargeOrderService;//订单服务
     @Autowired
     private MemberService memberService;
     @Autowired
     private PayService payService;
     @Autowired
-    private RiskManagementService riskManagementService;
-    @Autowired
     private VipService vipService;
     @Autowired
     private OemService oemService;
     @Autowired
     private AgentService agentService;
-
-
-    private RedisUtil redisUtil = new RedisUtil();
 
     /**
      * 微信支付

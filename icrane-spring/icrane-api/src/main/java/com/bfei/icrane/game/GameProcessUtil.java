@@ -400,6 +400,15 @@ public class GameProcessUtil {
         return message;
     }
 
+    public static void main(String[] args) {
+        Random r1 = new Random();
+        for (int i=0;i<100;i++) {
+            int run = r1.nextInt(2) + 15;
+            logger.info(String.valueOf(run));
+        }
+
+    }
+
     /**
      * 游戏结束状态控制
      */

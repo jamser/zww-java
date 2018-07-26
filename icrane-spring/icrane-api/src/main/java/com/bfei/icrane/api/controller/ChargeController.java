@@ -89,41 +89,41 @@ public class ChargeController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/chargeHistory", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap chargeHistory(@RequestParam Integer memberId, @RequestParam String token) throws Exception {
-        logger.info("充值历史接口参数：" + "memberId=" + memberId + "," + "token=" + token);
-        Map<String, Object> resultMap = new HashedMap<String, Object>();
-        try {
-            // 验证token有效性
-            if (token == null || "".equals(token) || !validateTokenService.validataToken(token, memberId)) {
-                resultMap.put("success", Enviroment.RETURN_FAILE);
-                logger.info("获取充值历史传入异常" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
-            List<Charge> chargeHistorys = chargeService.getChargeHistory(memberId);
-            if (chargeHistorys.size() != 0) {
-                List<Map<String, Object>> chargeList = new ArrayList<Map<String, Object>>();
-                for (Charge chargeHistory : chargeHistorys) {
-                    Map<String, Object> map = new HashMap<String, Object>();
-                    map.put("prepaidAmt", chargeHistory.getPrepaidAmt());
-                    map.put("coins", chargeHistory.getCoins());
-                    map.put("chargeDate", chargeHistory.getChargeDate());
-                    map.put("chargeMethod", chargeHistory.getChargeMethod());
-                    map.put("type", chargeHistory.getType());
-                    chargeList.add(map);
-                }
-                logger.info("返回前端需要的充值历史");
-                return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, chargeList);
-            } else {
-                logger.info("返回前端需要的充值历史失败" + Enviroment.RETURN_FAILE_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE, Enviroment.RETURN_FAILE_MESSAGE);
-            }
-        } catch (Exception e) {
-            logger.error("充值历史出错", e);
-            throw e;
-        }
-    }
+//    @RequestMapping(value = "/chargeHistory", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap chargeHistory(@RequestParam Integer memberId, @RequestParam String token) throws Exception {
+//        logger.info("充值历史接口参数：" + "memberId=" + memberId + "," + "token=" + token);
+//        Map<String, Object> resultMap = new HashedMap<String, Object>();
+//        try {
+//            // 验证token有效性
+//            if (token == null || "".equals(token) || !validateTokenService.validataToken(token, memberId)) {
+//                resultMap.put("success", Enviroment.RETURN_FAILE);
+//                logger.info("获取充值历史传入异常" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
+//            List<Charge> chargeHistorys = chargeService.getChargeHistory(memberId);
+//            if (chargeHistorys.size() != 0) {
+//                List<Map<String, Object>> chargeList = new ArrayList<Map<String, Object>>();
+//                for (Charge chargeHistory : chargeHistorys) {
+//                    Map<String, Object> map = new HashMap<String, Object>();
+//                    map.put("prepaidAmt", chargeHistory.getPrepaidAmt());
+//                    map.put("coins", chargeHistory.getCoins());
+//                    map.put("chargeDate", chargeHistory.getChargeDate());
+//                    map.put("chargeMethod", chargeHistory.getChargeMethod());
+//                    map.put("type", chargeHistory.getType());
+//                    chargeList.add(map);
+//                }
+//                logger.info("返回前端需要的充值历史");
+//                return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, chargeList);
+//            } else {
+//                logger.info("返回前端需要的充值历史失败" + Enviroment.RETURN_FAILE_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE, Enviroment.RETURN_FAILE_MESSAGE);
+//            }
+//        } catch (Exception e) {
+//            logger.error("充值历史出错", e);
+//            throw e;
+//        }
+//    }
 
     /**
      * 成功充值后查询充值记录
@@ -133,28 +133,28 @@ public class ChargeController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/successfulRechargeRecords", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap SuccessfulRechargeRecords(Integer memberId, String token, String mchOrderNo) throws Exception {
-        logger.info("发送成功充值后查询充值记录接口参数mobile=" + memberId + ",mchOrderNo=" + mchOrderNo);
-        try {
-            //参数验证
-            if (memberId == null && "".equals(memberId) && token == null && "".equals(token) && mchOrderNo == null && "".equals(mchOrderNo)) {
-                logger.info("成功充值后查询充值记录接口=" + memberId + ",mchOrderNo=" + mchOrderNo);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }
-            //授权验证
-            if (!validateTokenService.validataToken(token, memberId)) {
-                logger.info("成功充值后查询充值记录接口=" + memberId + ",mchOrderNo=" + mchOrderNo);
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
-            return chargeService.getSuccessfulRechargeRecords(memberId, mchOrderNo);
-        } catch (Exception e) {
-            logger.debug("成功充值后查询充值记录异常" + e.getMessage());
-            e.printStackTrace();
-            return new ResultMap(Enviroment.RETURN_FAILE_CODE, "查询异常");
-        }
-    }
+//    @RequestMapping(value = "/successfulRechargeRecords", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap SuccessfulRechargeRecords(Integer memberId, String token, String mchOrderNo) throws Exception {
+//        logger.info("发送成功充值后查询充值记录接口参数mobile=" + memberId + ",mchOrderNo=" + mchOrderNo);
+//        try {
+//            //参数验证
+//            if (memberId == null && "".equals(memberId) && token == null && "".equals(token) && mchOrderNo == null && "".equals(mchOrderNo)) {
+//                logger.info("成功充值后查询充值记录接口=" + memberId + ",mchOrderNo=" + mchOrderNo);
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//            }
+//            //授权验证
+//            if (!validateTokenService.validataToken(token, memberId)) {
+//                logger.info("成功充值后查询充值记录接口=" + memberId + ",mchOrderNo=" + mchOrderNo);
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
+//            return chargeService.getSuccessfulRechargeRecords(memberId, mchOrderNo);
+//        } catch (Exception e) {
+//            logger.debug("成功充值后查询充值记录异常" + e.getMessage());
+//            e.printStackTrace();
+//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, "查询异常");
+//        }
+//    }
 
     /**
      * 兑换娃娃币

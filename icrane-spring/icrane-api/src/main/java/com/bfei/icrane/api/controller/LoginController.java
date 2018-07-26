@@ -44,21 +44,21 @@ public class LoginController {
      * @return
      * @throws Exception 登录结果
      */
-    @RequestMapping(value = "/smsCodeLogin", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap smsCodeLogin(HttpServletRequest request, String mobile, String smsCode, String from, String channel, String phoneModel, String IMEI) throws Exception {
-        logger.info("短信验证码登录接口参数mobile=" + mobile);
-        try {
-            if (StringUtils.isEmpty(mobile) || StringUtils.isEmpty(mobile)) {
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.MOBILE_ERROR);
-            }
-            return loginService.smsCodeLogin(mobile, smsCode, from, channel, phoneModel, IMEI, HttpClientUtil.getIpAdrress(request));
-        } catch (Exception e) {
-            //logger.debug("短信验证码快速登录出错" + e.getMessage());
-            e.printStackTrace();
-            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.SMSCODELOGIN_ERROR);
-        }
-    }
+//    @RequestMapping(value = "/smsCodeLogin", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap smsCodeLogin(HttpServletRequest request, String mobile, String smsCode, String from, String channel, String phoneModel, String IMEI) throws Exception {
+//        logger.info("短信验证码登录接口参数mobile=" + mobile);
+//        try {
+//            if (StringUtils.isEmpty(mobile) || StringUtils.isEmpty(mobile)) {
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.MOBILE_ERROR);
+//            }
+//            return loginService.smsCodeLogin(mobile, smsCode, from, channel, phoneModel, IMEI, HttpClientUtil.getIpAdrress(request));
+//        } catch (Exception e) {
+//            //logger.debug("短信验证码快速登录出错" + e.getMessage());
+//            e.printStackTrace();
+//            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.SMSCODELOGIN_ERROR);
+//        }
+//    }
 
     /**
      * 发送快速登录验证码短信
@@ -92,21 +92,21 @@ public class LoginController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/logoff", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap logoff(Integer id, String token) throws Exception {
-        logger.info("用户登出接口参数memberId=" + id);
-        try {
-            if (id == null || StringUtils.isEmpty(token)) {
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }
-            return loginService.logout(id);
-        } catch (Exception e) {
-            logger.debug("用户登出接口异常" + e.getMessage());
-            e.printStackTrace();
-            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.LOGIN_ERROR);
-        }
-    }
+//    @RequestMapping(value = "/logoff", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap logoff(Integer id, String token) throws Exception {
+//        logger.info("用户登出接口参数memberId=" + id);
+//        try {
+//            if (id == null || StringUtils.isEmpty(token)) {
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//            }
+//            return loginService.logout(id);
+//        } catch (Exception e) {
+//            logger.debug("用户登出接口异常" + e.getMessage());
+//            e.printStackTrace();
+//            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.LOGIN_ERROR);
+//        }
+//    }
 
 
 

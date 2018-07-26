@@ -125,25 +125,25 @@ public class AccountController {
      * @param token
      * @return
      */
-    @RequestMapping(value = "/whetherTheDowngrade", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap whetherTheDowngrade(Integer memberId, String token) {
-        try {
-            if (memberId == null || StringUtils.isEmpty(token)) {
-                logger.info("查询上个月是否降级接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }
-            if (!validateTokenService.validataToken(token, memberId)) {
-                logger.info("查询上个月是否降级接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
-            return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, accountService.whetherTheDowngrade(memberId));
-        } catch (Exception e) {
-            logger.error("查询上个月是否降级接口异常=" + e.getMessage());
-            e.printStackTrace();
-            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
-        }
-    }
+//    @RequestMapping(value = "/whetherTheDowngrade", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap whetherTheDowngrade(Integer memberId, String token) {
+//        try {
+//            if (memberId == null || StringUtils.isEmpty(token)) {
+//                logger.info("查询上个月是否降级接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//            }
+//            if (!validateTokenService.validataToken(token, memberId)) {
+//                logger.info("查询上个月是否降级接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
+//            return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, accountService.whetherTheDowngrade(memberId));
+//        } catch (Exception e) {
+//            logger.error("查询上个月是否降级接口异常=" + e.getMessage());
+//            e.printStackTrace();
+//            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
+//        }
+//    }
 
     /*@RequestMapping(value = "/test", method = RequestMethod.POST)
     @ResponseBody

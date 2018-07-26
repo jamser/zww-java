@@ -61,41 +61,41 @@ public class DollController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/getIosDollTopicList", method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, Object> getIosDollTopicList(HttpServletRequest request) throws Exception {
-        Map<String, Object> resultMap = new HashedMap<String, Object>();
-        try {
-            // 验证token有效性
-
-            List<DollTopic> dollTopic = new ArrayList<DollTopic>();
-            DollTopic all = new DollTopic();
-            all.setId(0);
-            all.setDollId(0);
-            all.setDollName("全部");
-            all.setRoomType(-1);
-            all.setTopicType(0);
-            all.setTopicName("全部");
-            dollTopic.add(all);
-            List<DollTopic> dollTopicList = dollService.getDollTopics();
-            if (dollTopicList != null && dollTopicList.size() > 0) {
-                dollTopic.addAll(dollTopicList);
-            }
-            resultMap.put("resultData", dollTopic);
-            resultMap.put("success", Enviroment.RETURN_SUCCESS);
-            resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
-            resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
-
-            return resultMap;
-        } catch (Exception e) {
-            logger.error("获取娃娃机列表出错", e);
-            //throw e;
-            resultMap.put("success", Enviroment.RETURN_FAILE);
-            resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
-            resultMap.put("message", "查询房间主题列表信息失败");
-            return resultMap;
-        }
-    }
+//    @RequestMapping(value = "/getIosDollTopicList", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Map<String, Object> getIosDollTopicList(HttpServletRequest request) throws Exception {
+//        Map<String, Object> resultMap = new HashedMap<String, Object>();
+//        try {
+//            // 验证token有效性
+//
+//            List<DollTopic> dollTopic = new ArrayList<DollTopic>();
+//            DollTopic all = new DollTopic();
+//            all.setId(0);
+//            all.setDollId(0);
+//            all.setDollName("全部");
+//            all.setRoomType(-1);
+//            all.setTopicType(0);
+//            all.setTopicName("全部");
+//            dollTopic.add(all);
+//            List<DollTopic> dollTopicList = dollService.getDollTopics();
+//            if (dollTopicList != null && dollTopicList.size() > 0) {
+//                dollTopic.addAll(dollTopicList);
+//            }
+//            resultMap.put("resultData", dollTopic);
+//            resultMap.put("success", Enviroment.RETURN_SUCCESS);
+//            resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
+//            resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
+//
+//            return resultMap;
+//        } catch (Exception e) {
+//            logger.error("获取娃娃机列表出错", e);
+//            //throw e;
+//            resultMap.put("success", Enviroment.RETURN_FAILE);
+//            resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
+//            resultMap.put("message", "查询房间主题列表信息失败");
+//            return resultMap;
+//        }
+//    }
 
     /**
      * 房间详情(根据dollCode查询)
@@ -136,27 +136,27 @@ public class DollController {
      * @return 房间详情
      * @throws Exception
      */
-    @RequestMapping(value = "/spareRoom", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap spareRoom(Integer memberId, String token) {
-        try {
-            if (memberId == null || StringUtils.isEmpty(token)) {
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }
-            if (!validateTokenService.validataToken(token, memberId)) {
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
-            Doll doll = dollService.spareRoom();
-            if (doll == null) {
-                return new ResultMap(Enviroment.FAILE_CODE, Enviroment.NO_LIANXIFANG);
-            } else {
-                return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, doll);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
-        }
-    }
+//    @RequestMapping(value = "/spareRoom", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap spareRoom(Integer memberId, String token) {
+//        try {
+//            if (memberId == null || StringUtils.isEmpty(token)) {
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//            }
+//            if (!validateTokenService.validataToken(token, memberId)) {
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
+//            Doll doll = dollService.spareRoom();
+//            if (doll == null) {
+//                return new ResultMap(Enviroment.FAILE_CODE, Enviroment.NO_LIANXIFANG);
+//            } else {
+//                return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, doll);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
+//        }
+//    }
 
     /**
      * 主题列表(旧)
@@ -165,48 +165,48 @@ public class DollController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/getDollTopicList", method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, Object> getDollTopicList(HttpServletRequest request) throws Exception {
-        Map<String, Object> resultMap = new HashedMap<>();
-        try {
-            // 验证token有效性
-            /*if (request.getParameter("token") == null || "".equals(request.getParameter("token"))
-                    || !validateTokenService.validataToken(request.getParameter("token"))) {
-                resultMap.put("success", Enviroment.RETURN_FAILE);
-                resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
-                resultMap.put("message", Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-
-                return resultMap;
-            }*/
-            List<DollTopic> dollTopic = new ArrayList<DollTopic>();
-            DollTopic all = new DollTopic();
-            all.setId(0);
-            all.setDollId(0);
-            all.setDollName("全部");
-            all.setRoomType(-1);
-            all.setTopicType(0);
-            all.setTopicName("全部");
-            dollTopic.add(all);
-            List<DollTopic> dollTopicList = dollService.getDollTopics();
-            if (dollTopicList != null && dollTopicList.size() > 0) {
-                dollTopic.addAll(dollTopicList);
-            }
-            resultMap.put("resultData", dollTopic);
-            resultMap.put("success", Enviroment.RETURN_SUCCESS);
-            resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
-            resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
-
-            return resultMap;
-        } catch (Exception e) {
-            logger.error("获取娃娃机列表出错", e);
-            //throw e;
-            resultMap.put("success", Enviroment.RETURN_FAILE);
-            resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
-            resultMap.put("message", "查询房间主题列表信息失败");
-            return resultMap;
-        }
-    }
+//    @RequestMapping(value = "/getDollTopicList", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Map<String, Object> getDollTopicList(HttpServletRequest request) throws Exception {
+//        Map<String, Object> resultMap = new HashedMap<>();
+//        try {
+//            // 验证token有效性
+//            /*if (request.getParameter("token") == null || "".equals(request.getParameter("token"))
+//                    || !validateTokenService.validataToken(request.getParameter("token"))) {
+//                resultMap.put("success", Enviroment.RETURN_FAILE);
+//                resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
+//                resultMap.put("message", Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//
+//                return resultMap;
+//            }*/
+//            List<DollTopic> dollTopic = new ArrayList<DollTopic>();
+//            DollTopic all = new DollTopic();
+//            all.setId(0);
+//            all.setDollId(0);
+//            all.setDollName("全部");
+//            all.setRoomType(-1);
+//            all.setTopicType(0);
+//            all.setTopicName("全部");
+//            dollTopic.add(all);
+//            List<DollTopic> dollTopicList = dollService.getDollTopics();
+//            if (dollTopicList != null && dollTopicList.size() > 0) {
+//                dollTopic.addAll(dollTopicList);
+//            }
+//            resultMap.put("resultData", dollTopic);
+//            resultMap.put("success", Enviroment.RETURN_SUCCESS);
+//            resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
+//            resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
+//
+//            return resultMap;
+//        } catch (Exception e) {
+//            logger.error("获取娃娃机列表出错", e);
+//            //throw e;
+//            resultMap.put("success", Enviroment.RETURN_FAILE);
+//            resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
+//            resultMap.put("message", "查询房间主题列表信息失败");
+//            return resultMap;
+//        }
+//    }
 
     /**
      * 主题列表
@@ -215,30 +215,30 @@ public class DollController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/topic", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap topic(String token, String head, Integer version) throws Exception {
-        try {
-            logger.info("主题列表接口参数:token=" + token + "version=" + version);
-            if (!"ios".equals(head)) {
-                //验证参数
-                if (StringUtils.isEmpty(token)) {
-                    logger.info("主题列表接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
-                    return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-                }
-                //验证token
-                if (!validateTokenService.validataToken(token)) {
-                    logger.info("主题列表接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-                    return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-                }
-            }
-            return dollService.getTopic(version);
-        } catch (Exception e) {
-            logger.error("主题列表出错" + e.getMessage());
-            e.printStackTrace();
-            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
-        }
-    }
+//    @RequestMapping(value = "/topic", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap topic(String token, String head, Integer version) throws Exception {
+//        try {
+//            logger.info("主题列表接口参数:token=" + token + "version=" + version);
+//            if (!"ios".equals(head)) {
+//                //验证参数
+//                if (StringUtils.isEmpty(token)) {
+//                    logger.info("主题列表接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//                    return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//                }
+//                //验证token
+//                if (!validateTokenService.validataToken(token)) {
+//                    logger.info("主题列表接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//                    return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//                }
+//            }
+//            return dollService.getTopic(version);
+//        } catch (Exception e) {
+//            logger.error("主题列表出错" + e.getMessage());
+//            e.printStackTrace();
+//            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
+//        }
+//    }
 
     /**
      * 获取娃娃机列表
@@ -250,107 +250,107 @@ public class DollController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/getDollList", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap getDollList(String token, Integer offset, Integer limit, Integer dollTopic, Integer memberId, Integer version) throws Exception {
-        try {
-            logger.info("获取娃娃机列表接口参数：offset=" + offset + ",limit=" + limit + ",token=" + token + ",dollTopic=" + dollTopic + ",memberId=" + memberId);
-            //校验参数
-            if (StringUtils.isEmpty(token)) {
-                logger.info("获取娃娃机列表接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }
-            //验证token
-            if (!validateTokenService.validataToken(token)) {
-                logger.info("获取娃娃机列表接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
-            return dollService.DollList(offset, limit, dollTopic, memberService.isWorker(memberId), version);
-        } catch (Exception e) {
-            logger.info("获取娃娃机列表接口异常=" + e.getMessage());
-            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.PAY_ERROR);
-        }
-    }
+//    @RequestMapping(value = "/getDollList", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap getDollList(String token, Integer offset, Integer limit, Integer dollTopic, Integer memberId, Integer version) throws Exception {
+//        try {
+//            logger.info("获取娃娃机列表接口参数：offset=" + offset + ",limit=" + limit + ",token=" + token + ",dollTopic=" + dollTopic + ",memberId=" + memberId);
+//            //校验参数
+//            if (StringUtils.isEmpty(token)) {
+//                logger.info("获取娃娃机列表接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//            }
+//            //验证token
+//            if (!validateTokenService.validataToken(token)) {
+//                logger.info("获取娃娃机列表接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
+//            return dollService.DollList(offset, limit, dollTopic, memberService.isWorker(memberId), version);
+//        } catch (Exception e) {
+//            logger.info("获取娃娃机列表接口异常=" + e.getMessage());
+//            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.PAY_ERROR);
+//        }
+//    }
 
-    @RequestMapping(value = "/getIosDollList", method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, Object> getIosDollList(HttpServletRequest request, Integer memberId, Integer version) throws Exception {
-        Map<String, Object> resultMap = new HashedMap<String, Object>();
-
-        int offset = 0;
-        int limit = 0;
-        int dollTopic = 0;// 主题参数
-        try {
-            // 验证token有效性
-            /*if (request.getParameter("token") == null || "".equals(request.getParameter("token"))
-                    || !validateTokenService.validataToken(request.getParameter("token"))) {
-				resultMap.put("success", Enviroment.RETURN_FAILE);
-				resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
-				resultMap.put("message", Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-
-				return resultMap;
-			}*/
-
-            //if (!"".equals(request.getParameter("offset")) && request.getParameter("offset") != null) {
-            if (StringUtils.isNotEmpty(request.getParameter("offset"))) {
-                offset = Integer.parseInt(request.getParameter("offset"));
-            } else {
-                offset = 0;
-            }
-            //if (!"".equals(request.getParameter("limit")) && request.getParameter("limit") != null) {
-            if (StringUtils.isNotEmpty(request.getParameter("limit"))) {
-                limit = Integer.parseInt(request.getParameter("limit"));
-            } else {
-                limit = Enviroment.MAX_TABLE_LIMIT;
-            }
-            String sdollTopic = request.getParameter("dollTopic");
-            //System.out.println(sdollTopic);
-            if (StringUtils.isNotEmpty(sdollTopic) && !"-5764607523034234877".equals(sdollTopic)) {
-                dollTopic = Integer.parseInt(sdollTopic);
-            }
-            logger.info("获取娃娃机列表接口参数：offset=" + offset + ",limit=" + limit +
-                    //",token=" + request.getParameter("token") +
-                    ",dollTopic=" + dollTopic + ",memberId=" + memberId);
-            String head = request.getParameter("head");
-            String head1 = request.getHeader("head");
-            logger.info("getIosDollList接口请求head=" + head + "," + head1);
-            List<Doll> dollList = dollService.getDollList(offset, limit, dollTopic, memberService.isWorker(memberId), version);
-            if (dollList != null) {
-                //IOS功能开关
-                SystemPref syspref = systemPrefService.selectByPrimaryKey("IOS_STATE");
-                if ("0".equals(syspref.getValue()) && head1 == null) {
-                    List<Doll> dollListNew = new ArrayList<Doll>();
-                    Doll one = dollList.get(0);
-                    one.setMachineStatus("维修中");
-                    dollListNew.add(one);
-                    resultMap.put("resultData", dollListNew);
-                    resultMap.put("success", Enviroment.RETURN_SUCCESS);
-                    resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
-                    resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
-                } else {
-                    resultMap.put("resultData", dollList);
-                    resultMap.put("success", Enviroment.RETURN_SUCCESS);
-                    resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
-                    resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
-                }
-
-            } else if (dollList == null) {
-                resultMap.put("success", Enviroment.RETURN_FAILE);
-                resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
-                resultMap.put("message", Enviroment.RETURN_FAILE_MESSAGE);
-            }
-            logger.info("获取娃娃机列表resultMap=" + Enviroment.RETURN_SUCCESS_MESSAGE);
-            return resultMap;
-        } catch (Exception e) {
-            logger.error("获取娃娃机列表出错", e);
-            //throw e;
-            resultMap.put("success", Enviroment.RETURN_FAILE);
-            resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
-            resultMap.put("message", "获取娃娃机列表信息失败");
-            return resultMap;
-        }
-
-    }
+//    @RequestMapping(value = "/getIosDollList", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Map<String, Object> getIosDollList(HttpServletRequest request, Integer memberId, Integer version) throws Exception {
+//        Map<String, Object> resultMap = new HashedMap<String, Object>();
+//
+//        int offset = 0;
+//        int limit = 0;
+//        int dollTopic = 0;// 主题参数
+//        try {
+//            // 验证token有效性
+//            /*if (request.getParameter("token") == null || "".equals(request.getParameter("token"))
+//                    || !validateTokenService.validataToken(request.getParameter("token"))) {
+//				resultMap.put("success", Enviroment.RETURN_FAILE);
+//				resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
+//				resultMap.put("message", Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//
+//				return resultMap;
+//			}*/
+//
+//            //if (!"".equals(request.getParameter("offset")) && request.getParameter("offset") != null) {
+//            if (StringUtils.isNotEmpty(request.getParameter("offset"))) {
+//                offset = Integer.parseInt(request.getParameter("offset"));
+//            } else {
+//                offset = 0;
+//            }
+//            //if (!"".equals(request.getParameter("limit")) && request.getParameter("limit") != null) {
+//            if (StringUtils.isNotEmpty(request.getParameter("limit"))) {
+//                limit = Integer.parseInt(request.getParameter("limit"));
+//            } else {
+//                limit = Enviroment.MAX_TABLE_LIMIT;
+//            }
+//            String sdollTopic = request.getParameter("dollTopic");
+//            //System.out.println(sdollTopic);
+//            if (StringUtils.isNotEmpty(sdollTopic) && !"-5764607523034234877".equals(sdollTopic)) {
+//                dollTopic = Integer.parseInt(sdollTopic);
+//            }
+//            logger.info("获取娃娃机列表接口参数：offset=" + offset + ",limit=" + limit +
+//                    //",token=" + request.getParameter("token") +
+//                    ",dollTopic=" + dollTopic + ",memberId=" + memberId);
+//            String head = request.getParameter("head");
+//            String head1 = request.getHeader("head");
+//            logger.info("getIosDollList接口请求head=" + head + "," + head1);
+//            List<Doll> dollList = dollService.getDollList(offset, limit, dollTopic, memberService.isWorker(memberId), version);
+//            if (dollList != null) {
+//                //IOS功能开关
+//                SystemPref syspref = systemPrefService.selectByPrimaryKey("IOS_STATE");
+//                if ("0".equals(syspref.getValue()) && head1 == null) {
+//                    List<Doll> dollListNew = new ArrayList<Doll>();
+//                    Doll one = dollList.get(0);
+//                    one.setMachineStatus("维修中");
+//                    dollListNew.add(one);
+//                    resultMap.put("resultData", dollListNew);
+//                    resultMap.put("success", Enviroment.RETURN_SUCCESS);
+//                    resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
+//                    resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
+//                } else {
+//                    resultMap.put("resultData", dollList);
+//                    resultMap.put("success", Enviroment.RETURN_SUCCESS);
+//                    resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
+//                    resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
+//                }
+//
+//            } else if (dollList == null) {
+//                resultMap.put("success", Enviroment.RETURN_FAILE);
+//                resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
+//                resultMap.put("message", Enviroment.RETURN_FAILE_MESSAGE);
+//            }
+//            logger.info("获取娃娃机列表resultMap=" + Enviroment.RETURN_SUCCESS_MESSAGE);
+//            return resultMap;
+//        } catch (Exception e) {
+//            logger.error("获取娃娃机列表出错", e);
+//            //throw e;
+//            resultMap.put("success", Enviroment.RETURN_FAILE);
+//            resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
+//            resultMap.put("message", "获取娃娃机列表信息失败");
+//            return resultMap;
+//        }
+//
+//    }
 
     /**
      * 房间列表(H5用)
@@ -400,113 +400,113 @@ public class DollController {
     }
 
     // 获取娃娃机列表分页
-    @RequestMapping(value = "/getDollListTotalPage", method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, Object> getDollListTotalPage(String token, Integer pageSize) throws Exception {
-
-        Map<String, Object> resultMap = new HashedMap<String, Object>();
-        try {
-            // 验证token有效性
-            if (StringUtils.isEmpty(token) || !validateTokenService.validataToken(token)) {
-                resultMap.put("success", Enviroment.RETURN_FAILE);
-                resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
-                resultMap.put("message", Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-
-                return resultMap;
-            }
-
-            if (pageSize == null) {
-                pageSize = 10;
-            }
-
-            int totalCount = dollService.getTotalCount();
-            logger.info("totalCount=" + totalCount);
-            int totalPage = (totalCount - 1) / pageSize + 1;
-            logger.info("totalPage=" + totalPage);
-            if (totalCount > 0) {
-                resultMap.put("totalPages", totalPage);
-                resultMap.put("success", Enviroment.RETURN_SUCCESS);
-                resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
-                resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
-            } else {
-                resultMap.put("success", Enviroment.RETURN_FAILE);
-                resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
-                resultMap.put("message", Enviroment.RETURN_NODATA_MESSAGE);
-            }
-            //logger.info("获取娃娃机列表分页resultMap=" + resultMap);
-            return resultMap;
-        } catch (Exception e) {
-            logger.error("获取娃娃机列表分页出错", e);
-            throw e;
-        }
-
-    }
+//    @RequestMapping(value = "/getDollListTotalPage", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Map<String, Object> getDollListTotalPage(String token, Integer pageSize) throws Exception {
+//
+//        Map<String, Object> resultMap = new HashedMap<String, Object>();
+//        try {
+//            // 验证token有效性
+//            if (StringUtils.isEmpty(token) || !validateTokenService.validataToken(token)) {
+//                resultMap.put("success", Enviroment.RETURN_FAILE);
+//                resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
+//                resultMap.put("message", Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//
+//                return resultMap;
+//            }
+//
+//            if (pageSize == null) {
+//                pageSize = 10;
+//            }
+//
+//            int totalCount = dollService.getTotalCount();
+//            logger.info("totalCount=" + totalCount);
+//            int totalPage = (totalCount - 1) / pageSize + 1;
+//            logger.info("totalPage=" + totalPage);
+//            if (totalCount > 0) {
+//                resultMap.put("totalPages", totalPage);
+//                resultMap.put("success", Enviroment.RETURN_SUCCESS);
+//                resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
+//                resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
+//            } else {
+//                resultMap.put("success", Enviroment.RETURN_FAILE);
+//                resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
+//                resultMap.put("message", Enviroment.RETURN_NODATA_MESSAGE);
+//            }
+//            //logger.info("获取娃娃机列表分页resultMap=" + resultMap);
+//            return resultMap;
+//        } catch (Exception e) {
+//            logger.error("获取娃娃机列表分页出错", e);
+//            throw e;
+//        }
+//
+//    }
 
     // 获取娃娃机列表分页
-    @RequestMapping(value = "/getDollListPage", method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, Object> getDollListPage(HttpServletRequest request, String token, Integer memberId, Integer version) throws Exception {
-
-        Map<String, Object> resultMap = new HashedMap<>();
-
-        int pageNo = 0;
-        int pageSize = 0;
-        int dollTopic = 0;
-
-        try {
-            //验证token有效性
-            /*if (StringUtils.isEmpty(token) || !validateTokenService.validataToken(token)) {
-                resultMap.put("success", Enviroment.RETURN_FAILE);
-                resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
-                resultMap.put("message", Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-                return resultMap;
-            }*/
-            if (StringUtils.isNotEmpty(request.getParameter("pageNo"))) {
-                pageNo = Integer.parseInt(request.getParameter("pageNo"));
-            } else {
-                pageNo = 1;
-            }
-            //if (!"".equals(request.getParameter("pageSize")) && request.getParameter("pageSize") != null) {
-            if (StringUtils.isNotEmpty(request.getParameter("pageSize"))) {
-                pageSize = Integer.parseInt(request.getParameter("pageSize"));
-            } else {
-                pageSize = 10;
-            }
-            if (StringUtils.isNotEmpty(request.getParameter("dollTopic"))) {
-                dollTopic = Integer.parseInt(request.getParameter("dollTopic"));
-            }
-            String head = request.getParameter("head");
-            String head1 = request.getHeader("head");
-            logger.info("getDollListPage********请求head=" + head + "," + head1);
-            int offset = pageSize * (pageNo - 1);
-            if (offset < 0) {
-                offset = 0;
-            }
-            logger.info("获取娃娃机列表分页传入参数offset=" + offset + ",pageSize=" + pageSize + ",dollTopic=" + dollTopic + ",memberId=" + memberId);
-            //加载主题列表房间
-            List<Doll> dollList = dollService.getDollListPage(offset, pageSize, dollTopic, memberService.isWorker(memberId), version);
-            if (dollList != null) {
-                resultMap.put("resultData", dollList);
-                resultMap.put("success", Enviroment.RETURN_SUCCESS);
-                resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
-                resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
-            } else {
-                resultMap.put("success", Enviroment.RETURN_FAILE);
-                resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
-                resultMap.put("message", Enviroment.RETURN_FAILE_MESSAGE);
-            }
-            //logger.info("获取娃娃机列表分页resultMap=" + resultMap);
-            return resultMap;
-        } catch (Exception e) {
-            logger.error("获取娃娃机列表分页出错", e);
-            //throw e;
-            resultMap.put("success", Enviroment.RETURN_FAILE);
-            resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
-            resultMap.put("message", "获取娃娃机列表信息失败");
-            return resultMap;
-        }
-
-    }
+//    @RequestMapping(value = "/getDollListPage", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Map<String, Object> getDollListPage(HttpServletRequest request, String token, Integer memberId, Integer version) throws Exception {
+//
+//        Map<String, Object> resultMap = new HashedMap<>();
+//
+//        int pageNo = 0;
+//        int pageSize = 0;
+//        int dollTopic = 0;
+//
+//        try {
+//            //验证token有效性
+//            /*if (StringUtils.isEmpty(token) || !validateTokenService.validataToken(token)) {
+//                resultMap.put("success", Enviroment.RETURN_FAILE);
+//                resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
+//                resultMap.put("message", Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//                return resultMap;
+//            }*/
+//            if (StringUtils.isNotEmpty(request.getParameter("pageNo"))) {
+//                pageNo = Integer.parseInt(request.getParameter("pageNo"));
+//            } else {
+//                pageNo = 1;
+//            }
+//            //if (!"".equals(request.getParameter("pageSize")) && request.getParameter("pageSize") != null) {
+//            if (StringUtils.isNotEmpty(request.getParameter("pageSize"))) {
+//                pageSize = Integer.parseInt(request.getParameter("pageSize"));
+//            } else {
+//                pageSize = 10;
+//            }
+//            if (StringUtils.isNotEmpty(request.getParameter("dollTopic"))) {
+//                dollTopic = Integer.parseInt(request.getParameter("dollTopic"));
+//            }
+//            String head = request.getParameter("head");
+//            String head1 = request.getHeader("head");
+//            logger.info("getDollListPage********请求head=" + head + "," + head1);
+//            int offset = pageSize * (pageNo - 1);
+//            if (offset < 0) {
+//                offset = 0;
+//            }
+//            logger.info("获取娃娃机列表分页传入参数offset=" + offset + ",pageSize=" + pageSize + ",dollTopic=" + dollTopic + ",memberId=" + memberId);
+//            //加载主题列表房间
+//            List<Doll> dollList = dollService.getDollListPage(offset, pageSize, dollTopic, memberService.isWorker(memberId), version);
+//            if (dollList != null) {
+//                resultMap.put("resultData", dollList);
+//                resultMap.put("success", Enviroment.RETURN_SUCCESS);
+//                resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
+//                resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
+//            } else {
+//                resultMap.put("success", Enviroment.RETURN_FAILE);
+//                resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
+//                resultMap.put("message", Enviroment.RETURN_FAILE_MESSAGE);
+//            }
+//            //logger.info("获取娃娃机列表分页resultMap=" + resultMap);
+//            return resultMap;
+//        } catch (Exception e) {
+//            logger.error("获取娃娃机列表分页出错", e);
+//            //throw e;
+//            resultMap.put("success", Enviroment.RETURN_FAILE);
+//            resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
+//            resultMap.put("message", "获取娃娃机列表信息失败");
+//            return resultMap;
+//        }
+//
+//    }
 
 
     /*

@@ -79,24 +79,24 @@ public class AboutUsController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/systemPref", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap systemPref(String code) throws Exception {
-        try {
-            if (StringUtils.isEmpty(code)) {
-                return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, aboutUsService.selectAll());
-            }
-            SystemPref systemPref = aboutUsService.selectByPrimaryKey(code);
-            if (systemPref != null) {
-                return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, systemPref);
-            } else {
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_FAILE_MESSAGE);
-            }
-        } catch (Exception e) {
-            logger.error("获取系统参数出错", e);
-            throw e;
-        }
-    }
+//    @RequestMapping(value = "/systemPref", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap systemPref(String code) throws Exception {
+//        try {
+//            if (StringUtils.isEmpty(code)) {
+//                return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, aboutUsService.selectAll());
+//            }
+//            SystemPref systemPref = aboutUsService.selectByPrimaryKey(code);
+//            if (systemPref != null) {
+//                return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, systemPref);
+//            } else {
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_FAILE_MESSAGE);
+//            }
+//        } catch (Exception e) {
+//            logger.error("获取系统参数出错", e);
+//            throw e;
+//        }
+//    }
 
     // 获取版本号
 
@@ -104,45 +104,45 @@ public class AboutUsController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/getVersion", method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, Object> getVersion(String appKey, String token) throws Exception {
-        //logger.info("获取版本号接口参数appKey=" + appKey);
-        Map<String, Object> resultMap = new HashedMap<String, Object>();
-        try {
-            // 验证token有效性
-            /*if (token == null || "".equals(token) || !validateTokenService.validataToken(token)) {
-                resultMap.put("success", Enviroment.RETURN_FAILE);
-				resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
-				resultMap.put("message", Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-				return resultMap;
-			}*/
-            if (StringUtils.isEmpty(appKey)){
-                resultMap.put("success", Enviroment.RETURN_FAILE);
-				resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE1);
-				resultMap.put("message", Enviroment.RETURN_INVALID_PARA_MESSAGE);
-				return resultMap;
-            }
-            TAppVersion version = appVersionService.selectByPrimaryKey(appKey);
-            //logger.info("获取版本号version=" + version);
-            if (version != null) {
-                //logger.info("获取版本号version=" + version);
-                resultMap.put("resultData", version);
-                resultMap.put("success", Enviroment.RETURN_SUCCESS);
-                resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
-                resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
-            } else {
-                resultMap.put("success", Enviroment.RETURN_FAILE);
-                resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
-                resultMap.put("message", Enviroment.RETURN_FAILE_MESSAGE);
-            }
-            //logger.info("获取版本号resultMap=" + resultMap);
-            return resultMap;
-        } catch (Exception e) {
-            logger.error("获取版本号出错", e);
-            throw e;
-        }
-    }
+//    @RequestMapping(value = "/getVersion", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Map<String, Object> getVersion(String appKey, String token) throws Exception {
+//        //logger.info("获取版本号接口参数appKey=" + appKey);
+//        Map<String, Object> resultMap = new HashedMap<String, Object>();
+//        try {
+//            // 验证token有效性
+//            /*if (token == null || "".equals(token) || !validateTokenService.validataToken(token)) {
+//                resultMap.put("success", Enviroment.RETURN_FAILE);
+//				resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE);
+//				resultMap.put("message", Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//				return resultMap;
+//			}*/
+//            if (StringUtils.isEmpty(appKey)){
+//                resultMap.put("success", Enviroment.RETURN_FAILE);
+//				resultMap.put("statusCode", Enviroment.RETURN_UNAUTHORIZED_CODE1);
+//				resultMap.put("message", Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//				return resultMap;
+//            }
+//            TAppVersion version = appVersionService.selectByPrimaryKey(appKey);
+//            //logger.info("获取版本号version=" + version);
+//            if (version != null) {
+//                //logger.info("获取版本号version=" + version);
+//                resultMap.put("resultData", version);
+//                resultMap.put("success", Enviroment.RETURN_SUCCESS);
+//                resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
+//                resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
+//            } else {
+//                resultMap.put("success", Enviroment.RETURN_FAILE);
+//                resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
+//                resultMap.put("message", Enviroment.RETURN_FAILE_MESSAGE);
+//            }
+//            //logger.info("获取版本号resultMap=" + resultMap);
+//            return resultMap;
+//        } catch (Exception e) {
+//            logger.error("获取版本号出错", e);
+//            throw e;
+//        }
+//    }
 
     // 获取版本隐藏
 
@@ -152,46 +152,46 @@ public class AboutUsController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/getVersionHide", method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, Object> getVersionHide(String appKey, String version) throws Exception {
-        //logger.info("获取版本隐藏接口参数appKey=" + appKey + "version=" + version);
-        Map<String, Object> resultMap = new HashedMap<String, Object>();
-        try {
-            TAppVersion versionHide = appVersionService.selectVersionHide(appKey, version);
-            //logger.info("获取版本隐藏versionHide=" + versionHide);
-                /*if (version != null) {
-                    resultMap.put("resultData", versionHide);
-					resultMap.put("success", Enviroment.RETURN_SUCCESS);
-					resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
-					resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
-				} else {
-					resultMap.put("success", Enviroment.RETURN_FAILE);
-					resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
-					resultMap.put("message", Enviroment.RETURN_FAILE_MESSAGE);
-				}*/
-            Integer curVersion = Integer.parseInt(version.replace(".", ""));
-            Integer dbVersion = Integer.parseInt(versionHide.getVersion().replace(".", ""));
-            if (versionHide != null && curVersion < dbVersion) {
-                //logger.info("获取版本号version=" + versionHide);
-                //resultMap.put("resultData", versionHide);
-                //versionHide = new TAppVersion();
-                //versionHide.setAppKey("iOS");
-                //versionHide.setUpgradeUrl("itms-apps://itunes.apple.com/cn/app/id1314921684?mt=8");
-                resultMap.put("resultData", versionHide);
-                resultMap.put("success", Enviroment.RETURN_SUCCESS);
-                resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
-                resultMap.put("message", Enviroment.RETURN_FAILE_MESSAGE);
-            } else {
-                resultMap.put("success", Enviroment.RETURN_FAILE);
-                resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
-                resultMap.put("message", Enviroment.RETURN_FAILE_MESSAGE);
-            }
-            //logger.info("获取版本隐藏resultMap=" + resultMap);
-            return resultMap;
-        } catch (Exception e) {
-            logger.error("获取版本隐藏出错", e);
-            throw e;
-        }
-    }
+//    @RequestMapping(value = "/getVersionHide", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Map<String, Object> getVersionHide(String appKey, String version) throws Exception {
+//        //logger.info("获取版本隐藏接口参数appKey=" + appKey + "version=" + version);
+//        Map<String, Object> resultMap = new HashedMap<String, Object>();
+//        try {
+//            TAppVersion versionHide = appVersionService.selectVersionHide(appKey, version);
+//            //logger.info("获取版本隐藏versionHide=" + versionHide);
+//                /*if (version != null) {
+//                    resultMap.put("resultData", versionHide);
+//					resultMap.put("success", Enviroment.RETURN_SUCCESS);
+//					resultMap.put("statusCode", Enviroment.RETURN_SUCCESS_CODE);
+//					resultMap.put("message", Enviroment.RETURN_SUCCESS_MESSAGE);
+//				} else {
+//					resultMap.put("success", Enviroment.RETURN_FAILE);
+//					resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
+//					resultMap.put("message", Enviroment.RETURN_FAILE_MESSAGE);
+//				}*/
+//            Integer curVersion = Integer.parseInt(version.replace(".", ""));
+//            Integer dbVersion = Integer.parseInt(versionHide.getVersion().replace(".", ""));
+//            if (versionHide != null && curVersion < dbVersion) {
+//                //logger.info("获取版本号version=" + versionHide);
+//                //resultMap.put("resultData", versionHide);
+//                //versionHide = new TAppVersion();
+//                //versionHide.setAppKey("iOS");
+//                //versionHide.setUpgradeUrl("itms-apps://itunes.apple.com/cn/app/id1314921684?mt=8");
+//                resultMap.put("resultData", versionHide);
+//                resultMap.put("success", Enviroment.RETURN_SUCCESS);
+//                resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
+//                resultMap.put("message", Enviroment.RETURN_FAILE_MESSAGE);
+//            } else {
+//                resultMap.put("success", Enviroment.RETURN_FAILE);
+//                resultMap.put("statusCode", Enviroment.RETURN_FAILE_CODE);
+//                resultMap.put("message", Enviroment.RETURN_FAILE_MESSAGE);
+//            }
+//            //logger.info("获取版本隐藏resultMap=" + resultMap);
+//            return resultMap;
+//        } catch (Exception e) {
+//            logger.error("获取版本隐藏出错", e);
+//            throw e;
+//        }
+//    }
 }

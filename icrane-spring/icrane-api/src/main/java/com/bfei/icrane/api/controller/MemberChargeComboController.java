@@ -36,35 +36,35 @@ public class MemberChargeComboController {
      * @param token    用户Token
      * @return
      */
-    @RequestMapping(value = "/weeks", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap weeksCombo(Integer memberId, String token) {
-        logger.info("周卡领取接口参数memberId=" + memberId + "token" + token);
-        try {
-            //验证参数
-            if (memberId == null || token == null || "".equals(token)) {
-                logger.info("周卡领取接口异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }
-            //访问间隔限制
-            RedisUtil redisUtil = new RedisUtil();
-            if (redisUtil.getString("weeks" + memberId) != null) {
-                logger.info("周卡领取失败=" + Enviroment.PLEASE_SLOW_DOWN);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.PLEASE_SLOW_DOWN);
-            }
-            redisUtil.setString("weeks" + memberId, "", Enviroment.ACCESS_CONTROL_TIME);
-            //验证token
-            if (!validateTokenService.validataToken(token, memberId)) {
-                logger.info("周卡领取接口异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
-            return memberChargeComboService.weeksCombo(memberId);
-        } catch (Exception e) {
-            logger.error("周卡领取出错", e);
-            e.printStackTrace();
-            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.COMBO_IN_ABNORMAL);
-        }
-    }
+//    @RequestMapping(value = "/weeks", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap weeksCombo(Integer memberId, String token) {
+//        logger.info("周卡领取接口参数memberId=" + memberId + "token" + token);
+//        try {
+//            //验证参数
+//            if (memberId == null || token == null || "".equals(token)) {
+//                logger.info("周卡领取接口异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//            }
+//            //访问间隔限制
+//            RedisUtil redisUtil = new RedisUtil();
+//            if (redisUtil.getString("weeks" + memberId) != null) {
+//                logger.info("周卡领取失败=" + Enviroment.PLEASE_SLOW_DOWN);
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.PLEASE_SLOW_DOWN);
+//            }
+//            redisUtil.setString("weeks" + memberId, "", Enviroment.ACCESS_CONTROL_TIME);
+//            //验证token
+//            if (!validateTokenService.validataToken(token, memberId)) {
+//                logger.info("周卡领取接口异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
+//            return memberChargeComboService.weeksCombo(memberId);
+//        } catch (Exception e) {
+//            logger.error("周卡领取出错", e);
+//            e.printStackTrace();
+//            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.COMBO_IN_ABNORMAL);
+//        }
+//    }
 
     /**
      * 月卡领取接口
@@ -73,35 +73,35 @@ public class MemberChargeComboController {
      * @param token    用户Token
      * @return
      */
-    @RequestMapping(value = "/month", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap monthCombo(Integer memberId, String token) {
-        logger.info("月卡领取接口参数memberId=" + memberId + "token" + token);
-        try {
-            //验证参数
-            if (memberId == null || token == null || "".equals(token)) {
-                logger.info("月卡领取接口异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }
-            //访问间隔限制
-            RedisUtil redisUtil = new RedisUtil();
-            if (redisUtil.getString("month" + memberId) != null) {
-                logger.info("月卡领取失败=" + Enviroment.PLEASE_SLOW_DOWN);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.PLEASE_SLOW_DOWN);
-            }
-            redisUtil.setString("month" + memberId, "", Enviroment.ACCESS_CONTROL_TIME);
-            //验证token
-            if (!validateTokenService.validataToken(token, memberId)) {
-                logger.info("月卡领取接口异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
-            return memberChargeComboService.monthCombo(memberId);
-        } catch (Exception e) {
-            logger.error("月卡领取出错", e);
-            e.printStackTrace();
-            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.COMBO_IN_ABNORMAL);
-        }
-    }
+//    @RequestMapping(value = "/month", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap monthCombo(Integer memberId, String token) {
+//        logger.info("月卡领取接口参数memberId=" + memberId + "token" + token);
+//        try {
+//            //验证参数
+//            if (memberId == null || token == null || "".equals(token)) {
+//                logger.info("月卡领取接口异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//            }
+//            //访问间隔限制
+//            RedisUtil redisUtil = new RedisUtil();
+//            if (redisUtil.getString("month" + memberId) != null) {
+//                logger.info("月卡领取失败=" + Enviroment.PLEASE_SLOW_DOWN);
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.PLEASE_SLOW_DOWN);
+//            }
+//            redisUtil.setString("month" + memberId, "", Enviroment.ACCESS_CONTROL_TIME);
+//            //验证token
+//            if (!validateTokenService.validataToken(token, memberId)) {
+//                logger.info("月卡领取接口异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
+//            return memberChargeComboService.monthCombo(memberId);
+//        } catch (Exception e) {
+//            logger.error("月卡领取出错", e);
+//            e.printStackTrace();
+//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.COMBO_IN_ABNORMAL);
+//        }
+//    }
 
 
 }
