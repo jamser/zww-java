@@ -165,41 +165,41 @@ public class ChargeController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/redeemCoins", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap redeemCoins(Integer memberId, @RequestParam("orderIds") Long[] orderIds, String token) throws Exception {
-        logger.info("兑换娃娃币接口参数：memberId=" + memberId + "," + "dollId=" + orderIds);
-        try {
-            //验证参数
-            if (memberId == null || StringUtils.isEmpty(token) || orderIds == null || orderIds.length < 1) {
-                logger.info("兑换娃娃币接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
-                return new ResultMap(Enviroment.FAILE_CODE, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }
-            //访问间隔限制
-            RedisUtil redisUtil = new RedisUtil();
-            if (redisUtil.getString("redeemCoins" + memberId) != null) {
-                logger.info("兑换娃娃币失败=" + Enviroment.PLEASE_SLOW_DOWN);
-                return new ResultMap(Enviroment.FAILE_CODE, Enviroment.PLEASE_SLOW_DOWN);
-            }
-            redisUtil.setString("redeemCoins" + memberId, "", Enviroment.ACCESS_SENDDOLL_TIME);
-            // 验证token有效性
-            if (!validateTokenService.validataToken(token, memberId)) {
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
-            Integer countSum = chargeService.insertChargeHistory(new Charge(), memberId, orderIds);
-            logger.info("兑换结果result=" + countSum);
-            if (countSum >= 0) {
-                logger.info("兑换娃娃币countSum=" + countSum);
-                return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, countSum);
-            } else {
-                logger.info("兑换娃娃币失败" + Enviroment.RETURN_FAILE_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_FAILE_MESSAGE);
-            }
-        } catch (Exception e) {
-            logger.error("兑换娃娃币", e);
-            throw e;
-        }
-    }
+//    @RequestMapping(value = "/redeemCoins", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap redeemCoins(Integer memberId, @RequestParam("orderIds") Long[] orderIds, String token) throws Exception {
+//        logger.info("兑换娃娃币接口参数：memberId=" + memberId + "," + "dollId=" + orderIds);
+//        try {
+//            //验证参数
+//            if (memberId == null || StringUtils.isEmpty(token) || orderIds == null || orderIds.length < 1) {
+//                logger.info("兑换娃娃币接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//                return new ResultMap(Enviroment.FAILE_CODE, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//            }
+//            //访问间隔限制
+//            RedisUtil redisUtil = new RedisUtil();
+//            if (redisUtil.getString("redeemCoins" + memberId) != null) {
+//                logger.info("兑换娃娃币失败=" + Enviroment.PLEASE_SLOW_DOWN);
+//                return new ResultMap(Enviroment.FAILE_CODE, Enviroment.PLEASE_SLOW_DOWN);
+//            }
+//            redisUtil.setString("redeemCoins" + memberId, "", Enviroment.ACCESS_SENDDOLL_TIME);
+//            // 验证token有效性
+//            if (!validateTokenService.validataToken(token, memberId)) {
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
+//            Integer countSum = chargeService.insertChargeHistory(new Charge(), memberId, orderIds);
+//            logger.info("兑换结果result=" + countSum);
+//            if (countSum >= 0) {
+//                logger.info("兑换娃娃币countSum=" + countSum);
+//                return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, countSum);
+//            } else {
+//                logger.info("兑换娃娃币失败" + Enviroment.RETURN_FAILE_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_FAILE_MESSAGE);
+//            }
+//        } catch (Exception e) {
+//            logger.error("兑换娃娃币", e);
+//            throw e;
+//        }
+//    }
 
     /**
      * 绑定邀请好友
@@ -210,36 +210,36 @@ public class ChargeController {
      * @return 调用接口
      * @throws Exception
      */
-    @RequestMapping(value = "/invite", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap invite(Integer memberId, String inviteCode, String token) throws Exception {
-        try {
-            logger.info("邀请好友接口参数：" + "memberId=" + memberId + "," + "inviteCode=" + inviteCode + "," + "token=" + token);
-            //验证参数
-            if (memberId == null || StringUtils.isEmpty(token) || StringUtils.isEmpty(inviteCode)) {
-                logger.info("邀请好友接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }
-            //访问间隔限制
-            RedisUtil redisUtil = new RedisUtil();
-            if (redisUtil.getString("invite" + memberId) != null || redisUtil.getString("invite" + inviteCode) != null) {
-                logger.info("邀请好友失败=" + Enviroment.PLEASE_SLOW_DOWN);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.PLEASE_SLOW_DOWN);
-            }
-            redisUtil.setString("invite" + memberId, "", Enviroment.ACCESS_CONTROL_TIME);
-            redisUtil.setString("invite" + inviteCode, "", Enviroment.ACCESS_CONTROL_TIME);
-            //验证token有效性
-            if (!validateTokenService.validataToken(token, memberId)) {
-                logger.info("邀请好友接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
-            return chargeService.invite(memberId, inviteCode);
-        } catch (Exception e) {
-            logger.error("邀请失败异常=" + e.getMessage());
-            e.printStackTrace();
-            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
-        }
-    }
+//    @RequestMapping(value = "/invite", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap invite(Integer memberId, String inviteCode, String token) throws Exception {
+//        try {
+//            logger.info("邀请好友接口参数：" + "memberId=" + memberId + "," + "inviteCode=" + inviteCode + "," + "token=" + token);
+//            //验证参数
+//            if (memberId == null || StringUtils.isEmpty(token) || StringUtils.isEmpty(inviteCode)) {
+//                logger.info("邀请好友接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//            }
+//            //访问间隔限制
+//            RedisUtil redisUtil = new RedisUtil();
+//            if (redisUtil.getString("invite" + memberId) != null || redisUtil.getString("invite" + inviteCode) != null) {
+//                logger.info("邀请好友失败=" + Enviroment.PLEASE_SLOW_DOWN);
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.PLEASE_SLOW_DOWN);
+//            }
+//            redisUtil.setString("invite" + memberId, "", Enviroment.ACCESS_CONTROL_TIME);
+//            redisUtil.setString("invite" + inviteCode, "", Enviroment.ACCESS_CONTROL_TIME);
+//            //验证token有效性
+//            if (!validateTokenService.validataToken(token, memberId)) {
+//                logger.info("邀请好友接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
+//            return chargeService.invite(memberId, inviteCode);
+//        } catch (Exception e) {
+//            logger.error("邀请失败异常=" + e.getMessage());
+//            e.printStackTrace();
+//            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
+//        }
+//    }
 
     /**
      * 展示邀请人
@@ -249,28 +249,28 @@ public class ChargeController {
      * @return 调用接口
      * @throws Exception
      */
-    @RequestMapping(value = "/whoInvite", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap whoInvite(Integer memberId, String token) throws Exception {
-        try {
-            logger.info("展示邀请人接口参数：" + "memberId=" + memberId + "," + "token=" + token);
-            //验证参数
-            if (memberId == null || StringUtils.isEmpty(token)) {
-                logger.info("展示邀请人接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }
-            //验证token有效性
-            if (!validateTokenService.validataToken(token, memberId)) {
-                logger.info("展示邀请人接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
-            return chargeService.whoInvite(memberId);
-        } catch (Exception e) {
-            logger.error("展示邀请人失败异常=" + e.getMessage());
-            e.printStackTrace();
-            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
-        }
-    }
+//    @RequestMapping(value = "/whoInvite", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap whoInvite(Integer memberId, String token) throws Exception {
+//        try {
+//            logger.info("展示邀请人接口参数：" + "memberId=" + memberId + "," + "token=" + token);
+//            //验证参数
+//            if (memberId == null || StringUtils.isEmpty(token)) {
+//                logger.info("展示邀请人接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//            }
+//            //验证token有效性
+//            if (!validateTokenService.validataToken(token, memberId)) {
+//                logger.info("展示邀请人接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
+//            return chargeService.whoInvite(memberId);
+//        } catch (Exception e) {
+//            logger.error("展示邀请人失败异常=" + e.getMessage());
+//            e.printStackTrace();
+//            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
+//        }
+//    }
 
     /**
      * 展示邀请人数
@@ -280,26 +280,26 @@ public class ChargeController {
      * @return 调用接口
      * @throws Exception
      */
-    @RequestMapping(value = "/howInvite", method = RequestMethod.POST)
-    @ResponseBody
-    public ResultMap howInvite(Integer memberId, String token) throws Exception {
-        try {
-            logger.info("展示邀请人数接口参数：" + "memberId=" + memberId + "," + "token=" + token);
-            //验证参数
-            if (memberId == null || StringUtils.isEmpty(token)) {
-                logger.info("展示邀请人数接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-            }
-            //验证token有效性
-            if (!validateTokenService.validataToken(token, memberId)) {
-                logger.info("展示邀请人数接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
-            return chargeService.howInvite(memberId);
-        } catch (Exception e) {
-            logger.error("展示邀请人数失败异常=" + e.getMessage());
-            e.printStackTrace();
-            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
-        }
-    }
+//    @RequestMapping(value = "/howInvite", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResultMap howInvite(Integer memberId, String token) throws Exception {
+//        try {
+//            logger.info("展示邀请人数接口参数：" + "memberId=" + memberId + "," + "token=" + token);
+//            //验证参数
+//            if (memberId == null || StringUtils.isEmpty(token)) {
+//                logger.info("展示邀请人数接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+//            }
+//            //验证token有效性
+//            if (!validateTokenService.validataToken(token, memberId)) {
+//                logger.info("展示邀请人数接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
+//            return chargeService.howInvite(memberId);
+//        } catch (Exception e) {
+//            logger.error("展示邀请人数失败异常=" + e.getMessage());
+//            e.printStackTrace();
+//            return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
+//        }
+//    }
 }
