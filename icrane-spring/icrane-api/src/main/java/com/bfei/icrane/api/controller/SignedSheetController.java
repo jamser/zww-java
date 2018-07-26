@@ -1,23 +1,16 @@
 package com.bfei.icrane.api.controller;
 
-import java.util.Date;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import com.bfei.icrane.common.util.*;
+import com.bfei.icrane.api.service.SignedSheetService;
+import com.bfei.icrane.api.service.SystemPrefService;
+import com.bfei.icrane.common.util.Enviroment;
+import com.bfei.icrane.common.util.ResultMap;
+import com.bfei.icrane.common.util.StringUtils;
 import com.bfei.icrane.core.service.ValidateTokenService;
-import org.apache.commons.collections4.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import com.bfei.icrane.api.service.SignedSheetService;
-import com.bfei.icrane.api.service.SystemPrefService;
-import com.bfei.icrane.core.models.SignedSheet;
-import com.bfei.icrane.core.models.SystemPref;
 
 
 /**
@@ -32,11 +25,7 @@ public class SignedSheetController {
     @Autowired
     SignedSheetService signedSheetService;
     @Autowired
-    SystemPrefService systemPrefService;
-    @Autowired
     ValidateTokenService validateTokenService;
-    /*@Autowired
-    MemberService memberService;*/
 
     /**
      * (旧)签到

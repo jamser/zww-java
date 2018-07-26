@@ -340,6 +340,7 @@ public class SignedSheetServiceImpl implements SignedSheetService {
         if (judgeOpen(memberId)) {
             TurnAnglePojo turnRandom = RandomUtil.getTurnRandom();
 
+
             //修改金额
             Account account = new Account();
             Account select = accountService.select(Integer.valueOf(memberId));
@@ -355,7 +356,11 @@ public class SignedSheetServiceImpl implements SignedSheetService {
             chargeRecord.setCoins(currCoins);
             chargeRecord.setCoinsSum(turnRandom.getCoins());//转盘奖励
             chargeRecord.setInviteCoinsSum(turnRandom.getCoins());
-            chargeRecord.setChargeMethod("转盘奖励");
+            if (turnRandom.getCoins().equals(0)) {
+                chargeRecord.setChargeMethod("转盘奖励-谢谢参与");
+            } else {
+                chargeRecord.setChargeMethod("转盘奖励");
+            }
             chargeRecord.setInviteMemberId(Integer.valueOf(memberId));
             chargeRecord.setType(Enviroment.TYPE_INCOME);
             chargeDao.insertInviteChargeHistory(chargeRecord);

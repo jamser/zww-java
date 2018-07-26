@@ -9,7 +9,8 @@ import lombok.Getter;
 public enum RandomEnum {
     TEN_COIN(0, 10),
     FIFTEEN_COIN(1, 15),
-    FIFTY_COIN(2, 50);
+    FIFTY_COIN(2, 50),
+    Thanks(3, 0);
 
     private Integer code;
 

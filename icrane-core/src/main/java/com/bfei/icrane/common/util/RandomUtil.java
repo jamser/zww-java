@@ -14,13 +14,23 @@ public class RandomUtil {
     public static TurnAnglePojo getTurnRandom() {
         Random random = new Random();
         int i = random.nextInt(100);
-        if (0 <= i && i < 80) {
+        if (0 <= i && i < 45) {
             return getTurnAngle(RandomEnum.TEN_COIN);
-        } else if (80 <= i && i < 95) {
+        } else if (45 <= i && i < 49) {
             return getTurnAngle(RandomEnum.FIFTEEN_COIN);
-        } else {
+        } else if (49 <= i && i < 50) {
             return getTurnAngle(RandomEnum.FIFTY_COIN);
+        } else {
+            return getTurnAngle(RandomEnum.Thanks);
         }
+    }
+
+    public static void main(String[] args) {
+        for (int i=0;i<100;i++) {
+            TurnAnglePojo turnRandom = RandomUtil.getTurnRandom();
+            System.out.println(turnRandom.toString());
+        }
+
     }
 
     private static TurnAnglePojo getTurnAngle(RandomEnum randomEnum) {
@@ -37,6 +47,10 @@ public class RandomUtil {
                 return turnAnglePojo;
             case 2:
                 turnAnglePojo.setAngel(random.nextInt(60) + 151);
+                turnAnglePojo.setCoins(randomEnum.getCoin());
+                return turnAnglePojo;
+            case 3:
+                turnAnglePojo.setAngel(random.nextInt(60) + 271);
                 turnAnglePojo.setCoins(randomEnum.getCoin());
                 return turnAnglePojo;
             default:
