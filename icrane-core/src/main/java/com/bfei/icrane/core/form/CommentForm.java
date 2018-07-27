@@ -20,7 +20,6 @@ public class CommentForm {
     private String token;
 
     @NotEmpty
-    @Length(max = 10)
     private String comment;
 
     @NotNull
