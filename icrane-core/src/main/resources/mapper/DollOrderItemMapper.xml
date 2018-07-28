@@ -115,7 +115,6 @@
         t_doll_order_item a
         INNER JOIN t_doll_order b ON a.order_id = b.id
         LEFT JOIN t_doll c ON a.doll_id = c.id
-        LEFT JOIN doll_info dinfo ON dinfo.dollCode = a.doll_code
         WHERE
         b.order_by = #{memberId,jdbcType=INTEGER}
         <if test="orderStatus == '申请发货'">

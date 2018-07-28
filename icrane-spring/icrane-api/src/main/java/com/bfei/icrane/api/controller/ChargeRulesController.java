@@ -13,10 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -122,12 +119,20 @@ public class ChargeRulesController {
 //    }
 //
 //
-//    @RequestMapping(value = "/getProgressParams", method = RequestMethod.POST)
-//    @ResponseBody
-//    public ResultMap getPayDetail(@RequestParam Integer memberId, @RequestParam String token) throws Exception {
-//        if (!validateTokenService.validataToken(token, memberId)) {
-//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-//        }
-//        return chargeRulesService.getRechargeRuleByPro(memberId);
-//    }
+
+    /**
+     * 充值进度条
+     * @param memberId
+     * @param token
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/getProgressParams", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap getPayDetail(@RequestParam Integer memberId, @RequestParam String token) throws Exception {
+        if (!validateTokenService.validataToken(token, memberId)) {
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+        }
+        return chargeRulesService.getRechargeRuleByPro(memberId);
+    }
 }
