@@ -390,7 +390,7 @@ public class DollController {
                 }
             }
 
-            List<Doll> dollList = dollService.getH5DollList(type, memberService.isWorker(memberId), channels);
+            List<Doll> dollList = dollService.getH5DollList(type, memberService.isWorker(memberId), channels,member.getAccount().getTester());
             return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, dollList);
         } catch (Exception e) {
             //logger.error("获取H5娃娃机列表出错", e);

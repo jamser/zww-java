@@ -80,6 +80,14 @@ public interface DollDao {
      */
     List<Doll> getH5DollTopicList(@Param("type") Integer type, @Param("channels") List<String> channels);
 
+    /**
+     * 测试人员房间列表
+     * @param type
+     * @param channels
+     * @return
+     */
+    List<Doll> getH5DollTopicListByTest(@Param("type") Integer type, @Param("channels") List<String> channels);
+
     //获取娃娃机数据总数量
     int getTotalCount();
 
