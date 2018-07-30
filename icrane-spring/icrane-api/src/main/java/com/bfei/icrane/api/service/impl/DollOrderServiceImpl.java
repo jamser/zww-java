@@ -170,10 +170,15 @@ public class DollOrderServiceImpl implements DollOrderService {
                 TDollInfo dollInfo = new TDollInfo();
                 dollInfo.setDollcode(doll.getDollID());
                 tDollInfoMapper.updateByDollCode(dollInfo);
-                if (tDollInfo.getDolltotal() <= 1) {
-                    sendSms(doll);
+                SystemPref systemPref1 = systemPrefDao.selectByPrimaryKey(Enviroment.STOCK_LOWEST_NUM);
+                if (tDollInfo.getDolltotal().equals(Integer.valueOf(systemPref1.getValue()))) {
+                    logger.info("库存不足={}", tDollInfo.getDolltotal());
+                    sendSms(doll, "SMS_140725948");
                 }
-                logger.info("房间={} 减库存",doll.getName());
+                if (tDollInfo.getDolltotal() <= 1) {
+                    sendSms(doll, "SMS_140550044");
+                }
+                logger.info("房间={} 减库存", doll.getName());
             }
         }
 
@@ -191,10 +196,10 @@ public class DollOrderServiceImpl implements DollOrderService {
         return dollDao.updateByPrimaryKeySelective(doll);
     }
 
-    public void sendSms(Doll doll) {
+    public void sendSms(Doll doll, String template) {
         SystemPref systemPref = systemPrefDao.selectByPrimaryKey(Enviroment.STOCK_NOTIFY);
         try {
-            AliyunServiceImpl.getInstance().sendSMSForCode(systemPref.getValue(), "蓝澳科技", "SMS_140550044", doll.getName());
+            AliyunServiceImpl.getInstance().sendSMSForCode(systemPref.getValue(), "蓝澳科技", template, doll.getName());
             Doll dollNew = new Doll();
             dollNew.setId(doll.getId());
             dollNew.setMachineStatus("未上线");

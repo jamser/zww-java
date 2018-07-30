@@ -201,6 +201,7 @@ public class Enviroment {
     public static final String INVALID_SUCCESS_MESSAGE = "邀请成功";
     public static final String DOLL_NOTIFY_PHONE = "DOLL_NOTIFY_PHONE";
     public static final String STOCK_NOTIFY = "STOCK_NOTIFY";
+    public static final String STOCK_LOWEST_NUM = "STOCK_LOWEST_NUM";//库存预警数量
 
     /**
      * 流水相关
