@@ -269,7 +269,7 @@ public class LocalMachineServiceImpl implements LocalMachineService {
             return process.getReady(userId, dollId);
         }
         if (info.indexOf("gotToy") > 0) {
-            System.out.println("==========向[" + dollId + "]转发机器指令gotToy:" + info);
+            logger.info("抓中成功转发,userId={}",userId);
             return process.getCatch(userId, dollId);
         }
         if (info.indexOf("claw") > 0) {

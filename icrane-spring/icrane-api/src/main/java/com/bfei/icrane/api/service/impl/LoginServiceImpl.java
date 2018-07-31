@@ -199,7 +199,7 @@ public class LoginServiceImpl implements LoginService {
             //储存用户信息
             int result = memberDao.insertMemberBywx(member);
             //新用户抓中娃娃 保证标示
-            redisUtil.setString(RedisKeyGenerator.getMemberToyNum(member.getId()), "0");
+//            redisUtil.setString(RedisKeyGenerator.getMemberToyNum(member.getId()), "0");
             //储存渠道信息
             int result2 = memberDao.insertChannel(member.getId(), channel, null, null);
             //储存微信信息
@@ -666,7 +666,7 @@ public class LoginServiceImpl implements LoginService {
             //储存用户信息
             int result = memberDao.insertMemberBywx(member);
             //新用户抓中娃娃 保证标示
-            redisUtil.setString(RedisKeyGenerator.getMemberToyNum(member.getId()), "0");
+//            redisUtil.setString(RedisKeyGenerator.getMemberToyNum(member.getId()), "0");
             //储存渠道信息
             int result2 = memberDao.insertChannel(member.getId(), channel, null, null);
             //储存微信信息

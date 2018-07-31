@@ -31,7 +31,6 @@ public class TestController {
     @RequestMapping(value = "/test")
     public String Test() throws Exception {
         Account account = accountDao.selectById(4);
-
 //        insetCatchSuccess();
 //        dollRoomService.endPlayByCatchCount(4, 215);
 //        SystemPref systemPref = systemPrefDao.selectByPrimaryKey("STOCK_NOTIFY");

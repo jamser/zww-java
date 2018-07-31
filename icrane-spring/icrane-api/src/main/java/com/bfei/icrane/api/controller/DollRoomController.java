@@ -115,7 +115,7 @@ public class DollRoomController {
     @RequestMapping(value = "/exitDoll", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> exitDoll(@RequestParam Integer memberId, @RequestParam String token) throws Exception {
-        logger.info("离开房接口参数memberId:{},token:{}", memberId, token);
+//        logger.info("离开房接口参数memberId:{},token:{}", memberId, token);
         Map<String, Object> resultMap = new HashedMap<String, Object>();
         try {
             // 验证token有效性

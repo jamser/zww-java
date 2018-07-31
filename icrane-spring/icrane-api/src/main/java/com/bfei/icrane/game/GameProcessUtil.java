@@ -501,7 +501,7 @@ public class GameProcessUtil {
         logger.info("抓中娃娃标示 num={}", num);
         if (null == num || num == 0) {
             addCountGameLock(userId, dollId, GameProcessEnum.GAME_CATCH);
-            redisUtil.delKey(RedisKeyGenerator.getMemberToyNum(userId));//获得抓中娃娃指令后删除用户抓中保障
+//            redisUtil.delKey(RedisKeyGenerator.getMemberToyNum(userId));//获得抓中娃娃指令后删除用户抓中保障
             return true;
         }
         return false;
