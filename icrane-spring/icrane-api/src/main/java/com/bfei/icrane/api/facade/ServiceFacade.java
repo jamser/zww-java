@@ -56,11 +56,11 @@ public class ServiceFacade {
             return false;
         }
         //如抓取成功则生成订单
-        if (catchFlag > 0) {
-            if (dollOrderService.insertOrder(memberId, dollId, 1) <= 0) {
-                return false;
-            }
-        }
+//        if (catchFlag > 0) {
+//            if (dollOrderService.insertOrder(memberId, dollId, 1) <= 0) {
+//                return false;
+//            }
+//        }
         return true;
     }
 

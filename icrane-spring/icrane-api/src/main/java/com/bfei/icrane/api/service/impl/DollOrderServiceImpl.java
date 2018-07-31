@@ -122,7 +122,6 @@ public class DollOrderServiceImpl implements DollOrderService {
         return dollOrderItems;
     }
 
-    @Transactional
     public Integer insertOrder(Integer memberId, Integer dollId, Integer dollNum) {
         Doll doll = dollDao.selectByPrimaryKey(dollId);
         /*if ("3".equals(String.valueOf(doll.getMachineType()))) {

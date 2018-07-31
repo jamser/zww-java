@@ -7,12 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.aliyuncs.exceptions.ClientException;
+import com.bfei.icrane.api.service.DollOrderService;
 import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.dao.*;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.models.vo.CatchVO;
 import com.bfei.icrane.core.pojos.RechargeRulePojp;
 import com.bfei.icrane.core.service.AccountService;
+import com.bfei.icrane.core.service.DollService;
 import com.bfei.icrane.core.service.RechargeRuleService;
 import com.bfei.icrane.core.service.impl.AliyunServiceImpl;
 import com.bfei.icrane.game.GameProcessEnum;
@@ -56,6 +58,8 @@ public class DollRoomServiceImpl implements DollRoomService {
     private DollOrderItemDao dollOrderItemDao;
     @Autowired
     private SystemPrefDao systemPrefDao;
+    @Autowired
+    private DollOrderService dollOrderService;
 
     RedisUtil redisUtil = new RedisUtil();
 
@@ -381,7 +385,6 @@ public class DollRoomServiceImpl implements DollRoomService {
     }
 
     @Override
-    @Transactional
     public boolean endRound(Integer dollId, Integer memberId, Integer catchFlag, String gameNum, String state) {
         // TODO Auto-generated method stub
         //dollRoomDao.clearPlayFlagByDollId(dollId);
@@ -424,6 +427,10 @@ public class DollRoomServiceImpl implements DollRoomService {
 
             //生成抓取次数奖励
 //            insertByCatchLevel(member);
+            //如抓取成功则生成订单
+            if (catchFlag > 0) {
+                dollOrderService.insertOrder(memberId, dollId, 1);
+            }
         }
 
         String machineStatus = machine.getMachineStatus();
