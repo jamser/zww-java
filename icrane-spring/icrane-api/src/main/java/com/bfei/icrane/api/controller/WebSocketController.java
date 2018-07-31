@@ -366,19 +366,9 @@ public class WebSocketController {
                     MachineServiceImpl.sendMsg(roomSession.getDevice() + "|control|weakClaw", this.dollId, roomSession.getMemberId());
                     localMachineService.addClaw(this.userId, dollId);
                 }
-                ;
-                int state = 0;
-                // 判断是否补扣费
-                if (localMachineService.leaveConsume(this.userId, this.dollId)) {
-                    state = 1;
-                    //补扣费
-                    localMachineService.consumeGame(tokenStr, userId, dollId);
-                }
-                ;
 
                 //补游戏记录
-                logger.info("补游戏记录state={}", state);
-                localMachineService.historyGame(tokenStr, userId, dollId, state);
+                localMachineService.historyGame(tokenStr, userId, dollId, 1);
                 localMachineService.onClose(tokenStr, userId, dollId);
                 popMsgFlag = false;
                 //MachineServiceImpl.machineSocketMap.get(this.dollId).close();

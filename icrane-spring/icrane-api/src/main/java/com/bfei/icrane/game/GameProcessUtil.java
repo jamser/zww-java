@@ -455,9 +455,11 @@ public class GameProcessUtil {
     public synchronized boolean getReady(Integer userId, Integer dollId) {
         Integer coinNum = countGameLock(userId, dollId, GameProcessEnum.GAME_COIN);
         Integer num = countGameLock(userId, dollId, GameProcessEnum.GAME_READY);
+        logger.info("getReady==>userId={},dollId={},coinNum={},num={}",userId,dollId,coinNum,num);
         if (num == 0 && coinNum > 0) {
             addCountGameLock(userId, dollId, GameProcessEnum.GAME_READY);
             String gameNum = StringUtils.getCatchHistoryNum().replace("-", "").substring(0, 20);
+            logger.info("getReady==>userId={},dollId={},gameNum={}",userId,dollId,gameNum);
             redisUtil.setString(RedisKeyGenerator.getRoomGameNumKey(userId, dollId), gameNum, CACHE_TIME);//设置游戏编号
             //产生游戏编号 后初始化
             initCountGameLock(userId, dollId, GameProcessEnum.GAME_CLAW);//下抓计数0

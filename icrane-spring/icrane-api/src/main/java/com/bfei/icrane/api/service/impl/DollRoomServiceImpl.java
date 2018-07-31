@@ -427,10 +427,6 @@ public class DollRoomServiceImpl implements DollRoomService {
 
             //生成抓取次数奖励
 //            insertByCatchLevel(member);
-            //如抓取成功则生成订单
-            if (catchFlag > 0) {
-                dollOrderService.insertOrder(memberId, dollId, 1);
-            }
         }
 
         String machineStatus = machine.getMachineStatus();
