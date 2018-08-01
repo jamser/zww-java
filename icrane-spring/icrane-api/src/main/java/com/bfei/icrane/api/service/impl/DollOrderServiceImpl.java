@@ -525,8 +525,8 @@ public class DollOrderServiceImpl implements DollOrderService {
         rankMemberPojo.setSex(member.getGender());
         rankMemberPojo.setUserName(member.getName());
 
-        rankMemberPojo.setRankWeek(dollOrderItemDao.selectByRankWeek(memberId, TenpayUtil.getMondayDayStr(new Date()), TenpayUtil.getNowDate(new Date())).get(0).getNumber());
-        rankMemberPojo.setRankAll(dollOrderItemDao.selectByRankAll(memberId).get(0).getNumber());
+//        rankMemberPojo.setRankWeek(dollOrderItemDao.selectByRankWeek(memberId, TenpayUtil.getMondayDayStr(new Date()), TenpayUtil.getNowDate(new Date())).get(0).getNumber());
+//        rankMemberPojo.setRankAll(dollOrderItemDao.selectByRankAll(memberId).get(0).getNumber());
         List<Rankpojo> rankNow = dollOrderItemDao.selectByRankNow(null);
         List<Rankpojo> rankWeek = dollOrderItemDao.selectByRankWeek(null, TenpayUtil.getMondayDayStr(new Date()), TenpayUtil.getNowDate(new Date()));
         List<Rankpojo> rankAll = dollOrderItemDao.selectByRankAll(null);

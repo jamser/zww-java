@@ -396,11 +396,12 @@ public class WebSocketController {
 
     @OnError
     public void onError(Session session, Throwable error) {
+
         try {
             //redisUtil.delKey(RedisKeyGenerator.getRoomHostKey(this.dollId));
             RoomSession roomSession = roomSessionMap.get(this.dollId);
             if (roomSession != null) {
-                logger.info("onError...........");
+                logger.info("onError...........userId={},dollId={}",userId,dollId);
                 String tokenStr = roomSession.getToken();
                 Integer userId = roomSession.getMemberId();
                 int state = 0;
@@ -413,11 +414,11 @@ public class WebSocketController {
 
 
                 //补游戏记录
-                logger.info("补游戏记录state={}", state);
+                logger.info("补游戏记录userId={},dollId={},state={}", this.userId,this.dollId,state);
                 localMachineService.historyGame(tokenStr, userId, dollId, state);
                 localMachineService.exitDollRoom(tokenStr,userId);
             }
-            logger.error("session处理过程中出现异常");
+            logger.error("session处理过程中出现异常userId={},dollId={}",userId,dollId);
         } catch (Exception e) {
             //heartbeatFlag = false;
             logger.error("关闭连接后处理过程中出现异常", e);

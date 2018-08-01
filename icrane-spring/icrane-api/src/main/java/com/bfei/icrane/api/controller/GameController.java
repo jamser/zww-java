@@ -165,14 +165,14 @@ public class GameController {
             if (!validateTokenService.validataToken(token, memberId)) {
                 return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_UNAUTHORIZED_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
             }
-            if (redisUtil.getString("claw" + memberId+dollId) != null) {
+            if (redisUtil.getString("claw" + memberId + dollId) != null) {
                 return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_UNAUTHORIZED_CODE1, "操作频繁");
             }
-            redisUtil.setString("claw" + memberId+dollId, "", Enviroment.ACCESS_SENDDOLL_TIME);
+            redisUtil.setString("claw" + memberId + dollId, "", Enviroment.ACCESS_SENDDOLL_TIME);
 
             String gameNum = gameService.takeGameNum(memberId, dollId);
             if (gameNum == null || "".equals(gameNum)) {
-                logger.info("claw==>userId={},dollId={},gameNum={}",memberId,dollId,gameNum);
+                logger.info("claw==>userId={},dollId={},gameNum={}", memberId, dollId, gameNum);
                 return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, "游戏开始异常");//游戏开始异常 不扣费
             }
             GameStatusEnum result = gameService.consumePlay(dollId, memberId, state);
@@ -223,10 +223,11 @@ public class GameController {
                 return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_UNAUTHORIZED_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
             }
 
-            if (redisUtil.getString("endRound" + memberId+dollId) != null) {
+            if (redisUtil.getString("endRound" + memberId + dollId) != null) {
+                logger.info("endRound频繁访问userId={},dollId={}", memberId, dollId);
                 return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_UNAUTHORIZED_CODE1, "操作频繁");
             }
-            redisUtil.setString("endRound" + memberId+dollId, "", 3);
+            redisUtil.setString("endRound" + memberId + dollId, "", Enviroment.ACCESS_SENDDOLL_TIME);
             /*Integer userId = gameService.takeToken2Member(token);
             if (userId > 0) {//兼容memberId 传错了 userId
                 memberId = userId;
@@ -234,16 +235,16 @@ public class GameController {
             //String gameNum = StringUtils.getCatchHistoryNum().replace("-", "").substring(0, 20);
             String gameNum = gameService.takeGameNum(memberId, dollId);
             GameStatusEnum result = gameService.endRound(dollId, memberId, gotDoll, gameNum, state);
-                    switch (result) {
-                        case GAME_END_ROUND_SUCCESS:
-                            //频繁抓中娃娃处理
-                            dollRoomService.endPlayByCatchCount(memberId, dollId);
-                            Map<String, Object> gameNumMap = new HashMap<>();
-                            gameNumMap.put("gameNum", gameNum);
-                            String stsTokenUrl = propFileMgr.getProperty("aliyun.sts");
-                            if (stsTokenUrl != null) {
-                                gameNumMap.put("stsTokenUrl", stsTokenUrl + "?userId=" + memberId + "&token=" + token);
-                            }
+            switch (result) {
+                case GAME_END_ROUND_SUCCESS:
+                    //频繁抓中娃娃处理
+                    dollRoomService.endPlayByCatchCount(memberId, dollId);
+                    Map<String, Object> gameNumMap = new HashMap<>();
+                    gameNumMap.put("gameNum", gameNum);
+                    String stsTokenUrl = propFileMgr.getProperty("aliyun.sts");
+                    if (stsTokenUrl != null) {
+                        gameNumMap.put("stsTokenUrl", stsTokenUrl + "?userId=" + memberId + "&token=" + token);
+                    }
 //                    Integer machineType = dollService.selectTypeById(dollId);
 //                    switch (machineType) {
 //                        case 0:

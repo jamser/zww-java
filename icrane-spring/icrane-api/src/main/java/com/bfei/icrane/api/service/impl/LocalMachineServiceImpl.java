@@ -61,7 +61,7 @@ public class LocalMachineServiceImpl implements LocalMachineService {
             params.add(new BasicNameValuePair("token", token));
             params.add(new BasicNameValuePair("state", "1"));
             HttpClientUtil.getInstance().executeByPOST(consumeUrl, params);
-            logger.info("未正常结束补扣费");
+            logger.info("未正常结束补扣费,userId={},dollId={}",userId,dollId);
         }
     }
 
@@ -92,7 +92,7 @@ public class LocalMachineServiceImpl implements LocalMachineService {
                     try {
                         Thread.sleep(10000);
                         HttpClientUtil.getInstance().executeByPOST(endRoundUrl, params);
-                        logger.info("未正常结束补游戏记录");
+                        logger.info("未正常结束补游戏记录userId={},dollId={}",userId,dollId);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -269,7 +269,7 @@ public class LocalMachineServiceImpl implements LocalMachineService {
             return process.getReady(userId, dollId);
         }
         if (info.indexOf("gotToy") > 0) {
-            logger.info("抓中成功转发,userId={}",userId);
+            logger.info("抓中成功转发,userId={},dollId={}",userId,dollId);
             return process.getCatch(userId, dollId);
         }
         if (info.indexOf("claw") > 0) {
