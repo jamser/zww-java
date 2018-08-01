@@ -509,7 +509,7 @@ public class DollRoomServiceImpl implements DollRoomService {
             }
         }//普通房间连续抓中
         else if (dollR.getMachineType().equals(0) || dollR.getMachineType().equals(3)) {
-            List<CatchHistory> catchHistories = catchHistoryDao.selectByDollId(dollId);
+            List<CatchHistory> catchHistories = catchHistoryDao.selectByDollIdLimit5(dollId);
             int count = 0;
             for (CatchHistory catchHistory : catchHistories) {
                 if ("抓取成功".equals(catchHistory.getCatchStatus())) {
