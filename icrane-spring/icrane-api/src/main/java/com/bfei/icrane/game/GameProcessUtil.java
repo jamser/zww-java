@@ -130,6 +130,11 @@ public class GameProcessUtil {
         Integer num = 0;
         String key = getKey(userId, dollId, keyType);
         redisUtil.setString(key, String.valueOf(num), CACHE_TIME);
+        if (keyType.equals(GameProcessEnum.GAME_COIN)) {
+            logger.info("initCountGameLock==>getRoomGameNumKey={},expire={}",
+                    redisUtil.getString(RedisKeyGenerator.getRoomGameNumKey(userId, dollId)),
+                    redisUtil.getTTl(RedisKeyGenerator.getRoomGameNumKey(userId, dollId)));
+        }
     }
 
     /**
@@ -141,14 +146,21 @@ public class GameProcessUtil {
         // logger.info("当前使用key:"+key);
         if (redisUtil.existsKey(key)) {
             num = Integer.parseInt(redisUtil.getString(key)) + 1;
+            if (keyType.equals(GameProcessEnum.GAME_COIN)) {
+                logger.info("addCountGameLock==existsKey>userId={},dollId={},num={},key={}", userId, dollId, num, key);
+                logger.info("addCountGameLock==>getRoomGameNumKey={},expire={}",
+                        redisUtil.getString(RedisKeyGenerator.getRoomGameNumKey(userId, dollId)),
+                        redisUtil.getTTl(RedisKeyGenerator.getRoomGameNumKey(userId, dollId)));
+
+            }
             redisUtil.setString(key, String.valueOf(num), CACHE_TIME);
             //logger.info("使用key自增:"+key+"num="+num);
         } else {
             num = 1;
+            if (keyType.equals(GameProcessEnum.GAME_COIN)) {
+                logger.info("addCountGameLock==>userId={},dollId={},num={},key={}", userId, dollId, num, key);
+            }
             redisUtil.setString(key, String.valueOf(num), CACHE_TIME);
-        }
-        if (keyType.GAME_CONSUME.equals(keyType)) {
-            logger.info("当前使用key:" + key + ",num=" + num + ",userId=" + userId + ",dollId=" + dollId);
         }
         return num;
     }
@@ -227,6 +239,9 @@ public class GameProcessUtil {
             redisUtil.delKey(RedisKeyGenerator.getRoomGameNumKey(userId, dollId));
             /*机器空闲后等待 初始化 机器就绪指令  等待就绪指令发送*/
             initCountGameLock(userId, dollId, GameProcessEnum.GAME_READY);//游戏就绪指令计数0
+            if (redisUtil.getTTl(RedisKeyGenerator.getGameCoin("")) < 50) {
+                redisUtil.setString(RedisKeyGenerator.getGameCoin(""), String.valueOf(1), CACHE_TIME);
+            }
             logger.info("用户ID" + userId + "向" + dollId + "投币");
             return true;
         }
@@ -274,7 +289,7 @@ public class GameProcessUtil {
         if (redisUtil.existsKey(key)) {
             catchDoll = Integer.parseInt(redisUtil.getString(key));
         }
-        logger.info("结束本轮游戏保持===gameNum={},key={},catchDoll={}",gameNum,key,catchDoll);
+        logger.info("结束本轮游戏保持===gameNum={},key={},catchDoll={}", gameNum, key, catchDoll);
         return catchDoll;
     }
 
@@ -373,36 +388,36 @@ public class GameProcessUtil {
 	        } */
         logger.info("【contrClaw方法】参数 chargeSum={},clawPro={}, baseNum={},clawNumKey={},clawNum={},strongClawNumKey={}", chargeSum, clawPro, baseNum, clawNumKey, clawNum, strongClawNumKey);
 //        if (chargeSum > 0) {//充钱用户
-            Integer range = Integer.parseInt(clawPro);
-            if (clawNum <= 0) {//产生随机数
-                Random r1 = new Random();
-                clawNum = r1.nextInt(range) + baseNum;//在基数情波动范围出现
-                logger.info("userId={},dollId={},clawNum={},range={},baseNum={}", userId, dollId, clawNum, range, baseNum);
-                redisUtil.setString(clawNumKey, String.valueOf(clawNum), USER_STRONG);
-            }
+        Integer range = Integer.parseInt(clawPro);
+        if (clawNum <= 0) {//产生随机数
+            Random r1 = new Random();
+            clawNum = r1.nextInt(range) + baseNum;//在基数情波动范围出现
+            logger.info("userId={},dollId={},clawNum={},range={},baseNum={}", userId, dollId, clawNum, range, baseNum);
+            redisUtil.setString(clawNumKey, String.valueOf(clawNum), USER_STRONG);
+        }
 
-            if (redisUtil.existsKey(clawNumKey)) {//clawNum ==0 局之后 出现强抓
-                clawNum = Integer.parseInt(redisUtil.getString(clawNumKey)) - 1;
-                logger.info("计数值 userId={},dollId={},clawNum={}", userId, dollId, clawNum);
-                if (clawNum == 0 || range == 0) {
-                    logger.info("出现强抓userId={},dollId={},clawNum={}", userId, dollId, clawNum);
-                    message = "strongClaw";
-                } else {
-                    message = "weakClaw";
-                }
-                redisUtil.setString(clawNumKey, String.valueOf(clawNum), USER_STRONG);
-                strongClawNum = Integer.parseInt(redisUtil.getString(strongClawNumKey)) + 1;
-                redisUtil.setString(strongClawNumKey, String.valueOf(strongClawNum), USER_STRONG);
-            } else {//容错处理
+        if (redisUtil.existsKey(clawNumKey)) {//clawNum ==0 局之后 出现强抓
+            clawNum = Integer.parseInt(redisUtil.getString(clawNumKey)) - 1;
+            logger.info("计数值 userId={},dollId={},clawNum={}", userId, dollId, clawNum);
+            if (clawNum == 0 || range == 0) {
+                logger.info("出现强抓userId={},dollId={},clawNum={}", userId, dollId, clawNum);
+                message = "strongClaw";
+            } else {
                 message = "weakClaw";
             }
+            redisUtil.setString(clawNumKey, String.valueOf(clawNum), USER_STRONG);
+            strongClawNum = Integer.parseInt(redisUtil.getString(strongClawNumKey)) + 1;
+            redisUtil.setString(strongClawNumKey, String.valueOf(strongClawNum), USER_STRONG);
+        } else {//容错处理
+            message = "weakClaw";
+        }
 //        }
         return message;
     }
 
     public static void main(String[] args) {
         Random r1 = new Random();
-        for (int i=0;i<100;i++) {
+        for (int i = 0; i < 100; i++) {
             int run = r1.nextInt(2) + 15;
             logger.info(String.valueOf(run));
         }
@@ -455,11 +470,9 @@ public class GameProcessUtil {
     public synchronized boolean getReady(Integer userId, Integer dollId) {
         Integer coinNum = countGameLock(userId, dollId, GameProcessEnum.GAME_COIN);
         Integer num = countGameLock(userId, dollId, GameProcessEnum.GAME_READY);
-        logger.info("getReady==>userId={},dollId={},coinNum={},num={}",userId,dollId,coinNum,num);
         if (num == 0 && coinNum > 0) {
             addCountGameLock(userId, dollId, GameProcessEnum.GAME_READY);
             String gameNum = StringUtils.getCatchHistoryNum().replace("-", "").substring(0, 20);
-            logger.info("getReady==>userId={},dollId={},gameNum={}",userId,dollId,gameNum);
             redisUtil.setString(RedisKeyGenerator.getRoomGameNumKey(userId, dollId), gameNum, CACHE_TIME);//设置游戏编号
             //产生游戏编号 后初始化
             initCountGameLock(userId, dollId, GameProcessEnum.GAME_CLAW);//下抓计数0

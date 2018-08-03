@@ -61,7 +61,7 @@ public class CommnetWebsocketContoller {
     public void onClose() {
         webSocketSet.remove(this);  //从set中删除
         subOnlineCount();           //在线数减1
-        log.info("评论有一连接关闭！当前在线人数为" + getOnlineCount());
+//        log.info("评论有一连接关闭！当前在线人数为" + getOnlineCount());
     }
 
     /**
@@ -81,7 +81,7 @@ public class CommnetWebsocketContoller {
     @OnError
     public void onError(Session session, Throwable error) {
         try {
-            log.error("评论发生错误");
+//            log.error("评论发生错误");
         } catch (Exception e) {
             log.error("评论关闭连接后处理过程中出现异常", e);
         }

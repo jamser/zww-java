@@ -67,7 +67,7 @@ public class PushWebsocketContoller {
     @OnError
     public void onError(Session session, Throwable error) {
         try {
-            log.error("发生错误");
+//            log.error("发生错误");
         } catch (Exception e) {
             log.error("关闭连接后处理过程中出现异常", e);
         }

@@ -390,7 +390,7 @@ public class DollController {
                 }
             }
 
-            List<Doll> dollList = dollService.getH5DollList(type, memberService.isWorker(memberId), channels,member.getAccount().getTester());
+            List<Doll> dollList = dollService.getH5DollList(type, memberService.isWorker(memberId), channels, member.getAccount().getTester());
             return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, dollList);
         } catch (Exception e) {
             //logger.error("获取H5娃娃机列表出错", e);
@@ -702,7 +702,7 @@ public class DollController {
      */
     @RequestMapping(value = "/getH5BannerList", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap getH5BannerList(String token, Integer memberId) throws Exception {
+    public ResultMap getH5BannerList(@RequestParam String token, @RequestParam Integer memberId) throws Exception {
         try {
             //logger.info("获取娃娃机列表接口参数：token=" + token + ",memberId=" + memberId);
             //验证参数
@@ -724,7 +724,7 @@ public class DollController {
             //logger.info("获取娃娃机列表resultMap=" + Enviroment.RETURN_SUCCESS_MESSAGE);
             return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, list);
         } catch (Exception e) {
-            //logger.error("获取H5娃娃机列表出错", e);
+            logger.info("获取娃娃机列表接口参数：token=" + token + ",memberId=" + memberId);
             e.printStackTrace();
             return new ResultMap(Enviroment.ERROR_CODE, Enviroment.HAVE_ERROR);
         }
