@@ -234,7 +234,7 @@
         OR machine_status = '游戏中'
         )
         <if test="type == 0">
-            AND a.machine_type IN (0,1)
+
         </if>
         <if test="type != 0">
             AND a.machine_type =#{type,jdbcType=INTEGER}
@@ -246,7 +246,7 @@
         AND a.machine_url in (SELECT machine_name from machine_status where machine_state='ONLINE' AND rtmp_state='开启')
         AND delete_status = 1
         ORDER BY
-        machine_status desc,machine_type desc
+        machine_status desc,machine_type
     </select>
 
     <select id="getH5DollTopicListByTest" resultMap="BaseResultMap" parameterType="java.lang.Integer">
@@ -286,7 +286,7 @@
         OR machine_status = '测试中'
         )
         <if test="type == 0">
-            AND a.machine_type IN (0,1)
+
         </if>
         <if test="type != 0">
             AND a.machine_type =#{type,jdbcType=INTEGER}
@@ -298,7 +298,7 @@
         AND a.machine_url in (SELECT machine_name from machine_status where machine_state='ONLINE' AND rtmp_state='开启')
         AND delete_status = 1
         ORDER BY
-        machine_status desc,machine_type desc
+        machine_status desc,machine_type
     </select>
 
 

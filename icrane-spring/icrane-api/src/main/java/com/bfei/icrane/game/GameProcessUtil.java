@@ -130,11 +130,6 @@ public class GameProcessUtil {
         Integer num = 0;
         String key = getKey(userId, dollId, keyType);
         redisUtil.setString(key, String.valueOf(num), CACHE_TIME);
-        if (keyType.equals(GameProcessEnum.GAME_COIN)) {
-            logger.info("initCountGameLock==>getRoomGameNumKey={},expire={}",
-                    redisUtil.getString(RedisKeyGenerator.getRoomGameNumKey(userId, dollId)),
-                    redisUtil.getTTl(RedisKeyGenerator.getRoomGameNumKey(userId, dollId)));
-        }
     }
 
     /**
@@ -239,7 +234,7 @@ public class GameProcessUtil {
             redisUtil.delKey(RedisKeyGenerator.getRoomGameNumKey(userId, dollId));
             /*机器空闲后等待 初始化 机器就绪指令  等待就绪指令发送*/
             initCountGameLock(userId, dollId, GameProcessEnum.GAME_READY);//游戏就绪指令计数0
-            if (redisUtil.getTTl(RedisKeyGenerator.getGameCoin("")) < 50) {
+            if (redisUtil.getTTl(RedisKeyGenerator.getGameCoin("")) <= 60) {
                 redisUtil.setString(RedisKeyGenerator.getGameCoin(""), String.valueOf(1), CACHE_TIME);
             }
             logger.info("用户ID" + userId + "向" + dollId + "投币");
@@ -470,6 +465,9 @@ public class GameProcessUtil {
     public synchronized boolean getReady(Integer userId, Integer dollId) {
         Integer coinNum = countGameLock(userId, dollId, GameProcessEnum.GAME_COIN);
         Integer num = countGameLock(userId, dollId, GameProcessEnum.GAME_READY);
+        if (StringUtils.isEmpty(coinNum)) {
+            logger.info("getReady===>coinNum={}", redisUtil.getString("game__coin"));
+        }
         if (num == 0 && coinNum > 0) {
             addCountGameLock(userId, dollId, GameProcessEnum.GAME_READY);
             String gameNum = StringUtils.getCatchHistoryNum().replace("-", "").substring(0, 20);
