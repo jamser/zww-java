@@ -251,26 +251,28 @@ public class QRCodeUtil {
 
     public static String getAgentUrl(Agent agent, String note, String index,Oem oem) {
         //先查询redis
-        RedisUtil redisUtil = new RedisUtil();
-        String QRCodeUrl = redisUtil.getString(RedisKeyGenerator.getAgentCodeKey(agent.getId().toString()) + shareIMGversion);
-        //如果redis中有就从redis中查询
-        if (StringUtils.isNotEmpty(QRCodeUrl)) {
-            return QRCodeUrl;
-        }
+//        RedisUtil redisUtil = new RedisUtil();
+//        String QRCodeUrl = redisUtil.getString(RedisKeyGenerator.getAgentCodeKey(agent.getId().toString()) + shareIMGversion);
+//        //如果redis中有就从redis中查询
+//        if (StringUtils.isNotEmpty(QRCodeUrl)) {
+//            return QRCodeUrl;
+//        }
+        String QRCodeUrl=null;
         try {
             File logoFile = null;
             String lanaokj = getshareUrl("agent" + agent.getId(), "lanaokj", index,oem);
             // logger.info("生成长链接前："+lanaokj);
+//            lanaokj =  WXUtil.qrcode(agent.getId()+"_"+oem.getCode(),oem);
             lanaokj =  WXUtil.short_url(lanaokj,oem);
             // logger.info("长链接后："+lanaokj);
-            QRCodeUrl = myDrawLogoQRCode("agent", String.valueOf(agent.getId()), null, lanaokj, note);
+             QRCodeUrl = myDrawLogoQRCode("agent", String.valueOf(agent.getId()), null, lanaokj, note);
             //缓存地址到redis
-            redisUtil.setString(RedisKeyGenerator.getAgentCodeKey(agent.getId().toString() + shareIMGversion), QRCodeUrl, 2147483647);
+//            redisUtil.setString(RedisKeyGenerator.getAgentCodeKey(agent.getId().toString() + shareIMGversion), QRCodeUrl, 2147483647);
             return QRCodeUrl;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return QRCodeUrl;
+        return null;
     }
 
     public static final String GET_SHARE_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect";

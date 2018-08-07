@@ -141,13 +141,6 @@ public class GameProcessUtil {
         // logger.info("当前使用key:"+key);
         if (redisUtil.existsKey(key)) {
             num = Integer.parseInt(redisUtil.getString(key)) + 1;
-            if (keyType.equals(GameProcessEnum.GAME_COIN)) {
-                logger.info("addCountGameLock==existsKey>userId={},dollId={},num={},key={}", userId, dollId, num, key);
-                logger.info("addCountGameLock==>getRoomGameNumKey={},expire={}",
-                        redisUtil.getString(RedisKeyGenerator.getRoomGameNumKey(userId, dollId)),
-                        redisUtil.getTTl(RedisKeyGenerator.getRoomGameNumKey(userId, dollId)));
-
-            }
             redisUtil.setString(key, String.valueOf(num), CACHE_TIME);
             //logger.info("使用key自增:"+key+"num="+num);
         } else {

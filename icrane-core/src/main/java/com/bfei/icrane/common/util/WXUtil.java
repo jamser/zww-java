@@ -304,7 +304,7 @@ public class WXUtil {
         resp3.put("scene_str", ecode);
         resp2.put("scene", resp3);
         resp.put("action_info", resp2);
-        resp.put("action_name", "QR_LIMIT_STR_SCENE");
+        resp.put("action_name", "QR_STR_SCENE");
         try {
             String accessToken = getAccessToken(oem);
             if (StringUtils.isEmpty(accessToken)) {

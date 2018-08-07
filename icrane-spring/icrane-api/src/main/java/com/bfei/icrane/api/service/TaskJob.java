@@ -93,6 +93,26 @@ public class TaskJob {
         }
     }
 
+//    @Scheduled(cron = "0/5 * *  * * ? ")
+    public void test() {
+        Integer agentId;
+        if (redisUtil.existsKey("agent_id")) {
+            agentId = Integer.valueOf(redisUtil.getString("agent_id"));
+        } else {
+            agentId = 1;
+        }
+        if (redisUtil.existsKey("AgentCodeKey" + agentId + "1_3_Key")) {
+            redisUtil.delKey("AgentCodeKey" + agentId + "1_3_Key");
+        }
+        String index = "https://open.weixin.qq.com/connect/oauth2/authorize?" +
+                "appid=wxcb4254f4b131fc12&redirect_uri=http%3A%2F%2Flanao.nat300.top/icrane/api/h5login" +
+                "&response_type=code&scope=snsapi_userinfo&state=agent" + agentId + "-lanaokj_null#wechat_redirect1_3";
+        if (redisUtil.existsKey(index)) {
+            redisUtil.delKey(index);
+        }
+        redisUtil.setString("agent_id", String.valueOf(agentId + 1));
+    }
+
 
     @Scheduled(cron = "0 0 1 * * ?") //每天一点执行
 //    @Scheduled(cron = "0/5 * *  * * ? ")

@@ -24,6 +24,7 @@ import com.bfei.icrane.game.GameStatusEnum;
 public class GameServiceImpl implements GameService {
     protected static final Logger logger = LoggerFactory.getLogger(GameServiceImpl.class);
     RedisUtil redisUtil = new RedisUtil();
+    AgentUtils agentUtils = new AgentUtils();
 
     @Autowired
     private DollRoomService dollRoomService;
@@ -648,7 +649,8 @@ public class GameServiceImpl implements GameService {
         }
         String shareUrl = QRCodeUtil.getshareUrl("agent" + agent.getId(), channel, index,oem);
         //先查询redis
-        String shareImgUrl = redisUtil.getString(shareUrl + QRCodeUtil.shareIMGversion);
+        String shareImgUrl = agentUtils.getCodeImagUrl(agentId);
+//        String shareImgUrl = redisUtil.getString(shareUrl + QRCodeUtil.shareIMGversion);
         //如果redis中有就从redis中查询
         if (StringUtils.isNotEmpty(shareImgUrl)) {
             map.put("shareImgUrl", shareImgUrl);
@@ -662,7 +664,8 @@ public class GameServiceImpl implements GameService {
         }
         try {
             //缓存地址到redis
-            redisUtil.setString(shareUrl + QRCodeUtil.shareIMGversion, qrUrl, 2147483647);
+//            redisUtil.setString(shareUrl + QRCodeUtil.shareIMGversion, qrUrl, 2147483647);
+            agentUtils.setCodeImagUrl(agentId,qrUrl);
             map.put("shareImgUrl", qrUrl);
             map.put("shareUrl", shareUrl);
             return map;

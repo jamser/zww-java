@@ -282,8 +282,7 @@ public class GameController {
     @RequestMapping(value = "/end", method = RequestMethod.POST)
     @ResponseBody
     public IcraneResult endGame(Integer memberId, Integer dollId, String token) throws Exception {
-        logger.info("结束本次游戏关闭");
-        // logger.info("结束本次游戏关闭socket后调用的接口memberId=" + memberId + "," + "dollId=" + dollId + "," + "token=" + token);
+         logger.info("结束本次游戏关闭socket后调用的接口memberId=" + memberId + "," + "dollId=" + dollId + "," + "token=" + token);
         try {
             //验证token有效性
             if (token == null || "".equals(token) ||

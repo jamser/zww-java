@@ -190,6 +190,17 @@ public class RedisUtil {
     }
 
     // 向hashset添加一个或多个成员
+    public void addHashSet(String key, String field, String value, int expire) {
+        // 连接本地的 Redis 服务
+        Jedis jedis = new Jedis(redisAddr, redisPort, redisTimeout);
+        jedis.auth(redisPwd);
+        jedis.hset(key, field, value);
+        jedis.expire(key, expire);
+        if (jedis != null) {
+            jedis.close();
+        }
+    }
+
     public void addHashSet(String key, String field, String value) {
         // 连接本地的 Redis 服务
         Jedis jedis = new Jedis(redisAddr, redisPort, redisTimeout);
@@ -202,7 +213,7 @@ public class RedisUtil {
 
     // 获取hashset成员
     public String getHashSet(String key, String field) {
-        // 连接本地的 Redis 服务
+        // 连接本地的 Redis 服务Fzhu
         Jedis jedis = new Jedis(redisAddr, redisPort, redisTimeout);
         jedis.auth(redisPwd);
         String value = jedis.hget(key, field);
@@ -213,4 +224,14 @@ public class RedisUtil {
         return value;
     }
 
+    public boolean existsKey(String key, String field) {
+        // 连接本地的 Redis 服务
+        Jedis jedis = new Jedis(redisAddr, redisPort, redisTimeout);
+        jedis.auth(redisPwd);
+        boolean type = jedis.hexists(key, field);
+        if (jedis != null) {
+            jedis.close();
+        }
+        return type;
+    }
 }
