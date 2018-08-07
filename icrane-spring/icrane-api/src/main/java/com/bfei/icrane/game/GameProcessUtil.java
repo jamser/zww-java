@@ -461,7 +461,8 @@ public class GameProcessUtil {
         if (StringUtils.isEmpty(coinNum)) {
             logger.info("getReady===>coinNum={}", redisUtil.getString("game__coin"));
         }
-        if (num == 0 && coinNum > 0) {
+        logger.info("getReady===>num={},coinNum={}", num, coinNum);
+        if ((null == num || num == 0) && coinNum > 0) {
             addCountGameLock(userId, dollId, GameProcessEnum.GAME_READY);
             String gameNum = StringUtils.getCatchHistoryNum().replace("-", "").substring(0, 20);
             redisUtil.setString(RedisKeyGenerator.getRoomGameNumKey(userId, dollId), gameNum, CACHE_TIME);//设置游戏编号
@@ -477,6 +478,7 @@ public class GameProcessUtil {
         }
         return false;
     }
+
 
     /**
      * 发出过下抓指令
