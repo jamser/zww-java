@@ -146,7 +146,6 @@ public class GameController {
         }
     }
 
-
     /**
      * 娃娃机下抓接口
      *
@@ -219,10 +218,9 @@ public class GameController {
         logger.info("结束本轮游戏保持socket连接并调用的接口memberId=" + memberId + "," + "dollId=" + dollId + "," + "gotDoll" + gotDoll + "," + "token=" + token + ",state=" + state);
         try {
             //验证token有效性
-            if (!validateTokenService.validataToken(token, memberId)) {
-                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_UNAUTHORIZED_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
-
+//            if (!validateTokenService.validataToken(token, memberId)) {
+//                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_UNAUTHORIZED_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
             if (redisUtil.getString("endRound" + memberId + dollId) != null) {
                 logger.info("endRound频繁访问userId={},dollId={}", memberId, dollId);
                 return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_UNAUTHORIZED_CODE1, "操作频繁");
@@ -282,7 +280,7 @@ public class GameController {
     @RequestMapping(value = "/end", method = RequestMethod.POST)
     @ResponseBody
     public IcraneResult endGame(Integer memberId, Integer dollId, String token) throws Exception {
-         logger.info("结束本次游戏关闭socket后调用的接口memberId=" + memberId + "," + "dollId=" + dollId + "," + "token=" + token);
+        logger.info("结束本次游戏关闭socket后调用的接口memberId=" + memberId + "," + "dollId=" + dollId + "," + "token=" + token);
         try {
             //验证token有效性
             if (token == null || "".equals(token) ||

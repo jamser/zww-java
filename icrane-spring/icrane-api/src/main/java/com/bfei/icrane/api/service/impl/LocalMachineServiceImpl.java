@@ -256,7 +256,7 @@ public class LocalMachineServiceImpl implements LocalMachineService {
      */
     @Override
     public boolean onReceived(String info, Integer userId, Integer dollId) {
-        logger.info("收到机器指令info={},userId={},dollId={}", info, userId, dollId);
+//        logger.info("收到机器指令info={},userId={},dollId={}", info, userId, dollId);
         if (info == null || "".equals(info)) {
             return false;
         }

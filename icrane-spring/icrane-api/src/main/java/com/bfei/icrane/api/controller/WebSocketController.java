@@ -349,7 +349,7 @@ public class WebSocketController {
                     localMachineService.addClaw(userId, dollId);
                     //logger.info("将玩家" + roomSession.getMemberId() + "在房间" + roomSession.getDollId() + "的session从全局map中移除");
                     String message = String.format("[%s,%s]", roomSession.getNickname(), "结束控制" + roomSession.getHousename());
-                    logger.info(message);
+                    logger.info("roomSessionMap.containsKey"+message);
                 }
                 logger.info("roomSessionMap.containsKey(dollId) && !newMachineType");
                 localMachineService.consumeGame(tokenStr, userId, dollId);
@@ -363,12 +363,15 @@ public class WebSocketController {
             if (newMachineType && MachineServiceImpl.machineSocketMap.containsKey(this.dollId)) {
                 //补下抓
                 if (localMachineService.leaveClaw(this.userId, this.dollId)) {
+                    logger.info("MachineServiceImpl.machineSocketMap.containsKey");
                     MachineServiceImpl.sendMsg(roomSession.getDevice() + "|control|weakClaw", this.dollId, roomSession.getMemberId());
                     localMachineService.addClaw(this.userId, dollId);
+                    localMachineService.historyGame(tokenStr, userId, dollId, 1);
+                }else {
+                    logger.info("MachineServiceImpl.machineSocketMap");
+                    localMachineService.historyGame(tokenStr, userId, dollId, 0);
                 }
-
                 //补游戏记录
-                localMachineService.historyGame(tokenStr, userId, dollId, 1);
                 localMachineService.onClose(tokenStr, userId, dollId);
                 popMsgFlag = false;
                 //MachineServiceImpl.machineSocketMap.get(this.dollId).close();
@@ -404,18 +407,18 @@ public class WebSocketController {
                 logger.info("onError...........userId={},dollId={}",userId,dollId);
                 String tokenStr = roomSession.getToken();
                 Integer userId = roomSession.getMemberId();
-                int state = 0;
-                // 判断是否补扣费
-                if (localMachineService.leaveConsume(this.userId, this.dollId)) {
-                    state = 1;
-                    //补扣费
-                    localMachineService.consumeGame(tokenStr, userId, dollId);
-                }
-
-
-                //补游戏记录
-                logger.info("补游戏记录userId={},dollId={},state={}", this.userId,this.dollId,state);
-                localMachineService.historyGame(tokenStr, userId, dollId, state);
+//                int state = 0;
+//                // 判断是否补扣费
+//                if (localMachineService.leaveConsume(this.userId, this.dollId)) {
+//                    state = 1;
+//                    //补扣费
+//                    localMachineService.consumeGame(tokenStr, userId, dollId);
+//                }
+//
+//
+//                //补游戏记录
+//                logger.info("补游戏记录userId={},dollId={},state={}", this.userId,this.dollId,state);
+//                localMachineService.historyGame(tokenStr, userId, dollId, state);
                 localMachineService.exitDollRoom(tokenStr,userId);
             }
             logger.error("session处理过程中出现异常userId={},dollId={}",userId,dollId);
