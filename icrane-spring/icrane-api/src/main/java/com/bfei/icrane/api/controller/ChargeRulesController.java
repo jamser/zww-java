@@ -44,7 +44,7 @@ public class ChargeRulesController {
     @ResponseBody
     public ResultMap getChargeRules(String token, Integer rulesType) throws Exception {
         //logger.info("获取充值规则token=" + token);
-        Map<String, Object> resultMap = new HashedMap<>();
+       // Map<String, Object> resultMap = new HashedMap<>();
         try {
             // 验证token有效性
             if (StringUtils.isEmpty(token) || !validateTokenService.validataToken(token)) {

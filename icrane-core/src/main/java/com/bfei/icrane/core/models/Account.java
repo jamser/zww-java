@@ -32,10 +32,11 @@ public class Account implements Serializable {
     private Date weeksCardState = new Date(0);  //最近周卡领取时间
     private Date monthCardState = new Date(0);  //最近月卡领取时间
     private BigDecimal growthValue;             //会员成长值
-    private BigDecimal growthValueMonth;      //会员每月成长值
+    private BigDecimal growthValueMonth;        //会员每月成长值
     private Integer growthValueMonthLevel;      //会员每月充值级别
     private Vip vip;                            //会员
-    private Integer tester;
+    private Integer tester;                     //测试人员标记（0普通用户1测试人员）
+    private Integer lover;                     //七夕活动房间进入权限（0没有该权限  1，有该权限）
 
     public void addState(long state) {
         this.bitState = BitStatesUtils.addState(this.bitState, state);

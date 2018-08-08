@@ -13,12 +13,13 @@
         <result column="growth_value_month" property="growthValueMonth"/>
         <result column="growth_value_month_level" property="growthValueMonthLevel"/>
         <result column="tester" property="tester"/>
+        <result column="lover" property="lover"/>
         <association property="vip" javaType="com.bfei.icrane.core.models.Vip"
                      select="com.bfei.icrane.core.dao.VipDao.selectVipByGrowthValue" column="growth_value">
         </association>
     </resultMap>
     <sql id="Base_Column_List">
-        id,coins,superTicket,bitState,weeksCardState,monthCardState,growth_value,sign_date,growth_value_month,growth_value_month_level,tester
+        id,coins,superTicket,bitState,weeksCardState,monthCardState,growth_value,sign_date,growth_value_month,growth_value_month_level,tester,lover
     </sql>
 
     <insert id="insert">
