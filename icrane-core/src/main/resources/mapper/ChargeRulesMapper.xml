@@ -22,11 +22,12 @@
         <result column="charge_times_limit" property="chargeTimesLimit" jdbcType="INTEGER"/>
         <result column="charge_date_limit" property="chargeDateLimit" jdbcType="INTEGER"/>
         <result column="rules_status" property="rulesStatus" jdbcType="INTEGER"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
     id, charge_price, coins_charge, coins_offer,superTicket_charge,superTicket_offer, discount, description, created_date,
-    created_by, modified_date, modified_by, charge_type, charge_name, orderby, cions_first, charge_times_limit, charge_date_limit,rules_status
+    created_by, modified_date, modified_by, charge_type, charge_name, orderby, cions_first, charge_times_limit, charge_date_limit,rules_status,icon
   	</sql>
 
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
@@ -41,49 +42,55 @@
         from t_charge_rules
         where 1=1
         <if test="id != null">
-            AND id = #{id,jdbcType=INTEGER},
+            AND id = #{id,jdbcType=INTEGER}
         </if>
         <if test="chargePrice != null">
-            AND charge_price = #{charge_price,jdbcType=DECIMAL},
+            AND charge_price = #{charge_price,jdbcType=DECIMAL}
         </if>
         <if test="coinsCharge != null">
-            AND coins_charge = #{coinsCharge,jdbcType=INTEGER},
+            AND coins_charge = #{coinsCharge,jdbcType=INTEGER}
         </if>
         <if test="coinsOffer != null">
-            AND coins_offer = #{coinsOffer,jdbcType=INTEGER},
+            AND coins_offer = #{coinsOffer,jdbcType=INTEGER}
         </if>
         <if test="superTicketCharge != null">
-            AND superTicket_charge = #{superTicketCharge,jdbcType=INTEGER},
+            AND superTicket_charge = #{superTicketCharge,jdbcType=INTEGER}
         </if>
         <if test="superTicketOffer != null">
-            AND superTicket_offer = #{superTicketOffer,jdbcType=INTEGER},
+            AND superTicket_offer = #{superTicketOffer,jdbcType=INTEGER}
         </if>
         <if test="discount != null">
-            AND discount = #{discount,jdbcType=DECIMAL},
+            AND discount = #{discount,jdbcType=DECIMAL}
         </if>
         <if test="description != null">
-            AND description = #{description,jdbcType=VARCHAR},
+            AND description = #{description,jdbcType=VARCHAR}
         </if>
         <if test="createdDate != null">
-            AND created_date = #{createdDate,jdbcType=TIMESTAMP},
+            AND created_date = #{createdDate,jdbcType=TIMESTAMP}
         </if>
         <if test="chargeType != null">
-            AND charge_type = #{chargeType,jdbcType=INTEGER},
+            AND charge_type = #{chargeType,jdbcType=INTEGER}
         </if>
         <if test="chargeName != null">
-            AND charge_name = #{chargeName,jdbcType=VARCHAR},
+            AND charge_name = #{chargeName,jdbcType=VARCHAR}
         </if>
         <if test="orderby != null">
-            AND orderby = #{orderby,jdbcType=INTEGER},
+            AND orderby = #{orderby,jdbcType=INTEGER}
         </if>
         <if test="cionsFirst != null">
-            AND cions_first = #{cionsFirst,jdbcType=INTEGER},
+            AND cions_first = #{cionsFirst,jdbcType=INTEGER}
         </if>
         <if test="chargeTimesLimit != null">
-            AND charge_times_limit = #{chargeTimesLimit,jdbcType=INTEGER},
+            AND charge_times_limit = #{chargeTimesLimit,jdbcType=INTEGER}
         </if>
         <if test="chargeDateLimit != null">
             AND charge_date_limit = #{chargeDateLimit,jdbcType=INTEGER}
+        </if>
+        <if test="rulesStatus != null">
+            AND rules_status = #{rulesStatus,jdbcType=INTEGER}
+        </if>
+        <if test="icon != null">
+            AND icon = #{icon,jdbcType=VARCHAR}
         </if>
     </select>
     <select id="getChargeRules" resultType="ChargeRules" parameterType="ChargeRules">
@@ -178,6 +185,14 @@
             <if test="chargeDateLimit != null">
                 charge_date_limit = #{chargeDateLimit,jdbcType=INTEGER},
             </if>
+
+            <if test="rulesStatus != null">
+                rules_status = #{rulesStatus,jdbcType=INTEGER},
+            </if>
+
+            <if test="icon != null">
+                icon = #{icon,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -239,6 +254,12 @@
             <if test="chargeDateLimit != null">
                 charge_date_limit,
             </if>
+            <if test="rulesStatus != null">
+                rules_status,
+            </if>
+            <if test="icon != null">
+                icon,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -294,6 +315,12 @@
             </if>
             <if test="chargeDateLimit != null">
                 #{chargeDateLimit,jdbcType=INTEGER},
+            </if>
+            <if test="rulesStatus != null">
+                #{rulesStatus,jdbcType=INTEGER},
+            </if>
+            <if test="icon != null">
+                #{icon,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>

@@ -41,10 +41,7 @@ public class ChargeRulesServiceImpl implements ChargeRulesService {
 
     @Override
     public List<ChargeRules> getChargeRules() {
-        // TODO Auto-generated method stub
-        List<ChargeRules> cr = chargeRulesDao.getChargeRules();
-        //logger.info("返回 cr:{}",cr);
-        return cr;
+        return chargeRulesDao.getChargeRules();
     }
 
     @Override

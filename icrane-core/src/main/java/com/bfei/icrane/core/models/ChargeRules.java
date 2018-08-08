@@ -32,5 +32,6 @@ public class ChargeRules implements Serializable {
     private Integer chargeTimesLimit;//限购次数
     private Integer chargeDateLimit;//期限
     private Integer rulesStatus;//规则状态
+    private String icon;//图标
 
 }
