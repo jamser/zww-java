@@ -186,10 +186,6 @@
                 charge_date_limit = #{chargeDateLimit,jdbcType=INTEGER},
             </if>
 
-            <if test="rulesStatus != null">
-                rules_status = #{rulesStatus,jdbcType=INTEGER},
-            </if>
-
             <if test="icon != null">
                 icon = #{icon,jdbcType=VARCHAR},
             </if>
