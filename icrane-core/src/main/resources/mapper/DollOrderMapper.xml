@@ -17,6 +17,8 @@
         <result column="modified_by" jdbcType="INTEGER" property="modifiedBy"/>
         <result column="comment" jdbcType="VARCHAR" property="comment"/>
         <result column="doll_redeem_coins" jdbcType="VARCHAR" property="dollRedeemCoins"/>
+        <result column="lover" jdbcType="INTEGER" property="lover"/>
+
         <association property="memberAddress" javaType="MemberAddr">
             <id property="id" column="address_id"/>
             <result property="receiverPhone" column="receiver_phone"/>
@@ -56,7 +58,7 @@
         modified_date,
         modified_by,
         comment,
-        doll_redeem_coins
+        doll_redeem_coins,lover
 	</sql>
 
     <!-- 查询申请发货的订单 -->
@@ -143,6 +145,7 @@
             a.modified_date,
             a.modified_by,
             a. COMMENT,
+            a.lover,
             IFNULL(
             a.doll_redeem_coins,
             c.redeem_coins
@@ -246,7 +249,7 @@
 		order_by, status, stock_valid_date,
 		deliver_date, deliver_method, deliver_number,
 		deliver_amount, deliver_coins, address_id,
-		modified_date, modified_by ,doll_redeem_coins)
+		modified_date, modified_by ,doll_redeem_coins,lover)
 		values (#{id,jdbcType=BIGINT}, #{orderNumber,jdbcType=VARCHAR},
 		#{orderDate,jdbcType=TIMESTAMP},
 		#{orderBy,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, #{stockValidDate,jdbcType=TIMESTAMP},
@@ -254,7 +257,7 @@
 		#{deliverNumber,jdbcType=VARCHAR},
 		#{deliverAmount,jdbcType=DECIMAL}, #{deliverCoins,jdbcType=INTEGER},
 		#{memberAddress.id,jdbcType=INTEGER},
-		#{modifiedDate,jdbcType=TIMESTAMP}, #{modifiedBy,jdbcType=INTEGER},#{dollRedeemCoins})
+		#{modifiedDate,jdbcType=TIMESTAMP}, #{modifiedBy,jdbcType=INTEGER},#{dollRedeemCoins},#{lover,jdbcType=INTEGER})
 	</insert>
     <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.DollOrder"
             useGeneratedKeys="true" keyProperty="id">
@@ -302,6 +305,10 @@
             <if test="modifiedBy != null">
                 modified_by,
             </if>
+            <if test="lover != null">
+                lover,
+            </if>
+
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -345,6 +352,9 @@
             </if>
             <if test="modifiedBy != null">
                 #{modifiedBy,jdbcType=INTEGER},
+            </if>
+            <if test="lover != null">
+                 #{lover,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
@@ -391,7 +401,10 @@
                 modified_by = #{modifiedBy,jdbcType=INTEGER},
             </if>
             <if test="modifiedBy != null">
-                comment = #{comment,jdbcType=VARCHAR}
+                comment = #{comment,jdbcType=VARCHAR},
+            </if>
+            <if test="lover != null">
+                lover = #{lover,jdbcType=INTEGER}
             </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
@@ -410,7 +423,8 @@
 		deliver_coins = #{deliverCoins,jdbcType=INTEGER},
 		address_id = #{addressId,jdbcType=INTEGER},
 		modified_date = #{modifiedDate,jdbcType=TIMESTAMP},
-		modified_by = #{modifiedBy,jdbcType=INTEGER}
+		modified_by = #{modifiedBy,jdbcType=INTEGER},
+		lover = #{lover,jdbcType=INTEGER}
 		where id = #{id,jdbcType=BIGINT}
 	</update>
     <update id="sendDoll" parameterType="java.util.Map">
