@@ -42,21 +42,29 @@ public class ChargeRulesController {
      */
     @RequestMapping(value = "/getChargeRules", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMap getChargeRules(String token, Integer rulesType) throws Exception {
+    public ResultMap getChargeRules(String token, Integer memberId, Integer rulesType) throws Exception {
         //logger.info("获取充值规则token=" + token);
-       // Map<String, Object> resultMap = new HashedMap<>();
+        // Map<String, Object> resultMap = new HashedMap<>();
         try {
             // 验证token有效性
             if (StringUtils.isEmpty(token) || !validateTokenService.validataToken(token)) {
                 logger.info("获取用户消息出错," + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
                 return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
             }
+            if (StringUtils.isEmpty(rulesType)) {
+                rulesType = null;
+            }
             List<ChargeRules> getChargeRules = chargeRulesService.getChargeRulesByType(rulesType);
-            RedisUtil redisUtil = new RedisUtil();
-            String memberId = redisUtil.getString(token);
             //充值过的不显示首充
-            if (memberService.selectById(Integer.valueOf(memberId)).getAccount().getCoinFirstCharge()) {
-                getChargeRules.remove(0);
+            if (null == rulesType || rulesType != 5) {
+                if (memberService.selectById(Integer.valueOf(memberId)).getAccount().getCoinFirstCharge()) {
+                    for (ChargeRules chargeRules : getChargeRules) {
+                        if (chargeRules.getChargeType() == 4) {
+                            getChargeRules.remove(chargeRules);
+                            break;
+                        }
+                    }
+                }
             }
             if (getChargeRules != null) {
                 return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, getChargeRules);
@@ -122,6 +130,7 @@ public class ChargeRulesController {
 
     /**
      * 充值进度条
+     *
      * @param memberId
      * @param token
      * @return
