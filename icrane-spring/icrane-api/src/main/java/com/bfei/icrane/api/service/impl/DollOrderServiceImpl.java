@@ -100,13 +100,13 @@ public class DollOrderServiceImpl implements DollOrderService {
     public List<DollOrderItem> selectItemsByMemberIdOrderStatus(Integer memberId, String orderStatus) {
         List<DollOrderItem> dollOrderItems = dollOrderItemDao.selectByMemberIdOrderStatus(memberId, orderStatus);
         for (DollOrderItem dollOrderItem : dollOrderItems) {
-            String[] split = dollOrderItem.getDoll().getName().split("-");
+            String[] split = dollOrderItem.getDollName().split("-");
             if (dollOrderItem.getDollOrder().getLover().equals("131.4")) {
-                dollOrderItem.getDoll().setName(split[0] + "(小丘比特)");
+                dollOrderItem.setDollName(split[0] + "(小丘比特)");
             } else if (dollOrderItem.getDollOrder().getLover().equals("199.0")) {
-                dollOrderItem.getDoll().setName(split[0] + "(大丘比特)");
+                dollOrderItem.setDollName(split[0] + "(大丘比特)");
             } else {
-                dollOrderItem.getDoll().setName(split[0]);
+                dollOrderItem.setDollName(split[0]);
             }
 
         }
@@ -553,11 +553,12 @@ public class DollOrderServiceImpl implements DollOrderService {
 
     /**
      * 兑换
+     *
      * @param memberId
      * @param orderIds
      */
     @Override
-    public ResultMap dollExchange(Integer memberId, Long[] orderIds){
+    public ResultMap dollExchange(Integer memberId, Long[] orderIds) {
         //根据抓取订单id查询可发货的寄存娃娃
         List<DollOrder> exchangeList = dollOrderDao.selectListByOrderIds(orderIds);
         if (exchangeList == null || exchangeList.size() == 0) {
@@ -565,7 +566,7 @@ public class DollOrderServiceImpl implements DollOrderService {
             return new ResultMap(Enviroment.FAILE_CODE, Enviroment.SELECT_EXCHANGE_FAILED);
         }
         Account account = accountDao.selectById(memberId);
-        for (DollOrder dollOrder:exchangeList) {
+        for (DollOrder dollOrder : exchangeList) {
             dollOrderItemDao.getOrderItemByOrderId(dollOrder.getId());
             MemberChargeHistory chargeRecord = new MemberChargeHistory();
             chargeRecord.setChargeDate(new Date());
@@ -576,12 +577,12 @@ public class DollOrderServiceImpl implements DollOrderService {
         }
 
 
-        int i =  dollOrderDao.dollExchange(orderIds);
-        if(i >0 ){
+        int i = dollOrderDao.dollExchange(orderIds);
+        if (i > 0) {
 
             logger.info("兑换成功");
             return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE);
-        }else{
+        } else {
             logger.info("兑换失败:" + Enviroment.UPDATE_ORDER_FAILED);
             return new ResultMap(Enviroment.FAILE_CODE, Enviroment.UPDATE_ORDER_FAILED);
         }
