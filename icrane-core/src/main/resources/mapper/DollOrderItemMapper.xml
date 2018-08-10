@@ -5,6 +5,7 @@
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="quantity" jdbcType="INTEGER" property="quantity"/>
         <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
+        <result column="doll_id" jdbcType="VARCHAR" property="dollId"/>
         <result column="doll_code" jdbcType="VARCHAR" property="dollCode"/>
         <result column="doll_name" jdbcType="VARCHAR" property="dollName"/>
         <result column="doll_url" jdbcType="VARCHAR" property="dollUrl"/>

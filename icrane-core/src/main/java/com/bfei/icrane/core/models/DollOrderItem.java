@@ -34,4 +34,5 @@ public class DollOrderItem implements Serializable {
     private Account account;
     private String dollName;
     private String dollUrl;
+    private Integer dollId;
 }

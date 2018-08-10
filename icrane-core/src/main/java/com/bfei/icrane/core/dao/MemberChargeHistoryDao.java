@@ -19,4 +19,6 @@ public interface MemberChargeHistoryDao {
      * @return
      */
     int totalCount(@Param("userId")Integer userId);
+
+    int insertSelective(MemberChargeHistory memberChargeHistory);
 }

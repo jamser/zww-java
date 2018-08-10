@@ -52,6 +52,8 @@ public class DollOrderServiceImpl implements DollOrderService {
     private AccountDao accountDao;
     @Autowired
     private TDollInfoMapper tDollInfoMapper;
+    @Autowired
+    private MemberChargeHistoryDao memberChargeHistoryDao;
     RedisUtil redisUtil = new RedisUtil();
 
     @Override
@@ -566,19 +568,30 @@ public class DollOrderServiceImpl implements DollOrderService {
         }
         Account account = accountDao.selectById(memberId);
         for (DollOrder dollOrder:exchangeList) {
-            dollOrderItemDao.getOrderItemByOrderId(dollOrder.getId());
+            DollOrderItem dollOrderItem = dollOrderItemDao.selectByOrderId(dollOrder.getId());
+            int coinBefore = account.getCoins();
+            int coin = dollOrder.getDollRedeemCoins();
+            int coinAfter = coinBefore + coin;
+            //兑换变为金币添加记录
             MemberChargeHistory chargeRecord = new MemberChargeHistory();
             chargeRecord.setChargeDate(new Date());
-            //chargeRecord.setChargeMethod("房间("+  +")已兑换成币");
-            // chargeRecord.setCoins();
-            chargeRecord.setMemberId(account.getId());
+            chargeRecord.setChargeMethod("房间("+ dollOrderItem.getDollName() +")已兑换成币");
+            chargeRecord.setCoins(coin);
+            chargeRecord.setPrepaidAmt(0.00);
+            chargeRecord.setMemberId(memberId);
             chargeRecord.setType("income");
+            chargeRecord.setChargeDate(new Date());
+            chargeRecord.setDollId(dollOrderItem.getDollId());
+            chargeRecord.setCoinsBefore(coinBefore);
+            chargeRecord.setCoinsAfter(coinAfter);
+            memberChargeHistoryDao.insertSelective(chargeRecord);
+            //账户加币
+            account.setCoins(coin);
+            accountDao.updateMemberCoin(account);
         }
-
-
+        //娃娃状态改为已兑换
         int i =  dollOrderDao.dollExchange(orderIds);
         if(i >0 ){
-
             logger.info("兑换成功");
             return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE);
         }else{

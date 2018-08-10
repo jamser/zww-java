@@ -40,5 +40,72 @@
             AND member_id = #{userId,jdbcType=INTEGER}
         </if>
     </select>
+    <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.MemberChargeHistory">
+        insert into t_member_charge_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="memberId != null">
+                member_id,
+            </if>
+            <if test="prepaidAmt != null">
+                prepaid_amt,
+            </if>
+            <if test="coins != null">
+                coins,
+            </if>
+            <if test="chargeDate != null">
+                charge_date,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="chargeMethod != null">
+                charge_method,
+            </if>
+            <if test="dollId != null">
+                doll_id,
+            </if>
+            <if test="coinsBefore != null">
+                coins_before,
+            </if>
+            <if test="coinsAfter != null">
+                coins_after,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="memberId != null">
+                #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="prepaidAmt != null">
+                #{prepaidAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="coins != null">
+                #{coins,jdbcType=INTEGER},
+            </if>
+            <if test="chargeDate != null">
+                #{chargeDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="chargeMethod != null">
+                #{chargeMethod,jdbcType=VARCHAR},
+            </if>
+            <if test="dollId != null">
+                #{dollId,jdbcType=INTEGER},
+            </if>
+            <if test="coinsBefore != null">
+                #{coinsBefore,jdbcType=INTEGER},
+            </if>
+            <if test="coinsAfter != null">
+                #{coinsAfter,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
 
 </mapper>
