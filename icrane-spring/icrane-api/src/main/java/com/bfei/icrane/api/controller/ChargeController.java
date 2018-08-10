@@ -18,6 +18,7 @@ import com.bfei.icrane.api.service.MemberService;
 import com.bfei.icrane.core.models.Charge;
 import com.bfei.icrane.core.models.Member;
 import com.bfei.icrane.core.service.ValidateTokenService;
+
 /**
  * 充值
  */
@@ -133,28 +134,28 @@ public class ChargeController {
      * @return
      * @throws Exception
      */
-//    @RequestMapping(value = "/successfulRechargeRecords", method = RequestMethod.POST)
-//    @ResponseBody
-//    public ResultMap SuccessfulRechargeRecords(Integer memberId, String token, String mchOrderNo) throws Exception {
-//        logger.info("发送成功充值后查询充值记录接口参数mobile=" + memberId + ",mchOrderNo=" + mchOrderNo);
-//        try {
-//            //参数验证
-//            if (memberId == null && "".equals(memberId) && token == null && "".equals(token) && mchOrderNo == null && "".equals(mchOrderNo)) {
-//                logger.info("成功充值后查询充值记录接口=" + memberId + ",mchOrderNo=" + mchOrderNo);
-//                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
-//            }
-//            //授权验证
-//            if (!validateTokenService.validataToken(token, memberId)) {
-//                logger.info("成功充值后查询充值记录接口=" + memberId + ",mchOrderNo=" + mchOrderNo);
-//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-//            }
-//            return chargeService.getSuccessfulRechargeRecords(memberId, mchOrderNo);
-//        } catch (Exception e) {
-//            logger.debug("成功充值后查询充值记录异常" + e.getMessage());
-//            e.printStackTrace();
-//            return new ResultMap(Enviroment.RETURN_FAILE_CODE, "查询异常");
-//        }
-//    }
+    @RequestMapping(value = "/successfulRechargeRecords", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap SuccessfulRechargeRecords(Integer memberId, String token, String mchOrderNo) throws Exception {
+        logger.info("发送成功充值后查询充值记录接口参数mobile=" + memberId + ",mchOrderNo=" + mchOrderNo);
+        try {
+            //参数验证
+            if (memberId == null && "".equals(memberId) && token == null && "".equals(token) && mchOrderNo == null && "".equals(mchOrderNo)) {
+                logger.info("成功充值后查询充值记录接口=" + memberId + ",mchOrderNo=" + mchOrderNo);
+                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+            }
+            //授权验证
+            if (!validateTokenService.validataToken(token, memberId)) {
+                logger.info("成功充值后查询充值记录接口=" + memberId + ",mchOrderNo=" + mchOrderNo);
+                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            }
+            return chargeService.getSuccessfulRechargeRecords(memberId, mchOrderNo);
+        } catch (Exception e) {
+            logger.debug("成功充值后查询充值记录异常" + e.getMessage());
+            e.printStackTrace();
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, "查询异常");
+        }
+    }
 
     /**
      * 兑换娃娃币

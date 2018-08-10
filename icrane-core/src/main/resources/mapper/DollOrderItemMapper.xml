@@ -10,6 +10,7 @@
             <id property="id" column="order_id"/>
             <result property="status" column="status"/>
             <result column="order_number" jdbcType="VARCHAR" property="orderNumber"/>
+            <result column="lover" jdbcType="VARCHAR" property="lover"/>
             <result column="order_date" jdbcType="TIMESTAMP" property="orderDate"/>
             <result column="stock_valid_date" jdbcType="TIMESTAMP" property="stockValidDate"/>
             <result column="modifiedDate" jdbcType="TIMESTAMP" property="modifiedDate"/>

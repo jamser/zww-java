@@ -99,26 +99,17 @@ public class DollOrderServiceImpl implements DollOrderService {
     @Override
     public List<DollOrderItem> selectItemsByMemberIdOrderStatus(Integer memberId, String orderStatus) {
         List<DollOrderItem> dollOrderItems = dollOrderItemDao.selectByMemberIdOrderStatus(memberId, orderStatus);
-//        if ("寄存中".equals(orderStatus)) {
-//            Vip vip = vipService.selectVipByMemberId(memberId);
-//            for (Iterator iter = dollOrderItems.iterator(); iter.hasNext(); ) {
-//                DollOrderItem dollOrderItem = (DollOrderItem) iter.next();
-//                DollOrder dollOrder = dollOrderItem.getDollOrder();
-//                Date orderDate = dollOrder.getOrderDate();
-//                if (orderDate.getTime() > new Date("2018/4/9").getTime()) {
-//                    Calendar ca = Calendar.getInstance();
-//                    ca.setTime(orderDate);
-//                    ca.add(Calendar.DATE, vip.getCheckTime());
-//                    Date time = ca.getTime();
-//                    Date date = new Date();
-//                    if (time.getTime() < date.getTime()) {
-//                        iter.remove();
-//                    } else {
-//                        dollOrder.setStockValidDate(time);
-//                    }
-//                }
-//            }
-//        }
+        for (DollOrderItem dollOrderItem : dollOrderItems) {
+            String[] split = dollOrderItem.getDoll().getName().split("-");
+            if (dollOrderItem.getDollOrder().getLover().equals("131.4")) {
+                dollOrderItem.getDoll().setName(split[0] + "(小丘比特)");
+            } else if (dollOrderItem.getDollOrder().getLover().equals("199.0")) {
+                dollOrderItem.getDoll().setName(split[0] + "(大丘比特)");
+            } else {
+                dollOrderItem.getDoll().setName(split[0]);
+            }
+
+        }
         return dollOrderItems;
     }
 
