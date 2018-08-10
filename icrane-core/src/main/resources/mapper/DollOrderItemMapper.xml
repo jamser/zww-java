@@ -6,6 +6,8 @@
         <result column="quantity" jdbcType="INTEGER" property="quantity"/>
         <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
         <result column="doll_code" jdbcType="VARCHAR" property="dollCode"/>
+        <result column="doll_name" jdbcType="VARCHAR" property="dollName"/>
+        <result column="doll_url" jdbcType="VARCHAR" property="dollUrl"/>
         <association property="dollOrder" javaType="com.bfei.icrane.core.models.DollOrder">
             <id property="id" column="order_id"/>
             <result property="status" column="status"/>
@@ -46,7 +48,7 @@
         <result column="gender" jdbcType="VARCHAR" property="sex"/>
     </resultMap>
     <sql id="Base_Column_List">
-		id, order_id, doll_id, created_date,doll_code
+		id, order_id, doll_id, created_date,doll_code,doll_name,doll_url
 	</sql>
     <!-- 根据订单id查询 -->
     <select id="getOrderItemByOrderId" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -59,6 +61,13 @@
         WHERE
             a.order_id = #{orderId};
 	</select>
+
+    <select id="selectByOrderId" parameterType="java.lang.Long"  resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_doll_order_item
+        where order_id = #{orderId,jdbcType=BIGINT}
+    </select>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer"
             resultMap="BaseResultMap">

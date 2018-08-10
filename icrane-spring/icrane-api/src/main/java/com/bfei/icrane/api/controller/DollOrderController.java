@@ -257,4 +257,44 @@ public class DollOrderController {
 
     }
 
+
+    /**
+     * 兑换
+     *
+     * @param memberId
+     * @param orderIds
+     * @param token
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/dollExchange", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap dollExchange(@RequestParam Integer memberId, @RequestParam Long[] orderIds, @RequestParam String token) throws Exception {
+        try {
+            //验证参数
+            if (memberId == null || StringUtils.isEmpty(token) || orderIds == null || orderIds.length < 1) {
+                logger.info("兑换接口参数异常=" + Enviroment.RETURN_INVALID_PARA_MESSAGE);
+                return new ResultMap(Enviroment.FAILE_CODE, Enviroment.RETURN_INVALID_PARA_MESSAGE);
+            }
+            //访问间隔限制
+            RedisUtil redisUtil = new RedisUtil();
+            if (redisUtil.getString("dollExchange" + memberId) != null) {
+                logger.info("兑换接口失败=" + Enviroment.PLEASE_SLOW_DOWN);
+                return new ResultMap(Enviroment.FAILE_CODE, Enviroment.PLEASE_SLOW_DOWN);
+            }
+            redisUtil.setString("dollExchange" + memberId, "", Enviroment.ACCESS_SENDDOLL_TIME);
+            // 验证token有效性
+            if (!validateTokenService.validataToken(token, memberId)) {//官方账号不发货
+                logger.info("兑换失败:没有授权");
+                return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            }
+            return dollOrderService.dollExchange(memberId,orderIds);
+        } catch (Exception e) {
+            logger.error("兑换出错,参数 memberId={},orderIds={},token={}", memberId, orderIds, token);
+            throw e;
+        }
+
+    }
+
+
 }

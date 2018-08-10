@@ -76,4 +76,12 @@ public interface DollOrderService {
      * @return
      */
     ResultMap getCatchSuccessRanksByMember(Integer memberId);
+
+
+    /**
+     * 兑换
+     * @param memberId
+     * @param orderIds
+     */
+     ResultMap dollExchange(Integer memberId, Long[] orderIds);
 }

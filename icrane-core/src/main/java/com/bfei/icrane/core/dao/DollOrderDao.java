@@ -22,6 +22,9 @@ public interface DollOrderDao {
     //发货申请
     int sendDoll(@Param("addressId") Integer addressId, @Param("orderIds") Long[] orderIds);
 
+    // 兑换
+    int dollExchange( @Param("orderIds") Long[] orderIds);
+
     int updateByPrimaryKeySelective(DollOrder record);
 
     int updateByPrimaryKey(DollOrder record);

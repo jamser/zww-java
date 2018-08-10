@@ -441,6 +441,19 @@
         AND STATUS = '寄存中'
     </update>
 
+    <update id="dollExchange" parameterType="java.util.Map">
+        UPDATE t_doll_order
+        SET STATUS = '已兑换',
+        modified_date = NOW()
+        WHERE
+        id IN
+        <foreach item="item" index="index" collection="orderIds" open="("
+                 close=")" separator=",">
+            #{item}
+        </foreach>
+        AND STATUS = '寄存中'
+    </update>
+
     <select id="selectOutTimeDolls" resultMap="BaseResultMap">
         <![CDATA[
         SELECT

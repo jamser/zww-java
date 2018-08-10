@@ -32,4 +32,6 @@ public class DollOrderItem implements Serializable {
     private String deliverMethod = "";
     private String deliverNumber = "";
     private Account account;
+    private String dollName;
+    private String dollUrl;
 }

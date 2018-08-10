@@ -93,6 +93,9 @@ public class Enviroment {
     public static final String SELECT_SENDORDER_FAILED = "查询发货娃娃失败";
     public static final String SELECT_SENDORDER_ITEMS_FAILED = "查询发货娃娃详情失败";
     public static final int ACCESS_SENDDOLL_TIME = 5;//发货兑换接口访问频率限制接口
+    public static final String SELECT_EXCHANGE_FAILED = "查询兑换娃娃失败";
+    public static final String UPDATE_ORDER_FAILED = "修改兑换订单失败";
+
 
     /**
      * 礼品码相关

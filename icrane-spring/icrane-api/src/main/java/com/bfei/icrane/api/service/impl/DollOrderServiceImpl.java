@@ -550,4 +550,40 @@ public class DollOrderServiceImpl implements DollOrderService {
         }
         return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, rankMemberPojo);
     }
+
+    /**
+     * 兑换
+     * @param memberId
+     * @param orderIds
+     */
+    @Override
+    public ResultMap dollExchange(Integer memberId, Long[] orderIds){
+        //根据抓取订单id查询可发货的寄存娃娃
+        List<DollOrder> exchangeList = dollOrderDao.selectListByOrderIds(orderIds);
+        if (exchangeList == null || exchangeList.size() == 0) {
+            logger.info("兑换失败:" + Enviroment.SELECT_EXCHANGE_FAILED);
+            return new ResultMap(Enviroment.FAILE_CODE, Enviroment.SELECT_EXCHANGE_FAILED);
+        }
+        Account account = accountDao.selectById(memberId);
+        for (DollOrder dollOrder:exchangeList) {
+            dollOrderItemDao.getOrderItemByOrderId(dollOrder.getId());
+            MemberChargeHistory chargeRecord = new MemberChargeHistory();
+            chargeRecord.setChargeDate(new Date());
+            //chargeRecord.setChargeMethod("房间("+  +")已兑换成币");
+            // chargeRecord.setCoins();
+            chargeRecord.setMemberId(account.getId());
+            chargeRecord.setType("income");
+        }
+
+
+        int i =  dollOrderDao.dollExchange(orderIds);
+        if(i >0 ){
+
+            logger.info("兑换成功");
+            return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE);
+        }else{
+            logger.info("兑换失败:" + Enviroment.UPDATE_ORDER_FAILED);
+            return new ResultMap(Enviroment.FAILE_CODE, Enviroment.UPDATE_ORDER_FAILED);
+        }
+    }
 }
