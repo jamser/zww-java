@@ -328,6 +328,7 @@ public class WeixinController {
         if (null == oem) {
             oem = oemService.selectByCode("lanaokj");
         }
+        logger.info("insertMember==>{}", oem);
         JSONObject json = WXUtil.getUserInfo(wopenid, oem);
         if (!StringUtils.isEmpty(json) && json.containsKey("unionid")) {
             String unionId = json.getString("unionid");

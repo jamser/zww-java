@@ -249,7 +249,7 @@ public class QRCodeUtil {
 //        return QRCodeUrl;
 //    }
 
-    public static String getAgentUrl(Agent agent, String note, String index,Oem oem) {
+    public static String getAgentUrl(Agent agent, String note, String index, Oem oem) {
         //先查询redis
 //        RedisUtil redisUtil = new RedisUtil();
 //        String QRCodeUrl = redisUtil.getString(RedisKeyGenerator.getAgentCodeKey(agent.getId().toString()) + shareIMGversion);
@@ -257,15 +257,15 @@ public class QRCodeUtil {
 //        if (StringUtils.isNotEmpty(QRCodeUrl)) {
 //            return QRCodeUrl;
 //        }
-        String QRCodeUrl=null;
+        String QRCodeUrl = null;
         try {
             File logoFile = null;
-            String lanaokj = getshareUrl("agent" + agent.getId(), "lanaokj", index,oem);
+            String lanaokj = getshareUrl("agent" + agent.getId(), "lanaokj", index, oem);
             // logger.info("生成长链接前："+lanaokj);
-//            lanaokj =  WXUtil.qrcode(agent.getId()+"_"+oem.getCode(),oem);
-            lanaokj =  WXUtil.short_url(lanaokj,oem);
+            lanaokj = WXUtil.qrcode("agent" + agent.getId() + "-" + oem.getCode(), oem);
+//            lanaokj = WXUtil.short_url(lanaokj, oem);
             // logger.info("长链接后："+lanaokj);
-             QRCodeUrl = myDrawLogoQRCode("agent", String.valueOf(agent.getId()), null, lanaokj, note);
+            QRCodeUrl = myDrawLogoQRCode("agent", String.valueOf(agent.getId()), null, lanaokj, note);
             //缓存地址到redis
 //            redisUtil.setString(RedisKeyGenerator.getAgentCodeKey(agent.getId().toString() + shareIMGversion), QRCodeUrl, 2147483647);
             return QRCodeUrl;
@@ -278,9 +278,9 @@ public class QRCodeUtil {
     public static final String GET_SHARE_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect";
 
 
-    public static String getshareUrl(String id, String channel, String index,Oem oem) {
+    public static String getshareUrl(String id, String channel, String index, Oem oem) {
         return GET_SHARE_URL.replace("APPID", oem.getAppid())
-                .replace("REDIRECT_URI", "http%3A%2F%2F"+oem.getNatappUrl()+"/icrane/api/h5login")
+                .replace("REDIRECT_URI", "http%3A%2F%2F" + oem.getNatappUrl() + "/icrane/api/h5login")
                 .replace("SCOPE", "snsapi_userinfo")
                 .replace("STATE", id + "-" + oem.getCode() + "_" + index);
     }
