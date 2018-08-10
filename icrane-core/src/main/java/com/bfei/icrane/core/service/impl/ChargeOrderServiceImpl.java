@@ -92,7 +92,7 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
         Account account = member.getAccount();//账户
         order.setCoinsBefore(account.getCoins());
         order.setSuperTicketBefore(account.getSuperTicket());
-        if (rule.getChargeType() == 0 || rule.getChargeType() == 4) {//普通包或者新首充
+        if (rule.getChargeType() == 0 || rule.getChargeType() == 4 || rule.getChargeType() == 5) {//普通包或者新首充
             order.setCoinsCharge(rule.getCoinsCharge());
             order.setCoinsOffer(rule.getCoinsOffer());
             Integer coinsAfter = account.getCoins() + rule.getCoinsCharge() + rule.getCoinsOffer();
@@ -148,6 +148,20 @@ public class ChargeOrderServiceImpl implements ChargeOrderService {
                 }
                 member.setFirstCharge(firstCharge + 1);
                 memberDao.updateFirstCharge(member);
+            }
+            if (chargeType == 5) {//普通礼包
+                Member member = memberDao.getMemberById(memberId);
+                Integer firstCharge = member.getFirstCharge();
+                if (firstCharge == null) {
+                    firstCharge = 0;
+                }
+                account.setLover(String.valueOf(chargeOrder.getPrice()));
+
+                logger.info("用户充值丘比特礼包userId={}", memberId);
+                member.setFirstCharge(firstCharge + 1);
+                memberDao.updateFirstCharge(member);
+                accountService.updateAccountLover(account);
+
             }
             //新首充礼包
             if (chargeType == 4) {

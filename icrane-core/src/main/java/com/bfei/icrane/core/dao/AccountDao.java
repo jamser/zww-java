@@ -43,4 +43,6 @@ public interface AccountDao {
     //更新每月成长
     void updateMemberGrowthValueMonth(Account account);
 
+    void updateAccountLover(Account account);
+
 }

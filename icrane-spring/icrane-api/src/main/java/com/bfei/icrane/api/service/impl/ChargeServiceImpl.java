@@ -104,10 +104,8 @@ public class ChargeServiceImpl implements ChargeService {
                 }
                 return result;
             }
-            if (charge.getSuperTicketSum() > 0 && charge.getCoinsSum() <= 0) {//普通纯钻石礼包记录
-                charge.setCoinsSum(charge.getSuperTicketSum());
-                charge.setCoins(charge.getSuperTicket());
-                charge.setType("s" + charge.getType());
+
+            if (charge.getSuperTicketSum() == 0 && charge.getCoinsSum() == 0) {//普通金币礼包记录
                 result = chargeDao.insertChargeHistory(charge);
                 insertGrowthHistory(charge, account);
                 if (charge.getPrepaidAmt() != null && charge.getPrepaidAmt() > 0) {
@@ -118,21 +116,35 @@ public class ChargeServiceImpl implements ChargeService {
                 }
                 return result;
             }
-            if (charge.getSuperTicketSum() > 0 && charge.getCoinsSum() > 0) {//混合礼包记录
-                chargeDao.insertChargeHistory(charge);
-                insertGrowthHistory(charge, account);
-                charge.setCoinsSum(charge.getSuperTicketSum());
-                charge.setCoins(charge.getSuperTicket());
-                charge.setType("s" + charge.getType());
-                result = chargeDao.insertChargeHistory(charge);
-                if (charge.getPrepaidAmt() != null && charge.getPrepaidAmt() > 0) {
-                    charge.setType("income");
-                    charge.setGrowthValue(account.getGrowthValue());
-                    charge.setGrowthValueSum(account.getGrowthValue().add(new BigDecimal(charge.getPrepaidAmt())));
-                    chargeDao.insertGrowthValueHistory(charge);
-                }
-                return result;
-            }
+//            if (charge.getSuperTicketSum() > 0 && charge.getCoinsSum() <= 0) {//普通纯钻石礼包记录
+//                charge.setCoinsSum(charge.getSuperTicketSum());
+//                charge.setCoins(charge.getSuperTicket());
+//                charge.setType("s" + charge.getType());
+//                result = chargeDao.insertChargeHistory(charge);
+//                insertGrowthHistory(charge, account);
+//                if (charge.getPrepaidAmt() != null && charge.getPrepaidAmt() > 0) {
+//                    charge.setType("income");
+//                    charge.setGrowthValue(account.getGrowthValue());
+//                    charge.setGrowthValueSum(account.getGrowthValue().add(new BigDecimal(charge.getPrepaidAmt())));
+//                    chargeDao.insertGrowthValueHistory(charge);
+//                }
+//                return result;
+//            }
+//            if (charge.getSuperTicketSum() > 0 && charge.getCoinsSum() > 0) {//混合礼包记录
+//                chargeDao.insertChargeHistory(charge);
+//                insertGrowthHistory(charge, account);
+//                charge.setCoinsSum(charge.getSuperTicketSum());
+//                charge.setCoins(charge.getSuperTicket());
+//                charge.setType("s" + charge.getType());
+//                result = chargeDao.insertChargeHistory(charge);
+//                if (charge.getPrepaidAmt() != null && charge.getPrepaidAmt() > 0) {
+//                    charge.setType("income");
+//                    charge.setGrowthValue(account.getGrowthValue());
+//                    charge.setGrowthValueSum(account.getGrowthValue().add(new BigDecimal(charge.getPrepaidAmt())));
+//                    chargeDao.insertGrowthValueHistory(charge);
+//                }
+//                return result;
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

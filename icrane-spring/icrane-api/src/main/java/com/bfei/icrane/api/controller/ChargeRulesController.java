@@ -6,7 +6,11 @@ import com.bfei.icrane.common.util.Enviroment;
 import com.bfei.icrane.common.util.RedisUtil;
 import com.bfei.icrane.common.util.ResultMap;
 import com.bfei.icrane.common.util.StringUtils;
+import com.bfei.icrane.core.models.Account;
 import com.bfei.icrane.core.models.ChargeRules;
+import com.bfei.icrane.core.models.Doll;
+import com.bfei.icrane.core.service.AccountService;
+import com.bfei.icrane.core.service.DollService;
 import com.bfei.icrane.core.service.ValidateTokenService;
 import org.apache.commons.collections4.map.HashedMap;
 import org.slf4j.Logger;
@@ -15,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +37,10 @@ public class ChargeRulesController {
     ValidateTokenService validateTokenService;
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private DollService dollService;
 
     /**
      * 获取充值规则
@@ -77,6 +86,52 @@ public class ChargeRulesController {
             throw e;
         }
     }
+
+    @RequestMapping(value = "/memberChargeRule", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap memberChargeRule(@RequestParam String token, @RequestParam Integer memberId, Integer rulesType) throws Exception {
+        if (StringUtils.isEmpty(token) || !validateTokenService.validataToken(token, memberId)) {
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+        }
+        Map<Object, Object> hashMaps = new HashMap<>();
+        if (null != rulesType && rulesType != 5) {
+            hashMaps.put("lover", 0);
+            return new ResultMap("未充值", hashMaps);
+        }
+        Account account = accountService.selectById(memberId);
+        if (account.getLover().equals("199")) {
+            hashMaps.put("lover", account.getLover());
+            return new ResultMap("充值", hashMaps);
+        } else if (account.getLover().equals("131.4")) {
+            hashMaps.put("lover", account.getLover());
+            return new ResultMap("充值", hashMaps);
+        } else {
+            hashMaps.put("lover", account.getLover());
+            return new ResultMap("未充值", hashMaps);
+        }
+    }
+
+    @RequestMapping(value = "/memberRoom", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMap memberRoom(@RequestParam String token, @RequestParam Integer memberId, @RequestParam Integer dollId) throws Exception {
+        if (StringUtils.isEmpty(token) || !validateTokenService.validataToken(token, memberId)) {
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+        }
+        Doll doll = dollService.selectByPrimaryKey(dollId);
+        Map<Object, Object> hashMaps = new HashMap<>();
+        if (doll.getPrice() == 0) {
+            Account account = accountService.selectById(memberId);
+            if (account.getLover().equals("0")) {
+                hashMaps.put("lover", 1);
+                return new ResultMap("未充值", hashMaps);
+            } else
+                hashMaps.put("lover", 2);
+            return new ResultMap("充值", hashMaps);
+        }
+        hashMaps.put("lover", 0);
+        return new ResultMap("未充值", hashMaps);
+    }
+
 
 //    /**
 //     * 获取充值规则

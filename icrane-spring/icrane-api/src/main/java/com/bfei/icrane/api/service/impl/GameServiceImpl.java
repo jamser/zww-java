@@ -191,14 +191,13 @@ public class GameServiceImpl implements GameService {
         Doll doll = dollService.selectByPrimaryKey(dollId);
         //检测游戏币不足
 //        if (doll.getMachineType() != 2) {
-            if (doll.getPrice() > account.getCoins()) {
-                return GameStatusEnum.GAME_PRICE_NOT_ENOUGH;
-            }
-//        } else {
-//            if (doll.getPrice() > account.getSuperTicket()) {
-//                return GameStatusEnum.GAME_PRICE_NOT_SuperTicket;
-//            }
-//        }
+        if (doll.getPrice() == 0 && account.getLover().equals("0")) {
+            return GameStatusEnum.GAME_LOVER_NOT_ENOUGH;
+        }
+        if (doll.getPrice() > account.getCoins()) {
+            return GameStatusEnum.GAME_PRICE_NOT_ENOUGH;
+        }
+
         //数据库状态 空闲  但是 缓存为  维修中  同步数据库空闲状态
         if ("空闲中".equals(doll.getMachineStatus()) && "维修中".equals(takeRoomState(dollId))) {
             redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(dollId), "空闲中");
@@ -590,17 +589,17 @@ public class GameServiceImpl implements GameService {
             return map;
         }
         Oem oem = oemMapper.selectByCode(member.getRegisterChannel());
-        if(oem == null){
+        if (oem == null) {
             oem = oemMapper.selectByCode("lanaokj");
         }
-        String shareUrl = QRCodeUtil.getshareUrl(member.getMemberID(), member.getRegisterChannel(), index,oem);
+        String shareUrl = QRCodeUtil.getshareUrl(member.getMemberID(), member.getRegisterChannel(), index, oem);
         //先查询redis
 //        String shareImgUrl = redisUtil.getString(shareUrl + QRCodeUtil.shareIMGversion);
 //        //如果redis中有就从redis中查询
 //        if (StringUtils.isNotEmpty(shareImgUrl)) {
-            map.put("shareImgUrl", null);
-            map.put("shareUrl", shareUrl);
-            return map;
+        map.put("shareImgUrl", null);
+        map.put("shareUrl", shareUrl);
+        return map;
 //        }
 //        ImageHandleHelper imageHandleHelper = new ImageHandleHelper();
 //        //拼接
@@ -632,22 +631,22 @@ public class GameServiceImpl implements GameService {
         //贴牌
         String channel = "lanaokj";
         Oem oem = null;
-        if(agent.getLevel() == 0){//为贴牌商
-            if(agent.getIsOem()){
-                oem  = oemMapper.selectByPrimaryKey(agent.getId());
-                if(oem != null) channel = oem.getCode();
+        if (agent.getLevel() == 0) {//为贴牌商
+            if (agent.getIsOem()) {
+                oem = oemMapper.selectByPrimaryKey(agent.getId());
+                if (oem != null) channel = oem.getCode();
             }
-        }else if(agent.getLevel() != 0){
+        } else if (agent.getLevel() != 0) {
             Agent superAgent = agentService.selectByPrimaryKey(agent.getAgentId());
-            if(superAgent.getIsOem()){
+            if (superAgent.getIsOem()) {
                 oem = oemMapper.selectByPrimaryKey(superAgent.getId());
-                if(oem != null) channel = oem.getCode();
+                if (oem != null) channel = oem.getCode();
             }
         }
-        if(oem == null){
+        if (oem == null) {
             oem = oemMapper.selectByCode(channel);
         }
-        String shareUrl = QRCodeUtil.getshareUrl("agent" + agent.getId(), channel, index,oem);
+        String shareUrl = QRCodeUtil.getshareUrl("agent" + agent.getId(), channel, index, oem);
         //先查询redis
         String shareImgUrl = agentUtils.getCodeImagUrl(agentId);
 //        String shareImgUrl = redisUtil.getString(shareUrl + QRCodeUtil.shareIMGversion);
@@ -658,14 +657,14 @@ public class GameServiceImpl implements GameService {
             return map;
         }
         //拼接
-        String qrUrl = QRCodeUtil.getAgentUrl(agent, null, index,oem);
+        String qrUrl = QRCodeUtil.getAgentUrl(agent, null, index, oem);
         if (StringUtils.isEmpty(qrUrl)) {
             qrUrl = "https://lanao.oss-cn-shenzhen.aliyuncs.com/other/20180604144534.png";
         }
         try {
             //缓存地址到redis
 //            redisUtil.setString(shareUrl + QRCodeUtil.shareIMGversion, qrUrl, 2147483647);
-            agentUtils.setCodeImagUrl(agentId,qrUrl);
+            agentUtils.setCodeImagUrl(agentId, qrUrl);
             map.put("shareImgUrl", qrUrl);
             map.put("shareUrl", shareUrl);
             return map;

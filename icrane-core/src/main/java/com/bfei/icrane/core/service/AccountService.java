@@ -67,4 +67,6 @@ public interface AccountService {
     void updateMemberCoinAndSignDAte(Account account);
 
     void updateMemberGrowthValueMonth(Account account);
+
+    void updateAccountLover(Account account);
 }

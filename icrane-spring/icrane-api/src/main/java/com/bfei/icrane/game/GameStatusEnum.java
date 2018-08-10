@@ -14,7 +14,8 @@ public enum GameStatusEnum {
     GAME_CONSUME_FAIL(10, "游戏消费失败"),
     GAME_END_ROUND_SUCCESS(11, "游戏正常结束"),
     GAME_END_FAIL(12, "游戏结束异常"),
-    GAME_PRICE_NOT_SuperTicket(13, "钻石不足");
+    GAME_PRICE_NOT_SuperTicket(13, "钻石不足"),
+    GAME_LOVER_NOT_ENOUGH(14, "未充值礼包");
 
     private final int code;
 

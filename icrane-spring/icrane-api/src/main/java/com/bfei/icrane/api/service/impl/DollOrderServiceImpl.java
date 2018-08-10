@@ -144,12 +144,17 @@ public class DollOrderServiceImpl implements DollOrderService {
         if (deliverCoin != null) {
             dollOrder.setDeliverCoins(deliverCoin);
         }
+
+        //判断测试人员
+        Account account = accountDao.selectById(memberId);
+
         dollOrder.setDollRedeemCoins(doll.getRedeemCoins());
         dollOrder.setOrderNumber(orderNum);
         dollOrder.setOrderDate(TimeUtil.getTime());
         dollOrder.setOrderBy(memberId);
         dollOrder.setStatus("寄存中");
         dollOrder.setStockValidDate(TimeUtil.plusDay(validDate));
+        dollOrder.setLover(account.getLover());
         dollOrderDao.insertOrder(dollOrder);
 
         dollOrderItem.setDollOrder(dollOrder);
@@ -158,8 +163,15 @@ public class DollOrderServiceImpl implements DollOrderService {
         dollOrderItem.setCreatedDate(TimeUtil.getTime());
         dollOrderItemDao.insert(dollOrderItem);
 
-        //判断测试人员
-        Account account = accountDao.selectById(memberId);
+        if (doll.getPrice() == 0) {
+            logger.info("七夕房间抓中userId={},dollId={}", memberId, dollId);
+            Account newAccount = new Account();
+            newAccount.setId(account.getId());
+            newAccount.setLover("0");
+            accountDao.updateAccountLover(newAccount);
+        }
+
+
         if (account.getTester().equals(0) && (doll.getMachineType().equals(0) || doll.getMachineType().equals(3))) {
             TDollInfo tDollInfo = tDollInfoMapper.selectByollCode(doll.getDollID());
             if (StringUtils.isEmpty(tDollInfo)) {

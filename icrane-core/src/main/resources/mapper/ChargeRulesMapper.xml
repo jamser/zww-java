@@ -98,7 +98,7 @@
         SELECT
         <include refid="Base_Column_List"/>
         from t_charge_rules WHERE
-        rules_status = 1 order by charge_type DESC
+        rules_status = 1 order by charge_type DESC,orderby
     </select>
 
     <!--后台使用-->

@@ -111,9 +111,16 @@ public class GameController {
                 Map<String, String> socketMap = new HashMap<>();
                 socketMap.put("socketUrl", serviceFacade.getSocketUrl(dollId));
                 return IcraneResult.ok(socketMap);
+            case GAME_GO:
+                Map<String, String> stringMap = new HashMap<>();
+                stringMap.put("socketUrl", serviceFacade.getSocketUrl(dollId));
+                return IcraneResult.ok(stringMap);
             case GAME_START_FAIL:
                 logger.info("玩家" + memberId + "在娃娃机" + dollId + "的游戏开始失败");
                 return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_FAILE_MESSAGE);
+            case GAME_LOVER_NOT_ENOUGH:
+                logger.info("玩家" + memberId + "在七夕娃娃机" + dollId + "的游戏开始失败");
+                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_UNAUTHORIZED_CODE1, "未充值");
             default:
                 logger.info("玩家" + memberId + "在娃娃机" + dollId + "的游戏开始失败");
                 return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_FAILE_MESSAGE);
@@ -132,12 +139,12 @@ public class GameController {
     @RequestMapping(value = "/again", method = RequestMethod.POST)
     @ResponseBody
     public IcraneResult againGame(@RequestParam Integer memberId, @RequestParam Integer dollId, @RequestParam String token) throws Exception {
-        logger.info("开始本轮游戏建立socket前调用的接口参数memberId=" + memberId + "," + "dollId=" + dollId + "," + "token=" + token);
+        logger.info("再一局本轮游戏建立socket前调用的接口参数memberId=" + memberId + "," + "dollId=" + dollId + "," + "token=" + token);
         try {
             //验证token有效性
-            if (!validateTokenService.validataToken(token, memberId)) {
-                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
+//            if (!validateTokenService.validataToken(token, memberId)) {
+//                return IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
             GameStatusEnum result = gameService.checkPlaying(dollId, memberId);
             return getResult(result, memberId, dollId);
         } catch (Exception e) {

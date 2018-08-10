@@ -17,7 +17,7 @@
         <result column="modified_by" jdbcType="INTEGER" property="modifiedBy"/>
         <result column="comment" jdbcType="VARCHAR" property="comment"/>
         <result column="doll_redeem_coins" jdbcType="VARCHAR" property="dollRedeemCoins"/>
-        <result column="lover" jdbcType="INTEGER" property="lover"/>
+        <result column="lover" jdbcType="VARCHAR" property="lover"/>
 
         <association property="memberAddress" javaType="MemberAddr">
             <id property="id" column="address_id"/>
@@ -257,7 +257,7 @@
 		#{deliverNumber,jdbcType=VARCHAR},
 		#{deliverAmount,jdbcType=DECIMAL}, #{deliverCoins,jdbcType=INTEGER},
 		#{memberAddress.id,jdbcType=INTEGER},
-		#{modifiedDate,jdbcType=TIMESTAMP}, #{modifiedBy,jdbcType=INTEGER},#{dollRedeemCoins},#{lover,jdbcType=INTEGER})
+		#{modifiedDate,jdbcType=TIMESTAMP}, #{modifiedBy,jdbcType=INTEGER},#{dollRedeemCoins},#{lover,jdbcType=VARCHAR})
 	</insert>
     <insert id="insertSelective" parameterType="com.bfei.icrane.core.models.DollOrder"
             useGeneratedKeys="true" keyProperty="id">
@@ -354,7 +354,7 @@
                 #{modifiedBy,jdbcType=INTEGER},
             </if>
             <if test="lover != null">
-                 #{lover,jdbcType=INTEGER},
+                 #{lover,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -404,7 +404,7 @@
                 comment = #{comment,jdbcType=VARCHAR},
             </if>
             <if test="lover != null">
-                lover = #{lover,jdbcType=INTEGER}
+                lover = #{lover,jdbcType=VARCHAR}
             </if>
         </set>
         where id = #{id,jdbcType=BIGINT}
@@ -424,7 +424,7 @@
 		address_id = #{addressId,jdbcType=INTEGER},
 		modified_date = #{modifiedDate,jdbcType=TIMESTAMP},
 		modified_by = #{modifiedBy,jdbcType=INTEGER},
-		lover = #{lover,jdbcType=INTEGER}
+		lover = #{lover,jdbcType=VARCHAR}
 		where id = #{id,jdbcType=BIGINT}
 	</update>
     <update id="sendDoll" parameterType="java.util.Map">

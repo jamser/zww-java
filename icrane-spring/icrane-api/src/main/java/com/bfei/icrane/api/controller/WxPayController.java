@@ -7,10 +7,7 @@ import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.common.wx.utils.*;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.pojos.AccessTokenPojo;
-import com.bfei.icrane.core.service.ChargeOrderService;
-import com.bfei.icrane.core.service.OemService;
-import com.bfei.icrane.core.service.ValidateTokenService;
-import com.bfei.icrane.core.service.VipService;
+import com.bfei.icrane.core.service.*;
 import com.google.gson.Gson;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
@@ -52,6 +49,8 @@ public class WxPayController {
     @Autowired
     private MemberService memberService;
     @Autowired
+    private AccountService accountService;
+    @Autowired
     private PayService payService;
     @Autowired
     private VipService vipService;
@@ -71,12 +70,21 @@ public class WxPayController {
         try {
             boolean isToken = validateTokenService.validataToken(token, memberId);
             if (isToken) {
+
                 String orderNo = UUID.randomUUID().toString().replaceAll("-", "");
                 //数据库 创建订单
                 Vip vip = vipService.selectVipByMemberId(memberId);
                 //总金额以分为单位，不带小数点
                 //查询用户vip信息
                 ChargeRules rule = chargeOrderService.queryRule(chargeruleid);
+                Account account = accountService.selectById(memberId);
+                if (rule.getChargeType() == 5) {
+                    if (!account.getLover().equals("0")) {
+                        return IcraneResult.build(Enviroment.RETURN_FAILE, "400", "不能购买此礼包");
+                    }
+                }
+
+
                 Double dprice = rule.getChargePrice();
                 if (vip != null) {
 

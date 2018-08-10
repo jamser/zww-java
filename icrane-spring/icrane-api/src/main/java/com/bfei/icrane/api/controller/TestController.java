@@ -1,7 +1,13 @@
 package com.bfei.icrane.api.controller;
 
+import com.bfei.icrane.api.service.ChargeService;
+import com.bfei.icrane.api.service.DollOrderService;
+import com.bfei.icrane.common.util.TimeUtil;
 import com.bfei.icrane.core.dao.AccountDao;
 import com.bfei.icrane.core.models.Account;
+import com.bfei.icrane.core.models.Charge;
+import com.bfei.icrane.core.models.ChargeOrder;
+import com.bfei.icrane.core.service.ChargeOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +25,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class TestController {
     private static final Logger logger = LoggerFactory.getLogger(GameController.class);
 
-   @Autowired
-   private AccountDao accountDao;
+    @Autowired
+    private DollOrderService dollOrderService;
+    @Autowired
+    private ChargeOrderService chargeOrderService;
+    @Autowired
+    private ChargeService chargeService;
+
 
     // 绑定手机
 
@@ -30,12 +41,18 @@ public class TestController {
      */
     @RequestMapping(value = "/test")
     public String Test() throws Exception {
-        Account account = accountDao.selectById(4);
-//        insetCatchSuccess();
-//        dollRoomService.endPlayByCatchCount(4, 215);
-//        SystemPref systemPref = systemPrefDao.selectByPrimaryKey("STOCK_NOTIFY");
-//        Doll dollOld = dollDao.selectByPrimaryKey(215);
-//        AliyunServiceImpl.getInstance().sendSMSForCode(systemPref.getValue(), "蓝澳科技", "SMS_140550044", dollOld.getName());
+        ChargeOrder order = chargeOrderService.orderSuccess("dadb78e8121243f0b25333050a3a1fa9", 199.00);
+        Charge charge = new Charge();
+        charge.setMemberId(8);
+        charge.setCoins(order.getCoinsBefore());
+        charge.setCoinsSum(order.getCoinsCharge() + order.getCoinsOffer());
+        charge.setPrepaidAmt(order.getPrice());
+        charge.setSuperTicket(order.getSuperTicketBefore());
+        charge.setSuperTicketSum(order.getSuperTicketCharge() + order.getSuperTicketOffer());
+        charge.setType("income");
+        charge.setChargeDate(TimeUtil.getTime());
+        charge.setChargeMethod("微信充值-" + order.getChargeName());
+        Integer result = chargeService.insertChargeHistory(charge);
         return "file_upload_test";
     }
 

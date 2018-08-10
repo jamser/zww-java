@@ -36,7 +36,7 @@ public class Account implements Serializable {
     private Integer growthValueMonthLevel;      //会员每月充值级别
     private Vip vip;                            //会员
     private Integer tester;                     //测试人员标记（0普通用户1测试人员）
-    private Integer lover;                     //七夕活动房间进入权限（0没有该权限  1，有该权限）
+    private String lover;                     //七夕活动房间进入权限（0没有该权限  1，有该权限）
 
     public void addState(long state) {
         this.bitState = BitStatesUtils.addState(this.bitState, state);

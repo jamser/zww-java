@@ -38,6 +38,15 @@
     </update>
 
     <!--更新每月成长值-->
+    <update id="updateAccountLover">
+        UPDATE account
+        SET
+        lover=#{lover}
+        WHERE
+        id = #{id}
+    </update>
+
+    <!--更新每月成长值-->
     <update id="updateMemberGrowthValueMonth">
         UPDATE account
         SET

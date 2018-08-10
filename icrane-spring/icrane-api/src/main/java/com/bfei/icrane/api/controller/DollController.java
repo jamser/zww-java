@@ -391,7 +391,19 @@ public class DollController {
             }
 
             List<Doll> dollList = dollService.getH5DollList(type, memberService.isWorker(memberId), channels, member.getAccount().getTester());
-            return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, dollList);
+            List<Doll> newDollList = new ArrayList<>();
+            List<Doll> oldDollList = new ArrayList<>();
+
+            for (Doll doll : dollList) {
+                if (doll.getPrice() == 0) {
+                    oldDollList.add(doll);
+                } else {
+                    newDollList.add(doll);
+                }
+            }
+
+            newDollList.addAll(0, oldDollList);
+            return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, newDollList);
         } catch (Exception e) {
             //logger.error("获取H5娃娃机列表出错", e);
             e.printStackTrace();

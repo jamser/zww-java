@@ -40,6 +40,6 @@ public class DollOrder implements Serializable {
     private String comment;
     private int dollRedeemCoins;
     private DollOrderItem orderItems;
-    private Integer lover;
+    private String lover;
 
 }

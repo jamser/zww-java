@@ -216,8 +216,6 @@ public class PaySerciceImpl implements PayService {
     }*/
 
 
-
-
     /**
      * 微信充值回调接口
      *
@@ -238,7 +236,7 @@ public class PaySerciceImpl implements PayService {
             //创建支付应答对象
             RequestHandler reqHandler = new RequestHandler(null, null);
             if (reqHandler.isWechatSign(mapXml)) {
-                logger.info("微信充值回调...",mapXml);
+                logger.info("微信充值回调...", mapXml);
                 if (mapXml.get("result_code").equalsIgnoreCase("SUCCESS")
                         && mapXml.get("return_code").equalsIgnoreCase("SUCCESS")) {
                     // 处理业务，更新用户余额或金币
@@ -408,24 +406,25 @@ public class PaySerciceImpl implements PayService {
 
     @Autowired
     private WxPayService wxPayService;
+
     @Override
     public ResultMap queryOrder(String outTradeNo) {
         ChargeOrder chargeOrder = chargeOrderService.selectByOrderNo(outTradeNo);
         Member member = memberService.selectById(chargeOrder.getMemberId());
         Oem oem = oemService.selectByCode(member.getRegisterChannel());
-        WxPayConfig wxPayConfig=new WxPayConfig();
+        WxPayConfig wxPayConfig = new WxPayConfig();
         wxPayConfig.setAppId(oem.getAppid());
         wxPayConfig.setMchId(oem.getPartner());
         wxPayConfig.setMchKey(oem.getPartnerKey());
         wxPayService.setConfig(wxPayConfig);
-        XStream xStream=new XStream();
+        XStream xStream = new XStream();
         XStream.setupDefaultSecurity(xStream);
         xStream.allowTypes(new Class[]{WxPayController.class});
         WxpayRecord wxpayRecord = wxpayRecordService.selectByOutTradeNo(outTradeNo);
         try {
 //            WxPayBillResult all = wxPayService.downloadBill("20180710", "ALL", null, null);
-            WxPayOrderQueryResult result = wxPayService.queryOrder(wxpayRecord.getWxOrderNo(),null);
-            if (StringUtils.success(result.getResultCode())&&StringUtils.success(result.getReturnCode())) {
+            WxPayOrderQueryResult result = wxPayService.queryOrder(wxpayRecord.getWxOrderNo(), null);
+            if (StringUtils.success(result.getResultCode()) && StringUtils.success(result.getReturnCode())) {
                 if (StringUtils.success(result.getTradeState())) {
                     return new ResultMap(result.getTradeState());
                 }

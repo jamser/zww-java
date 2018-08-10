@@ -186,4 +186,9 @@ public class AccountServiceImpl implements AccountService {
         accountDao.updateMemberGrowthValueMonth(account);
     }
 
+    @Override
+    public void updateAccountLover(Account account) {
+        accountDao.updateAccountLover(account);
+    }
+
 }
