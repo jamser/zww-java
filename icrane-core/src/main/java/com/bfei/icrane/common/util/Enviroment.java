@@ -234,6 +234,7 @@ public class Enviroment {
     public static final String AGENT_PASSWORD_ERROR = "密码不一致";
     public static final String AGENT_PHONE_NOT_EXIT = "手机号不存在，请到代理后台修改";
     public static final String ADD_AGENT_ERROER_MESSAGE = "该代理没有添加代理权限";
+    public static final String AGENT_WITHDRAW_SUCCESS = "提现成功";
     public static final String AGENT_SHARE = "agent_share";
 
     /**

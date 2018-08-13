@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.*;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -471,6 +472,21 @@ public class WXUtil {
         }
         return null;
     }
+
+    /**
+     * 判断是否为周末
+     * @param date
+     * @return
+     */
+    public static boolean isWeekend(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+            return true;
+        }
+        return false;
+    }
+
 
 
     /**

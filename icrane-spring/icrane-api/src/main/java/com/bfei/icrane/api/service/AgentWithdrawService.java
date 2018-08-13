@@ -1,5 +1,7 @@
 package com.bfei.icrane.api.service;
 
+import com.bfei.icrane.common.util.ResultMap;
+import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.AgentWithdraw;
 import com.bfei.icrane.core.models.vo.AgentWithdrawVO;
 
@@ -24,4 +26,6 @@ public interface AgentWithdrawService {
     Long selectByWithdraw(Integer id);
 
     List<AgentWithdrawVO> selectByWithdrawLists(Integer id);
+
+    ResultMap withdrawByAgent(Agent agent,Integer bankId);
 }

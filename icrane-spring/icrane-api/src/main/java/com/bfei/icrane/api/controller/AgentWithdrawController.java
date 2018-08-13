@@ -39,6 +39,7 @@ public class AgentWithdrawController {
 
     /**
      * 获取分润列表
+     *
      * @param token
      * @param agentId
      * @return
@@ -80,6 +81,7 @@ public class AgentWithdrawController {
 
     /**
      * 获取提现记录
+     *
      * @param token
      * @param agentId
      * @return
@@ -94,5 +96,24 @@ public class AgentWithdrawController {
         }
         Agent agent = agentService.selectByPrimaryKey(agentId);
         return new ResultMap("获取数据成功", withdrawService.selectByWithdrawLists(agent.getId()));
+    }
+
+    /**
+     * 提现
+     *
+     * @param token
+     * @param agentId
+     * @return
+     */
+    @PostMapping(value = "/withdraw")
+    @ResponseBody
+    public ResultMap beforeWithdraw(@RequestParam String token, @RequestParam Integer agentId, @RequestParam Integer bankId) {
+        //验证token
+        if (!validateTokenService.validataAgentToken(token, agentId)) {
+            logger.info("用户提现参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+            return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+        }
+        Agent agent = agentService.selectByPrimaryKey(agentId);
+        return withdrawService.withdrawByAgent(agent, bankId);
     }
 }
