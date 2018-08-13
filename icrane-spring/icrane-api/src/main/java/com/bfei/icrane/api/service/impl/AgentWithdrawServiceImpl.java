@@ -1,5 +1,6 @@
 package com.bfei.icrane.api.service.impl;
 
+import com.bfei.icrane.api.controller.DollOrderController;
 import com.bfei.icrane.api.service.AgentWithdrawService;
 import com.bfei.icrane.api.service.SystemPrefService;
 import com.bfei.icrane.common.util.Enviroment;
@@ -14,6 +15,8 @@ import com.bfei.icrane.core.models.AgentWithdraw;
 import com.bfei.icrane.core.models.BankInfo;
 import com.bfei.icrane.core.models.SystemPref;
 import com.bfei.icrane.core.models.vo.AgentWithdrawVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +30,9 @@ import java.util.List;
  */
 @Service("AgentWithdrawService")
 public class AgentWithdrawServiceImpl implements AgentWithdrawService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AgentWithdrawServiceImpl.class);
+
 
     @Autowired
     private AgentWithdrawMapper agentWithdrawMapper;
@@ -140,6 +146,7 @@ public class AgentWithdrawServiceImpl implements AgentWithdrawService {
         tAgent.setId(agent.getId());
         tAgent.setBalance(0L);//提现直接提完
         agentMapper.updateByPrimaryKeySelective(tAgent);
+        logger.info("代理ID={}发起提现", agent.getId());
         return new ResultMap(Enviroment.AGENT_WITHDRAW_SUCCESS);
     }
 }

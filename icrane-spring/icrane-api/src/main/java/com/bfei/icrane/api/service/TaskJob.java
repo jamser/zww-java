@@ -40,6 +40,8 @@ public class TaskJob {
     private AccountService accountService;
     @Autowired
     private AgentChargeService agentChargeService;
+    @Autowired
+    private AgentWithdrawService agentWithdrawService;
 
     @Autowired
     private SystemPrefService systemPrefService;
@@ -93,7 +95,7 @@ public class TaskJob {
         }
     }
 
-//    @Scheduled(cron = "0/5 * *  * * ? ")
+    //    @Scheduled(cron = "0/5 * *  * * ? ")
     public void test() {
         Integer agentId;
         if (redisUtil.existsKey("agent_id")) {
@@ -237,26 +239,31 @@ public class TaskJob {
                     case 0:
                         sum = agentChargeService.selectByAgentSuperId(agentList.get(i).getId(), 1, null);
                         Agent agentSuper = agentService.selectByPrimaryKey(agentList.get(i).getId());
-                        Assert.isTrue(agentSuper.getBalance() - sum == 0, "总金额异常");
+                        Long withdraw = agentWithdrawService.selectByWithdraw(agentList.get(i).getId());
+
+                        Assert.isTrue(agentSuper.getBalance() + withdraw - sum == 0, "总金额异常");
                         break;
                     case 1:
                         sum = agentChargeService.selectByAgentOneId(agentList.get(i).getId(), 1, null);
                         Agent agentOne = agentService.selectByPrimaryKey(agentList.get(i).getId());
-                        Assert.isTrue(agentOne.getBalance() - sum == 0, "总金额异常");
+                        Long agentOnewithdraw = agentWithdrawService.selectByWithdraw(agentList.get(i).getId());
+                        Assert.isTrue(agentOne.getBalance() + agentOnewithdraw - sum == 0, "总金额异常");
                         break;
                     case 2:
                         sum = agentChargeService.selectByAgentTwoId(agentList.get(i).getId(), 1, null);
                         Agent agentTwo = agentService.selectByPrimaryKey(agentList.get(i).getId());
-                        Assert.isTrue(agentTwo.getBalance() - sum == 0, "总金额异常");
+                        Long agentTwowithdraw = agentWithdrawService.selectByWithdraw(agentList.get(i).getId());
+                        Assert.isTrue(agentTwo.getBalance() + agentTwowithdraw - sum == 0, "总金额异常");
                         break;
                     case 3:
                         sum = agentChargeService.selectByAgentThreeId(agentList.get(i).getId(), 1, null);
                         Agent agentThree = agentService.selectByPrimaryKey(agentList.get(i).getId());
-                        Assert.isTrue(agentThree.getBalance() - sum == 0, "总金额异常");
+                        Long agentThreeithdraw = agentWithdrawService.selectByWithdraw(agentList.get(i).getId());
+                        Assert.isTrue(agentThree.getBalance() + agentThreeithdraw - sum == 0, "总金额异常");
                         break;
                 }
             } catch (Exception e) {
-                logger.info("代理商金额异常！！ 余额={},已清算金额={},id={}", String.valueOf(sum), agentList.get(i).getBalance(), agentList.get(i).getId());
+                logger.info("代理商金额异常！！ 余额={},已清算金额={},代理Id={}", String.valueOf(sum), agentList.get(i).getBalance(), agentList.get(i).getId());
             }
         }
     }

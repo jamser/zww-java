@@ -214,7 +214,7 @@ public class GameProcessUtil {
      */
     public synchronized boolean onCoin(Integer userId, Integer dollId) {
         Integer num = countGameLock(userId, dollId, GameProcessEnum.GAME_COIN);
-        if (num == 0 || num == null) {//有ready返回后不收coin
+        if (null == num || num == 0) {//有ready返回后不收coin
             addCountGameLock(userId, dollId, GameProcessEnum.GAME_COIN);
             //redisUtil.setString(RedisKeyGenerator.getUserGameCatch(userId), "0", 60 * 2 );//抓中初始化
             redisUtil.setString(RedisKeyGenerator.getRoomHostKey(dollId), String.valueOf(userId), 60 * 5);
@@ -458,10 +458,9 @@ public class GameProcessUtil {
     public synchronized boolean getReady(Integer userId, Integer dollId) {
         Integer coinNum = countGameLock(userId, dollId, GameProcessEnum.GAME_COIN);
         Integer num = countGameLock(userId, dollId, GameProcessEnum.GAME_READY);
-        if (StringUtils.isEmpty(coinNum)) {
+        if (StringUtils.isEmpty(coinNum) || coinNum == 0) {
             logger.info("getReady===>coinNum={}", redisUtil.getString("game__coin"));
         }
-        logger.info("getReady===>num={},coinNum={}", num, coinNum);
         if ((null == num || num == 0) && coinNum > 0) {
             addCountGameLock(userId, dollId, GameProcessEnum.GAME_READY);
             String gameNum = StringUtils.getCatchHistoryNum().replace("-", "").substring(0, 20);
