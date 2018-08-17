@@ -266,6 +266,7 @@ public class WeixinController {
                             insertMember(key, fromUserName, request);//扫描带参数二维码事件处理
                         }
                     } else {//普通关注事件
+                        insertMember("lanaokj", fromUserName, request);
                     }
                     List<Article> articleList = new ArrayList<>();
                     Article article = new Article();
@@ -305,6 +306,7 @@ public class WeixinController {
 
         return "success";
     }
+
 
     @Transactional
     public void insertMember(String state, String wopenid, HttpServletRequest request) throws Exception {
