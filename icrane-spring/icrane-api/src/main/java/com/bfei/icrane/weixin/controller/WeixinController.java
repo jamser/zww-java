@@ -159,7 +159,7 @@ public class WeixinController {
             logger.error("【解析请求出错】" + xmlStr);
             return "fail";
         }
-
+        logger.error("获取微信方茴的信息：" + reqMap);
         // 发送方帐号（一个OpenID）
         String fromUserName = reqMap.get("FromUserName");
         if (StringUtils.isEmpty(fromUserName)) {
@@ -181,7 +181,7 @@ public class WeixinController {
         textMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_TEXT);
         textMessage.setFuncFlag(0);
         // 默认返回的文本消息内容
-        String respContent = "点击查看 <a href=\"\">首页访问</a>";
+        String respContent = "";
 
         // 消息类型
         MsgTypeEnum msgType;

@@ -38,7 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 @Transactional
 public class LoginServiceImpl implements LoginService {
 
-    private static final Logger logger = LoggerFactory.getLogger(WxPayController.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
     @Autowired
     private MemberService memberService;
     @Autowired
@@ -558,7 +558,7 @@ public class LoginServiceImpl implements LoginService {
         JSONObject object = JSONObject.fromObject(result);
         if (object.has("access_token")) {
             logger.info("JSONObject={}", object.toString());
-            String accessToken = object.getString("access_token");
+         //   String accessToken = object.getString("access_token");
             String unionId = object.getString("unionid");
             String wopenid = object.getString("openid");
 
@@ -575,6 +575,7 @@ public class LoginServiceImpl implements LoginService {
 
             //风控信息
             int register = riskManagementService.register(member.getId(), "IMEI", HttpClientUtil.getIpAdrress(request));
+            logger.info("register={}",register);
             if (register != 1) {
                 return new ResultMap(Enviroment.ERROR_CODE, Enviroment.RISK_CONTROL_ABNORMAL);
             }
