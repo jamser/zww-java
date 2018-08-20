@@ -149,6 +149,7 @@ public class WeixinController {
     @ResponseBody
     @RequestMapping(value = "weixincoreservlet", method = RequestMethod.POST, produces = "text/html; charset=UTF-8")
     public Object weixin(HttpServletRequest request) {
+        logger.info("weixincoreservlet");
         Map<String, String> reqMap;
         String xmlStr = null;
         try {
@@ -159,7 +160,7 @@ public class WeixinController {
             logger.error("【解析请求出错】" + xmlStr);
             return "fail";
         }
-        logger.error("获取微信方茴的信息：" + reqMap);
+//        logger.error("获取微信方茴的信息：" + reqMap);
         // 发送方帐号（一个OpenID）
         String fromUserName = reqMap.get("FromUserName");
         if (StringUtils.isEmpty(fromUserName)) {

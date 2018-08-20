@@ -177,10 +177,10 @@ public class DollOrderServiceImpl implements DollOrderService {
                 SystemPref systemPref1 = systemPrefDao.selectByPrimaryKey(Enviroment.STOCK_LOWEST_NUM);
                 if (tDollInfo.getDolltotal().equals(Integer.valueOf(systemPref1.getValue()))) {
                     logger.info("库存不足={}", tDollInfo.getDolltotal());
-                    sendSms(doll, "SMS_140725948");
+                    sendSms(doll, "SMS_140725948", tDollInfo);
                 }
                 if (tDollInfo.getDolltotal() <= 1) {
-                    sendSms(doll, "SMS_140550044");
+                    sendSms(doll, "SMS_140550044", tDollInfo);
                 }
                 logger.info("房间={} 减库存", doll.getName());
             }
@@ -200,24 +200,26 @@ public class DollOrderServiceImpl implements DollOrderService {
         return dollDao.updateByPrimaryKeySelective(doll);
     }
 
-    public void sendSms(Doll doll, String template) {
+    public void sendSms(Doll doll, String template, TDollInfo tDollInfo) {
         SystemPref systemPref = systemPrefDao.selectByPrimaryKey(Enviroment.STOCK_NOTIFY);
         try {
             AliyunServiceImpl.getInstance().sendSMSForCode(systemPref.getValue(), "蓝澳科技", template, doll.getName());
-            Doll dollNew = new Doll();
-            dollNew.setId(doll.getId());
-            dollNew.setMachineStatus("未上线");
-            dollDao.updateClean(dollNew);
-            redisUtil.delKey(RedisKeyGenerator.getRoomHostKey(doll.getId()));
-            Doll machine = dollDao.selectByPrimaryKey(doll.getId());
-            String machineStatus = machine.getMachineStatus();
-            if ("维修中".equals(machineStatus) || "维护中".equals(machineStatus) ||
-                    "未上线".equals(machineStatus)) {
-                redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(doll.getId()), "维修中");
-            } else {
-                redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(doll.getId()), "空闲中");
+            if (tDollInfo.getDolltotal() <= 1) {
+                Doll dollNew = new Doll();
+                dollNew.setId(doll.getId());
+                dollNew.setMachineStatus("未上线");
+                dollDao.updateClean(dollNew);
+                redisUtil.delKey(RedisKeyGenerator.getRoomHostKey(doll.getId()));
+                Doll machine = dollDao.selectByPrimaryKey(doll.getId());
+                String machineStatus = machine.getMachineStatus();
+                if ("维修中".equals(machineStatus) || "维护中".equals(machineStatus) ||
+                        "未上线".equals(machineStatus)) {
+                    redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(doll.getId()), "维修中");
+                } else {
+                    redisUtil.setString(RedisKeyGenerator.getRoomStatusKey(doll.getId()), "空闲中");
+                }
+                logger.info("dollId={}房间娃娃数量为0，将房间设为未上线", doll.getId());
             }
-            logger.info("dollId={}房间娃娃数量为0，将房间设为未上线", doll.getId());
         } catch (ClientException e) {
             e.printStackTrace();
             logger.error("dollId={}将房间设为未上线失败，原因={}", doll.getId(), e.getMessage());
@@ -575,7 +577,7 @@ public class DollOrderServiceImpl implements DollOrderService {
             int coinAfter = coinBefore + coin;
             //兑换变为金币添加记录
             MemberChargeHistory chargeRecord = new MemberChargeHistory();
-            chargeRecord.setChargeMethod("房间("+ dollOrderItem.getDollName() +")已兑换成币");
+            chargeRecord.setChargeMethod("房间(" + dollOrderItem.getDollName() + ")已兑换成币");
             chargeRecord.setCoins(coin);
             chargeRecord.setPrepaidAmt(0.00);
             chargeRecord.setMemberId(memberId);
@@ -590,8 +592,8 @@ public class DollOrderServiceImpl implements DollOrderService {
             accountDao.updateMemberCoin(account);
         }
         //娃娃状态改为已兑换
-        int i =  dollOrderDao.dollExchange(orderIds);
-        if(i >0 ){
+        int i = dollOrderDao.dollExchange(orderIds);
+        if (i > 0) {
             logger.info("兑换成功");
             return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE);
         } else {

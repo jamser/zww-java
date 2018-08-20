@@ -227,9 +227,7 @@ public class GameProcessUtil {
             redisUtil.delKey(RedisKeyGenerator.getRoomGameNumKey(userId, dollId));
             /*机器空闲后等待 初始化 机器就绪指令  等待就绪指令发送*/
             initCountGameLock(userId, dollId, GameProcessEnum.GAME_READY);//游戏就绪指令计数0
-            if (redisUtil.getTTl(RedisKeyGenerator.getGameCoin("")) <= 60) {
-                redisUtil.setString(RedisKeyGenerator.getGameCoin(""), String.valueOf(1), CACHE_TIME);
-            }
+            redisUtil.setString(RedisKeyGenerator.getGameCoin(""), String.valueOf(1), CACHE_TIME);
             logger.info("用户ID" + userId + "向" + dollId + "投币");
             return true;
         }

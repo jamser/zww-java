@@ -3,6 +3,7 @@ package com.bfei.icrane.api.controller;
 import com.bfei.icrane.api.service.AgentService;
 import com.bfei.icrane.api.service.AgentWithdrawService;
 import com.bfei.icrane.common.util.Enviroment;
+import com.bfei.icrane.common.util.RedisUtil;
 import com.bfei.icrane.common.util.ResultMap;
 import com.bfei.icrane.core.models.Agent;
 import com.bfei.icrane.core.models.vo.AgentProfitVO;
@@ -113,6 +114,13 @@ public class AgentWithdrawController {
             logger.info("用户提现参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
             return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
         }
+
+        RedisUtil redisUtil = new RedisUtil();
+        if (redisUtil.getString("withdraw_" + agentId) != null) {
+            logger.error("提现频繁===>agentId={}", agentId);
+            return new ResultMap(Enviroment.FAILE_CODE, Enviroment.PLEASE_SLOW_DOWN);
+        }
+        redisUtil.setString("withdraw_" + agentId, "", Enviroment.ACCESS_SENDDOLL_TIME);
         Agent agent = agentService.selectByPrimaryKey(agentId);
         return withdrawService.withdrawByAgent(agent, bankId);
     }
