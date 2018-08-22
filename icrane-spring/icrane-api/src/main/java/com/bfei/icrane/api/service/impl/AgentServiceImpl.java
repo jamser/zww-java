@@ -250,8 +250,8 @@ public class AgentServiceImpl implements AgentService {
                     logger.info("发送" + message + "验证码成功=" + Enviroment.TEXT_MESSAGING_SUCCESS);
                     return new ResultMap(Enviroment.TEXT_MESSAGING_SUCCESS);
                 } else {
-                    logger.info("发送" + message + "验证码失败=" + Enviroment.TEXT_MESSAGING_FAILURE);
-                    return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.TEXT_MESSAGING_FAILURE);
+                    logger.info("发送" + message + "验证码失败=" + result.errMsg);
+                    return new ResultMap(Enviroment.RETURN_UNAUTHORIZED_CODE1, Enviroment.TEXT_MESSAGING_FAILURE);
                 }
             }
         } catch (Exception e) {

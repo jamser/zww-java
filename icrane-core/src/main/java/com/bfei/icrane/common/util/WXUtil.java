@@ -431,7 +431,7 @@ public class WXUtil {
             json1.put("name", "代理商中心");
             json1.put("type", "view");
             json1.put("key", "ceshi");
-            json1.put("url", oem.getUrl() + "/lanaokj/login.html");
+            json1.put("url", oem.getUrl() + "/lanaokj/personal.html");
             jar1.add(1, json1);
             json.put("button", jar1);
             String msg = doPost(json.toString(), URL, "POST");

@@ -165,7 +165,7 @@
             AND b.order_by=#{memberId}
         </if>
         <if test="memberId == null">
-            GROUP BY order_by ORDER BY number DESC LIMIT 50
+            GROUP BY order_by ORDER BY number DESC LIMIT 10
         </if>
     </select>
 
@@ -180,7 +180,7 @@
             AND b.order_by=#{memberId}
         </if>
         <if test="memberId == null">
-            GROUP BY order_by ORDER BY number DESC LIMIT 50
+            GROUP BY order_by ORDER BY number DESC LIMIT 10
         </if>
     </select>
 
@@ -193,7 +193,7 @@
             WHERE b.order_by=#{memberId}
         </if>
         <if test="memberId == null">
-            GROUP BY order_by ORDER BY number DESC LIMIT 50
+            GROUP BY order_by ORDER BY number DESC LIMIT 10
         </if>
     </select>
 
