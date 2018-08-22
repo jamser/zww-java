@@ -363,7 +363,7 @@ public class WeixinController {
                 OemTemplate template = oemTemplateService.selectByOemIdAndType(oem.getId(),"register");
                 String url =  "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + oem.getAppid()
                         + "&redirect_uri=http%3A%2F%2Flanao.nat300.top/icrane/api/WeChatLogin&response_type=code&scope=snsapi_userinfo&state=" + oem.getCode() + "#wechat_redirect";
-                WXUtil.sendTemplate(template.getTemplateId(),oem,openId,url,"恭喜您成为网搜娃娃的一员",
+                WXUtil.sendTemplate(template.getTemplateId(),oem,openId,url,"恭喜您注册成功成为网搜抓娃娃的一员",
                         "点击查看详情",json.getString("nickname"), DateUtils.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"),"99币",null,null);
             }
             logger.info("用户信息: member={}", member);
@@ -377,6 +377,20 @@ public class WeixinController {
     @RequestMapping(value = "createMenu", method = RequestMethod.GET)
     protected Object createMenu(HttpServletRequest request) throws ServletException, IOException {
         return WXUtil.createMenu(oemService.selectByCode(request.getParameter("code")));
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "sendTemplate", method = RequestMethod.GET)
+    protected Object sendTemplate() throws Exception {
+        Oem oem = oemService.selectByCode("lanaokj");
+        //发送注册成功模板消息
+        OemTemplate template = oemTemplateService.selectByOemIdAndType(oem.getId(),"register");
+        String url =  "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + oem.getAppid()
+                + "&redirect_uri=http%3A%2F%2Flanao.nat300.top/icrane/api/WeChatLogin&response_type=code&scope=snsapi_userinfo&state=" + oem.getCode() + "#wechat_redirect";
+        WXUtil.sendTemplate(template.getTemplateId(),oem,"o_-591nmBVcc6SxgaoMb_jrC08L8",url,"恭喜您注册成功成为网搜抓娃娃的一员",
+                "点击查看详情","bruce", DateUtils.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"),"99币",null,null);
+        return WXUtil.createMenu(oemService.selectByCode("lanaokj"));
     }
 }
 
