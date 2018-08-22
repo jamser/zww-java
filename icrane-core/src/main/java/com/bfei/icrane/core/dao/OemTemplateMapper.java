@@ -1,6 +1,7 @@
 package com.bfei.icrane.core.dao;
 
 import com.bfei.icrane.core.models.OemTemplate;
+import org.apache.ibatis.annotations.Param;
 
 public interface OemTemplateMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +15,6 @@ public interface OemTemplateMapper {
     int updateByPrimaryKeySelective(OemTemplate record);
 
     int updateByPrimaryKey(OemTemplate record);
+
+    OemTemplate selectByOemIdAndType(@Param("oemId") Integer oemId,@Param("type")  String type);
 }

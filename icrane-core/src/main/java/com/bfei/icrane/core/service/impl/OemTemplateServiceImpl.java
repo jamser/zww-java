@@ -44,4 +44,9 @@ public class OemTemplateServiceImpl implements OemTemplateService {
     public int updateByPrimaryKey(OemTemplate record) {
         return oemTemplateMapper.updateByPrimaryKey(record);
     }
+
+    @Override
+    public OemTemplate selectByOemIdAndType(Integer oemId,String type) {
+        return oemTemplateMapper.selectByOemIdAndType(oemId,type);
+    }
 }

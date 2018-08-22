@@ -17,12 +17,12 @@
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
-        from t_oem_template AND status=1
-        where id = #{id,jdbcType=INTEGER}
+        from t_oem_template
+        where id = #{id,jdbcType=INTEGER}  AND status=1
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from t_oem_template AND status=1
-    where id = #{id,jdbcType=INTEGER}
+    delete from t_oem_template
+    where id = #{id,jdbcType=INTEGER}  AND status=1
   </delete>
     <insert id="insert" parameterType="com.bfei.icrane.core.models.OemTemplate">
     insert into t_oem_template (id, oem_id, template_id, 
@@ -125,4 +125,11 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+    <select id="selectByOemIdAndType" resultMap="BaseResultMap" parameterType="com.bfei.icrane.core.models.OemTemplate">
+        select
+        <include refid="Base_Column_List"/>
+        from t_oem_template
+        where oem_id = #{oemId,jdbcType=INTEGER} and type = #{type,jdbcType=VARCHAR} AND status=1
+    </select>
 </mapper>

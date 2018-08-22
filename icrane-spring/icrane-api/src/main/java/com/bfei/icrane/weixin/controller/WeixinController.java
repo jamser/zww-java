@@ -6,7 +6,9 @@ import com.bfei.icrane.common.util.*;
 import com.bfei.icrane.core.models.Member;
 import com.bfei.icrane.core.models.MemberInfo;
 import com.bfei.icrane.core.models.Oem;
+import com.bfei.icrane.core.models.OemTemplate;
 import com.bfei.icrane.core.service.OemService;
+import com.bfei.icrane.core.service.OemTemplateService;
 import com.bfei.icrane.weixin.vo.*;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
@@ -41,6 +43,9 @@ public class WeixinController {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private OemTemplateService oemTemplateService;
 
     private String host = "http://h5.lanao.fun";
 
@@ -269,6 +274,7 @@ public class WeixinController {
                     } else {//普通关注事件
                         insertMember("lanaokj", fromUserName, request);
                     }
+
                     List<Article> articleList = new ArrayList<>();
                     Article article = new Article();
                     article.setPicUrl("http://oss.lanao.fun/logo/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20180710091839.jpg");
@@ -352,6 +358,9 @@ public class WeixinController {
                 if (member == null) {
                     IcraneResult.build(Enviroment.RETURN_FAILE, Enviroment.RETURN_FAILE_CODE, Enviroment.REGISTRATION_FAILED);
                 }
+                //发送注册成功模板消息
+                OemTemplate template = oemTemplateService.selectByOemIdAndType(oem.getId(),"register");
+                WXUtil.sendTemplate(template.getTemplateId(),oem,openId,"","","","","","","");
             }
             logger.info("用户信息: member={}", member);
         } else {

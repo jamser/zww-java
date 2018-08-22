@@ -17,4 +17,6 @@ public interface OemTemplateService {
     int updateByPrimaryKeySelective(OemTemplate record);
 
     int updateByPrimaryKey(OemTemplate record);
+
+    OemTemplate selectByOemIdAndType(Integer oemId,String type);
 }
