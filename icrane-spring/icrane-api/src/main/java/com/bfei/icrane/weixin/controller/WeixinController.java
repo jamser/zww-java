@@ -11,6 +11,7 @@ import com.bfei.icrane.core.service.OemService;
 import com.bfei.icrane.core.service.OemTemplateService;
 import com.bfei.icrane.weixin.vo.*;
 import net.sf.json.JSONObject;
+import org.apache.http.client.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -360,7 +361,10 @@ public class WeixinController {
                 }
                 //发送注册成功模板消息
                 OemTemplate template = oemTemplateService.selectByOemIdAndType(oem.getId(),"register");
-                WXUtil.sendTemplate(template.getTemplateId(),oem,openId,"","","","","","","");
+                String url =  "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + oem.getAppid()
+                        + "&redirect_uri=http%3A%2F%2Flanao.nat300.top/icrane/api/WeChatLogin&response_type=code&scope=snsapi_userinfo&state=" + oem.getCode() + "#wechat_redirect";
+                WXUtil.sendTemplate(template.getTemplateId(),oem,openId,url,"恭喜您成为网搜娃娃的一员",
+                        "点击查看详情",json.getString("nickname"), DateUtils.formatDate(new Date(),"yyyy-MM-dd HH:mm:ss"),"99币",null,null);
             }
             logger.info("用户信息: member={}", member);
         } else {

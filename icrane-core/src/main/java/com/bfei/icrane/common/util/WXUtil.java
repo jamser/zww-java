@@ -362,7 +362,7 @@ public class WXUtil {
      * @param openid     接收者openid
      * @return
      */
-    public static JSONObject sendTemplate(String templateId, Oem oem, String openid
+    public static JSONObject sendTemplate(String templateId, Oem oem, String openid,String url
             , String first, String remark, String keyword1, String keyword2, String keyword3, String keyword4, String keyword5) throws Exception {
         String info = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN";
         String accessToken = getAccessToken(oem);
@@ -371,7 +371,7 @@ public class WXUtil {
         JSONObject data = new JSONObject();
         json.put("touser", openid);
         json.put("template_id", templateId);
-        json.put("url", info);
+        json.put("url", url);
         if (!StringUtils.isEmpty(first)) {
             data.put("first", getJson(first, "#173177"));
         }
