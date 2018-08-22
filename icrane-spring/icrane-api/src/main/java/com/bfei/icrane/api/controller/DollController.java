@@ -365,10 +365,10 @@ public class DollController {
                                    @RequestParam(value = "type", defaultValue = "0", required = false) Integer type) throws Exception {
         try {
 //            验证token
-            if (!validateTokenService.validataToken(token, memberId)) {
-                //logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
-            }
+//            if (!validateTokenService.validataToken(token, memberId)) {
+//                //logger.info("用户账户接口参数异常=" + Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//                return new ResultMap(Enviroment.RETURN_FAILE_CODE, Enviroment.RETURN_UNAUTHORIZED_MESSAGE);
+//            }
 
             Member member = memberService.selectById(memberId);
             Oem oem = oemService.selectByCode(member.getRegisterChannel());
@@ -390,20 +390,9 @@ public class DollController {
                 }
             }
 
-            List<Doll> dollList = dollService.getH5DollList(type, memberService.isWorker(memberId), channels, member.getAccount().getTester());
-            List<Doll> newDollList = new ArrayList<>();
-            List<Doll> oldDollList = new ArrayList<>();
+            List<Doll> dollList = dollService.getH5DollList(type, channels, member.getAccount().getTester());
 
-            for (Doll doll : dollList) {
-                if (doll.getPrice() == 0) {
-                    oldDollList.add(doll);
-                } else {
-                    newDollList.add(doll);
-                }
-            }
-
-            newDollList.addAll(0, oldDollList);
-            return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, newDollList);
+            return new ResultMap(Enviroment.RETURN_SUCCESS_MESSAGE, dollList);
         } catch (Exception e) {
             //logger.error("获取H5娃娃机列表出错", e);
             e.printStackTrace();

@@ -1,9 +1,6 @@
 package com.bfei.icrane.core.service.impl;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.bfei.icrane.core.models.*;
 import org.slf4j.Logger;
@@ -163,29 +160,33 @@ public class DollServiceImpl implements DollService {
 
     @Override
 //    @Cacheable(value = "h5DollList", key = "#worker+''+#type+#channels")
-    public List<Doll> getH5DollList(Integer type, boolean worker, List<String> channels, Integer isTest) {
-        List<Doll> dollTopicList = dollDao.getH5DollTopicList(type, channels);
-        if (isTest == 1) {
-            dollTopicList = dollDao.getH5DollTopicListByTest(type, channels);
-        }
-        if (worker) {
-            for (Doll doll : dollTopicList) {
-                int endIndex = doll.getName().indexOf("-");
-                if (endIndex > 0) {
-                    doll.setName(doll.getName().substring(0, doll.getName().indexOf("-")) + "-" + doll.getMachineCode());
-                } else {
-                    doll.setName(doll.getName() + "-" + doll.getMachineCode());
-                }
-            }
+    public List<Doll> getH5DollList(Integer type, List<String> channels, Integer isTest) {
+        List<Doll> dollTopicList = new ArrayList<>();
+
+        if (type.equals(1)) {
+            dollTopicList = dollDao.getH5DollTopicListByNew(type, channels);
         } else {
-            for (Doll doll : dollTopicList) {
-                int endIndex = doll.getName().indexOf("-");
-                if (endIndex > 0) {
-                    doll.setName(doll.getName().substring(0, endIndex));
-                }
+            dollTopicList = dollDao.getH5DollTopicList(type, channels);
+            if (isTest == 1) {
+                dollTopicList = dollDao.getH5DollTopicListByTest(type, channels);
             }
         }
-        return dollTopicList;
+        List<Doll> newDollList = new ArrayList<>();
+        List<Doll> oldDollList = new ArrayList<>();
+
+        for (Doll doll : dollTopicList) {
+            int endIndex = doll.getName().indexOf("-");
+            if (endIndex > 0) {
+                doll.setName(doll.getName().substring(0, endIndex));
+            }
+            if (doll.getPrice() == 0) {
+                oldDollList.add(doll);
+            } else {
+                newDollList.add(doll);
+            }
+        }
+        newDollList.addAll(0, oldDollList);
+        return newDollList;
     }
 
     public List<Doll> selectDollHistory(Integer memberId) {

@@ -80,8 +80,19 @@ public interface DollDao {
      */
     List<Doll> getH5DollTopicList(@Param("type") Integer type, @Param("channels") List<String> channels);
 
+
+    /**
+     * 获取最近30天的新品
+     *
+     * @param type
+     * @param channels
+     * @return
+     */
+    List<Doll> getH5DollTopicListByNew(@Param("type") Integer type, @Param("channels") List<String> channels);
+
     /**
      * 测试人员房间列表
+     *
      * @param type
      * @param channels
      * @return
