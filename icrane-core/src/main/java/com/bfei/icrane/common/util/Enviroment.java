@@ -168,6 +168,7 @@ public class Enviroment {
     public static final String WXPAY_SUCCESSFULLY_PLACED = "微信支付统一下单";
     public static final String ALIPAY_TIMEOUT_EXPRESS = "30m";
     public static final String PAY_SUCCESS = "充值成功";
+    public static final String WXPAY_TEMPLATE = "wxpay";
 
     /**
      * 签到相关

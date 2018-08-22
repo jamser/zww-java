@@ -18,6 +18,7 @@ import com.bfei.icrane.core.dao.ChargeDao;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.service.ChargeOrderService;
 import com.bfei.icrane.core.service.OemService;
+import com.bfei.icrane.core.service.OemTemplateService;
 import com.github.binarywang.wxpay.bean.result.WxPayBillResult;
 import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryResult;
 import com.github.binarywang.wxpay.config.WxPayConfig;
@@ -54,6 +55,8 @@ public class PaySerciceImpl implements PayService {
     private MemberService memberService;
     @Autowired
     private OemService oemService;
+    @Autowired
+    private OemTemplateService oemTemplateService;
 
     /*@Override
     public ResultMap wxpay(HttpServletRequest request, int memberId, int chargeruleid) {
@@ -285,6 +288,8 @@ public class PaySerciceImpl implements PayService {
                         int insert = wxpayRecordService.insert(wr);
                         logger.info("充值记录结果:insertResult=" + insert);
                     }
+                    //发送模版支付成功
+                    sendWxPaySuccessTemplate(order);
                     if (result == 1) {
                         logger.info("异步返回 SUCCESS");
                         return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
@@ -298,6 +303,19 @@ public class PaySerciceImpl implements PayService {
             return null;
         }
     }
+
+    private void sendWxPaySuccessTemplate(ChargeOrder order) {
+        Member member = memberService.selectById(order.getMemberId());
+        Oem oem = oemService.selectByCode(member.getRegisterChannel());
+        OemTemplate oemTemplate = oemTemplateService.selectByOemIdAndType(oem.getId(), Enviroment.WXPAY_TEMPLATE);
+        try {
+            WXUtil.sendTemplate(oemTemplate.getTemplateId(), oem, member.getWeixinId(), null, "你好，你的微信支付已成功", null,
+                    order.getOrderNo(), order.getPrice() + "元", oem.getName(), WXUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"), null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public String aliNotify(HttpServletRequest request) {

@@ -71,7 +71,6 @@ public class WxPayController {
             boolean isToken = validateTokenService.validataToken(token, memberId);
             if (isToken) {
 
-                String orderNo = UUID.randomUUID().toString().replaceAll("-", "");
                 //数据库 创建订单
                 Vip vip = vipService.selectVipByMemberId(memberId);
                 //总金额以分为单位，不带小数点
@@ -94,7 +93,8 @@ public class WxPayController {
                     dprice = 1.0;
                 }
 
-
+                Member member = memberService.selectById(memberId);
+                String orderNo = TenpayUtil.getCurrTime() + member.getMemberID();
                 Integer result = chargeOrderService.createChareOrder(chargeruleid, dprice / 100, memberId, orderNo);
 
 
@@ -123,7 +123,6 @@ public class WxPayController {
                 String out_trade_no = orderNo;
 
 
-                Member member = memberService.selectById(memberId);
                 Oem oem = oemService.selectByCode(member.getRegisterChannel());
 
 

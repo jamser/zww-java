@@ -7,10 +7,7 @@ import com.bfei.icrane.common.util.Enviroment;
 import com.bfei.icrane.common.util.ResultMap;
 import com.bfei.icrane.common.util.StringUtils;
 import com.bfei.icrane.common.util.TimeUtil;
-import com.bfei.icrane.core.dao.ChargeDao;
-import com.bfei.icrane.core.dao.MemberDao;
-import com.bfei.icrane.core.dao.RechargeRuleMapper;
-import com.bfei.icrane.core.dao.SystemPrefDao;
+import com.bfei.icrane.core.dao.*;
 import com.bfei.icrane.core.models.*;
 import com.bfei.icrane.core.service.AccountService;
 import com.bfei.icrane.core.service.DollService;
@@ -60,6 +57,9 @@ public class ChargeServiceImpl implements ChargeService {
 
     @Autowired
     private RechargeRuleMapper rechargeRuleMapper;
+
+    @Autowired
+    private OemTemplateMapper oemTemplateMapper;
 
 
     @Override

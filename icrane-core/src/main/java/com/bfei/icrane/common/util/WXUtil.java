@@ -371,7 +371,9 @@ public class WXUtil {
         JSONObject data = new JSONObject();
         json.put("touser", openid);
         json.put("template_id", templateId);
-        json.put("url", url);
+        if (!StringUtils.isEmpty(url)) {
+            json.put("url", url);
+        }
         if (!StringUtils.isEmpty(first)) {
             data.put("first", getJson(first, "#173177"));
         }
