@@ -326,24 +326,24 @@ public class WXUtil {
     }
 
     public static void main(String[] args) {
-        try {
-            String jsonStr = WXUtil.doPost("", "http://lanao.nat300.top/icrane/api/wx/getAccessToken", "POST");
-            //  [{ "code": "lanaokj","accessToken": "UxAjDRGUOMJjAEAFDA" }, {"code": "lanaocs", "accessToken": "7zMvA15BMujIRQhAJAQZY" }]
-            System.out.println("jsonStr = {}" + jsonStr);
-            JSONArray jsonArr = JSONArray.fromObject(jsonStr);
-            for (int i = 0; i < jsonArr.size(); i++) {
-                JSONObject json = jsonArr.getJSONObject(i);
-                String code = json.getString("code");
-                String accessToken = json.getString("accessToken");
-                if (!StringUtils.isEmpty(accessToken) && "lanaokj".equals(code)) {
-                    JSONObject jsonsend = sendTemplate("ItetnetU0PZPL2i0pW96XFyFYS2qBMr8uUvxAcqKQSc", "http://weixin.qq.com/download", "o_-591nmBVcc6SxgaoMb_jrC08L8", accessToken
-                            , "订单发货通知", "恭喜您支付成功! 预估五分钟后到帐，如有疑问请返回至在线客服联系我们或致电0551-62675556", "1213223", "Q币10元充值", "2件", "17.2元", format(new Date(), "yyyy-MM-dd"));
-                    System.out.println(jsonsend);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            String jsonStr = WXUtil.doPost("", "http://lanao.nat300.top/icrane/api/wx/getAccessToken", "POST");
+//            //  [{ "code": "lanaokj","accessToken": "UxAjDRGUOMJjAEAFDA" }, {"code": "lanaocs", "accessToken": "7zMvA15BMujIRQhAJAQZY" }]
+//            System.out.println("jsonStr = {}" + jsonStr);
+//            JSONArray jsonArr = JSONArray.fromObject(jsonStr);
+//            for (int i = 0; i < jsonArr.size(); i++) {
+//                JSONObject json = jsonArr.getJSONObject(i);
+//                String code = json.getString("code");
+//                String accessToken = json.getString("accessToken");
+//                if (!StringUtils.isEmpty(accessToken) && "lanaokj".equals(code)) {
+//                    JSONObject jsonsend = sendTemplate("ItetnetU0PZPL2i0pW96XFyFYS2qBMr8uUvxAcqKQSc", "http://weixin.qq.com/download", "o_-591nmBVcc6SxgaoMb_jrC08L8", accessToken
+//                            , "订单发货通知", "恭喜您支付成功! 预估五分钟后到帐，如有疑问请返回至在线客服联系我们或致电0551-62675556", "1213223", "Q币10元充值", "2件", "17.2元", format(new Date(), "yyyy-MM-dd"));
+//                    System.out.println(jsonsend);
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**
@@ -358,28 +358,30 @@ public class WXUtil {
     /**
      * 发送模板消息
      *
-     * @param templateId  模板id
-     * @param url         点击模板需要跳转的地址
-     * @param openid      接收者openid
-     * @param accessToken
+     * @param templateId 模板id
+     * @param openid     接收者openid
      * @return
      */
-    public static JSONObject sendTemplate(String templateId, String url, String openid, String accessToken
+    public static JSONObject sendTemplate(String templateId, Oem oem, String openid
             , String first, String remark, String keyword1, String keyword2, String keyword3, String keyword4, String keyword5) throws Exception {
         String info = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN";
-        if (StringUtils.isEmpty(accessToken)) {
-            return null;
-        }
+        String accessToken = getAccessToken(oem);
         info = info.replace("ACCESS_TOKEN", accessToken);
         JSONObject json = new JSONObject();
         JSONObject data = new JSONObject();
         json.put("touser", openid);
         json.put("template_id", templateId);
-        json.put("url", url);
-        data.put("first", getJson(first, "#173177"));
-        data.put("keyword1", getJson(keyword1, "#173177"));
-        data.put("keyword2", getJson(keyword2, "#173177"));
-        if (!StringUtils.isEmpty(keyword3)) {
+        json.put("url", info);
+        if (!StringUtils.isEmpty(first)) {
+            data.put("first", getJson(first, "#173177"));
+        }
+        if (!StringUtils.isEmpty(keyword1)) {
+            data.put("keyword1", getJson(keyword1, "#173177"));
+        }
+        if (!StringUtils.isEmpty(keyword2)) {
+            data.put("keyword2", getJson(keyword2, "#173177"));
+        }
+       if (!StringUtils.isEmpty(keyword3)) {
             data.put("keyword3", getJson(keyword3, "#173177"));
         }
         if (!StringUtils.isEmpty(keyword4)) {
@@ -388,7 +390,9 @@ public class WXUtil {
         if (!StringUtils.isEmpty(keyword5)) {
             data.put("keyword5", getJson(keyword5, "#173177"));
         }
-        data.put("remark", getJson(remark, "#173177"));
+        if (!StringUtils.isEmpty(remark)) {
+            data.put("remark", getJson(remark, "#173177"));
+        }
         json.put("data", data);
         System.out.println(json.toString());
         String msg = doPost(json.toString(), info, "POST");
@@ -396,7 +400,7 @@ public class WXUtil {
         if (resp4.getInt("errcode") == 0 && "ok".equals(resp4.getString("errmsg"))) {
             return resp4;
         } else {
-            logger.info("发送模板消息异常:" + resp4.toString());
+            logger.error("发送模板消息异常:" + resp4.toString());
         }
         return null;
     }
@@ -475,6 +479,7 @@ public class WXUtil {
 
     /**
      * 判断是否为周末
+     *
      * @param date
      * @return
      */
@@ -486,7 +491,6 @@ public class WXUtil {
         }
         return false;
     }
-
 
 
     /**
